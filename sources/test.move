@@ -12,6 +12,7 @@ module auto_chess::test {
     use sui::object::{Self};
     use auto_chess::chess;
     use auto_chess::role;
+    use auto_chess::utils;
 
     fun scenario(): Scenario { begin(@account) }
 
@@ -41,14 +42,12 @@ module auto_chess::test {
             let chessGlobal = take_shared<chess::Global>(test);
             let roleGlobal = take_shared<role::Global>(test);
             chess::mint_chess(&roleGlobal, &mut chessGlobal, ctx(test));
-            print(&utf8(b"total_chesses:"));
-            print(&chess::get_total_chesses(&chessGlobal));
+            utils::print2(utf8(b"total_chesses:"), utils::u64_to_string(chess::get_total_chesses(&chessGlobal)));
             next_epoch(test, admin);
 
             let chess_nft = take_from_sender<chess::Chess>(test);
             chess::match(&mut chessGlobal, &mut chess_nft, ctx(test));
-            print(&utf8(b"total_matches:"));
-            print(&chess::get_total_matches(&chessGlobal));
+            utils::print2(utf8(b"total_matches:"), utils::u64_to_string(chess::get_total_matches(&chessGlobal)));
             return_to_sender(test, chess_nft);
             return_shared(chessGlobal);
             return_shared(roleGlobal);

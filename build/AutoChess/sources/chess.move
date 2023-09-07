@@ -4,11 +4,12 @@ module auto_chess::chess {
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self, public_transfer};
     use sui::table::{Self, Table};
-    use std::string::{utf8, String};
+    use std::string::{utf8, String, Self};
     use std::vector::{Self};
     use auto_chess::lineup::{Self, LineUp};
     use std::debug::print;
-    use auto_chess::role::{Self};
+    use auto_chess::role;
+    use auto_chess::utils;
 
     const INIT_LIFE:u64 = 100;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
@@ -25,17 +26,18 @@ module auto_chess::chess {
         id:UID,
         lineup: LineUp,
         life: u64,
-        won: u8,
+        win: u8,
         lose: u8,
+        even: u8,
         creator: address
     }
 
     fun init_virtual_configs(role_global: &role::Global, ctx: &mut TxContext): Table<String, vector<LineUp>> {
         let configs = table::new<String, vector<LineUp>>(ctx);
-        if (!table::contains(&configs, utf8(b"0-0"))) {
+        if (!table::contains(&configs, utf8(b"0-0-0"))) {
             let vec = vector::empty<LineUp>();
             vector::push_back(&mut vec, lineup::create_lineup(role_global, ctx));
-            table::add(&mut configs, utf8(b"0-0"), vec);
+            table::add(&mut configs, utf8(b"0-0-0"), vec);
         };
         configs
     }
@@ -63,6 +65,17 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
+    fun get_pool_tag(win:u8, lose:u8, even:u8) : String {
+        // 3-2-2
+        let tag = utf8(b"");
+        string::append(&mut tag, utils::u8_to_string(win));
+        string::append(&mut tag, string::utf8(b"-"));
+        string::append(&mut tag, utils::u8_to_string(lose));
+        string::append(&mut tag, string::utf8(b"-"));
+        string::append(&mut tag, utils::u8_to_string(even));
+        tag
+    }
+
     public entry fun mint_chess(role_global: &role::Global, global: &mut Global, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
@@ -70,18 +83,25 @@ module auto_chess::chess {
             id: object::new(ctx),
             lineup: lineup::create_lineup(role_global, ctx),
             life: INIT_LIFE,
-            won: 0,
+            win: 0,
             lose: 0,
+            even: 0,
             creator: sender
         };
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
     }
 
-    fun select_lineup(configs: &Table<String, vector<LineUp>>, ctx: &mut TxContext): &LineUp {
-        print(&utf8(b"randomly choose a 0-0 opponent"));
-        let vec = table::borrow(configs, utf8(b"0-0"));
-        vector::borrow(vec, 0)
+    fun select_lineup(pool_tag:String, configs: &Table<String, vector<LineUp>>, ctx: &mut TxContext): &LineUp {
+        let content = utf8(b"randomly choose a component in pool of ");
+        string::append(&mut content, pool_tag);
+        print(&content);
+        let seed = 10;
+        let vec = table::borrow(configs, pool_tag);
+        let index = utils::get_random_num(0, vector::length(vec) - 1, 10, ctx);
+        let lineup = vector::borrow(vec, index);
+        print(lineup);
+        lineup
     }
 
     public fun match(global: &mut Global, chess:&mut Chess, ctx: &mut TxContext) {
@@ -89,7 +109,8 @@ module auto_chess::chess {
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
         // match an opponent config
-        let lineup = select_lineup(&global.configs, ctx);
+        let pool_tag = get_pool_tag(chess.win, chess.lose, chess.even);
+        let lineup = select_lineup(pool_tag, &global.configs, ctx);
 
         // fight
         fight(chess, lineup);
