@@ -54,4 +54,34 @@ module auto_chess::utils {
         let hash: vector<u8> = hash::keccak256(&info);
         hash
     }
+
+    public fun get_role_num_by_lineup_power(power:u64):u64 {
+        if (power >= 6) {
+            7
+        } else if (power >= 4) {
+            5
+        } else if (power >= 3) {
+            4
+        } else {
+            3
+        }
+    }
+
+    public fun get_lineup_power_by_tag(win:u64, lose:u64): u64{
+        2 + win * 2 - lose
+    }
+
+    // 0-1000 represents prop
+    public fun get_level3_prop_by_lineup_power(power:u64): u64 {
+        if (power <= 16) {
+            0
+        } else {
+            3 * power
+        }
+    }
+
+    // 0-1000 represents prop
+    public fun get_level2_prop_by_lineup_power(power:u64): u64 {
+        40 * power
+    }
 }
