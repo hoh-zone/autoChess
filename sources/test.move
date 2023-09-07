@@ -1,11 +1,12 @@
 // Copyright 2023 ComingChat Authors. Licensed under Apache-2.0 License.
 #[test_only]
 module auto_chess::test {
-    use std::string::{utf8};
+    use std::string::{utf8, String};
     use sui::test_scenario::{
         Scenario, next_tx, begin, end, ctx, take_shared, return_shared, take_from_sender,return_to_sender,
         next_epoch
     };
+    use std::vector;
     use std::debug::print;
     use auto_chess::chess;
     use auto_chess::role;
@@ -44,7 +45,6 @@ module auto_chess::test {
             let roleGlobal = take_shared<role::Global>(test);
             let chessGlobal = take_shared<chess::Global>(test);
             chess::mint_chess(&roleGlobal, &mut chessGlobal, utf8(b"sean"), ctx(test));
-            return_shared(roleGlobal);
             next_epoch(test, admin);
 
             let chess_nft = take_from_sender<chess::Chess>(test);
@@ -53,6 +53,18 @@ module auto_chess::test {
             print(&utf8(b"my card_pools:"));
             print(chess::get_cards_pool(&chess_nft));
             let lineupGlobal = take_shared<lineup::Global>(test);
+            let gold = 3;
+            let str_vec = vector::empty<String>();
+            // vector::push_back(&mut str_vec, utf8(b"warrior1"));
+            vector::push_back(&mut str_vec, utf8(b"warrior2"));
+            vector::push_back(&mut str_vec, utf8(b"warrior3"));
+            print(&utf8(b"operate my chess"));
+            chess::operate_my_chess(&roleGlobal, gold, str_vec, &mut chess_nft, ctx(test));
+            print(&utf8(b"my lineup:"));
+            print(chess::get_lineup(&chess_nft));
+            return_shared(roleGlobal);
+            next_epoch(test, admin);
+
             chess::match(&mut chessGlobal, &lineupGlobal, &mut chess_nft, ctx(test));
             utils::print2(utf8(b"total_matches:"), utils::u64_to_string(chess::get_total_matches(&chessGlobal)));
             return_to_sender(test, chess_nft);

@@ -157,4 +157,23 @@ module auto_chess::lineup {
         (all_attacks, all_defense)
     }
 
+    public fun parse_lineup_str_vec(role_global:&role::Global, str_vec:vector<String>, ctx:&mut TxContext) : LineUp {
+        let len = vector::length(&str_vec);
+        let vec = vector::empty<Role>();
+        while (len > 0) {
+            let role_name = vector::pop_back(&mut str_vec);
+            let role = role::get_role_by_name(role_global, role_name);
+            vector::push_back(&mut vec, role);
+            len = len - 1;
+        };
+        LineUp {
+            creator:tx_context::sender(ctx),
+            role_num:len,
+            roles: vec
+        }
+    }
+
+    public fun get_roles(lineup:&LineUp): &vector<Role> {
+        &lineup.roles
+    }
 }

@@ -5,6 +5,7 @@ module auto_chess::chess {
     use sui::transfer::{Self, public_transfer};
     use std::string::{utf8, String, Self};
     use auto_chess::lineup::{Self, LineUp};
+    use std::vector;
     use std::debug::print;
     use auto_chess::role;
     use auto_chess::utils;
@@ -81,6 +82,12 @@ module auto_chess::chess {
         public_transfer(game, sender);
     }
 
+    public entry fun operate_my_chess(role_global:&role::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
+        // todo: for safety, verify the data.
+        chess.gold = gold;
+        chess.lineup = lineup::parse_lineup_str_vec(role_global, lineup_str_vec, ctx);
+    }
+
     public fun get_lineup(chess:&Chess): &LineUp {
         &chess.lineup
     }
@@ -93,7 +100,7 @@ module auto_chess::chess {
         print(&utf8(b"start match chess"));
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
-        // match an opponent config
+        // match an enemy config
         let pool_tag = get_pool_tag(chess.win, chess.lose, chess.even);
         let lineup = lineup::select_random_lineup(&pool_tag, lineup_global, ctx);
 
@@ -105,24 +112,62 @@ module auto_chess::chess {
         print(&utf8(b"match finish"));
     }
 
-    public fun fight(chess: &mut Chess, lineup: &LineUp) {
-        let (all_attacks, all_defense) = lineup::get_fight_info(lineup);
-        let (my_attacks, my_defense) = lineup::get_fight_info(&chess.lineup);
-        if (all_attacks > my_defense) {
-            let lose_life = (all_attacks - my_defense);
-            chess.life = chess.life - lose_life;
-            print(&utf8(b"lose life"));
-            print(&lose_life);
-            print(&utf8(b"left life"));
-            print(&chess.life);
+    public fun fight(chess: &mut Chess, enemy_lineup: &LineUp):bool {
+        print(&utf8(b"enemy lineup"));
+        print(enemy_lineup);
+        let my_lineup = &chess.lineup;
+        let my_roles = *lineup::get_roles(my_lineup);
+        let my_num = vector::length(&my_roles);
+        let enemy_roles = *lineup::get_roles(enemy_lineup);
+        let enemy_num = vector::length(&enemy_roles);
+        if (my_num == 0) {
+            return false
         };
-        if (my_attacks > all_defense) {
-            print(&utf8(b"I win"));
-        } else if (my_attacks == all_defense) {
-            print(&utf8(b"even fight"));
-        } else {
-            print(&utf8(b"I lose"));
+        let my_first_role = role::empty();
+        let enemy_first_role = role::empty();
+        while (true) {
+            if (vector::length(&my_roles) == 0 && role::get_defense(&my_first_role) == 0) {
+                print(&utf8(b"I lose"));
+                return false
+            };
+            if (vector::length(&enemy_roles) == 0 && role::get_defense(&enemy_first_role) == 0) {
+                print(&utf8(b"I win, my left lineup:"));
+                print(&my_first_role);
+                print(&my_roles);
+                return true
+            };
+            if (role::get_defense(&my_first_role) == 0) {
+                my_first_role = vector::pop_back(&mut my_roles);
+            };
+            if (role::get_defense(&enemy_first_role) == 0) {
+                enemy_first_role = vector::pop_back(&mut enemy_roles);
+            };
+            combat(&mut my_first_role, &mut enemy_first_role);
         };
+        false
+    }
+
+    fun combat(role1:&mut role::Role, role2:&mut role::Role) {
+        let defense1 = 1;
+        let defense2 = 1;
+        let attack1 = role::get_attack(role1);
+        let attack2 = role::get_attack(role2);
+        while (defense1 != 0 && defense2 != 0) {
+            defense1 = role::get_defense(role1);
+            defense2 = role::get_defense(role2);
+            if (defense1 < attack2) {
+                role::set_defense(role1, 0);
+                break;
+            } else {
+                role::set_defense(role1, defense1 - attack2);
+            };
+            if (defense2 < attack1) {
+                role::set_defense(role2, 0);
+                break;
+            } else {
+                role::set_defense(role2, defense2 - attack1);
+            }
+        }
     }
 
     public fun get_total_chesses(global: &Global) : u64 {

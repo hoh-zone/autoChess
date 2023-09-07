@@ -57,6 +57,16 @@ module auto_chess::role {
         vec_map::insert(&mut global.charactors, utf8(b"assassin3"), Role {name:utf8(b"assassin3"), attack:9, defense:30, level:1, price:1});
     }
 
+    public fun empty() : Role {
+        Role {
+            name:utf8(b"none"),
+            attack: 0,
+            defense: 0,
+            level: 0,
+            price: 0,
+        }
+    }
+
     public(friend) fun create_role(global: &Global, ctx: &mut TxContext) : Role {
         let seed:u8 = 100;
         let index = utils::get_random_num(0, vec_map::size(&global.charactors) - 1, seed, ctx);
@@ -97,6 +107,10 @@ module auto_chess::role {
         }
     }
 
+    public fun get_role_by_name(global:&Global, name:String) : Role {
+        *vec_map::get(&global.charactors, &name)
+    }
+
     public fun get_attack(role:&Role) : u64 {
         role.attack
     }
@@ -107,5 +121,9 @@ module auto_chess::role {
 
     public fun get_level(role:&Role) : u8 {
         role.level
+    }
+
+    public fun set_defense(role:&mut Role, defense:u64) {
+        role.defense = defense;
     }
 }
