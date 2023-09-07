@@ -10,16 +10,16 @@ module auto_chess::lineup {
         roles: vector<Role>
     }
 
-    fun init_random_roles(ctx: &mut TxContext): vector<Role> {
+    fun init_random_roles(roleGlobal: &role::Global, ctx: &mut TxContext): vector<Role> {
         let vec = vector::empty<Role>();
-        vector::push_back(&mut vec, role::create_role(ctx));
-        vector::push_back(&mut vec, role::create_role(ctx));
-        vector::push_back(&mut vec, role::create_role(ctx));
+        vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
+        vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
+        vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
         vec
     }
 
-    public fun create_lineup(ctx: &mut TxContext) : LineUp {
-        let virtual_roles = init_random_roles(ctx);
+    public fun create_lineup(roleGlobal: &role::Global, ctx: &mut TxContext) : LineUp {
+        let virtual_roles = init_random_roles(roleGlobal, ctx);
         LineUp {
             creator: tx_context::sender(ctx),
             role_num: vector::length(&virtual_roles),

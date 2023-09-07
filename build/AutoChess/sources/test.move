@@ -11,12 +11,9 @@ module auto_chess::test {
     use sui::tx_context::{TxContext};
     use sui::object::{Self};
     use auto_chess::chess;
+    use auto_chess::role;
 
     fun scenario(): Scenario { begin(@account) }
-
-    fun init_module(ctx: &mut TxContext) {
-        chess::init_for_test(ctx);
-    }
 
     #[test]
     fun test_play_chess() {
@@ -26,11 +23,24 @@ module auto_chess::test {
 
         next_tx(test, admin);
         {
-            init_module(ctx(test));
+            // init modules
+            let ctx = ctx(test);
+            role::init_for_test(ctx(test));
+     
+            next_epoch(test, admin);
+            let roleGlobal = take_shared<role::Global>(test);
+            role::init_charactos(&mut roleGlobal);
+            return_shared(roleGlobal);
+            next_epoch(test, admin);
+            let roleGlobal = take_shared<role::Global>(test);
+            chess::init_for_test(&roleGlobal, ctx(test));
+            return_shared(roleGlobal);
+
             next_epoch(test, admin);
 
             let chessGlobal = take_shared<chess::Global>(test);
-            chess::mint_chess(&mut chessGlobal, ctx(test));
+            let roleGlobal = take_shared<role::Global>(test);
+            chess::mint_chess(&roleGlobal, &mut chessGlobal, ctx(test));
             print(&utf8(b"total_chesses:"));
             print(&chess::get_total_chesses(&chessGlobal));
             next_epoch(test, admin);
@@ -41,6 +51,7 @@ module auto_chess::test {
             print(&chess::get_total_matches(&chessGlobal));
             return_to_sender(test, chess_nft);
             return_shared(chessGlobal);
+            return_shared(roleGlobal);
         };
         end(scenario);
     }

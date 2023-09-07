@@ -8,6 +8,7 @@ module auto_chess::chess {
     use std::vector::{Self};
     use auto_chess::lineup::{Self, LineUp};
     use std::debug::print;
+    use auto_chess::role::{Self};
 
     const INIT_LIFE:u64 = 100;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
@@ -29,31 +30,30 @@ module auto_chess::chess {
         creator: address
     }
 
-    fun init_virtual_configs(ctx: &mut TxContext): Table<String, vector<LineUp>> {
+    fun init_virtual_configs(role_global: &role::Global, ctx: &mut TxContext): Table<String, vector<LineUp>> {
         let configs = table::new<String, vector<LineUp>>(ctx);
         if (!table::contains(&configs, utf8(b"0-0"))) {
             let vec = vector::empty<LineUp>();
-            vector::push_back(&mut vec, lineup::create_lineup(ctx));
+            vector::push_back(&mut vec, lineup::create_lineup(role_global, ctx));
             table::add(&mut configs, utf8(b"0-0"), vec);
         };
         configs
     }
 
     fun init(ctx: &mut TxContext) {
-        let virtual_configs = init_virtual_configs(ctx);
         let global = Global {
             id: object::new(ctx),
             total_chesses: 0,
             total_match: 0,
-            configs:virtual_configs
+            configs: table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
 
     
     #[test_only]
-    public fun init_for_test(ctx: &mut TxContext) {
-        let virtual_configs = init_virtual_configs(ctx);
+    public fun init_for_test(role_global:&role::Global, ctx: &mut TxContext) {
+        let virtual_configs = init_virtual_configs(role_global, ctx);
         let global = Global {
             id: object::new(ctx),
             total_chesses: 0,
@@ -63,12 +63,12 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
-    public entry fun mint_chess(global: &mut Global, ctx: &mut TxContext) {
+    public entry fun mint_chess(role_global: &role::Global, global: &mut Global, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
-            lineup: lineup::create_lineup(ctx),
+            lineup: lineup::create_lineup(role_global, ctx),
             life: INIT_LIFE,
             won: 0,
             lose: 0,

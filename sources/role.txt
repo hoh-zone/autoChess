@@ -1,0 +1,19 @@
+// 战士，均衡
+warrior1, 4, 25
+warrior2, 6, 30
+warrior3, 8, 40
+
+// 法师，高攻低防
+wizard1, 7, 15
+wizard2, 10, 20
+wizard3, 14, 25
+
+// 牧师，低攻吸血,每次吸50%
+priest1, 2, 30
+priest2, 4, 45
+priest3, 6, 60
+
+// 刺客，高攻, 50%概率闪避
+assassin1, 5, 18
+assassin2, 7, 25
+assassin3, 9, 30
