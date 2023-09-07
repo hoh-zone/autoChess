@@ -14,9 +14,9 @@
 排列组合：  
 ![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/30facc7d-0da6-45af-b2ef-0320c3d6166a)  
 阵容人数：  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/604410a7-bd26-4801-8dff-f6be14e2b689)
-二三星卡抽取概率：  （优先计算三星卡，然后二星，否则一星）
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/64260758-8394-4c75-9cb8-0388c95eea25)
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/604410a7-bd26-4801-8dff-f6be14e2b689)  
+二三星卡抽取概率：  （优先计算三星卡，然后二星，否则一星）  
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/64260758-8394-4c75-9cb8-0388c95eea25)  
 
 
 战斗力会影响阵容的随机卡牌概率  
