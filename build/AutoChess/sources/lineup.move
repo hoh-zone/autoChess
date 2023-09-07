@@ -1,13 +1,46 @@
 module auto_chess::lineup {
     use sui::tx_context::{Self, TxContext};
     use std::vector::{Self};
-
+    use sui::table::{Self, Table};
+    use sui::transfer;
     use auto_chess::role::{Role, Self};
+    use sui::object::{Self, UID};
+    use std::string::{utf8, String};
+
+    struct Global has key {
+        id: UID,
+        cards_pools: Table<String, LineUp>
+    }
     
     struct LineUp has store, copy, drop {
         creator: address,
         role_num: u64,
         roles: vector<Role>
+    }
+
+    fun init(ctx: &mut TxContext) {
+        let global = Global {
+            id: object::new(ctx),
+            cards_pools: table::new<String, LineUp>(ctx)
+        };
+        transfer::share_object(global);
+    }
+
+    #[test_only]
+    public fun init_for_test(ctx: &mut TxContext) {
+        let global = Global {
+            id: object::new(ctx),
+            cards_pools : table::new<String, LineUp>(ctx)
+        };
+        transfer::share_object(global);
+    }
+
+    public fun empty(ctx: &mut TxContext) : LineUp {
+        LineUp {
+            creator: tx_context::sender(ctx),
+            role_num: 0,
+            roles: vector::empty<Role>()
+        }
     }
 
     fun init_random_roles(roleGlobal: &role::Global, ctx: &mut TxContext): vector<Role> {
@@ -16,6 +49,23 @@ module auto_chess::lineup {
         vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
         vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
         vec
+    }
+
+    public fun get_cards_pool(cards_pool_tag:&String, global:&Global, ctx: &mut TxContext) : LineUp {
+        if (table::contains(&global.cards_pools, *cards_pool_tag)) {
+            let lineup = table::borrow(&global.cards_pools, *cards_pool_tag);
+            *lineup
+        } else {
+            // todo: how to choose a proper tag?
+            let default_cards_pool_tag = utf8(b"0-0-0");
+            let lineup = table::borrow(&global.cards_pools, default_cards_pool_tag);
+            *lineup
+        }
+    }
+
+    public fun init_cards_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
+        let lineup = create_lineup(roleGlobal, ctx);
+        table::add(&mut global.cards_pools, utf8(b"0-0-0"), lineup);
     }
 
     public fun create_lineup(roleGlobal: &role::Global, ctx: &mut TxContext) : LineUp {

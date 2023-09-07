@@ -26,6 +26,7 @@ module auto_chess::chess {
         id:UID,
         name:String,
         lineup: LineUp,
+        cards_pool: LineUp,
         gold: u64,
         life: u64,
         win: u8,
@@ -78,13 +79,14 @@ module auto_chess::chess {
         tag
     }
 
-    public entry fun mint_chess(role_global: &role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
+    public entry fun mint_chess(lineup_global: &lineup::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
             name:name,
-            lineup: lineup::create_lineup(role_global, ctx),
+            lineup: lineup::empty(ctx),
+            cards_pool: lineup::get_cards_pool(&get_pool_tag(0,0,0), lineup_global, ctx),
             gold: 100,
             life: INIT_LIFE,
             win: 0,
@@ -106,6 +108,14 @@ module auto_chess::chess {
         let lineup = vector::borrow(vec, index);
         print(lineup);
         lineup
+    }
+
+    public fun get_lineup(chess:&Chess): &LineUp {
+        &chess.lineup
+    }
+
+    public fun get_cards_pool(chess:&Chess): &LineUp {
+        &chess.cards_pool
     }
 
     public fun match(global: &mut Global, chess:&mut Chess, ctx: &mut TxContext) {

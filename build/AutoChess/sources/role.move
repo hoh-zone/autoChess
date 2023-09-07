@@ -20,7 +20,9 @@ module auto_chess::role {
     struct Role has store, copy, drop {
         name:String,
         attack: u64,
-        defense: u64
+        defense: u64,
+        level: u8,
+        price: u8,
     }
 
     fun init(ctx: &mut TxContext) {
@@ -41,18 +43,18 @@ module auto_chess::role {
     }
 
     public fun init_charactos(global: &mut Global) {
-        vec_map::insert(&mut global.charactors, utf8(b"warrior1"), Role {name:utf8(b"warrior1"), attack:4, defense:25});
-        vec_map::insert(&mut global.charactors, utf8(b"warrior2"), Role {name:utf8(b"warrior2"), attack:6, defense:30});
-        vec_map::insert(&mut global.charactors, utf8(b"warrior3"), Role {name:utf8(b"warrior3"), attack:8, defense:40});
-        vec_map::insert(&mut global.charactors, utf8(b"wizard1"), Role {name:utf8(b"wizard1"), attack:7, defense:15});
-        vec_map::insert(&mut global.charactors, utf8(b"wizard2"), Role {name:utf8(b"wizard2"), attack:10, defense:20});
-        vec_map::insert(&mut global.charactors, utf8(b"wizard3"), Role {name:utf8(b"wizard3"), attack:14, defense:25});
-        vec_map::insert(&mut global.charactors, utf8(b"priest1"), Role {name:utf8(b"priest1"), attack:2, defense:30});
-        vec_map::insert(&mut global.charactors, utf8(b"priest2"), Role {name:utf8(b"priest2"), attack:4, defense:45});
-        vec_map::insert(&mut global.charactors, utf8(b"priest3"), Role {name:utf8(b"priest3"), attack:6, defense:60});
-        vec_map::insert(&mut global.charactors, utf8(b"assassin1"), Role {name:utf8(b"assassin1"), attack:5, defense:18});
-        vec_map::insert(&mut global.charactors, utf8(b"assassin2"), Role {name:utf8(b"assassin2"), attack:7, defense:25});
-        vec_map::insert(&mut global.charactors, utf8(b"assassin3"), Role {name:utf8(b"assassin3"), attack:9, defense:30});
+        vec_map::insert(&mut global.charactors, utf8(b"warrior1"), Role {name:utf8(b"warrior1"), attack:4, defense:25, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"warrior2"), Role {name:utf8(b"warrior2"), attack:6, defense:30, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"warrior3"), Role {name:utf8(b"warrior3"), attack:8, defense:40, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard1"), Role {name:utf8(b"wizard1"), attack:7, defense:15, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard2"), Role {name:utf8(b"wizard2"), attack:10, defense:20, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard3"), Role {name:utf8(b"wizard3"), attack:14, defense:25, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"priest1"), Role {name:utf8(b"priest1"), attack:2, defense:30, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"priest2"), Role {name:utf8(b"priest2"), attack:4, defense:45, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"priest3"), Role {name:utf8(b"priest3"), attack:6, defense:60, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"assassin1"), Role {name:utf8(b"assassin1"), attack:5, defense:18, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"assassin2"), Role {name:utf8(b"assassin2"), attack:7, defense:25, level:1, price:1});
+        vec_map::insert(&mut global.charactors, utf8(b"assassin3"), Role {name:utf8(b"assassin3"), attack:9, defense:30, level:1, price:1});
     }
 
     public(friend) fun create_role(global: &Global, ctx: &mut TxContext) : Role {
@@ -68,5 +70,9 @@ module auto_chess::role {
 
     public fun get_defense(role:&Role) : u64 {
         role.defense
+    }
+
+    public fun get_level(role:&Role) : u8 {
+        role.level
     }
 }
