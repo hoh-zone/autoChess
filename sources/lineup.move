@@ -11,7 +11,7 @@ module auto_chess::lineup {
 
     struct Global has key {
         id: UID,
-        cards_pools: Table<String, LineUp>
+        cards_pools: Table<String, vector<LineUp>>
     }
     
     struct LineUp has store, copy, drop {
@@ -23,7 +23,7 @@ module auto_chess::lineup {
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            cards_pools: table::new<String, LineUp>(ctx)
+            cards_pools: table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -32,7 +32,7 @@ module auto_chess::lineup {
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            cards_pools : table::new<String, LineUp>(ctx)
+            cards_pools : table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -53,25 +53,25 @@ module auto_chess::lineup {
         vec
     }
 
-    public fun get_cards_pool(cards_pool_tag:&String, global:&Global, ctx: &mut TxContext) : LineUp {
+    public fun get_cards_pool(cards_pool_tag:&String, global:&Global, ctx: &mut TxContext) : vector<LineUp> {
         if (table::contains(&global.cards_pools, *cards_pool_tag)) {
             let lineup = table::borrow(&global.cards_pools, *cards_pool_tag);
             *lineup
         } else {
             // todo: how to choose a proper tag?
-            let default_cards_pool_tag = utf8(b"0-0-0");
+            let default_cards_pool_tag = utf8(b"0-0");
             let lineup = table::borrow(&global.cards_pools, default_cards_pool_tag);
             *lineup
         }
     }
 
     public fun init_lineup_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
-        let lineup = create_lineup(roleGlobal, ctx);
-        table::add(&mut global.cards_pools, utf8(b"0-0-0"), lineup);
+        // let lineup = create_lineup(roleGlobal, ctx);
+        // table::add(&mut global.cards_pools, utf8(b"0-0-0"), lineup);
         let win = 0;
         let lose = 0;
 
-        table::add(&mut global.cards_pools, utf8(b"0-0"), lineup);
+        // table::add(&mut global.cards_pools, utf8(b"0-0"), lineup);
         while (win < 10) {
             while (true) {
                 // todo: add win lose linup here
@@ -79,11 +79,14 @@ module auto_chess::lineup {
                 let seed:u8 = 1;
                 let tag = utils::get_pool_tag(win, lose);
                 let power = utils::get_lineup_power_by_tag(win, lose);
+                let vec = vector::empty<LineUp>();
                 while (duplicate_num > 0) {
                     let lineup = generate_lineup_by_power(roleGlobal, power, seed, ctx);
-                    table::add(&mut global.cards_pools, tag, lineup);
+                    vector::push_back(&mut vec, lineup);
                     duplicate_num = duplicate_num - 1;
                 };
+                assert!(!table::contains(&global.cards_pools, tag), 0x01);
+                table::add(&mut global.cards_pools, tag, vec);
                 lose = lose + 1;
                 if (lose == 3) {
                     lose = 0;
