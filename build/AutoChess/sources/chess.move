@@ -3,9 +3,7 @@ module auto_chess::chess {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self, public_transfer};
-    use sui::table::{Self, Table};
     use std::string::{utf8, String, Self};
-    use std::vector::{Self};
     use auto_chess::lineup::{Self, LineUp};
     use std::debug::print;
     use auto_chess::role;
@@ -18,8 +16,6 @@ module auto_chess::chess {
         id: UID,
         total_chesses: u64,
         total_match:u64,
-        // "3-1" -> random list 
-        configs: table::Table<String, vector<LineUp>>
     }
 
     struct Chess has key, store {
@@ -35,35 +31,22 @@ module auto_chess::chess {
         creator: address
     }
 
-    fun init_virtual_configs(role_global: &role::Global, ctx: &mut TxContext): Table<String, vector<LineUp>> {
-        let configs = table::new<String, vector<LineUp>>(ctx);
-        if (!table::contains(&configs, utf8(b"0-0-0"))) {
-            let vec = vector::empty<LineUp>();
-            vector::push_back(&mut vec, lineup::create_lineup(role_global, ctx));
-            table::add(&mut configs, utf8(b"0-0-0"), vec);
-        };
-        configs
-    }
-
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
             total_chesses: 0,
-            total_match: 0,
-            configs: table::new<String, vector<LineUp>>(ctx)
+            total_match: 0
         };
         transfer::share_object(global);
     }
 
     
     #[test_only]
-    public fun init_for_test(role_global:&role::Global, ctx: &mut TxContext) {
-        let virtual_configs = init_virtual_configs(role_global, ctx);
+    public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
             total_chesses: 0,
             total_match: 0,
-            configs:virtual_configs
         };
         transfer::share_object(global);
     }
@@ -79,14 +62,14 @@ module auto_chess::chess {
         tag
     }
 
-    public entry fun mint_chess(lineup_global: &lineup::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
+    public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            cards_pool: lineup::get_cards_pool(&get_pool_tag(0,0,0), lineup_global, ctx),
+            cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
             gold: 100,
             life: INIT_LIFE,
             win: 0,
@@ -98,18 +81,6 @@ module auto_chess::chess {
         public_transfer(game, sender);
     }
 
-    fun select_lineup(pool_tag:String, configs: &Table<String, vector<LineUp>>, ctx: &mut TxContext): &LineUp {
-        let content = utf8(b"randomly choose a component in pool of ");
-        string::append(&mut content, pool_tag);
-        print(&content);
-        let seed = 10;
-        let vec = table::borrow(configs, pool_tag);
-        let index = utils::get_random_num(0, vector::length(vec) - 1, seed, ctx);
-        let lineup = vector::borrow(vec, index);
-        print(lineup);
-        lineup
-    }
-
     public fun get_lineup(chess:&Chess): &LineUp {
         &chess.lineup
     }
@@ -118,16 +89,16 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    public fun match(global: &mut Global, chess:&mut Chess, ctx: &mut TxContext) {
+    public fun match(global: &mut Global, lineup_global:&lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
         print(&utf8(b"start match chess"));
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
         // match an opponent config
         let pool_tag = get_pool_tag(chess.win, chess.lose, chess.even);
-        let lineup = select_lineup(pool_tag, &global.configs, ctx);
+        let lineup = lineup::select_random_lineup(&pool_tag, lineup_global, ctx);
 
         // fight
-        fight(chess, lineup);
+        fight(chess, &lineup);
 
         // record
         global.total_match = global.total_match + 1;

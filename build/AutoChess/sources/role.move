@@ -1,5 +1,5 @@
 module auto_chess::role {
-    use std::string::{Self, utf8, String};
+    use std::string::{utf8, String};
     use sui::tx_context::{Self, TxContext};
     use std::debug::print;
     use sui::object::{UID, Self};
@@ -77,11 +77,20 @@ module auto_chess::role {
         }
     }
 
-    public(friend) fun create_random_role(global: &Global, seed:u8, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
+    public(friend) fun create_random_role_for_lineup(global: &Global, seed:u8, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
         let random = utils::get_random_num(0, 1000, seed, ctx);
         if (random < p3) {
             random_select_role_by_level(global, 3, ctx)
         } else if (random < p2) {
+            random_select_role_by_level(global, 2, ctx)
+        } else {
+            random_select_role_by_level(global, 1, ctx)
+        }
+    }
+
+    public(friend) fun create_random_role_for_cards(global: &Global, seed:u8, p2:u64, ctx: &mut TxContext) : Role {
+        let random = utils::get_random_num(0, 1000, seed, ctx);
+        if (random < p2) {
             random_select_role_by_level(global, 2, ctx)
         } else {
             random_select_role_by_level(global, 1, ctx)

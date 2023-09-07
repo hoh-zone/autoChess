@@ -6,14 +6,15 @@ module auto_chess::lineup {
     use auto_chess::role::{Role, Self};
     use sui::object::{Self, UID};
     use std::string::{utf8, String};
-    use std::debug::print;
     use auto_chess::utils;
+    use std::debug::print;
 
     struct Global has key {
         id: UID,
-        cards_pools: Table<String, LineUp>
+        // used for fight
+        lineup_pools: Table<String, vector<LineUp>>,
     }
-    
+
     struct LineUp has store, copy, drop {
         creator: address,
         role_num: u64,
@@ -23,7 +24,7 @@ module auto_chess::lineup {
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            cards_pools: table::new<String, LineUp>(ctx)
+            lineup_pools: table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -32,7 +33,7 @@ module auto_chess::lineup {
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            cards_pools : table::new<String, LineUp>(ctx)
+            lineup_pools : table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -53,37 +54,58 @@ module auto_chess::lineup {
         vec
     }
 
-    public fun get_cards_pool(cards_pool_tag:&String, global:&Global, ctx: &mut TxContext) : LineUp {
-        if (table::contains(&global.cards_pools, *cards_pool_tag)) {
-            let lineup = table::borrow(&global.cards_pools, *cards_pool_tag);
-            *lineup
+    public fun generate_random_cards(role_global:&role::Global, power:u64, ctx:&mut TxContext) : LineUp {
+        // todo: max 20 cards?
+        let max_cards = 20;
+        let vec = vector::empty<Role>();
+        let p2 = utils::get_level2_prop_by_lineup_power(power);
+        let seed = 20;
+        while (max_cards != 0) {
+            let role = role::create_random_role_for_cards(role_global, seed, p2, ctx);
+            vector::push_back(&mut vec, role);
+            max_cards = max_cards - 1;
+        };
+        LineUp {
+            creator: tx_context::sender(ctx),
+            role_num: vector::length(&vec),
+            roles: vec
+        }
+    }
+
+    public fun select_random_lineup(lineup_pool_tag:&String, global:&Global, ctx: &mut TxContext) : LineUp {
+        if (table::contains(&global.lineup_pools, *lineup_pool_tag)) {
+            let lineup_vec = table::borrow(&global.lineup_pools, *lineup_pool_tag);
+            let vec = *lineup_vec;
+            // todo:: index
+            *vector::borrow(&vec, 0)
         } else {
             // todo: how to choose a proper tag?
-            let default_cards_pool_tag = utf8(b"0-0-0");
-            let lineup = table::borrow(&global.cards_pools, default_cards_pool_tag);
-            *lineup
+            let default_lineup_pool_tag = utf8(b"0-0");
+            let lineup_vec = table::borrow(&global.lineup_pools, default_lineup_pool_tag);
+            let vec = *lineup_vec;
+            *vector::borrow(&vec, 0)
         }
     }
 
     public fun init_lineup_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
-        let lineup = create_lineup(roleGlobal, ctx);
-        table::add(&mut global.cards_pools, utf8(b"0-0-0"), lineup);
+        // todo:too much calculation
         let win = 0;
         let lose = 0;
-
-        table::add(&mut global.cards_pools, utf8(b"0-0"), lineup);
-        while (win < 10) {
+        while (win < 9) {
             while (true) {
                 // todo: add win lose linup here
-                let duplicate_num = 3;
+                let duplicate_num = 2;
                 let seed:u8 = 1;
                 let tag = utils::get_pool_tag(win, lose);
                 let power = utils::get_lineup_power_by_tag(win, lose);
+                let vec = vector::empty<LineUp>();
                 while (duplicate_num > 0) {
                     let lineup = generate_lineup_by_power(roleGlobal, power, seed, ctx);
-                    table::add(&mut global.cards_pools, tag, lineup);
+                    vector::push_back(&mut vec, lineup);
                     duplicate_num = duplicate_num - 1;
                 };
+                assert!(!table::contains(&global.lineup_pools, tag), 0x01);
+                table::add(&mut global.lineup_pools, tag, vec);
                 lose = lose + 1;
                 if (lose == 3) {
                     lose = 0;
@@ -100,7 +122,7 @@ module auto_chess::lineup {
         let p2 = utils::get_level2_prop_by_lineup_power(power);
         let p3 = utils::get_level3_prop_by_lineup_power(power);
         while (max_role_num > 0) {
-            let role = role::create_random_role(roleGlobal, seed, p2, p3, ctx);
+            let role = role::create_random_role_for_lineup(roleGlobal, seed, p2, p3, ctx);
             vector::push_back(&mut roles, role);
             max_role_num = max_role_num - 1;
         };
