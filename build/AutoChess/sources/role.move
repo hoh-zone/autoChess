@@ -64,6 +64,30 @@ module auto_chess::role {
         *role
     }
 
+    fun random_select_role_by_level(global: &Global, level:u64, ctx:&mut TxContext):Role {
+        if (level == 1) {
+            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 0);
+            *role
+        } else if (level ==2) {
+           let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 0);
+            *role
+        } else {
+            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 0);
+            *role
+        }
+    }
+
+    public(friend) fun create_random_role(global: &Global, seed:u8, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
+        let random = utils::get_random_num(0, 1000, seed, ctx);
+        if (random < p3) {
+            random_select_role_by_level(global, 3, ctx)
+        } else if (random < p2) {
+            random_select_role_by_level(global, 2, ctx)
+        } else {
+            random_select_role_by_level(global, 1, ctx)
+        }
+    }
+
     public fun get_attack(role:&Role) : u64 {
         role.attack
     }

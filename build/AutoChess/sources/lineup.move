@@ -6,6 +6,8 @@ module auto_chess::lineup {
     use auto_chess::role::{Role, Self};
     use sui::object::{Self, UID};
     use std::string::{utf8, String};
+    use std::debug::print;
+    use auto_chess::utils;
 
     struct Global has key {
         id: UID,
@@ -63,9 +65,50 @@ module auto_chess::lineup {
         }
     }
 
-    public fun init_cards_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
+    public fun init_lineup_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
         let lineup = create_lineup(roleGlobal, ctx);
         table::add(&mut global.cards_pools, utf8(b"0-0-0"), lineup);
+        let win = 0;
+        let lose = 0;
+
+        table::add(&mut global.cards_pools, utf8(b"0-0"), lineup);
+        while (win < 10) {
+            while (true) {
+                // todo: add win lose linup here
+                let duplicate_num = 3;
+                let seed:u8 = 1;
+                let tag = utils::get_pool_tag(win, lose);
+                let power = utils::get_lineup_power_by_tag(win, lose);
+                while (duplicate_num > 0) {
+                    let lineup = generate_lineup_by_power(roleGlobal, power, seed, ctx);
+                    table::add(&mut global.cards_pools, tag, lineup);
+                    duplicate_num = duplicate_num - 1;
+                };
+                lose = lose + 1;
+                if (lose == 3) {
+                    lose = 0;
+                    break
+                };
+            };
+            win = win + 1;
+        };
+    }
+
+    fun generate_lineup_by_power(roleGlobal:&role::Global, power:u64, seed:u8, ctx: &mut TxContext) : LineUp {
+        let max_role_num = utils::get_role_num_by_lineup_power(power);
+        let roles = vector::empty<Role>();
+        let p2 = utils::get_level2_prop_by_lineup_power(power);
+        let p3 = utils::get_level3_prop_by_lineup_power(power);
+        while (max_role_num > 0) {
+            let role = role::create_random_role(roleGlobal, seed, p2, p3, ctx);
+            vector::push_back(&mut roles, role);
+            max_role_num = max_role_num - 1;
+        };
+        LineUp {
+            creator:tx_context::sender(ctx),
+            role_num:max_role_num,
+            roles: roles
+        }
     }
 
     public fun create_lineup(roleGlobal: &role::Global, ctx: &mut TxContext) : LineUp {

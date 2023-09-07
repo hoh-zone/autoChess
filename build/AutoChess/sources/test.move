@@ -34,7 +34,7 @@ module auto_chess::test {
 
             let roleGlobal = take_shared<role::Global>(test);
             let lineupGlobal = take_shared<lineup::Global>(test);
-            lineup::init_cards_pools(&mut lineupGlobal, &roleGlobal, ctx(test));
+            lineup::init_lineup_pools(&mut lineupGlobal, &roleGlobal, ctx(test));
             return_shared(roleGlobal);
             return_shared(lineupGlobal);
 

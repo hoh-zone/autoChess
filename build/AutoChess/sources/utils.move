@@ -67,8 +67,8 @@ module auto_chess::utils {
         }
     }
 
-    public fun get_lineup_power_by_tag(win:u64, lose:u64): u64{
-        2 + win * 2 - lose
+    public fun get_lineup_power_by_tag(win:u8, lose:u8): u64 {
+        ((2 + win * 2 - lose) as u64)
     }
 
     // 0-1000 represents prop
@@ -83,5 +83,14 @@ module auto_chess::utils {
     // 0-1000 represents prop
     public fun get_level2_prop_by_lineup_power(power:u64): u64 {
         40 * power
+    }
+
+    public fun get_pool_tag(win:u8, lose:u8) : String {
+        // 3-2
+        let tag = utf8(b"");
+        string::append(&mut tag, u8_to_string(win));
+        string::append(&mut tag, string::utf8(b"-"));
+        string::append(&mut tag, u8_to_string(lose));
+        tag
     }
 }
