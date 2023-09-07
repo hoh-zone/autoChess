@@ -24,7 +24,9 @@ module auto_chess::chess {
 
     struct Chess has key, store {
         id:UID,
+        name:String,
         lineup: LineUp,
+        gold: u64,
         life: u64,
         win: u8,
         lose: u8,
@@ -76,12 +78,14 @@ module auto_chess::chess {
         tag
     }
 
-    public entry fun mint_chess(role_global: &role::Global, global: &mut Global, ctx: &mut TxContext) {
+    public entry fun mint_chess(role_global: &role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
+            name:name,
             lineup: lineup::create_lineup(role_global, ctx),
+            gold: 100,
             life: INIT_LIFE,
             win: 0,
             lose: 0,
@@ -98,7 +102,7 @@ module auto_chess::chess {
         print(&content);
         let seed = 10;
         let vec = table::borrow(configs, pool_tag);
-        let index = utils::get_random_num(0, vector::length(vec) - 1, 10, ctx);
+        let index = utils::get_random_num(0, vector::length(vec) - 1, seed, ctx);
         let lineup = vector::borrow(vec, index);
         print(lineup);
         lineup
