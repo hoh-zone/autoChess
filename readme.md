@@ -12,11 +12,19 @@
 限制1：胜场10场后结束游戏  
 限制2：输3场后结束游戏  
 排列组合：  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/30facc7d-0da6-45af-b2ef-0320c3d6166a)  
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/90891e9e-d68d-4674-b99f-5058e0afa4dc)  
+映射战斗力：  
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/0512b642-f28f-4f45-a08d-9e005708d131)
+
 阵容人数：  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/604410a7-bd26-4801-8dff-f6be14e2b689)  
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/a6559499-650a-4a02-8390-e99e13444561)  
+
+
 二三星卡抽取概率：  （优先计算三星卡，然后二星，否则一星）  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/64260758-8394-4c75-9cb8-0388c95eea25)  
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/aea10166-7fb4-4665-8c55-48031cbbe145)  
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/fae6a2a6-a86b-4718-8db1-a42f3661ad24)  
+
+
 
 
 战斗力会影响阵容的随机卡牌概率  
@@ -29,6 +37,8 @@
 ## 卡牌池  
 卡牌池只能出现1,2星卡  
 根据胜负场->战斗力，来调整卡排池出现2星卡的概率，总体来说概率需要比阵容池的概率更低。  
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/3c156d51-afac-459a-9a40-8adb0c8e8b2e)  
+
 
 ## 角色信息  
 等级，攻击力，防御力，攻击频率，攻击范围  
