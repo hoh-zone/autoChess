@@ -1,4 +1,4 @@
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/9fbee722-3356-488c-b594-e834953513b9)# 设计思路  
+# 设计思路  
 
 ## 匹配:  
 每次从global的阵容map中，根据胜败key "3-2-1" 随机抽一个阵容出来打，结束后把自己的阵容插入到阵容map中  
