@@ -67,13 +67,6 @@ module auto_chess::role {
         }
     }
 
-    public(friend) fun create_role(global: &Global, ctx: &mut TxContext) : Role {
-        let seed:u8 = 100;
-        let index = utils::get_random_num(0, vec_map::size(&global.charactors) - 1, seed, ctx);
-        let (name, role) = vec_map::get_entry_by_idx(&global.charactors, index);
-        *role
-    }
-
     fun random_select_role_by_level(global: &Global, level:u64, random: u64, ctx:&mut TxContext):Role {
         let max_roles_per_level = vec_map::size(&global.charactors) / 3;
         let index = random % max_roles_per_level;

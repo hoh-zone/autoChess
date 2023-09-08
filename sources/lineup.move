@@ -5,7 +5,7 @@ module auto_chess::lineup {
     use sui::transfer;
     use auto_chess::role::{Role, Self};
     use sui::object::{Self, UID};
-    use std::string::{utf8, String};
+    use std::string::{Self, utf8, String};
     use auto_chess::utils;
     use std::debug::print;
 
@@ -46,14 +46,6 @@ module auto_chess::lineup {
         }
     }
 
-    fun init_random_roles(roleGlobal: &role::Global, ctx: &mut TxContext): vector<Role> {
-        let vec = vector::empty<Role>();
-        vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
-        vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
-        vector::push_back(&mut vec, role::create_role(roleGlobal, ctx));
-        vec
-    }
-
     public fun generate_random_cards(role_global:&role::Global, power:u64, ctx:&mut TxContext) : LineUp {
         let max_cards = 20;
         let vec = vector::empty<Role>();
@@ -72,19 +64,23 @@ module auto_chess::lineup {
         }
     }
 
-    public fun select_random_lineup(lineup_pool_tag:&String, global:&Global, ctx: &mut TxContext) : LineUp {
-        if (table::contains(&global.lineup_pools, *lineup_pool_tag)) {
-            let lineup_vec = table::borrow(&global.lineup_pools, *lineup_pool_tag);
-            let vec = *lineup_vec;
-            // todo:: index
-            *vector::borrow(&vec, 0)
+    public fun select_random_lineup(win:u8, lose:u8, global:&Global, ctx: &mut TxContext) : LineUp {
+        let seed = 10;
+        let lineup_pool_tag = utils::get_pool_tag(win, lose);
+        let vec;
+        if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
+            let lineup_vec = table::borrow(&global.lineup_pools, lineup_pool_tag);
+            vec = *lineup_vec;
         } else {
-            // todo: how to choose a proper tag?
-            let default_lineup_pool_tag = utf8(b"0-0");
-            let lineup_vec = table::borrow(&global.lineup_pools, default_lineup_pool_tag);
-            let vec = *lineup_vec;
-            *vector::borrow(&vec, 0)
-        }
+            let tag = utils::u8_to_string(win);
+            string::append(&mut tag, utf8(b"-0"));
+            let lineup_vec = table::borrow(&global.lineup_pools, tag);
+            vec = *lineup_vec;
+        };
+        let len = vector::length(&vec);
+        let random = utils::get_random_num(0, len, seed, ctx);
+        let index = random % len;
+        *vector::borrow(&vec, index)
     }
 
     public fun init_lineup_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
@@ -130,15 +126,6 @@ module auto_chess::lineup {
             creator:tx_context::sender(ctx),
             role_num:max_role_num,
             roles: roles
-        }
-    }
-
-    public fun create_lineup(roleGlobal: &role::Global, ctx: &mut TxContext) : LineUp {
-        let virtual_roles = init_random_roles(roleGlobal, ctx);
-        LineUp {
-            creator: tx_context::sender(ctx),
-            role_num: vector::length(&virtual_roles),
-            roles: virtual_roles
         }
     }
 

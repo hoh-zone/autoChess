@@ -64,7 +64,6 @@ module auto_chess::test {
             print(chess::get_lineup(&chess_nft));
 
             next_epoch(test, admin);
-
             chess::match(&mut chessGlobal, &roleGlobal, &lineupGlobal, &mut chess_nft, ctx(test));
             print(&utf8(b"my card pools:"));
             print(chess::get_cards_pool(&chess_nft));

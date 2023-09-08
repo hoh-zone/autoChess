@@ -12,6 +12,7 @@ module auto_chess::chess {
 
     const INIT_LIFE:u64 = 3;
     const INIT_GOLD:u64 = 10;
+    const REFRESH_PRICE:u64 = 3;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
     const ERR_EXCEED_NUM_LIMIT:u64 = 0x02;
 
@@ -27,6 +28,7 @@ module auto_chess::chess {
         lineup: LineUp,
         cards_pool: LineUp,
         gold: u64,
+        refresh_price: u64,
         life: u64,
         win: u8,
         lose: u8,
@@ -54,17 +56,6 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
-    fun get_pool_tag(win:u8, lose:u8, even:u8) : String {
-        // 3-2-2
-        let tag = utf8(b"");
-        string::append(&mut tag, utils::u8_to_string(win));
-        string::append(&mut tag, string::utf8(b"-"));
-        string::append(&mut tag, utils::u8_to_string(lose));
-        string::append(&mut tag, string::utf8(b"-"));
-        string::append(&mut tag, utils::u8_to_string(even));
-        tag
-    }
-
     public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
@@ -74,6 +65,7 @@ module auto_chess::chess {
             lineup: lineup::empty(ctx),
             cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
             gold: INIT_GOLD,
+            refresh_price: REFRESH_PRICE,
             life: INIT_LIFE,
             win: 0,
             lose: 0,
@@ -104,8 +96,7 @@ module auto_chess::chess {
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
-        let pool_tag = get_pool_tag(chess.win, chess.lose, chess.even);
-        let lineup = lineup::select_random_lineup(&pool_tag, lineup_global, ctx);
+        let lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
 
         // fight
         fight(chess, &lineup);
@@ -172,17 +163,17 @@ module auto_chess::chess {
             defense2 = role::get_defense(role2);
             if (defense1 < attack2) {
                 role::set_defense(role1, 0);
-                break;
+                break
             } else {
                 role::set_defense(role1, defense1 - attack2);
             };
             if (defense2 < attack1) {
                 role::set_defense(role2, 0);
-                break;
+                break
             } else {
                 role::set_defense(role2, defense2 - attack1);
-            }
-        }
+            };
+        };
     }
 
     public fun get_total_chesses(global: &Global) : u64 {
