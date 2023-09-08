@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+.animBasic {
+  background-position-x: left;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.orcBarbare {
+  --attack-step: 12;
+  --attack-position: -1368px;
+  --move-step: 5;
+  --move-position: -570px;
+}
+
+.orcArcher {
+  --attack-step: 18;
+  --attack-position: -2664px;
+  --move-step: 6;
+  --move-position: -888px;
+}
+
+.humanKnight {
+  --attack-step: 11;
+  --attack-position: -1056px;
+  --move-step: 8;
+  --move-position: -480px;
+}
+
+.attack {
+  animation: attackAnim 0.8s steps(var(--attack-step)) 1;
+}
+
+@keyframes attackAnim {
+  to { background-position: var(--attack-position); }
+}
+
+.move {
+  animation: moveAnim 0.5s steps(var(--move-step)) infinite;
+}
+
+@keyframes moveAnim {
+  to { background-position: var(--move-position); }
+}
