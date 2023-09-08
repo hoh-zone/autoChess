@@ -91,8 +91,7 @@ module auto_chess::utils {
     }
 
     public fun get_pool_tag(win:u8, lose:u8) : String {
-        let tag = utf8(b"");
-        string::append(&mut tag, u8_to_string(win));
+        let tag = u8_to_string(win);
         string::append(&mut tag, string::utf8(b"-"));
         string::append(&mut tag, u8_to_string(lose));
         tag

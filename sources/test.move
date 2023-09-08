@@ -56,17 +56,29 @@ module auto_chess::test {
             let gold = 3;
             let str_vec = vector::empty<String>();
             // vector::push_back(&mut str_vec, utf8(b"warrior1"));
-            vector::push_back(&mut str_vec, utf8(b"warrior2"));
-            vector::push_back(&mut str_vec, utf8(b"warrior3"));
+            vector::push_back(&mut str_vec, utf8(b"warrior1"));
+            vector::push_back(&mut str_vec, utf8(b"warrior1"));
             print(&utf8(b"operate my chess"));
             chess::operate_my_chess(&roleGlobal, gold, str_vec, &mut chess_nft, ctx(test));
-            print(&utf8(b"my lineup:"));
-            print(chess::get_lineup(&chess_nft));
+            print_my_lineup(&chess_nft);
 
             next_epoch(test, admin);
             chess::match(&mut chessGlobal, &roleGlobal, &lineupGlobal, &mut chess_nft, ctx(test));
-            print(&utf8(b"my card pools:"));
-            print(chess::get_cards_pool(&chess_nft));
+            next_epoch(test, admin);
+
+            // second round
+            let str_vec = vector::empty<String>();
+            // vector::push_back(&mut str_vec, utf8(b"warrior1"));
+            vector::push_back(&mut str_vec, utf8(b"warrior1"));
+            vector::push_back(&mut str_vec, utf8(b"warrior1"));
+            print(&utf8(b"operate my chess"));
+            chess::operate_my_chess(&roleGlobal, 1, str_vec, &mut chess_nft, ctx(test));
+
+            next_epoch(test, admin);
+            chess::match(&mut chessGlobal, &roleGlobal, &lineupGlobal, &mut chess_nft, ctx(test));
+            next_epoch(test, admin);
+
+            print(&chess_nft);
             utils::print2(utf8(b"total_matches:"), utils::u64_to_string(chess::get_total_matches(&chessGlobal)));
             return_to_sender(test, chess_nft);
             return_shared(chessGlobal);
@@ -74,5 +86,15 @@ module auto_chess::test {
             return_shared(lineupGlobal);
         };
         end(scenario);
+    }
+
+    fun print_my_lineup (chess: &chess::Chess) {
+        print(&utf8(b"my card pools:"));
+        print(chess::get_lineup(chess));
+    }
+
+    fun print_my_cards_pool (chess: &chess::Chess) {
+        print(&utf8(b"my card pools:"));
+        print(chess::get_cards_pool(chess));
     }
 }
