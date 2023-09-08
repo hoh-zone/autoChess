@@ -4,6 +4,7 @@ import { Disconnect, Fund, Mint, WalletActions } from "../components";
 import { OrcBarbareCharacter } from "../components/character/orcBarbareCharacter";
 import { OrcArcherCharacter } from "../components/character/orcArcherCharacter";
 import { HumanKnightCharacter } from "../components/character/humanKnightCharacter";
+import MintChess from "../components/MintChess";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
@@ -42,6 +43,7 @@ const Home: NextPage = () => {
               </div>
               <div className="flex flex-col gap-4">
                 First, fund this wallet from the Sui faucet:
+                <MintChess username="sean"/>
                 <Fund />
                 then
                 <Mint />

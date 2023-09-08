@@ -6,7 +6,10 @@ import { CHESS_GLOBAL, ETHOS_EXAMPLE_CONTRACT, PACKAGE_ID, ROLE_GLOBAL } from '.
 import { verifyTransactionBlock } from '@mysten/sui.js/verify';
 import { fromB64 } from '@mysten/sui.js/utils';
 
-const MintChess = (username:string) => {
+type Props = {
+    username:string
+}
+const MintChess = ({username}: Props) => {
     const { wallet } = ethos.useWallet();
 
     const [signSuccess, setSignSuccess] = useState(false);
@@ -15,7 +18,7 @@ const MintChess = (username:string) => {
     const signTransaction = useCallback(async () => {
         const transactionBlock = new TransactionBlock();
         transactionBlock.moveCall({
-        target: `${PACKAGE_ID}::auto_chess::mint_chess`,
+        target: `${PACKAGE_ID}::chess::mint_chess`,
         arguments: [
             transactionBlock.pure(`${ROLE_GLOBAL}`),
             transactionBlock.pure(`${CHESS_GLOBAL}`),
