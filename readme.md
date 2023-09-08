@@ -1,4 +1,7 @@
 # 设计思路  
+## 数据流图  
+![Flow](https://github.com/ISayHelloworld/autoChess/assets/43593163/31784949-6b5d-48bd-950f-92d0c4787575)
+
 
 ## 匹配:  
 每次从global的阵容map中，根据胜败key "3-2-1" 随机抽一个阵容出来打，结束后把自己的阵容插入到阵容map中  
