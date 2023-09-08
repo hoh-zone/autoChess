@@ -6,8 +6,6 @@ export function OrcBarbareCharacter({ colorId }: { colorId: "1" | "2" | "3" }) {
         moveSrc={`./Orc_Barbare_0${colorId}_Move_5x1.png`}
         width="114px"
         height="116px"
-        attackAnim="attack"
-        moveAnim="move"
         className="orcBarbare"
     />
 }
