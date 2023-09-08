@@ -2,9 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { ethos, TransactionBlock} from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '.';
-import { CHESS_GLOBAL, ETHOS_EXAMPLE_CONTRACT, PACKAGE_ID, ROLE_GLOBAL } from '../lib/constants';
-import { verifyTransactionBlock } from '@mysten/sui.js/verify';
-import { fromB64 } from '@mysten/sui.js/utils';
+import { CHESS_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../lib/constants';
 
 type Props = {
     username:string
@@ -28,30 +26,6 @@ const MintChess = ({username}: Props) => {
 
         const response = await wallet?.signAndExecuteTransactionBlock({ transactionBlock });
         console.log("Sign result: ", response)
-        // if (!response) {
-        //     setSignError(true);
-        // } else {
-        //     console.log("Sign result: ", response)
-
-        //     const { transactionBlockBytes, signature } = response;
-
-        //     try {
-        //         // use verifyTransactionBlock() for transaction blocks
-        //         const publicKey = await verifyTransactionBlock(fromB64(transactionBlockBytes), signature);
-        //         console.log("Signing public key: ", publicKey)
-        //         console.log("Signing address: ", publicKey.toSuiAddress());
-        //         console.log("Verified message: ", wallet?.address === publicKey.toSuiAddress())
-        //         console.log("Visit https://github.com/EthosWallet/ethos-example-app/blob/main/components/SignTransaction.tsx#L30 for more details.") 
-
-        //         setSignSuccess(true);
-        //     } catch (e) {
-        //         console.error(e);
-        //         setSignError(true);
-        //     }
-
-        //     setSignSuccess(true);
-        // }
-        
     }, [wallet]);
 
     const reset = useCallback(() => {
