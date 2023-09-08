@@ -65,8 +65,8 @@ module auto_chess::test {
             next_epoch(test, admin);
             chess::match(&mut chessGlobal, &roleGlobal, &lineupGlobal, &mut chess_nft, ctx(test));
             next_epoch(test, admin);
+
             // second round
-            // oprata
             let str_vec = vector::empty<String>();
             // vector::push_back(&mut str_vec, utf8(b"warrior1"));
             vector::push_back(&mut str_vec, utf8(b"warrior1"));
