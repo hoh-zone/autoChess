@@ -13,6 +13,7 @@ module auto_chess::chess {
     const INIT_LIFE:u64 = 3;
     const INIT_GOLD:u64 = 10;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
+    const ERR_EXCEED_NUM_LIMIT:u64 = 0x02;
 
     struct Global has key {
         id: UID,
@@ -85,6 +86,7 @@ module auto_chess::chess {
 
     public entry fun operate_my_chess(role_global:&role::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
+        assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         chess.gold = gold;
         chess.lineup = lineup::parse_lineup_str_vec(role_global, lineup_str_vec, ctx);
     }
@@ -108,11 +110,11 @@ module auto_chess::chess {
         // fight
         fight(chess, &lineup);
 
+        // record
         if (chess.life > 0) {
             refresh_cards_pools(role_global, chess, ctx);
         };
-
-        // record
+        chess.gold = INIT_GOLD;
         global.total_match = global.total_match + 1;
         print(&utf8(b"match finish"));
     }

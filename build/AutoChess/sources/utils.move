@@ -72,7 +72,7 @@ module auto_chess::utils {
     }
 
     // 0-1000 represents prop
-    public fun get_level3_prop_by_lineup_power(power:u64): u64 {
+    public fun get_lineup_level3_prop_by_lineup_power(power:u64): u64 {
         if (power <= 16) {
             0
         } else {
@@ -81,8 +81,13 @@ module auto_chess::utils {
     }
 
     // 0-1000 represents prop
-    public fun get_level2_prop_by_lineup_power(power:u64): u64 {
+    public fun get_lineup_level2_prop_by_lineup_power(power:u64): u64 {
         40 * power
+    }
+
+    // 0-1000 represents prop
+    public fun get_cards_level2_prop_by_lineup_power(power:u64): u64 {
+        25 * power
     }
 
     public fun get_pool_tag(win:u8, lose:u8) : String {
