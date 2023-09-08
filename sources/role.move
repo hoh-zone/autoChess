@@ -74,15 +74,17 @@ module auto_chess::role {
         *role
     }
 
-    fun random_select_role_by_level(global: &Global, level:u64, ctx:&mut TxContext):Role {
+    fun random_select_role_by_level(global: &Global, level:u64, random: u64, ctx:&mut TxContext):Role {
+        let max_roles_per_level = vec_map::size(&global.charactors) / 3;
+        let index = random % max_roles_per_level;
         if (level == 1) {
-            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 0);
+            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 3 * index);
             *role
         } else if (level ==2) {
-           let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 0);
+           let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 1 + 3 * index);
             *role
         } else {
-            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 0);
+            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 2 + 3 * index);
             *role
         }
     }
@@ -90,20 +92,20 @@ module auto_chess::role {
     public(friend) fun create_random_role_for_lineup(global: &Global, seed:u8, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
         let random = utils::get_random_num(0, 1000, seed, ctx);
         if (random < p3) {
-            random_select_role_by_level(global, 3, ctx)
+            random_select_role_by_level(global, 3, random, ctx)
         } else if (random < p2) {
-            random_select_role_by_level(global, 2, ctx)
+            random_select_role_by_level(global, 2, random, ctx)
         } else {
-            random_select_role_by_level(global, 1, ctx)
+            random_select_role_by_level(global, 1, random, ctx)
         }
     }
 
     public(friend) fun create_random_role_for_cards(global: &Global, seed:u8, p2:u64, ctx: &mut TxContext) : Role {
         let random = utils::get_random_num(0, 1000, seed, ctx);
         if (random < p2) {
-            random_select_role_by_level(global, 2, ctx)
+            random_select_role_by_level(global, 2, random, ctx)
         } else {
-            random_select_role_by_level(global, 1, ctx)
+            random_select_role_by_level(global, 1, random, ctx)
         }
     }
 

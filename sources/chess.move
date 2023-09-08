@@ -10,7 +10,8 @@ module auto_chess::chess {
     use auto_chess::role;
     use auto_chess::utils;
 
-    const INIT_LIFE:u64 = 100;
+    const INIT_LIFE:u64 = 3;
+    const INIT_GOLD:u64 = 10;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
 
     struct Global has key {
@@ -71,7 +72,7 @@ module auto_chess::chess {
             name:name,
             lineup: lineup::empty(ctx),
             cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
-            gold: 100,
+            gold: INIT_GOLD,
             life: INIT_LIFE,
             win: 0,
             lose: 0,
@@ -96,7 +97,7 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    public fun match(global: &mut Global, lineup_global:&lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    public fun match(global: &mut Global, role_global:&role::Global, lineup_global:&lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
         print(&utf8(b"start match chess"));
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
@@ -107,9 +108,18 @@ module auto_chess::chess {
         // fight
         fight(chess, &lineup);
 
+        if (chess.life > 0) {
+            refresh_cards_pools(role_global, chess, ctx);
+        };
+
         // record
         global.total_match = global.total_match + 1;
         print(&utf8(b"match finish"));
+    }
+
+    fun refresh_cards_pools(role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
+        let seed = 20;
+        chess.cards_pool = lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(chess.win,chess.lose), ctx);
     }
 
     public fun fight(chess: &mut Chess, enemy_lineup: &LineUp):bool {
@@ -128,9 +138,12 @@ module auto_chess::chess {
         while (true) {
             if (vector::length(&my_roles) == 0 && role::get_defense(&my_first_role) == 0) {
                 print(&utf8(b"I lose"));
+                chess.lose = chess.lose + 1;
+                chess.life = chess.life - 1;
                 return false
             };
             if (vector::length(&enemy_roles) == 0 && role::get_defense(&enemy_first_role) == 0) {
+                chess.win = chess.win + 1;
                 print(&utf8(b"I win, my left lineup:"));
                 print(&my_first_role);
                 print(&my_roles);

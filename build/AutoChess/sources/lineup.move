@@ -55,12 +55,12 @@ module auto_chess::lineup {
     }
 
     public fun generate_random_cards(role_global:&role::Global, power:u64, ctx:&mut TxContext) : LineUp {
-        // todo: max 20 cards?
         let max_cards = 20;
         let vec = vector::empty<Role>();
         let p2 = utils::get_level2_prop_by_lineup_power(power);
         let seed = 20;
         while (max_cards != 0) {
+            seed = seed + 1;
             let role = role::create_random_role_for_cards(role_global, seed, p2, ctx);
             vector::push_back(&mut vec, role);
             max_cards = max_cards - 1;
@@ -116,7 +116,7 @@ module auto_chess::lineup {
         };
     }
 
-    fun generate_lineup_by_power(roleGlobal:&role::Global, power:u64, seed:u8, ctx: &mut TxContext) : LineUp {
+    public fun generate_lineup_by_power(roleGlobal:&role::Global, power:u64, seed:u8, ctx: &mut TxContext) : LineUp {
         let max_role_num = utils::get_role_num_by_lineup_power(power);
         let roles = vector::empty<Role>();
         let p2 = utils::get_level2_prop_by_lineup_power(power);
