@@ -9,10 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^1.0.6",
     "@mysten/bcs": "^0.7.3",
     "@mysten/sui.js": "^0.41.0",
+    "@types/canvas-confetti": "^1.6.1",
+    "canvas-confetti": "^1.6.0",
     "ethos-connect": "^0.0.185",
+    "framer-motion": "^10.16.4",
+    "jotai": "^2.4.2",
     "next": "^13.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

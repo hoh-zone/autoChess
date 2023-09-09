@@ -72,3 +72,11 @@ a {
 @keyframes moveAnim {
   to { background-position: var(--move-position); }
 }
+
+.opponentCharacter {
+  transform: rotateY(180deg);
+}
+
+.slot {
+  transform: rotateX(69deg);
+}

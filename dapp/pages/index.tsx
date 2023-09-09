@@ -1,23 +1,42 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
 import { Disconnect, Fund, Mint, WalletActions } from "../components";
-import { OrcBarbareCharacter } from "../components/character/orcBarbareCharacter";
-import { OrcArcherCharacter } from "../components/character/orcArcherCharacter";
-import { HumanKnightCharacter } from "../components/character/humanKnightCharacter";
 import MintChess from "../components/button/MintChess";
 import OperateAndMatch from "../components/button/OperateAndMatch";
 import QueryAllChesses from "../components/button/QueryAllChesses";
+import { Stack } from "@chakra-ui/react";
+import { Header } from "../components/scene/Header";
+import { MainScene } from "../components/scene/MainScene";
+import { Shop } from "../components/scene/Shop";
+import confetti from "canvas-confetti";
+import { useEffect, useRef } from "react";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
-
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    if(canvasRef.current === null) return;
+    var myConfetti = confetti.create(canvasRef.current, {
+      resize: true,
+      useWorker: true
+    });
+    myConfetti({
+      particleCount: 100,
+      spread: 160
+      // any other options from the global
+      // confetti function
+    });
+  }, [canvasRef]);
   return (
     <>
-      <CharacterRow />
-      <CharacterRow />
-      <CharacterRow />
-      <CharacterRow />
-      <CharacterRow />
+      <canvas ref={canvasRef} className="absolute h-[100vh] w-[100vw] z-50 pointer-events-none" />
+      <Stack className="h-[100vh] w-[100vw] bg-slate-600" gap={0}>
+        <Header />
+        <MainScene />
+        <Shop />
+      </Stack>
+
       <div className="flex justify-between items-start">
 
         <div className="p-12 flex-1">Status: {status}</div>
@@ -79,12 +98,3 @@ const Home: NextPage = () => {
 
 export default Home;
 
-const CharacterRow = () => (<div className="flex place-items-end">
-  <OrcBarbareCharacter colorId="1"/>
-  <OrcArcherCharacter colorId="1"/>
-  <OrcBarbareCharacter colorId="2"/>
-  <OrcBarbareCharacter colorId="3"/>
-  <OrcArcherCharacter colorId="2"/>
-  <OrcArcherCharacter colorId="3"/>
-  <HumanKnightCharacter colorId="Humans"/>
-</div>)
