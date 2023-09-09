@@ -76,11 +76,13 @@ module auto_chess::chess {
         public_transfer(game, sender);
     }
 
-    public entry fun operate_my_chess(role_global:&role::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         chess.gold = gold;
         chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
+
+        match(global, role_global, lineup_global, chess, ctx);
     }
 
     public fun get_lineup(chess:&Chess): &LineUp {
@@ -91,7 +93,7 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    public fun match(global: &mut Global, role_global:&role::Global, lineup_global:&lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    fun match(global: &mut Global, role_global:&role::Global, lineup_global:&lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
         print(&utf8(b"start match chess"));
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
