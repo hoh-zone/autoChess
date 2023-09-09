@@ -4,7 +4,9 @@ import { Disconnect, Fund, Mint, WalletActions } from "../components";
 import { OrcBarbareCharacter } from "../components/character/orcBarbareCharacter";
 import { OrcArcherCharacter } from "../components/character/orcArcherCharacter";
 import { HumanKnightCharacter } from "../components/character/humanKnightCharacter";
-import MintChess from "../components/MintChess";
+import MintChess from "../components/button/MintChess";
+import OperateAndMatch from "../components/button/OperateAndMatch";
+import QueryAllChesses from "../components/button/QueryAllChesses";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
@@ -42,8 +44,14 @@ const Home: NextPage = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-                First, fund this wallet from the Sui faucet:
+                Register Name:
+                <input type="text" defaultValue="sean"/>
                 <MintChess username="sean"/>
+                Query My Chess Nft:
+                <QueryAllChesses />
+                My Operations:
+                <input type="text" defaultValue="['buy1-2', 'd1', 'sell2', 'buy2-1', 'buy3-5', 'swap1-2']"/>
+                <OperateAndMatch username="sean"/>
                 <Fund />
                 then
                 <Mint />

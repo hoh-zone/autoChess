@@ -81,7 +81,6 @@ module auto_chess::chess {
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         chess.gold = gold;
         chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
-
         match(global, role_global, lineup_global, chess, ctx);
     }
 
