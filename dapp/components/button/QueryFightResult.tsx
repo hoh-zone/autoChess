@@ -10,25 +10,16 @@ const OperateChess = () => {
     const [signError, setSignError] = useState(false);
     const signTransaction = useCallback(async () => {
         if (!wallet) return;
-        const result = await wallet.client.getOwnedObjects({
-            owner: wallet.address,
-            options: {
-                showContent:true,
-            },
-            filter: {
+        const result = await wallet.client.queryEvents({
+            query: {
+                Sender: wallet.address,
                 MoveModule: {
                     package: `${PACKAGE_ID}`,
                     module: "chess",
                 }
             }
         });
-        let len =  result.data.length;
-        let i = 0;
-        while (i < len) {
-            let nft_data =  result.data[0].data?.content;
-            console.log("nft:", nft_data);
-            i++;
-        }
+        console.log(result);
     }, [wallet]);
 
     const reset = useCallback(() => {
@@ -56,7 +47,7 @@ const OperateChess = () => {
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={signTransaction}
             >
-                Query my chesses
+                Query my fight result
             </button>
         </div>
     )

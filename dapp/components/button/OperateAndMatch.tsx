@@ -27,7 +27,7 @@ const OperateAndMatch = ({username}: Props) => {
                 tx.pure(`${ROLE_GLOBAL}`),
                 tx.pure(`${LINEUP_GLOBAL}`),
                 tx.pure(left_gold),
-                tx.pure(["warrior1", "warrior2", "warrior3"]),
+                tx.pure(["ani1", "ani1_1", "mega2"]),
                 tx.pure(chess_id),
             ]
         })
