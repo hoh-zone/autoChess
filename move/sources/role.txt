@@ -1,19 +1,25 @@
-// 战士，均衡
-warrior1, 4, 25
-warrior2, 6, 30
-warrior3, 8, 40
+// 名称，攻击，血量
 
-// 法师，高攻低防
-wizard1, 7, 15
-wizard2, 10, 20
-wizard3, 14, 25
+// 刺客类
+ani, 3, 3
+archer, 4 ,2
+assa, 3, 2
+kunoichi, 3, 2
+shinobi, 4, 2
 
-// 牧师，低攻吸血,每次吸50%
-priest1, 2, 30
-priest2, 4, 45
-priest3, 6, 60
+// 法师类
+mega, 4, 2
+shaman, 2, 4
+firemega, 4, 2
+wizard, 3, 3
 
-// 刺客，高攻, 50%概率闪避
-assassin1, 5, 18
-assassin2, 7, 25
-assassin3, 9, 30
+// 战士类
+cleric, 2,4
+fighter, 2,4
+gelem, 1,7
+slime, 3, 3
+tank, 1, 7
+
+// 牧师类
+priest, 2, 4
+tree, 2, 4
