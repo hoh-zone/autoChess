@@ -55,9 +55,9 @@ module auto_chess::test {
             let lineupGlobal = take_shared<lineup::Global>(test);
             let gold = 3;
             let str_vec = vector::empty<String>();
-            // vector::push_back(&mut str_vec, utf8(b"warrior1"));
-            vector::push_back(&mut str_vec, utf8(b"warrior1"));
-            vector::push_back(&mut str_vec, utf8(b"warrior1"));
+
+            vector::push_back(&mut str_vec, utf8(b"tree1"));
+            vector::push_back(&mut str_vec, utf8(b"ani1"));
             print(&utf8(b"operate my chess"));
             chess::operate_and_match(&mut chessGlobal, &roleGlobal, &lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
             print_my_lineup(&chess_nft);
@@ -65,9 +65,9 @@ module auto_chess::test {
 
             // second round
             let str_vec = vector::empty<String>();
-            // vector::push_back(&mut str_vec, utf8(b"warrior1"));
-            vector::push_back(&mut str_vec, utf8(b"warrior1"));
-            vector::push_back(&mut str_vec, utf8(b"warrior1"));
+
+            vector::push_back(&mut str_vec, utf8(b"mega1"));
+            vector::push_back(&mut str_vec, utf8(b"mega1_1"));
             print(&utf8(b"operate my chess"));
             chess::operate_my_chess(&roleGlobal, 1, str_vec, &mut chess_nft, ctx(test));
 

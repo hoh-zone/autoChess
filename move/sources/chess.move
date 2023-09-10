@@ -7,6 +7,7 @@ module auto_chess::chess {
     use auto_chess::lineup::{Self, LineUp};
     use std::vector;
     use std::debug::print;
+    use sui::event;
     use auto_chess::role;
     use auto_chess::utils;
 
@@ -34,6 +35,16 @@ module auto_chess::chess {
         lose: u8,
         even: u8,
         creator: address
+    }
+
+    struct FightEvent has copy, drop {
+        v1: address,
+        v1_name: name,
+        v1_win: u8,
+        v1_lose: u8,
+        v2: name,
+        v2_lineup:lineup:LineUp,
+        res: u8 // even:0, win:1, lose:2
     }
 
     fun init(ctx: &mut TxContext) {
@@ -134,6 +145,14 @@ module auto_chess::chess {
                 print(&utf8(b"I lose"));
                 chess.lose = chess.lose + 1;
                 chess.life = chess.life - 1;
+                event::emit(FightEvent {
+                    v1: address,
+                    v1_name: ,
+                    v1_tag: 
+                    v2: lineup::get_name(enemy_lineup),
+                    v2_lineup:*enemy_lineup,
+                    res: 2
+                })
                 return false
             };
             if (vector::length(&enemy_roles) == 0 && role::get_defense(&enemy_first_role) == 0) {
