@@ -141,7 +141,7 @@ module auto_chess::chess {
         let my_first_role = role::empty();
         let enemy_first_role = role::empty();
         while (true) {
-            if (vector::length(&my_roles) == 0 && role::get_defense(&my_first_role) == 0) {
+            if (vector::length(&my_roles) == 0 && role::get_life(&my_first_role) == 0) {
                 print(&utf8(b"I lose"));
                 chess.lose = chess.lose + 1;
                 chess.life = chess.life - 1;
@@ -156,7 +156,7 @@ module auto_chess::chess {
                 });
                 return false
             };
-            if (vector::length(&enemy_roles) == 0 && role::get_defense(&enemy_first_role) == 0) {
+            if (vector::length(&enemy_roles) == 0 && role::get_life(&enemy_first_role) == 0) {
                 chess.win = chess.win + 1;
                 print(&utf8(b"I win, my left lineup:"));
                 event::emit(FightEvent {
@@ -170,10 +170,10 @@ module auto_chess::chess {
                 });
                 return true
             };
-            if (role::get_defense(&my_first_role) == 0) {
+            if (role::get_life(&my_first_role) == 0) {
                 my_first_role = vector::pop_back(&mut my_roles);
             };
-            if (role::get_defense(&enemy_first_role) == 0) {
+            if (role::get_life(&enemy_first_role) == 0) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
             combat(&mut my_first_role, &mut enemy_first_role);
@@ -182,24 +182,24 @@ module auto_chess::chess {
     }
 
     fun combat(role1:&mut role::Role, role2:&mut role::Role) {
-        let defense1 = 1;
-        let defense2 = 1;
+        let life1 = 1;
+        let life2 = 1;
         let attack1 = role::get_attack(role1);
         let attack2 = role::get_attack(role2);
-        while (defense1 != 0 && defense2 != 0) {
-            defense1 = role::get_defense(role1);
-            defense2 = role::get_defense(role2);
-            if (defense1 < attack2) {
-                role::set_defense(role1, 0);
+        while (life1 != 0 && life2 != 0) {
+            life1 = role::get_life(role1);
+            life2 = role::get_life(role2);
+            if (life1 < attack2) {
+                role::set_life(role1, 0);
                 break
             } else {
-                role::set_defense(role1, defense1 - attack2);
+                role::set_life(role1, life1 - attack2);
             };
-            if (defense2 < attack1) {
-                role::set_defense(role2, 0);
+            if (life2 < attack1) {
+                role::set_life(role2, 0);
                 break
             } else {
-                role::set_defense(role2, defense2 - attack1);
+                role::set_life(role2, life2 - attack1);
             };
         };
     }

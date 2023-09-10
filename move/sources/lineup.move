@@ -137,15 +137,15 @@ module auto_chess::lineup {
         let vec = lineup.roles;
         let (i, len) = (0u64, vector::length(&vec));
         let all_attacks = 0;
-        let all_defense = 0;
+        let all_life = 0;
         while (i < len) {
             // drop fragments
             let role:&Role = vector::borrow(&vec, i);
             all_attacks = all_attacks + role::get_attack(role);
-            all_defense = all_defense + role::get_defense(role);
+            all_life = all_life + role::get_life(role);
             i = i + 1;
         };
-        (all_attacks, all_defense)
+        (all_attacks, all_life)
     }
 
     public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, ctx:&mut TxContext) : LineUp {
