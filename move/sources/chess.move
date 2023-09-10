@@ -39,11 +39,11 @@ module auto_chess::chess {
 
     struct FightEvent has copy, drop {
         v1: address,
-        v1_name: name,
+        v1_name: String,
         v1_win: u8,
         v1_lose: u8,
-        v2: name,
-        v2_lineup:lineup:LineUp,
+        v2_name: String,
+        v2_lineup:lineup::LineUp,
         res: u8 // even:0, win:1, lose:2
     }
 
@@ -111,7 +111,7 @@ module auto_chess::chess {
         let lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
 
         // fight
-        fight(chess, &lineup);
+        fight(chess, &lineup, ctx);
 
         // record
         if (chess.life > 0) {
@@ -127,7 +127,7 @@ module auto_chess::chess {
         chess.cards_pool = lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(chess.win,chess.lose), ctx);
     }
 
-    public fun fight(chess: &mut Chess, enemy_lineup: &LineUp):bool {
+    public fun fight(chess: &mut Chess, enemy_lineup: &LineUp, ctx:&mut TxContext):bool {
         print(&utf8(b"enemy lineup"));
         print(enemy_lineup);
         let my_lineup = &chess.lineup;
@@ -146,20 +146,28 @@ module auto_chess::chess {
                 chess.lose = chess.lose + 1;
                 chess.life = chess.life - 1;
                 event::emit(FightEvent {
-                    v1: address,
-                    v1_name: ,
-                    v1_tag: 
-                    v2: lineup::get_name(enemy_lineup),
+                    v1: tx_context::sender(ctx),
+                    v1_name: chess.name,
+                    v1_win: chess.win,
+                    v1_lose: chess.lose + 1,
+                    v2_name: lineup::get_name(enemy_lineup),
                     v2_lineup:*enemy_lineup,
                     res: 2
-                })
+                });
                 return false
             };
             if (vector::length(&enemy_roles) == 0 && role::get_defense(&enemy_first_role) == 0) {
                 chess.win = chess.win + 1;
                 print(&utf8(b"I win, my left lineup:"));
-                print(&my_first_role);
-                print(&my_roles);
+                event::emit(FightEvent {
+                    v1: tx_context::sender(ctx),
+                    v1_name: chess.name,
+                    v1_win: chess.win + 1,
+                    v1_lose: chess.lose, 
+                    v2_name: lineup::get_name(enemy_lineup),
+                    v2_lineup:*enemy_lineup,
+                    res: 1
+                });
                 return true
             };
             if (role::get_defense(&my_first_role) == 0) {

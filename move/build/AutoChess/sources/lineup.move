@@ -168,4 +168,8 @@ module auto_chess::lineup {
     public fun get_roles(lineup:&LineUp): &vector<Role> {
         &lineup.roles
     }
+
+    public fun get_name(lineup:&LineUp): String {
+        *&lineup.name
+    }
 }
