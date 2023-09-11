@@ -1,5 +1,4 @@
 import { Box, HStack, Stack } from "@chakra-ui/react"
-import { Character } from "../character/character"
 import { Slot } from "../control/Slot"
 import { SellButton } from "../control/SellButton"
 
@@ -45,14 +44,3 @@ export const MainScene = () => {
         </div>
     </HStack>
 }
-
-const CharacterRow = ({ isOpponent = false }: { isOpponent?: boolean }) => (
-    <div className="flex place-items-end">
-        <Character charColor="Humans" charType="humanKnight" isOpponent={isOpponent} />
-        <Character charColor="1" charType="orcArcher" isOpponent={isOpponent} />
-        <Character charColor="2" charType="orcArcher" isOpponent={isOpponent} />
-        <Character charColor="3" charType="orcArcher" isOpponent={isOpponent} />
-        <Character charColor="3" charType="orcBarbare" isOpponent={isOpponent} />
-        <Character charColor="2" charType="orcBarbare" isOpponent={isOpponent} />
-        <Character charColor="1" charType="orcBarbare" isOpponent={isOpponent} />
-    </div>)

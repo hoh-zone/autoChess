@@ -61,7 +61,7 @@ export const charTable = {
         moveWidth: "300px",
         moveHeight: "150px",
         attackWidth: "300px",
-        attackHeight: "150px",  
+        attackHeight: "150px",
     },
     "priest": {
         attackSrc: `./priest-attack-1.png`,
@@ -70,7 +70,7 @@ export const charTable = {
         moveWidth: "300px",
         moveHeight: "150px",
         attackWidth: "300px",
-        attackHeight: "150px",  
+        attackHeight: "150px",
     },
     "kunoichi": {
         attackSrc: `./kunoichi-attack-1.png`,

@@ -230,7 +230,7 @@ a {
 }
 
 .attack {
-  animation: attackAnim 2s steps(var(--attack2-step)) infinite;
+  animation: attackAnim 1.5s steps(var(--attack2-step)) infinite;
 }
 
 @keyframes attackAnim {

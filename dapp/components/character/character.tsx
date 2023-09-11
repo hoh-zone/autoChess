@@ -1,23 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { twMerge } from "tailwind-merge";
-import { CharType } from "./type";
 import { charTable } from "./charTable";
-
-type CharacterArgs = {
-    attackSrc: string
-    moveSrc: string
-    moveWidth: string
-    moveHeight: string
-    attackWidth: string
-    attackHeight: string
-}
 
 export function Character({
     isOpponent = false,
     charType,
 }: {
     isOpponent?: boolean,
-    charType: CharType,
+    charType: string,
 }) {
     useEffect(() => {
         setInterval(() => {
@@ -25,7 +15,14 @@ export function Character({
             if (attackAnimRef.current) clearInterval(attackAnimRef.current);
             attackAnimRef.current = setTimeout(() => setAttack(false), 1000);
         }, 3000 + Math.random() * 3000);
-    }, [])
+    }, []);
+    const [attack, setAttack] = useState(false);
+    const attackAnimRef = useRef<NodeJS.Timeout>();
+
+    if(!charTable[charType as keyof typeof charTable]) {
+        console.error("not found", charType);
+        return <>no</>
+    }
     const {
         attackSrc,
         moveSrc,
@@ -33,11 +30,11 @@ export function Character({
         moveHeight,
         attackWidth,
         attackHeight,
-    } = charTable[charType];
+    } = charTable[charType as keyof typeof charTable];
 
-    const [attack, setAttack] = useState(false);
+
     const src = attack ? attackSrc : moveSrc;
-    const attackAnimRef = useRef<NodeJS.Timeout>();
+    
     return (
         <div className="w-full h-full overflow-visible flex place-items-end z-10 pointer-events-none">
             {

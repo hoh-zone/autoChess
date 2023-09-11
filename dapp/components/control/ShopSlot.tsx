@@ -1,8 +1,8 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { selectedShopSlot, selectedSlot, shopCharacter } from "../../store/stages"
-import { getCharacterById } from "../character/getCharacter"
+import { selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
+import { removeSuffix } from "../../utils/removeSuffix"
 
 export const ShopSlot = ({ id }: {
     id: number
@@ -31,7 +31,7 @@ export const ShopSlot = ({ id }: {
 
         <div className="absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
             {char && <Character
-                charType={getCharacterById(char)}
+                charType={removeSuffix(char.name)}
             />
             }
         </div>

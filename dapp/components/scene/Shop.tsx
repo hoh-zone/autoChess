@@ -1,7 +1,7 @@
 import { Box, Button, HStack } from "@chakra-ui/react"
 import { ShopSlot } from "../control/ShopSlot"
 import { useAtom } from "jotai"
-import { money as moneyAtom, shopCharacter } from "../../store/stages"
+import { moneyA as moneyAtom, shopCharacter } from "../../store/stages"
 
 export const Shop = () => {
     const [money, setMoney] = useAtom(moneyAtom);

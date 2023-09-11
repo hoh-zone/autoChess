@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react"
 import { useAtom } from "jotai";
-import { money as moneyAtom, selectedSlot, slotCharacter } from "../../store/stages";
+import { moneyA as moneyAtom, selectedSlot, slotCharacter } from "../../store/stages";
 
 export const SellButton = () => {
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
@@ -10,7 +10,7 @@ export const SellButton = () => {
     return (
         <Button
             colorScheme='blue'
-            isDisabled={slotNumber === null}
+            isDisabled={slotNumber === null || !chars[slotNumber]}
             onClick={() => {
                 if(slotNumber !== null) {
                     chars[slotNumber] = null;
