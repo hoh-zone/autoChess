@@ -16,7 +16,7 @@ wizard, 3, 3
 // 战士类
 cleric, 2,4
 fighter, 2,4
-gelem, 1,7
+golem, 1,7
 slime, 3, 3
 tank, 1, 7
 

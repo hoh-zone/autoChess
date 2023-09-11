@@ -109,11 +109,11 @@ module auto_chess::role {
         vec_map::insert(&mut global.charactors, utf8(b"fighter2_1"), Role {name:utf8(b"fighter2_1"), attack:8, life:40, level:6, price:3});
         vec_map::insert(&mut global.charactors, utf8(b"fighter3"), Role {name:utf8(b"fighter3"), attack:8, life:40, level:9, price:3});
         
-        vec_map::insert(&mut global.charactors, utf8(b"gelem1"), Role {name:utf8(b"gelem1"), attack:4, life:25, level:1, price:3});
-        vec_map::insert(&mut global.charactors, utf8(b"gelem1_1"), Role {name:utf8(b"gelem1_1"), attack:6, life:30, level:2, price:3});
-        vec_map::insert(&mut global.charactors, utf8(b"gelem2"), Role {name:utf8(b"gelem2"), attack:8, life:40, level:3, price:3});
-        vec_map::insert(&mut global.charactors, utf8(b"gelem2_1"), Role {name:utf8(b"gelem2_1"), attack:8, life:40, level:6, price:3});
-        vec_map::insert(&mut global.charactors, utf8(b"gelem3"), Role {name:utf8(b"gelem3"), attack:8, life:40, level:9, price:3});
+        vec_map::insert(&mut global.charactors, utf8(b"golem1"), Role {name:utf8(b"golem1"), attack:4, life:25, level:1, price:3});
+        vec_map::insert(&mut global.charactors, utf8(b"golem1_1"), Role {name:utf8(b"golem1_1"), attack:6, life:30, level:2, price:3});
+        vec_map::insert(&mut global.charactors, utf8(b"golem2"), Role {name:utf8(b"golem2"), attack:8, life:40, level:3, price:3});
+        vec_map::insert(&mut global.charactors, utf8(b"golem2_1"), Role {name:utf8(b"golem2_1"), attack:8, life:40, level:6, price:3});
+        vec_map::insert(&mut global.charactors, utf8(b"golem3"), Role {name:utf8(b"golem3"), attack:8, life:40, level:9, price:3});
         
         vec_map::insert(&mut global.charactors, utf8(b"slime1"), Role {name:utf8(b"slime1"), attack:4, life:25, level:1, price:3});
         vec_map::insert(&mut global.charactors, utf8(b"slime1_1"), Role {name:utf8(b"slime1_1"), attack:6, life:30, level:2, price:3});
