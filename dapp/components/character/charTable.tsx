@@ -2,6 +2,7 @@
 export const charTable = {
     "ani": {
         attackSrc: `./ani-attack-1.png`,
+        attack2Src: './ani-attack-2.png',
         moveSrc: `./ani-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -10,6 +11,7 @@ export const charTable = {
     },
     "archer": {
         attackSrc: `./archer-attack-1.png`,
+        attack2Src: './archer-attack-2.png',
         moveSrc: `./archer-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -18,6 +20,7 @@ export const charTable = {
     },
     "assa": {
         attackSrc: `./assa-attack-1.png`,
+        attack2Src: './assa-attack-2.png',
         moveSrc: `./assa-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -26,6 +29,7 @@ export const charTable = {
     },
     "cleric": {
         attackSrc: `./cleric-attack-1.png`,
+        attack2Src: './cleric-attack-2.png',
         moveSrc: `./cleric-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -34,6 +38,7 @@ export const charTable = {
     },
     "fighter": {
         attackSrc: `./fighter-attack-1.png`,
+        attack2Src: './fighter-attack-2.png',
         moveSrc: `./fighter-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -42,6 +47,7 @@ export const charTable = {
     },
     "golem": {
         attackSrc: `./golem-attack-1.png`,
+        attack2Src: './golem-attack-2.png',
         moveSrc: `./golem-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -50,6 +56,7 @@ export const charTable = {
     },
     "mega": {
         attackSrc: `./mega-attack-1.png`,
+        attack2Src: './attackSrc-attack-2.png',
         moveSrc: `./mega-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -58,6 +65,7 @@ export const charTable = {
     },
     "priest": {
         attackSrc: `./priest-attack-1.png`,
+        attack2Src: './priest-attack-2.png',
         moveSrc: `./priest-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -66,6 +74,7 @@ export const charTable = {
     },
     "kunoichi": {
         attackSrc: `./kunoichi-attack-1.png`,
+        attack2Src: './kunoichi-attack-2.png',
         moveSrc: `./kunoichi-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -74,6 +83,7 @@ export const charTable = {
     },
     "shaman": {
         attackSrc: `./shaman-attack-1.png`,
+        attack2Src: './shaman-attack-2.png',
         moveSrc: `./shaman-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -82,15 +92,17 @@ export const charTable = {
     },
     "shinobi": {
         attackSrc: `./shinobi-attack-1.png`,
+        attack2Src: './shinobi-attack-2.png',
         moveSrc: `./shinobi-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
         attackWidth: "300px",
         attackHeight: "150px",
     },
-    "shman": {
-        attackSrc: `./shman-attack-1.png`,
-        moveSrc: `./shman-idle.png`,
+    "firemega": {
+        attackSrc: `./firemega-attack-1.png`,
+        attack2Src: './firemega-attack-2.png',
+        moveSrc: `./firemega-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
         attackWidth: "300px",
@@ -98,6 +110,7 @@ export const charTable = {
     },
     "slime": {
         attackSrc: `./slime-attack-1.png`,
+        attack2Src: './slime-attack-2.png',
         moveSrc: `./slime-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -106,6 +119,7 @@ export const charTable = {
     },
     "tank": {
         attackSrc: `./tank-attack-1.png`,
+        attack2Src: './tank-attack-2.png',
         moveSrc: `./tank-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -114,6 +128,7 @@ export const charTable = {
     },
     "tree": {
         attackSrc: `./tree-attack-1.png`,
+        attack2Src: './tree-attack-2.png',
         moveSrc: `./tree-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
@@ -122,6 +137,7 @@ export const charTable = {
     },
     "wizard": {
         attackSrc: `./wizard-attack-1.png`,
+        attack2Src: './wizard-attack-2.png',
         moveSrc: `./wizard-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",

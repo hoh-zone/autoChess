@@ -13,7 +13,7 @@ const charMapTable: { [key: number]: CharType }
     9: "priest",
     10: "shaman",
     11: "shinobi",
-    12: "shman",
+    12: "firemega",
     13: "slime",
     14: "tank",
     15: "tree",

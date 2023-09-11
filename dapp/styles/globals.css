@@ -60,6 +60,8 @@ a {
 .kunoichi {
   --attack-step: 7;
   --attack-position: -2100px;
+  --attack2-step: 33;
+  --attack2-position: -9900px;
   --move-step: 5;
   --move-position: -1500px;
 }
@@ -67,6 +69,8 @@ a {
 .ani {
   --attack-step: 15;
   --attack-position: -4500px;
+  --attack2-step: 9;
+  --attack2-position: -2700;
   --move-step: 6;
   --move-position: -1800px;
 }
@@ -74,13 +78,26 @@ a {
 .assa {
   --attack-step: 17;
   --attack-position: -5100px;
+  --attack2-step: 17;
+  --attack2-position: -5100;
   --move-step: 6;
   --move-position: -1800px;
 }
 
+.cleric {
+  --attack-step: 9;
+  --attack-position: -2700px;
+  --attack2-step: 14;
+  --attack2-position: -4200;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
 .archer {
-  --attack-step: 11;
-  --attack-position: -3300px;
+  --attack-step: 15;
+  --attack-position: -4500px;
+  --attack2-step: 29;
+  --attack2-position: -8700;
   --move-step: 6;
   --move-position: -1800px;
 }
@@ -88,6 +105,8 @@ a {
 .kunoichi {
   --attack-step: 9;
   --attack-position: -2700px;
+  --attack2-step: 33;
+  --attack2-position: -9900;
   --move-step: 4;
   --move-position: -1200px;
 }
@@ -95,6 +114,8 @@ a {
 .fighter {
   --attack-step: 13;
   --attack-position: -3900px;
+  --attack2-step: 15;
+  --attack2-position: -4500;
   --move-step: 5;
   --move-position: -1500px;
 }
@@ -102,6 +123,8 @@ a {
 .golem {
   --attack-step: 7;
   --attack-position: -2100px;
+  --attack2-step: 7;
+  --attack2-position: -2100;
   --move-step: 5;
   --move-position: -1500px;
 }
@@ -109,6 +132,8 @@ a {
 .mega {
   --attack-step: 12;
   --attack-position: -3600px;
+  --attack2-step: 14;
+  --attack2-position: -4200;
   --move-step: 5;
   --move-position: -1500px;
 }
@@ -116,6 +141,8 @@ a {
 .priest {
   --attack-step: 10;
   --attack-position: -3000px;
+  --attack2-step: 10;
+  --attack2-position: -3000;
   --move-step: 5;
   --move-position: -1500px;
 }
@@ -123,6 +150,8 @@ a {
 .shaman {
   --attack-step: 20;
   --attack-position: -6000px;
+  --attack2-step: 14;
+  --attack2-position: -4200;
   --move-step: 5;
   --move-position: -1500px;
 }
@@ -130,13 +159,17 @@ a {
 .shinobi {
   --attack-step: 6;
   --attack-position: -1800px;
+  --attack2-step: 20;
+  --attack2-position: -6000;
   --move-step: 8;
   --move-position: -2400px;
 }
 
-.shman {
+.firemega {
   --attack-step: 24;
   --attack-position: -7200px;
+  --attack2-step: 71;
+  --attack2-position: -21300;
   --move-step: 4;
   --move-position: -1200px;
 }
@@ -144,6 +177,8 @@ a {
 .slime {
   --attack-step: 13;
   --attack-position: -3900px;
+  --attack2-step: 26;
+  --attack2-position: -7800;
   --move-step: 6;
   --move-position: -1800px;
 }
@@ -151,6 +186,8 @@ a {
 .tank {
   --attack-step: 6;
   --attack-position: -1800px;
+  --attack2-step: 11;
+  --attack2-position: -3300;
   --move-step: 6;
   --move-position: -1800px;
 }
@@ -158,6 +195,8 @@ a {
 .tree {
   --attack-step: 12;
   --attack-position: -3600px;
+  --attack2-step: 24;
+  --attack2-position: -7200;
   --move-step: 6;
   --move-position: -1800px;
 }
@@ -165,6 +204,8 @@ a {
 .wizard {
   --attack-step: 7;
   --attack-position: -2100px;
+  --attack2-step: 16;
+  --attack2-position: -4800;
   --move-step: 5;
   --move-position: -1500px;
 }
