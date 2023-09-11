@@ -5,7 +5,7 @@ export const ETHOS_EXAMPLE_COIN_TREASURY_CAP = "0xc4038ad78c21d473c946ca4c1b50ec
 export const ETHOS_COIN_TYPE = `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_coin::ETHOS_EXAMPLE_COIN`
 
 // auto_chess_vars
-export const PACKAGE_ID = "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08"
-export const ROLE_GLOBAL = "0xa71c3603cd6ab083da2b6cff2138cce660f27c644aa2018a4658edfc627c0cb9"
-export const LINEUP_GLOBAL = "0xe99af06077de34950749e897fdba17aa712abf8ebf4954fc91cf36af2e6028e4"
-export const CHESS_GLOBAL = "0x41e01bdcb4a156f1b3dbf298b8ba7d94d18ddead3bf3b4996d3a3765855bb5b4"
+export const PACKAGE_ID = "0x985c7213dcf110e0d6e5f501e1af4680db5837c9aa3e3d7cebc6facc695700ef"
+export const ROLE_GLOBAL = "0xc753f0e3aa758f47817ad2af70a425a4f0d25b352cbabcc99fa7b6f4aac6beb0"
+export const LINEUP_GLOBAL = "0x9b7b357c1f1a1ba902599ab67ab0d69ca4d016e8b7ad88994871be1a319be9a0"
+export const CHESS_GLOBAL = "0x424aa8ddf27f67715313115f8df9004d7ffa0af25d586dd6f4695923c93361f7"
