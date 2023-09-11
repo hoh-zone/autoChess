@@ -5,6 +5,7 @@ import { charTable } from "./charTable";
 
 type CharacterArgs = {
     attackSrc: string
+    attack2Src: string
     moveSrc: string
     moveWidth: string
     moveHeight: string
@@ -28,6 +29,7 @@ export function Character({
     }, [])
     const {
         attackSrc,
+        attack2Src,
         moveSrc,
         moveWidth,
         moveHeight,
@@ -36,7 +38,7 @@ export function Character({
     } = charTable[charType];
 
     const [attack, setAttack] = useState(false);
-    const src = attack ? attackSrc : moveSrc;
+    const src = attack ? attack2Src : moveSrc;
     const attackAnimRef = useRef<NodeJS.Timeout>();
     return (
         <div className="w-full h-full overflow-visible flex place-items-end z-10 pointer-events-none">

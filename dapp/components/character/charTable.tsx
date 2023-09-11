@@ -56,7 +56,7 @@ export const charTable = {
     },
     "mega": {
         attackSrc: `./mega-attack-1.png`,
-        attack2Src: './attackSrc-attack-2.png',
+        attack2Src: './mega-attack-2.png',
         moveSrc: `./mega-idle.png`,
         moveWidth: "300px",
         moveHeight: "150px",
