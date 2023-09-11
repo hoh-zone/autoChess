@@ -57,8 +57,120 @@ a {
   --move-position: -480px;
 }
 
+.kunoichi {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.ani {
+  --attack-step: 15;
+  --attack-position: -4500px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.assa {
+  --attack-step: 17;
+  --attack-position: -5100px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.archer {
+  --attack-step: 11;
+  --attack-position: -3300px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.kunoichi {
+  --attack-step: 9;
+  --attack-position: -2700px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.fighter {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.golem {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.mega {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.priest {
+  --attack-step: 10;
+  --attack-position: -3000px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shaman {
+  --attack-step: 20;
+  --attack-position: -6000px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shinobi {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --move-step: 8;
+  --move-position: -2400px;
+}
+
+.shman {
+  --attack-step: 24;
+  --attack-position: -7200px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.slime {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tank {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tree {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.wizard {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
 .attack {
-  animation: attackAnim 0.8s steps(var(--attack-step)) 1;
+  animation: attackAnim 1s steps(var(--attack-step)) 1;
 }
 
 @keyframes attackAnim {

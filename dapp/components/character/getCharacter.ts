@@ -1,43 +1,25 @@
-import { CharColor, CharType } from "./type";
+import { CharType } from "./type";
 
-const charTable: {
-    [key: number]: {
-        charType: CharType, charColor: CharColor
-    };
-}
+const charMapTable: { [key: number]: CharType }
     = {
-    1: {
-        charType: "orcBarbare",
-        charColor: "1"
-    },
-    2: {
-        charType: "orcBarbare",
-        charColor: "2"
-    },
-    3: {
-        charType: "orcBarbare",
-        charColor: "3"
-    },
-    4: {
-        charType: "orcArcher",
-        charColor: "1"
-    },
-    5: {
-        charType: "orcArcher",
-        charColor: "2"
-    },
-    6: {
-        charType: "orcArcher",
-        charColor: "3"
-    },
-    7: {
-        charType: "humanKnight",
-        charColor: "Humans"
-    },
+    1: "kunoichi",
+    2: "ani",
+    3: "archer",
+    4: "assa",
+    5: "cleric",
+    6: "fighter",
+    7: "golem",
+    8: "mega",
+    9: "priest",
+    10: "shaman",
+    11: "shinobi",
+    12: "shman",
+    13: "slime",
+    14: "tank",
+    15: "tree",
+    16: "wizard",
 };
 
-export const getCharacter = (id: keyof typeof charTable): {
-    charType: CharType, charColor: CharColor
-} => {
-    return charTable[id];
+export const getCharacterById = (id: number): CharType => {
+    return charMapTable[id];
 }

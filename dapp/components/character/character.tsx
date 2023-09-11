@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { twMerge } from "tailwind-merge";
-import { CharColor, CharType } from "./type";
+import { CharType } from "./type";
+import { charTable } from "./charTable";
 
 type CharacterArgs = {
     attackSrc: string
@@ -14,11 +15,9 @@ type CharacterArgs = {
 export function Character({
     isOpponent = false,
     charType,
-    charColor
 }: {
     isOpponent?: boolean,
     charType: CharType,
-    charColor: CharColor,
 }) {
     useEffect(() => {
         setInterval(() => {
@@ -34,13 +33,13 @@ export function Character({
         moveHeight,
         attackWidth,
         attackHeight,
-    } = getChar(charType, charColor);
+    } = charTable[charType];
 
     const [attack, setAttack] = useState(false);
     const src = attack ? attackSrc : moveSrc;
     const attackAnimRef = useRef<NodeJS.Timeout>();
     return (
-        <div className="w-32 h-24 overflow-visible flex place-items-end z-10 pointer-events-none">
+        <div className="w-full h-full overflow-visible flex place-items-end z-10 pointer-events-none">
             {
                 attack ? <div
                     className={
@@ -76,37 +75,4 @@ export function Character({
                 />}
         </div>
     )
-}
-
-function getChar(charType: string, charColor: string): CharacterArgs {
-    switch (charType) {
-        case "orcBarbare":
-            return {
-                attackSrc: `./Orc_Barbare_0${charColor}_ATK_Full_12x1.png`,
-                moveSrc: `./Orc_Barbare_0${charColor}_Move_5x1.png`,
-                moveWidth: "114px",
-                moveHeight: "116px",
-                attackWidth: "114px",
-                attackHeight: "116px",
-            }
-        case "orcArcher":
-            return {
-                attackSrc: `./Orc_Archer_0${charColor}_ATK_Full_18x1.png`,
-                moveSrc: `./Orc_Archer_0${charColor}_Move_6x1.png`,
-                moveWidth: "148px",
-                moveHeight: "82px",
-                attackWidth: "148px",
-                attackHeight: "82px",
-            }
-        case "humanKnight":
-            return {
-                attackSrc: `./00_${charColor}_Tiny_Knight_Attack_11x1.png`,
-                moveSrc: `./00_${charColor}_Tiny_Knight_Run_8x1.png`,
-                moveWidth: "60px",
-                moveHeight: "90px",
-                attackWidth: "96px",
-                attackHeight: "90px",
-            }
-    }
-    throw new Error(`Unknown charType: ${charType}`);
 }

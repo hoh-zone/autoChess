@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
 import { money as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
-import { getCharacter } from "../character/getCharacter"
+import { getCharacterById } from "../character/getCharacter"
 
 const PRICE = 3;
 
@@ -45,7 +45,7 @@ export const Slot = ({ isOpponent = false, id }: {
                 }
             }
             // swap two char
-            else if(slotNumber !== null && slotNumber !== id) {
+            else if (slotNumber !== null && slotNumber !== id) {
                 const temp = chars[id];
                 chars[id] = chars[slotNumber];
                 chars[slotNumber] = temp;
@@ -65,7 +65,7 @@ export const Slot = ({ isOpponent = false, id }: {
 
         <div className="absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
             {char && <Character
-                {...getCharacter(char)}
+                charType={getCharacterById(char)}
                 isOpponent={isOpponent} />
             }
         </div>
