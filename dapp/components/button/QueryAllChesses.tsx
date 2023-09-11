@@ -4,7 +4,7 @@ import { ethos} from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '..';
 import { PACKAGE_ID } from '../../lib/constants';
 
-const QueryChess = () => {
+const QueryChesses = () => {
     const { wallet } = ethos.useWallet();
     const [signSuccess, setSignSuccess] = useState(false);
     const [signError, setSignError] = useState(false);
@@ -46,4 +46,4 @@ const QueryChess = () => {
     return {nfts, query_chesses};
 }
 
-export default QueryChess;
+export default QueryChesses;

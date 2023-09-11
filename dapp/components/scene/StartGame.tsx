@@ -31,7 +31,6 @@ const parse_nft = (nfts:string[] | null) => {
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
-    // const [gold, setGold] = useAtom(money);
     const {nftObjectId, mint } = mint_chess();
     const [inputValue, setInputValue] = useState('');
     const {nfts, query_chesses} = QueryChesses();
