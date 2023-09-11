@@ -10,6 +10,25 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+.text-start-game {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+
+.custom-input {
+  font-weight: 900;
+  background: rgb(251, 251, 238);
+}
+
+.custom-input::placeholder {
+  font-weight: 900;
+  color: rgb(246, 246, 247);
+}
+
 a {
   color: inherit;
   text-decoration: none;
