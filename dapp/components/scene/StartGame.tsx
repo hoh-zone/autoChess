@@ -1,5 +1,5 @@
 import { Box, Button, Center, HStack, Input, Stack } from "@chakra-ui/react"
-import { stageAtom } from "../../store/stages";
+import { money, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
 import mint_chess from "../button/MintChess";
 import { Character } from "../character/character";
@@ -31,7 +31,8 @@ const parse_nft = (nfts:string[] | null) => {
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
-    const { nftObjectId, mint } = mint_chess();
+    // const [gold, setGold] = useAtom(money);
+    const {nftObjectId, mint } = mint_chess();
     const [inputValue, setInputValue] = useState('');
     const {nfts, query_chesses} = QueryChesses();
 
@@ -77,7 +78,7 @@ export const StartGame = () => {
                         onClick={async () => {
                             let cards_pool = selectedNftINfo['cards_pool'];
                             alert(JSON.stringify(cards_pool));
-                            // setStage("shop");
+                            setStage("shop");
                         }}
                         >Continue Game</Button>
                     </div>
