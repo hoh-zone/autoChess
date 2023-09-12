@@ -25,7 +25,7 @@ export const StartGame = () => {
     const {ranks , query_fight_rank} = useQueryFight();
     const syncGameNFT = useSyncGameNFT();
     const [selectedGameNFT, setSelectedGameNFT] = useState('');
-
+    
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedGameNFT(event.target.value);
     };
@@ -37,10 +37,9 @@ export const StartGame = () => {
             </video>
             <div className="text-start-game">
                 <HStack>
-                    
                 <Stack className="items-center" gap={4}>
                     <div>    
-                        {nft_options.length > 0 && <text>我的存档：</text>}
+                        {nft_options.length > 0 && <text>My Records:</text>}
                         {
                             nft_options.map((nft, index) => (
                                 <div key={index}>
@@ -55,15 +54,17 @@ export const StartGame = () => {
                                     </label>
                                 </div>))
                         }
+                        {nft_options.length > 0 && 
                         <Button
-                            onClick={async () => {
-                                const nft = nfts.find(nft => nft.id.id === selectedGameNFT);
-                                if (!nft) throw new Error("nft not found");
-                                console.log(nft.id);
-                                syncGameNFT(nft);
-                                setStage("shop");
-                            }}
-                        >Continue Game</Button>
+                        onClick={async () => {
+                            const nft = nfts.find(nft => nft.id.id === selectedGameNFT);
+                            if (!nft) throw new Error("nft not found");
+                            console.log(nft.id);
+                            syncGameNFT(nft);
+                            setStage("shop");
+                        }}
+                    >Continue Game</Button>}
+                            
                     </div>
                     <Input
                         type="text"
@@ -86,7 +87,7 @@ export const StartGame = () => {
                 </Stack>
                 {ranks && ranks.length > 0 && 
                         <div style={{marginLeft:'100px'}}> 
-                            <p>排行榜:</p>
+                            <p>Rank:</p>
                             {
                             ranks.map((fight) => (
                                 <p>{fight}</p>

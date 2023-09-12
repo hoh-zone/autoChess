@@ -5,6 +5,7 @@ import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, sh
 import { removeSuffix } from "../../utils/removeSuffix";
 import { CharacterFields } from "../../types/nft";
 import { useEffect } from "react";
+import { upgrade } from "../character/rawData";
 
 const PRICE = 3;
 
@@ -33,11 +34,12 @@ export const Slot = ({ isOpponent = false, id }: {
 
     useEffect(() => {
         if (!char) return;
-
         char.attacking = true;
         if (char?.name.includes("tank")) {
             console.log("set attack for tank", chars);
         }
+        chars[id] = char
+        setChars(chars)
         isOpponent ?
             setEnemyChars(enemyChars) :
             setChars(chars);
@@ -80,7 +82,10 @@ export const Slot = ({ isOpponent = false, id }: {
             // buy and upgrad chars
             } else if (shopSlotNumber != null && char && 
                 canUpgrade(char, shopChars[shopSlotNumber])) {
-                char.level = upgrade(char.level);
+                let tmp = upgrade(char);
+                    chars[id] = tmp;
+                    console.log("tmp", tmp);
+
                 shopChars[shopSlotNumber] = null;
                 setChars(chars);
                 setShopSlotNumber(null);
@@ -88,12 +93,12 @@ export const Slot = ({ isOpponent = false, id }: {
             }
             // swap or upgrad chars
             else if (slotNumber !== null && slotNumber !== id) {
-                const temp = chars[id];
+                let temp = chars[id];
                 chars[id] = chars[slotNumber];
                 if (canUpgrade(chars[id], temp)) {
                     chars[slotNumber] = null;
-                    if (temp && temp.level) {
-                        temp.level = upgrade(temp.level);
+                    if (temp != null) {
+                        temp = upgrade(temp);
                     }
                     chars[id] = temp;
                     setChars(chars);
@@ -107,7 +112,12 @@ export const Slot = ({ isOpponent = false, id }: {
                 }
             }
             else {
-                setSlotNumber(id);
+                if (slotNumber == null) {
+                    setSlotNumber(id);
+                } else {
+                    // cancel choosen state
+                    setSlotNumber(null);
+                }
                 setShopSlotNumber(null);
             }
         }}
@@ -157,19 +167,5 @@ const canUpgrade = (char1: any, char2: any) => {
         return level2 == 3 || level2 == 6
     } else {
         return false;
-    }
-}
-
-const upgrade = (level:any) => {
-    if (level == 1) {
-        return 2;
-    } else if (level == 2) {
-        return 3;
-    } else if (level == 3) {
-        return 6;
-    } else if (level == 6) {
-        return 9;
-    } else {
-        return -1;
     }
 }
