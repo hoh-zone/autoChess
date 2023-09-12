@@ -88,10 +88,8 @@ export const Slot = ({ isOpponent = false, id }: {
             else if (slotNumber !== null && slotNumber !== id) {
                 const temp = chars[id];
                 chars[id] = chars[slotNumber];
-                console.log("first:", chars[id]?.name);
-                console.log("second:", temp?.name);
                 if (canUpgrade(chars[id], temp)) {
-                    console.log("合成动作");
+                    console.log("compose action");
                     chars[slotNumber] = null;
                     if (temp && temp.level) {
                         temp.level = upgrade(temp.level);
@@ -101,7 +99,6 @@ export const Slot = ({ isOpponent = false, id }: {
                     setSlotNumber(null);
                     setShopSlotNumber(null);
                 } else {
-                    console.log("交换");
                     chars[slotNumber] = temp;
                     setChars(chars);
                     setSlotNumber(null);
