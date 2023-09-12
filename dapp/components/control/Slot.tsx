@@ -28,35 +28,28 @@ export const Slot = ({ isOpponent = false, id }: {
 
     const selected = (slotNumber === id);
 
-    if (char?.name.includes("tank")) {
-        console.log("tank status", char.attacking, char);
-    }
-
-    useEffect(() => {
-        if (!char) return;
-        char.attacking = true;
-        if (char?.name.includes("tank")) {
-            console.log("set attack for tank", chars);
-        }
-        chars[id] = char
-        setChars(chars)
-        isOpponent ?
-            setEnemyChars(enemyChars) :
-            setChars(chars);
-    }, [char]);
+    // useEffect(() => {
+    //     if (!char) return;
+    //     char.attacking = true;
+    //     chars[id] = char
+    //     setChars(chars)
+    //     isOpponent ?
+    //         setEnemyChars(enemyChars.slice()) :
+    //         setChars(chars.slice());
+    // }, [char]);
 
     // reset attack after 1.5s
-    // useEffect(() => {
-    //     if (char && char.attacking) {
-    //         setTimeout(() => {
-    //             if (!char || !char.attacking) return;
-    //             char.attacking = false;
-    //             isOpponent ?
-    //                 setEnemyChars(enemyChars) :
-    //                 setChars(chars);
-    //         }, 1500);
-    //     }
-    // }, [char?.attacking]);
+    useEffect(() => {
+        if (char && char.attacking) {
+            setTimeout(() => {
+                if (!char || !char.attacking) return;
+                char.attacking = false;
+                isOpponent ?
+                    setEnemyChars(enemyChars.slice()) :
+                    setChars(chars.slice());
+            }, 1500);
+        }
+    }, [char?.attacking]);
 
 
     return <div className={

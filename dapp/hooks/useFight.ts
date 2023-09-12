@@ -20,8 +20,8 @@ export const useFight = () => {
             // attacking animation
             char.attacking = true;
             enemyChar.attacking = true;
-            setEnemyChars(enemyChars);
-            setChars(chars);
+            setEnemyChars(enemyChars.slice());
+            setChars(chars.slice());
             await sleep(2000);
 
             const charLife = Number(char.life) - Number(enemyChar.attack);
@@ -33,12 +33,12 @@ export const useFight = () => {
             if (charLife < 0) {
                 chars[charIndex] = null;
             }
-            setChars(chars);
+            setChars(chars.slice());
 
             if (enemyLife < 0) {
                 enemyChars[enemyCharIndex] = null;
             }
-            setEnemyChars(enemyChars);
+            setEnemyChars(enemyChars.slice());
             await sleep(500);
         }
     }, [enemyChars, setEnemyChars, chars, setChars]);

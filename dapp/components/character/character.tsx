@@ -11,9 +11,6 @@ export function Character({
     charType: string,
     attack?: boolean
 }) {
-    if(charType === "tank") {
-        console.log("rerender attack", attack);
-    }
     if(!charTable[charType as keyof typeof charTable]) {
         console.error("not found", charType);
         return <>no</>
