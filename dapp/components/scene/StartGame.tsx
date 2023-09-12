@@ -84,7 +84,7 @@ export const StartGame = () => {
                         }}
                     >Query</Button>
                 </Stack>
-                {ranks && 
+                {ranks && ranks.length > 0 && 
                         <div style={{marginLeft:'100px'}}> 
                             <p>排行榜:</p>
                             {
