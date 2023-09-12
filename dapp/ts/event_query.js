@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.queryValueFromContract = void 0;
 var sui_js_1 = require("@mysten/sui.js");
-var constants_js_1 = require("./constants.js");
+var constants_js_1 = require("../lib/constants.js");
 var queryValueFromContract = function () {
     var connect = function () { return __awaiter(void 0, void 0, void 0, function () {
         var provider, result;
@@ -46,16 +46,14 @@ var queryValueFromContract = function () {
             switch (_a.label) {
                 case 0:
                     provider = new sui_js_1.JsonRpcProvider(sui_js_1.testnetConnection);
-                    return [4 /*yield*/, provider.getOwnedObjects({
-                            owner: constants_js_1.config.SENDER,
-                            filter: {
-                                Package: constants_js_1.config.PACKAGE_ID,
-                            },
-                            options: {
-                                showContent: true,
-                                showDisplay: true,
-                                showType: true,
-                            },
+                    return [4 /*yield*/, provider.queryEvents({
+                            query: {
+                                Sender: constants_js_1.SENDER,
+                                MoveModule: {
+                                    package: constants_js_1.PACKAGE_ID,
+                                    module: "chess"
+                                }
+                            }
                         })];
                 case 1:
                     result = _a.sent();

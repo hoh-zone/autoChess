@@ -24,7 +24,6 @@ const useQueryChesses = () => {
                 }
             }
         });
-
         setNfts(
             result.data.map(d => (d.data?.content as any)?.fields).filter(Boolean) as GameNft[]
         );

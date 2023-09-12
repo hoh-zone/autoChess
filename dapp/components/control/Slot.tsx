@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
+import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
 import { removeSuffix } from "../../utils/removeSuffix";
 
 const PRICE = 3;
@@ -12,15 +12,18 @@ export const Slot = ({ isOpponent = false, id }: {
 }) => {
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
     const [chars, setChars] = useAtom(slotCharacter);
+    const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
 
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot);
     const [shopChars, setShopChars] = useAtom(shopCharacter);
 
     const [money, setMoney] = useAtom(moneyAtom);
-
-    const char = chars[id];
-    console.log(chars);
-
+    let char:any;
+    if (id >= 6) {
+        char = enemyChars[id - 6];
+    } else {
+        char = chars[id];
+    }
     const selected = (slotNumber === id);
 
     return <div className={

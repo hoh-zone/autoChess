@@ -1,11 +1,19 @@
 import { Box, Button, HStack } from "@chakra-ui/react"
 import { ShopSlot } from "../control/ShopSlot"
 import { useAtom } from "jotai"
-import { moneyA as moneyAtom, shopCharacter } from "../../store/stages"
+import { chessId, enemyCharacter, moneyA as moneyAtom, shopCharacter, stageAtom } from "../../store/stages"
+import OperateAndMatch from "../button/OperateAndMatch"
+import useQueryFight from "../button/QueryFightResult"
+
 
 export const Shop = () => {
+    const [stage, setStage] = useAtom(stageAtom);
     const [money, setMoney] = useAtom(moneyAtom);
     const [chars, setChars] = useAtom(shopCharacter);
+    const [chess_id, setChessId] = useAtom(chessId);
+    const { nftObjectId, operate_submit } = OperateAndMatch();
+    const {query_fight} = useQueryFight();
+    const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
 
     return <Box flexBasis={"15%"} className="bg-indigo-200">
         <HStack className="justify-around relative top-[-20px] " gap={0}>
@@ -16,6 +24,10 @@ export const Shop = () => {
             <ShopSlot id={4} />
 
             <HStack className="relative top-[20px]">
+            <   Button onClick={async () => {
+                        setStage("init");;
+                    }}
+                >GO BACK</Button>
                 <Button className=""
                     onClick={
                         () => {
@@ -25,7 +37,13 @@ export const Shop = () => {
                         }
                     }>Refresh(-2💰)
                 </Button>
-                <Button className="" onClick={()=>{}}>Fight</Button>
+                <Button className="" onClick={async () => {
+                            await operate_submit();
+                            console.log("start game");
+                            let json = await query_fight();
+                            let enemy = json['v2_lineup']['roles'];
+                            setEnemyChars(enemy);
+                        }}>Fight</Button>
             </HStack>
         </HStack>
     </Box>

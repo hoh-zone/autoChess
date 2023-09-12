@@ -31,7 +31,7 @@ export interface Role {
 
 export interface CharacterFields {
     attack:  string;
-    defense: string;
+    life: string;
     level:   number;
     name:    string;
     price:   number;
@@ -55,7 +55,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "4",
-//                         "defense": "25",
+//                         "life": "25",
 //                         "level": 1,
 //                         "name": "warrior1",
 //                         "price": 1
@@ -65,7 +65,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "2",
-//                         "defense": "30",
+//                         "life": "30",
 //                         "level": 1,
 //                         "name": "priest1",
 //                         "price": 1
@@ -75,7 +75,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "7",
-//                         "defense": "15",
+//                         "life": "15",
 //                         "level": 1,
 //                         "name": "wizard1",
 //                         "price": 1
@@ -85,7 +85,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -95,7 +95,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "10",
-//                         "defense": "20",
+//                         "life": "20",
 //                         "level": 1,
 //                         "name": "wizard2",
 //                         "price": 1
@@ -105,7 +105,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -115,7 +115,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "2",
-//                         "defense": "30",
+//                         "life": "30",
 //                         "level": 1,
 //                         "name": "priest1",
 //                         "price": 1
@@ -125,7 +125,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -135,7 +135,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "2",
-//                         "defense": "30",
+//                         "life": "30",
 //                         "level": 1,
 //                         "name": "priest1",
 //                         "price": 1
@@ -145,7 +145,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "4",
-//                         "defense": "25",
+//                         "life": "25",
 //                         "level": 1,
 //                         "name": "warrior1",
 //                         "price": 1
@@ -155,7 +155,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -165,7 +165,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -175,7 +175,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -185,7 +185,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "2",
-//                         "defense": "30",
+//                         "life": "30",
 //                         "level": 1,
 //                         "name": "priest1",
 //                         "price": 1
@@ -195,7 +195,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "4",
-//                         "defense": "25",
+//                         "life": "25",
 //                         "level": 1,
 //                         "name": "warrior1",
 //                         "price": 1
@@ -205,7 +205,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "7",
-//                         "defense": "15",
+//                         "life": "15",
 //                         "level": 1,
 //                         "name": "wizard1",
 //                         "price": 1
@@ -215,7 +215,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -225,7 +225,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "5",
-//                         "defense": "18",
+//                         "life": "18",
 //                         "level": 1,
 //                         "name": "assassin1",
 //                         "price": 1
@@ -235,7 +235,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "4",
-//                         "defense": "25",
+//                         "life": "25",
 //                         "level": 1,
 //                         "name": "warrior1",
 //                         "price": 1
@@ -245,7 +245,7 @@ export interface ID {
 //                     "type": "0xa50dadac76f6e6619dae1bec599d9310fb5d2f03e498b0857bd57de94676ed08::role::Role",
 //                     "fields": {
 //                         "attack": "4",
-//                         "defense": "25",
+//                         "life": "25",
 //                         "level": 1,
 //                         "name": "warrior1",
 //                         "price": 1

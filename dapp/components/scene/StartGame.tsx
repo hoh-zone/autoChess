@@ -57,6 +57,7 @@ export const StartGame = () => {
                             onClick={async () => {
                                 const nft = nfts.find(nft => nft.id.id === selectedGameNFT);
                                 if (!nft) throw new Error("nft not found");
+                                console.log(nft.id);
                                 syncGameNFT(nft);
                                 setStage("shop");
                             }}

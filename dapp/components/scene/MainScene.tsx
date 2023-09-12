@@ -1,6 +1,9 @@
-import { Box, HStack, Stack } from "@chakra-ui/react"
+import { Box, Button, HStack, Stack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { SellButton } from "../control/SellButton"
+import useQueryFight from "../button/QueryFightResult"
+import { useAtom } from "jotai"
+import { enemyCharacter } from "../../store/stages"
 
 export const MainScene = () => {
     return <HStack className="flex-1" gap={0}>
@@ -29,16 +32,16 @@ export const MainScene = () => {
         <div className="w-1/2 h-full bg-slate-50 relative" >
             <div className="absolute top-[-5%] right-1/3 h-full">
                 <Stack className=" justify-around h-full">
-                    <Slot isOpponent={true} id={11} />
-                    <Slot isOpponent={true} id={12} />
-                    <Slot isOpponent={true} id={13} />
+                    <Slot isOpponent={true} id={6} />
+                    <Slot isOpponent={true} id={7} />
+                    <Slot isOpponent={true} id={8} />
                 </Stack>
             </div>
             <div className="absolute top-[-5%] right-2/3 h-full">
                 <Stack className=" justify-around h-full">
-                    <Slot isOpponent={true} id={14} />
-                    <Slot isOpponent={true} id={15} />
-                    <Slot isOpponent={true} id={16} />
+                    <Slot isOpponent={true} id={9} />
+                    <Slot isOpponent={true} id={10} />
+                    <Slot isOpponent={true} id={11} />
                 </Stack>
             </div>
         </div>

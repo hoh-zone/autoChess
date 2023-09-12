@@ -3,73 +3,84 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos, TransactionBlock} from 'ethos-connect';
 import { ErrorMessage, SuccessMessage } from '..';
 import { CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
+import { chessId, moneyA as moneyAtom, slotCharacter} from "../../store/stages";
+import { useAtom } from 'jotai';
 
-type Props = {
-    username:string
-}
-
-const OperateAndMatch = ({username}: Props) => {
-    
+const OperateAndMatch = () => {
     const { wallet } = ethos.useWallet();
-    const [signSuccess, setSignSuccess] = useState(false);
-    const [signError, setSignError] = useState(false);
+    const [nftObjectId, setNftObjectId] = useState<string | null>(null);
+    const [money] = useAtom(moneyAtom);
+    const [chars] = useAtom(slotCharacter);
+    const [chess_id] = useAtom(chessId);
 
-    const signTransaction = useCallback(async () => {
-        if (!wallet) return;
-        const left_gold = 3;
-        const chess_id = "0x7c553fc28e0f2c1650a0b21003553b6c8011784e01e561ebef14d7432f9f1140";
-        const tx = new TransactionBlock();
-        
-        tx.moveCall({
-            target: `${PACKAGE_ID}::chess::operate_and_match`,
-            arguments: [
-                tx.pure(`${CHESS_GLOBAL}`),
-                tx.pure(`${ROLE_GLOBAL}`),
-                tx.pure(`${LINEUP_GLOBAL}`),
-                tx.pure(left_gold),
-                tx.pure(["ani1", "ani1_1", "mega2"]),
-                tx.pure(chess_id),
-            ]
-        })
-
-        const response = await wallet.signAndExecuteTransactionBlock({ 
-            transactionBlock: tx, 
-            options: { 
-                showObjectChanges: true,
+    const get_chars_strvec = () => {
+        let vec:string[] = [];
+        for (const index in chars) {
+            let cha = chars[index];
+            if (cha == null) {
+                continue
             }
-          });
-        console.log("res:", response);
+            // version1:
+            vec.push(cha.name);
+            // todo: version2:
+            // vec.push(cha.name + ":" + cha.level + ":" + cha.attack + ":" + cha.life + ":" + cha.price);
+        }
+        return vec;
+    }
+
+    const operate_submit = useCallback(async () => {
+        if (!wallet) return;
+        console.log("chars vec:", get_chars_strvec());
+        console.log("chessId:", chess_id);
+        try {
+            const tx = new TransactionBlock();
+            const left_gold = money;
+            tx.moveCall({
+                target: `${PACKAGE_ID}::chess::operate_and_match`,
+                arguments: [
+                    tx.pure(`${CHESS_GLOBAL}`),
+                    tx.pure(`${ROLE_GLOBAL}`),
+                    tx.pure(`${LINEUP_GLOBAL}`),
+                    tx.pure(left_gold),
+                    tx.pure(get_chars_strvec()),
+                    tx.pure(chess_id),
+                ]
+            })
+
+            const response = await wallet.signAndExecuteTransactionBlock({
+                transactionBlock:tx,
+                options: {
+                    showObjectChanges: true,
+                    showEffects:true,
+                    showEvents:true,
+                }
+            });
+            if (response.events != null) {
+                let event_json = response.events[0].parsedJson as any;
+                let res = event_json['res']
+                if (res == 1) {
+                    console.log("you win");
+                } else if (res == 2) {
+                    console.log("you lose")
+                } else {
+                    console.log("even");
+                }
+            }
+            console.log("response", response);
+        } catch (error) {
+            console.log(error);
+        }
     }, [wallet]);
 
     const reset = useCallback(() => {
-        setSignSuccess(false);
-        setSignError(false);
+        setNftObjectId(null)
     }, [])
 
     useEffect(() => {
         reset();
     }, [reset])
 
-    return (
-        <div className='flex flex-col gap-6'>
-            {signSuccess && (
-                <SuccessMessage reset={reset}>
-                    Check the developer console to see the result.
-                </SuccessMessage>
-            )}
-            {signError && (
-                <ErrorMessage reset={reset}>
-                    Signing did not work. See the developer console for additional information.
-                </ErrorMessage>
-            )}
-            <button
-                className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                onClick={signTransaction}
-            >
-                submit chess operations
-            </button>
-        </div>
-    )
-}
+    return { nftObjectId, operate_submit };
+};
 
 export default OperateAndMatch;

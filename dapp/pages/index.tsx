@@ -110,11 +110,7 @@ const Home: NextPage = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-
-                My Operations:
-                <input type="text" defaultValue="['buy1-2', 'd1', 'sell2', 'buy2-1', 'buy3-5', 'swap1-2']" />
-                <OperateAndMatch username="sean" />
-                <Fund />
+               <Fund />
                 then
                 <Mint />
                 or
