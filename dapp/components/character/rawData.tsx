@@ -7,7 +7,7 @@ interface Roles {
 
 const roles_info: Roles = {
     "ani1": {name:"ani1", attack:"6", life:"4", level:1, price:3, sellprice:2},
-    "ani1_1": {name:"ani1",attack:"6", life:"4", level:1, price:3, sellprice:2},
+    "ani1_1": {name:"ani1_1",attack:"6", life:"4", level:2, price:3, sellprice:2},
     "ani2": {name:"ani2",attack:"12", life:"8", level:3, price:7, sellprice:6},
     "ani2_1": {name:"ani2_1", attack:"12", life:"8", level:6, price:7, sellprice:6},
     "ani3": {name:"ani3", attack:"20", life:"20", level:9, price:9, sellprice:8},

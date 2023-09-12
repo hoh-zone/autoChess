@@ -32,6 +32,7 @@ export const StartGame = () => {
     const nft_options = parse_nft(nfts);
     return (
         <Center className="h-full w-full">
+
             <video style={{ width: '100%', height: '100%' }} autoPlay loop muted>
                 <source src="bg7.mp4" type="video/mp4" />
             </video>
@@ -39,7 +40,7 @@ export const StartGame = () => {
                 <HStack>
                 <Stack className="items-center" gap={4}>
                     <div>    
-                        {nft_options.length > 0 && <text>My Records:</text>}
+                        {nft_options.length > 0 && <text>My Chesses:</text>}
                         {
                             nft_options.map((nft, index) => (
                                 <div key={index}>

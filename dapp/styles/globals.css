@@ -6,12 +6,27 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: PixcelFont;
+}
+
+@font-face {
+  font-family: PixcelFont;
+  src: url('./../public/PressStart2P-Regular.ttf') format('truetype');
+}
+
+button {
+  font-family: PixcelFont;
+  font-size: small;
+}
+
+p {
+  font-family: PixcelFont;
+  font-size: small;
 }
 
 .text-start-game {
   position: absolute;
+  font-family: PixcelFont;
   top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -20,6 +35,7 @@ body {
 }
 
 .custom-input {
+  font-family: PixcelFont;
   font-weight: 900;
   background: rgb(251, 251, 238);
 }
