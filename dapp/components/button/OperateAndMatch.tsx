@@ -5,6 +5,7 @@ import { ErrorMessage, SuccessMessage } from '..';
 import { CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
 import { chessId, moneyA as moneyAtom, slotCharacter} from "../../store/stages";
 import { useAtom } from 'jotai';
+import { addLevelSuffix } from '../../utils/removeSuffix';
 
 const OperateAndMatch = () => {
     const { wallet } = ethos.useWallet();
@@ -20,8 +21,10 @@ const OperateAndMatch = () => {
             if (cha == null) {
                 continue
             }
-            // version1:
-            vec.push(cha.name);
+            // version1: namex_y
+            vec.push(addLevelSuffix(cha.name, cha.level));
+
+
             // todo: version2:
             // vec.push(cha.name + ":" + cha.level + ":" + cha.attack + ":" + cha.life + ":" + cha.price);
         }
