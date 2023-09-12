@@ -47,6 +47,7 @@ export const Slot = ({ isOpponent = false, id }: {
             return false;
         }
     }
+
     const upgrade = (level:any) => {
         if (level == 1) {
             return 2;
@@ -70,7 +71,12 @@ export const Slot = ({ isOpponent = false, id }: {
         )}
         onClick={() => {
             // try to buy
+            console.log("slotNumber:", slotNumber);
+            console.log("shopNum:", shopSlotNumber);
+            console.log("char:", char);
+            console.log("char[id]", chars[id]);
             if (shopSlotNumber !== null && !char) {
+                console.log("here-1");
                 if (money >= PRICE) {
                     setMoney(money - PRICE);
 
@@ -82,8 +88,15 @@ export const Slot = ({ isOpponent = false, id }: {
                     setShopSlotNumber(null);
                     setSlotNumber(null);
                 }
+            // buy and upgrad chars
+            } else if (shopSlotNumber != null && char && 
+                canUpgrade(char, shopChars[shopSlotNumber])) {
+                char.level = upgrade(char.level);
+                shopChars[shopSlotNumber] = null;
+                setChars(chars);
+                setShopSlotNumber(null);
+                setSlotNumber(null);
             }
-
             // swap or upgrad chars
             else if (slotNumber !== null && slotNumber !== id) {
                 const temp = chars[id];
@@ -106,6 +119,7 @@ export const Slot = ({ isOpponent = false, id }: {
                 }
             }
             else {
+                console.log("here3");
                 setSlotNumber(id);
                 setShopSlotNumber(null);
             }
