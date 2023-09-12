@@ -39,10 +39,19 @@ export const Shop = () => {
                 </Button>
                 <Button className="" onClick={async () => {
                             await operate_submit();
-                            console.log("start game");
+                            console.log("start fight");
                             let json = await query_fight();
                             let enemy = json['v2_lineup']['roles'];
                             setEnemyChars(enemy);
+                            console.log("播放战斗动作，战斗计算");
+                            let res = json['res']
+                            if (res == 1) {
+                                console.log("you win");
+                            } else if (res == 2) {
+                                console.log("you lose")
+                            } else {
+                                console.log("even");
+                            }
                         }}>Fight</Button>
             </HStack>
         </HStack>

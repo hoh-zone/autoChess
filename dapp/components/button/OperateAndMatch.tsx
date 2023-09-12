@@ -66,7 +66,6 @@ const OperateAndMatch = () => {
                     console.log("even");
                 }
             }
-            console.log("response", response);
         } catch (error) {
             console.log(error);
         }
