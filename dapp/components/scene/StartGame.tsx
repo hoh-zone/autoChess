@@ -56,6 +56,7 @@ export const StartGame = () => {
                 <HStack>
                     <Stack className="items-center" gap={4}>
                         <div>
+                            <p style={{marginBottom:'50px', fontSize:'100px'}}>Auto Chess</p>
                             {nft_options.length > 0 ? <text>My Chesses:</text> : <Spinner/>}
                             {
                                 nft_options.map((nft, index) => (
