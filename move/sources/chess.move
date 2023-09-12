@@ -151,7 +151,7 @@ module auto_chess::chess {
                     v1: tx_context::sender(ctx),
                     v1_name: chess.name,
                     v1_win: chess.win,
-                    v1_lose: chess.lose + 1,
+                    v1_lose: chess.lose,
                     v2_name: lineup::get_name(enemy_lineup),
                     v2_lineup:*enemy_lineup,
                     res: 2
@@ -165,7 +165,7 @@ module auto_chess::chess {
                     chess_id: object::id_address(chess),
                     v1: tx_context::sender(ctx),
                     v1_name: chess.name,
-                    v1_win: chess.win + 1,
+                    v1_win: chess.win,
                     v1_lose: chess.lose, 
                     v2_name: lineup::get_name(enemy_lineup),
                     v2_lineup:*enemy_lineup,

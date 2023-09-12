@@ -128,7 +128,7 @@ module auto_chess::lineup {
         LineUp {
             creator:tx_context::sender(ctx),
             name: utf8(b"I'm a super robot"),
-            role_num:max_role_num,
+            role_num: vector::length(&roles);,
             roles: roles
         }
     }
