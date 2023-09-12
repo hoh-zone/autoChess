@@ -28,16 +28,6 @@ export const Slot = ({ isOpponent = false, id }: {
 
     const selected = (slotNumber === id);
 
-    // useEffect(() => {
-    //     if (!char) return;
-    //     char.attacking = true;
-    //     chars[id] = char
-    //     setChars(chars)
-    //     isOpponent ?
-    //         setEnemyChars(enemyChars.slice()) :
-    //         setChars(chars.slice());
-    // }, [char]);
-
     // reset attack after 1.5s
     useEffect(() => {
         if (char && char.attacking) {

@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Input, Stack } from "@chakra-ui/react"
+import { Box, Button, Center, HStack, Input, Spinner, Stack } from "@chakra-ui/react"
 import { moneyA, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
 import mint_chess from "../button/MintChess";
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT";
 import { GameNft } from "../../types/nft";
 import useQueryFight from "../button/QueryFightResult";
+import { ethos } from "ethos-connect";
 
 const parse_nft = (nfts: GameNft[]) => {
     return nfts.map((nft) => ({
@@ -19,13 +20,28 @@ const parse_nft = (nfts: GameNft[]) => {
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
-    const {nftObjectId, mint } = mint_chess();
+    const { nftObjectId, mint } = mint_chess();
     const [inputValue, setInputValue] = useState('');
-    const {nfts, query_chesses } = useQueryChesses();
-    const {ranks , query_fight_rank} = useQueryFight();
+    const { nfts, query_chesses } = useQueryChesses();
+    const { ranks, query_fight_rank } = useQueryFight();
     const syncGameNFT = useSyncGameNFT();
     const [selectedGameNFT, setSelectedGameNFT] = useState('');
-    
+    const { status } = ethos.useWallet();
+    const [isLoading, setIsLoading] = useState(false);
+
+    // query chesses when wallet connected
+    useEffect(() => {
+        if(status !== 'connected') return;
+
+        async function fetch() {
+            setIsLoading(false);
+            await Promise.all([query_chesses(), query_fight_rank()]);
+            setIsLoading(true);
+        }
+        fetch();
+        
+    },[status, query_chesses, query_fight_rank]);
+
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedGameNFT(event.target.value);
     };
@@ -38,61 +54,55 @@ export const StartGame = () => {
             </video>
             <div className="text-start-game">
                 <HStack>
-                <Stack className="items-center" gap={4}>
-                    <div>    
-                        {nft_options.length > 0 && <text>My Chesses:</text>}
-                        {
-                            nft_options.map((nft, index) => (
-                                <div key={index}>
-                                    <label >
-                                        <input
-                                            type="radio"
-                                            value={nft.id}
-                                            checked={selectedGameNFT === nft.id}
-                                            onChange={handleOptionChange}
-                                        />
-                                        {nft.text}
-                                    </label>
-                                </div>))
-                        }
-                        {nft_options.length > 0 && 
+                    <Stack className="items-center" gap={4}>
+                        <div>
+                            {nft_options.length > 0 ? <text>My Chesses:</text> : <Spinner/>}
+                            {
+                                nft_options.map((nft, index) => (
+                                    <div key={index}>
+                                        <label >
+                                            <input
+                                                type="radio"
+                                                value={nft.id}
+                                                checked={selectedGameNFT === nft.id}
+                                                onChange={handleOptionChange}
+                                            />
+                                            {nft.text}
+                                        </label>
+                                    </div>))}
+                                    
+                            {nft_options.length > 0 &&
+                                <Button
+                                    onClick={async () => {
+                                        const nft = nfts.find(nft => nft.id.id === selectedGameNFT);
+                                        if (!nft) throw new Error("nft not found");
+                                        console.log(nft.id);
+                                        syncGameNFT(nft);
+                                        setStage("shop");
+                                    }}
+                                >Continue Game</Button>}
+
+                        </div>
+                        <Input
+                            type="text"
+                            className='custom-input'
+                            value={inputValue}
+                            placeholder="Enter your name"
+                            onChange={(v) => setInputValue(v.target.value)} />
                         <Button
-                        onClick={async () => {
-                            const nft = nfts.find(nft => nft.id.id === selectedGameNFT);
-                            if (!nft) throw new Error("nft not found");
-                            console.log(nft.id);
-                            syncGameNFT(nft);
-                            setStage("shop");
-                        }}
-                    >Continue Game</Button>}
-                            
-                    </div>
-                    <Input
-                        type="text"
-                        className='custom-input'
-                        value={inputValue}
-                        placeholder="Enter your name"
-                        onChange={(v) => setInputValue(v.target.value)} />
-                    <Button
-                        onClick={async () => {
-                            await mint({ username: inputValue });
-                            setStage("shop");
-                        }}
-                    >Start New Game</Button>
-                    <Button
-                        onClick={async () => {
-                            await query_chesses();
-                            await query_fight_rank();
-                        }}
-                    >Query</Button>
-                </Stack>
-                {ranks && ranks.length > 0 && 
-                        <div style={{marginLeft:'100px'}}> 
+                            onClick={async () => {
+                                await mint({ username: inputValue });
+                                setStage("shop");
+                            }}
+                        >Start New Game</Button>
+                    </Stack>
+                    {ranks && ranks.length > 0 &&
+                        <div style={{ marginLeft: '100px' }}>
                             <p>Rank:</p>
                             {
-                            ranks.map((fight) => (
-                                <p>{fight}</p>
-                            ))}
+                                ranks.map((fight) => (
+                                    <p>{fight}</p>
+                                ))}
                         </div>}
                 </HStack>
                 <div className="flex place-items-end" style={{ position: "absolute", transform: 'translate(-50%, 70%)' }}>
