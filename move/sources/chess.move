@@ -38,6 +38,7 @@ module auto_chess::chess {
     }
 
     struct FightEvent has copy, drop {
+        chess_id: address,
         v1: address,
         v1_name: String,
         v1_win: u8,
@@ -146,6 +147,7 @@ module auto_chess::chess {
                 chess.lose = chess.lose + 1;
                 chess.life = chess.life - 1;
                 event::emit(FightEvent {
+                    chess_id: object::id_address(chess),
                     v1: tx_context::sender(ctx),
                     v1_name: chess.name,
                     v1_win: chess.win,
@@ -160,6 +162,7 @@ module auto_chess::chess {
                 chess.win = chess.win + 1;
                 print(&utf8(b"I win, my left lineup:"));
                 event::emit(FightEvent {
+                    chess_id: object::id_address(chess),
                     v1: tx_context::sender(ctx),
                     v1_name: chess.name,
                     v1_win: chess.win + 1,
