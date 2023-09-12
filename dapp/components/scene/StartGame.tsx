@@ -4,9 +4,10 @@ import { useAtom } from "jotai";
 import mint_chess from "../button/MintChess";
 import { Character } from "../character/character";
 import useQueryChesses from "../button/QueryAllChesses";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT";
 import { GameNft } from "../../types/nft";
+import useQueryFight from "../button/QueryFightResult";
 
 const parse_nft = (nfts: GameNft[]) => {
     return nfts.map((nft) => ({
@@ -18,27 +19,28 @@ const parse_nft = (nfts: GameNft[]) => {
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
-    const { nftObjectId, mint } = mint_chess();
+    const {nftObjectId, mint } = mint_chess();
     const [inputValue, setInputValue] = useState('');
-    const { nfts, query_chesses } = useQueryChesses();
+    const {nfts, query_chesses } = useQueryChesses();
+    const {ranks , query_fight_rank} = useQueryFight();
     const syncGameNFT = useSyncGameNFT();
     const [selectedGameNFT, setSelectedGameNFT] = useState('');
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedGameNFT(event.target.value);
     };
-
     const nft_options = parse_nft(nfts);
-
     return (
         <Center className="h-full w-full">
             <video style={{ width: '100%', height: '100%' }} autoPlay loop muted>
                 <source src="bg7.mp4" type="video/mp4" />
             </video>
             <div className="text-start-game">
+                <HStack>
+                    
                 <Stack className="items-center" gap={4}>
-                    <div>
-                        {nft_options.length > 0 && <text>历史棋局</text>}
+                    <div>    
+                        {nft_options.length > 0 && <text>我的存档：</text>}
                         {
                             nft_options.map((nft, index) => (
                                 <div key={index}>
@@ -78,9 +80,19 @@ export const StartGame = () => {
                     <Button
                         onClick={async () => {
                             await query_chesses();
+                            await query_fight_rank();
                         }}
                     >Query</Button>
                 </Stack>
+                {ranks && 
+                        <div style={{marginLeft:'100px'}}> 
+                            <p>排行榜:</p>
+                            {
+                            ranks.map((fight) => (
+                                <p>{fight}</p>
+                            ))}
+                        </div>}
+                </HStack>
                 <div className="flex place-items-end" style={{ position: "absolute", transform: 'translate(-50%, 70%)' }}>
                     <Character charType="archer" isOpponent={false} />
                     <Character charType="shaman" isOpponent={false} />
