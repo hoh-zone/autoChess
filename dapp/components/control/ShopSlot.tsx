@@ -10,7 +10,6 @@ export const ShopSlot = ({ id }: {
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot)
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot)
     const selected = (shopSlotNumber === id);
-
     const [shopChars, setShopChars] = useAtom(shopCharacter)
     const char = shopChars[id];
 
@@ -27,8 +26,9 @@ export const ShopSlot = ({ id }: {
         }}
     >
         <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />
-        <div className="absolute bottom-[-2rem] left-1/2" >
+        <div className="absolute bottom-[-2rem] left-1/2" style={{marginLeft:'40px'}}>
              <p>{char && char.name}</p>
+             <p>price:{char && char.price}</p>
              <p>level:{char && char.level}</p>
              <p>attack:{char && char.attack}</p>
              <p>life:{char && char.life}</p>
