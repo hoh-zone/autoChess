@@ -83,9 +83,8 @@ export const Slot = ({ isOpponent = false, id }: {
             } else if (shopSlotNumber != null && char && 
                 canUpgrade(char, shopChars[shopSlotNumber])) {
                 let tmp = upgrade(char);
-                    chars[id] = tmp;
-                    console.log("tmp", tmp);
-
+                chars[id] = tmp;
+                console.log("tmp", tmp);
                 shopChars[shopSlotNumber] = null;
                 setChars(chars);
                 setShopSlotNumber(null);
@@ -148,6 +147,9 @@ export const Slot = ({ isOpponent = false, id }: {
 
 const canUpgrade = (char1: any, char2: any) => {
     if (char1 == null || char2 == null) {
+        return false;
+    }
+    if (removeSuffix(char1.name) != removeSuffix(char2.name)) {
         return false;
     }
     // 1 + 1 = 2

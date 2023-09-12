@@ -112,6 +112,7 @@ export function get_sell_price(name:string | undefined): number {
 }
 
 export function upgrade(char:CharacterFields): CharacterFields {
+    console.log("升级前:", char.name);
     let level_str = "";
     let level = char.level;
     let name = char.name;
@@ -125,5 +126,6 @@ export function upgrade(char:CharacterFields): CharacterFields {
         level_str = "3";
     }
     let key = removeSuffix(name) + level_str
+    console.log("升级后:", roles_info[key]);
     return roles_info[key];
 }
