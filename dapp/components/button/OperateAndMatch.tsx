@@ -5,7 +5,7 @@ import { ErrorMessage, SuccessMessage } from '..';
 import { CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
 import { chessId, moneyA as moneyAtom, slotCharacter} from "../../store/stages";
 import { useAtom } from 'jotai';
-import { addLevelSuffix } from '../../utils/removeSuffix';
+import { addLevelSuffix, removeSuffix } from '../../utils/removeSuffix';
 
 const OperateAndMatch = () => {
     const { wallet } = ethos.useWallet();
@@ -22,7 +22,8 @@ const OperateAndMatch = () => {
                 continue
             }
             // version1: namex_y
-            vec.push(addLevelSuffix(cha.name, cha.level));
+            let name = removeSuffix(cha.name);
+            vec.push(addLevelSuffix(name, cha.level));
 
 
             // todo: version2:
