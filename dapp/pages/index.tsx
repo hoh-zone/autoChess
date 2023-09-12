@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
 import { Disconnect, Fund, Mint, WalletActions } from "../components";
 import MintChess from "../components/button/MintChess";
-import OperateAndMatch from "../components/button/OperateAndMatch";
+import useOperateAndMatch from "../components/button/OperateAndMatch";
 import QueryAllChesses from "../components/button/QueryAllChesses";
 import { Stack } from "@chakra-ui/react";
 import { Header } from "../components/scene/Header";

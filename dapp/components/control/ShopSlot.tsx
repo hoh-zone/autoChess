@@ -3,6 +3,7 @@ import { Character } from "../character/character"
 import { useAtom } from "jotai"
 import { selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
 import { removeSuffix } from "../../utils/removeSuffix"
+import { useEffect, useRef, useState } from "react"
 
 export const ShopSlot = ({ id }: {
     id: number
@@ -13,6 +14,16 @@ export const ShopSlot = ({ id }: {
     const [shopChars, setShopChars] = useAtom(shopCharacter)
     const char = shopChars[id];
 
+    const attackAnimRef = useRef<NodeJS.Timeout>();
+    const [attack ,setAttack] = useState(false);
+    useEffect(() => {
+        setTimeout(() => {
+            setAttack(true);
+            if (attackAnimRef.current) clearInterval(attackAnimRef.current);
+            attackAnimRef.current = setTimeout(() => setAttack(false), 1500);
+        }, 6000 + Math.random() * 3000);
+    }, []);
+    
     return <div className={
         twMerge(
             "w-24 h-24 relative rounded-xl",
@@ -36,6 +47,7 @@ export const ShopSlot = ({ id }: {
 
         <div className="absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
             {char && <Character
+                attack={attack}
                 charType={removeSuffix(char.name)}
             />
             }

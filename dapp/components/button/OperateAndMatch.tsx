@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { ethos, TransactionBlock} from 'ethos-connect';
-import { ErrorMessage, SuccessMessage } from '..';
 import { CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
 import { chessId, moneyA as moneyAtom, slotCharacter} from "../../store/stages";
 import { useAtom } from 'jotai';
 import { addLevelSuffix, removeSuffix } from '../../utils/removeSuffix';
 
-const OperateAndMatch = () => {
+const useOperateAndMatch = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
     const [money] = useAtom(moneyAtom);
@@ -86,4 +85,4 @@ const OperateAndMatch = () => {
     return { nftObjectId, operate_submit };
 };
 
-export default OperateAndMatch;
+export default useOperateAndMatch;

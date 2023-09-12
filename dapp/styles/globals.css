@@ -230,11 +230,11 @@ a {
 }
 
 .attack {
-  animation: attackAnim 1.5s steps(var(--attack2-step)) infinite;
+  animation: attackAnim 1s steps(var(--attack-step)) infinite;
 }
 
 @keyframes attackAnim {
-  to { background-position: var(--attack2-position); }
+  to { background-position: var(--attack-position); }
 }
 
 .move {

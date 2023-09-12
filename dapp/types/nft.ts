@@ -35,6 +35,7 @@ export interface CharacterFields {
     level:   number;
     name:    string;
     price:   number;
+    attacking?: boolean;
 }
 
 export interface ID {

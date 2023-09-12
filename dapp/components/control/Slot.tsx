@@ -3,6 +3,8 @@ import { Character } from "../character/character"
 import { useAtom } from "jotai"
 import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
 import { removeSuffix } from "../../utils/removeSuffix";
+import { CharacterFields } from "../../types/nft";
+import { useEffect } from "react";
 
 const PRICE = 3;
 
@@ -16,51 +18,44 @@ export const Slot = ({ isOpponent = false, id }: {
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot);
     const [shopChars, setShopChars] = useAtom(shopCharacter);
     const [money, setMoney] = useAtom(moneyAtom);
-    let char:any;
+    let char: CharacterFields | null = null;
     if (id >= 6) {
         char = enemyChars[id - 6];
     } else {
         char = chars[id];
     }
+
     const selected = (slotNumber === id);
 
-    const canUpgrade = (char1:any, char2:any) => {
-        if (char1 == null || char2 == null) {
-            return false;
-        }
-        // 1 + 1 = 2
-        // 1 + 2 = 3
-        // 3 + 3 = 6
-        // 3 + 6 = 9
-        let level1 = char1.level;
-        let level2 = char2.level;
-        if (level1 > level2) {
-            let tmp = level2;
-            level2 = level1;
-            level1 = tmp;
-        }
-        if (level1 == 1) {
-            return level2 == 1 || level2 == 2
-        } else if (level1 == 3) {
-            return level2 == 3 || level2 == 6
-        } else {
-            return false;
-        }
+    if (char?.name.includes("tank")) {
+        console.log("tank status", char.attacking, char);
     }
 
-    const upgrade = (level:any) => {
-        if (level == 1) {
-            return 2;
-        } else if (level == 2) {
-            return 3;
-        } else if (level == 3) {
-            return 6;
-        } else if (level == 6) {
-            return 9;
-        } else {
-            return -1;
+    useEffect(() => {
+        if (!char) return;
+
+        char.attacking = true;
+        if (char?.name.includes("tank")) {
+            console.log("set attack for tank", chars);
         }
-    }
+        isOpponent ?
+            setEnemyChars(enemyChars) :
+            setChars(chars);
+    }, [char]);
+
+    // reset attack after 1.5s
+    // useEffect(() => {
+    //     if (char && char.attacking) {
+    //         setTimeout(() => {
+    //             if (!char || !char.attacking) return;
+    //             char.attacking = false;
+    //             isOpponent ?
+    //                 setEnemyChars(enemyChars) :
+    //                 setChars(chars);
+    //         }, 1500);
+    //     }
+    // }, [char?.attacking]);
+
 
     return <div className={
         twMerge(
@@ -118,24 +113,63 @@ export const Slot = ({ isOpponent = false, id }: {
         }}
     >
         <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />
-        <div className="absolute bottom-[-2rem] left-1/2" style={{marginLeft:'40px'}} >
-             <p>id:{id}</p>
-             {char && <div>
-             <p>{removeSuffix(char.name)}</p>
+        <div className="absolute bottom-[-2rem] left-1/2" style={{ marginLeft: '40px' }} >
+            <p>id:{id}</p>
+            {char && <div>
+                <p>{removeSuffix(char.name)}</p>
                 <p>level:{char.level}</p>
                 <p>attack:{char.attack}</p>
                 <p>life:{char.life}</p>
                 <p>price:{char.price}</p>
-             </div>
+            </div>
             }
-             
+
         </div>
 
         <div className="absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
             {char && char.name && <Character
+                attack={char.attacking}
                 charType={removeSuffix(char.name)}
                 isOpponent={isOpponent} />
             }
         </div>
     </div >
+}
+
+const canUpgrade = (char1: any, char2: any) => {
+    if (char1 == null || char2 == null) {
+        return false;
+    }
+    // 1 + 1 = 2
+    // 1 + 2 = 3
+    // 3 + 3 = 6
+    // 3 + 6 = 9
+    let level1 = char1.level;
+    let level2 = char2.level;
+    if (level1 > level2) {
+        let tmp = level2;
+        level2 = level1;
+        level1 = tmp;
+    }
+    if (level1 == 1) {
+        return level2 == 1 || level2 == 2
+    } else if (level1 == 3) {
+        return level2 == 3 || level2 == 6
+    } else {
+        return false;
+    }
+}
+
+const upgrade = (level:any) => {
+    if (level == 1) {
+        return 2;
+    } else if (level == 2) {
+        return 3;
+    } else if (level == 3) {
+        return 6;
+    } else if (level == 6) {
+        return 9;
+    } else {
+        return -1;
+    }
 }

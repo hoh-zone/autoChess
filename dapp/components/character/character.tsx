@@ -5,20 +5,15 @@ import { charTable } from "./charTable";
 export function Character({
     isOpponent = false,
     charType,
+    attack = false
 }: {
     isOpponent?: boolean,
     charType: string,
+    attack?: boolean
 }) {
-    useEffect(() => {
-        setInterval(() => {
-            setAttack(true);
-            if (attackAnimRef.current) clearInterval(attackAnimRef.current);
-            attackAnimRef.current = setTimeout(() => setAttack(false), 1000);
-        }, 3000 + Math.random() * 3000);
-    }, []);
-    const [attack, setAttack] = useState(false);
-    const attackAnimRef = useRef<NodeJS.Timeout>();
-
+    if(charType === "tank") {
+        console.log("rerender attack", attack);
+    }
     if(!charTable[charType as keyof typeof charTable]) {
         console.error("not found", charType);
         return <>no</>
@@ -63,11 +58,6 @@ export function Character({
                         backgroundImage: `url(${src})`,
                         width: moveWidth,
                         height: moveHeight
-                    }}
-                    onClick={() => {
-                        setAttack(true);
-                        if (attackAnimRef.current) clearInterval(attackAnimRef.current);
-                        attackAnimRef.current = setTimeout(() => setAttack(false), 1000);
                     }}
                 />}
         </div>
