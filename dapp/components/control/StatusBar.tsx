@@ -66,7 +66,6 @@ export const StatusBar = ({ isOpponent = false}: {
             } else {
                 name = "avatar_" + removeSuffix(char!.name);
             }
-            
         } else {
             let char = enemy_chars.find(Boolean);
             if (char == null) {
