@@ -79,11 +79,12 @@ export const StartGame = () => {
                                         if (!nft) throw new Error("nft not found");
                                         console.log(nft.id);
                                         syncGameNFT(nft);
-                                        if (nft.lose == 3) {
-                                            alert("The game was end");
-                                        } else {
-                                            setStage("shop");
-                                        }
+                                        setStage("shop");
+                                        // if (nft.lose == 3) {
+                                        //     alert("The game was end");
+                                        // } else {
+                                        //     setStage("shop");
+                                        // }
                                     }}
                                 >Continue Game</Button>}
                         </div>

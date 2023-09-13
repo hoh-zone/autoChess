@@ -111,11 +111,11 @@ export function get_sell_price(name:string | undefined): number {
     }
 }
 
-export function get_total_life(char:CharacterFields) : number {
+export function get_total_life(char:CharacterFields | null) : number {
     if (char && char.name) {
         return parseInt(roles_info[char.name].life);
     } else {
-        return 99;
+        return -1;
     }
 }
 

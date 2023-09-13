@@ -28,12 +28,10 @@ export const StatusBar = ({ isOpponent = false}: {
         let start = isOpponent? 10: 60;
         let end = isOpponent? 335: 330;
         let total = get_total_life(char);
-        let life = char == null ? 0 : char.life;
-        if (!isOpponent) {
-            console.log(char);
-            console.log("total:", total);
-
+        if (total == -1) {
+            return end;
         }
+        let life = char == null ? 0 : char.life;
         return start + (life/total) * end
     }
 
@@ -106,6 +104,7 @@ export const StatusBar = ({ isOpponent = false}: {
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>
                 <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
+                <p>{char?.life}/{get_total_life(char)}</p>
             </div>
         </HStack>
         <HStack style={{marginLeft:`${!isOpponent ? '70px' : '260px'}`}}>

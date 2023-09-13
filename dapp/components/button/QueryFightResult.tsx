@@ -48,7 +48,7 @@ const useQueryFight = () => {
         }
     }, [wallet]);
 
-    const query_fight = useCallback(async () => {
+    const query_fight = useCallback(async (nft_id:string) => {
         try {
             if (!wallet) return;
             const result = await wallet.client.queryEvents( {
@@ -56,13 +56,14 @@ const useQueryFight = () => {
                   MoveEventType: PACKAGE_ID + '::chess::FightEvent',
                 }
             });
-            let json = result.data[0].parsedJson as any;
-            // todo:根据nftid进行校验比对
-            // let chess_id = json['chess_id'];
-            let res = json['res'];
-            let v2_name = json['v2_name'];
-            let v2_lineup = json['v2_lineup'];
-            return json;
+            for (let i = 0; i < result.data.length; i++) {
+                let json = result.data[i].parsedJson as any;
+                let chess_id = json['chess_id'];
+                if (chess_id == nft_id) {
+                    console.log("找到了");
+                    return json;
+                }
+            }
         } catch(error) {
             console.log('err', error);
         }

@@ -12,6 +12,7 @@ export const Fight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
     const [enemyName, setEnemyName] = useAtom(enemyNameA);
     const [stage, setStage] = useAtom(stageAtom);
+    const [chess_id] = useAtom(chessId);
     const fight = useFight();
 
     useEffect(() => {
@@ -27,7 +28,7 @@ export const Fight = () => {
         console.log("start fight");
 
         // sync enemy
-        let json = await query_fight();
+        let json = await query_fight(chess_id);
         let enemy = json['v2_lineup']['roles'];
         let name = json['v2_name'];
         setEnemyName(name);
