@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Input, Spinner, Stack } from "@chakra-ui/react"
+import { Box, Button, Center, HStack, Img, Input, Spinner, Stack } from "@chakra-ui/react"
 import { moneyA, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
 import mint_chess from "../button/MintChess";
@@ -79,11 +79,15 @@ export const StartGame = () => {
                                         if (!nft) throw new Error("nft not found");
                                         console.log(nft.id);
                                         syncGameNFT(nft);
-                                        setStage("shop");
+                                        if (nft.lose == 3) {
+                                            alert("The game was end");
+                                        } else {
+                                            setStage("shop");
+                                        }
                                     }}
                                 >Continue Game</Button>}
-
                         </div>
+                        
                         <Input
                             type="text"
                             className='custom-input'
@@ -93,7 +97,9 @@ export const StartGame = () => {
                         <Button
                             onClick={async () => {
                                 await mint({ username: inputValue });
-                                setStage("shop");
+                                if (nftObjectId) {
+                                    setStage("shop");
+                                }
                             }}
                         >Start New Game</Button>
                     </Stack>

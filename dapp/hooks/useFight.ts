@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { enemyCharacter, slotCharacter } from "../store/stages";
+import { enemyCharacter, enemyFightingIndex, fightingIndex, slotCharacter } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import { sleep } from "../utils/sleep";
@@ -7,14 +7,18 @@ import { sleep } from "../utils/sleep";
 export const useFight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
     const [chars, setChars] = useAtom(slotCharacter);
-    
+    const [fight_index, setFightingIndex] = useAtom(fightingIndex);
+    const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
+
     return useCallback(async () => {
         // both sides have characters, continue fighting
         while(some(chars, Boolean) && some(enemyChars, Boolean)) {
             const charIndex = chars.findIndex(Boolean);
+            setFightingIndex(charIndex);
             const char = chars[charIndex]!;
 
             const enemyCharIndex = enemyChars.findIndex(Boolean);
+            setEnemyFightingIndex(enemyCharIndex);
             const enemyChar = enemyChars[enemyCharIndex]!;
 
             // attacking animation

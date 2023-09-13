@@ -111,6 +111,14 @@ export function get_sell_price(name:string | undefined): number {
     }
 }
 
+export function get_total_life(char:CharacterFields) : number {
+    if (char && char.name) {
+        return parseInt(roles_info[char.name].life)
+    } else {
+        return 99;
+    }
+}
+
 export function upgrade(char:CharacterFields): CharacterFields {
     console.log("升级前:", char.name);
     let level_str = "";

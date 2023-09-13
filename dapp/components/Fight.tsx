@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { chessId, enemyCharacter, stageAtom } from "../store/stages";
+import { chessId, enemyCharacter, enemyNameA, stageAtom } from "../store/stages";
 import useOperateAndMatch from "./button/OperateAndMatch";
 import useQueryFight from "./button/QueryFightResult";
 import { Button } from "@chakra-ui/react";
@@ -10,6 +10,7 @@ export const Fight = () => {
     const { nftObjectId, operate_submit } = useOperateAndMatch();
     const { query_fight } = useQueryFight();
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
+    const [enemyName, setEnemyName] = useAtom(enemyNameA);
     const [stage, setStage] = useAtom(stageAtom);
     const fight = useFight();
 
@@ -26,6 +27,8 @@ export const Fight = () => {
         // sync enemy
         let json = await query_fight();
         let enemy = json['v2_lineup']['roles'];
+        let name = json['v2_name'];
+        setEnemyName(name);
         setEnemyChars(enemy);
         setStage("fight");
     }}> Fight </Button>
