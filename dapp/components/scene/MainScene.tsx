@@ -10,8 +10,8 @@ export const MainScene = () => {
     return <HStack className="flex-1" gap={0}>
         {/* left side */}
         <div className="w-1/2 h-full bg-slate-200 relative" >
-            <div style={{marginLeft:'20px', marginTop:'140px'}}>
-                <StatusBar isOpponent={false} id = {0}></StatusBar>
+            <div style={{marginLeft:'20px', marginTop:'30px'}}>
+                <StatusBar isOpponent={false}></StatusBar>
             </div>
             <div className="absolute top-[-5%] left-1/3 h-full">
                 <Stack className=" justify-around h-full">
@@ -34,8 +34,8 @@ export const MainScene = () => {
 
         {/* right side */}
         <div className="w-1/2 h-full bg-slate-50 relative" >
-            <div style={{marginLeft:'20px', marginTop:'140px'}}>
-                <StatusBar isOpponent={true} id = {6}></StatusBar>
+            <div style={{marginLeft:'150px', marginTop:'30px'}}>
+                <StatusBar isOpponent={true}></StatusBar>
             </div>
             <div className="absolute top-[-5%] right-1/3 h-full">
                 <Stack className=" justify-around h-full">

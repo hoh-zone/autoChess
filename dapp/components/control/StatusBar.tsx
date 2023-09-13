@@ -4,7 +4,7 @@ import { useAtom } from "jotai"
 import { CharacterFields } from "../../types/nft";
 import { useEffect } from "react";
 import { HStack, Img } from "@chakra-ui/react";
-import { loseA, nameA, enemyNameA, slotCharacter, winA, enemyWinA, enemyLoseA, fightingIndex, enemyFightingIndex} from "../../store/stages";
+import { loseA, nameA, enemyNameA, slotCharacter, winA, enemyWinA, enemyLoseA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
 import { moneyA as moneyAtom} from "../../store/stages"
 import { get_total_life } from "../character/rawData";
 
@@ -14,6 +14,7 @@ export const StatusBar = ({ isOpponent = false}: {
     const [lose, _setLose] = useAtom(loseA);
     const [win, _setWin] = useAtom(winA);
     const [chars] = useAtom(slotCharacter);
+    const [enemy_chars] = useAtom(enemyCharacter);
     const [money] = useAtom(moneyAtom);
     const [name] = useAtom(nameA);
     const [enemy_name] = useAtom(enemyNameA);
@@ -62,7 +63,7 @@ export const StatusBar = ({ isOpponent = false}: {
         }
     }
     let char: CharacterFields | null = null;
-    char = chars[isOpponent ? enemy_fight_index : fight_index];
+    char = isOpponent ? enemy_chars[enemy_fight_index]: chars[fight_index];
     return <div style={{width:'500px'}}>
         {!isOpponent ? 
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
@@ -79,9 +80,9 @@ export const StatusBar = ({ isOpponent = false}: {
                 <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
             </div>
         </HStack>
-        <HStack style={{marginLeft:'70px'}}>
-            <Img src="gold.png" style={{width:'23px'}}/>
-            <p style={{marginRight:'30px'}}>{money}</p>
+        <HStack style={{marginLeft:`${!isOpponent ? '70px' : '260px'}`}}>
+            {!isOpponent && <Img src="gold.png" style={{width:'23px'}}/>}
+            {!isOpponent && <p style={{marginRight:'30px'}}>{money}</p>}
             {lose == 0 && <HStack>
                 <Img src="heart.png"/>
                 <Img src="heart.png"/>
