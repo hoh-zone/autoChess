@@ -192,18 +192,21 @@ module auto_chess::chess {
         while (life1 != 0 && life2 != 0) {
             life1 = role::get_life(role1);
             life2 = role::get_life(role2);
-            if (life1 < attack2) {
-                role::set_life(role1, 0);
-                break
-            } else {
+            if (life1 > attack2 && attack1 > life2) {
                 role::set_life(role1, life1 - attack2);
-            };
-            if (life2 < attack1) {
                 role::set_life(role2, 0);
-                break
-            } else {
+            } else if (life2 > attack1 && attack2 > life1) {
+                role::set_life(role1, 0);
                 role::set_life(role2, life2 - attack1);
-            };
+            } else if (life1 > attack2 && life2 && attack1) {
+                role::set_life(role1, life1 - attack2);
+                role::set_life(role2, life2 - attack1);
+            } else if (attack1 > life2 && attack2 > life1) {
+                role::set_life(role1, 0);
+                role::set_life(role2, 0);
+            } else {
+
+            }
         };
     }
 
