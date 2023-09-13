@@ -7,6 +7,7 @@ import { HStack, Img } from "@chakra-ui/react";
 import { loseA, nameA, enemyNameA, slotCharacter, winA, enemyWinA, enemyLoseA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
 import { moneyA as moneyAtom} from "../../store/stages"
 import { get_total_life } from "../character/rawData";
+import { removeSuffix } from "../../utils/removeSuffix";
 
 export const StatusBar = ({ isOpponent = false}: {
     isOpponent?: boolean
@@ -55,6 +56,29 @@ export const StatusBar = ({ isOpponent = false}: {
         }
     }
 
+    const get_avatar= () => {
+        let path;
+        let name;
+        if (!isOpponent) {
+            let char = chars.find(Boolean);
+            if (char == null) {
+                name = "avatar";
+            } else {
+                name = "avatar_" + removeSuffix(char!.name);
+            }
+            
+        } else {
+            let char = enemy_chars.find(Boolean);
+            if (char == null) {
+                name = "avatar";
+            } else {
+                name = "avatar_" + removeSuffix(char!.name);
+            }
+        }
+        path = name + ".png"
+        return path;
+    }
+
     const get_bar_direction = () => {
         if (isOpponent) {
             return "left"
@@ -67,13 +91,13 @@ export const StatusBar = ({ isOpponent = false}: {
     return <div style={{width:'500px'}}>
         {!isOpponent ? 
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
-            <Img src="avatar.png" style={{width:'100px'}}/>
+            <Img src= {`${get_avatar()}`} style={{width:'100px'}}/>
             <p style={{bottom:'0'}}>{isOpponent ? enemy_name : name}</p>
         </HStack>
         : 
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <p style={{bottom:'0'}}>{isOpponent ? enemy_name : name}</p>
-            <Img src="avatar.png" style={{width:'100px'}}/>
+            <Img src={`${get_avatar()}`} style={{width:'100px'}}/>
         </HStack>}
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>
