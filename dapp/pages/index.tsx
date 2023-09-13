@@ -68,7 +68,7 @@ const Home: NextPage = () => {
       requestAnimationFrame(frame);
     };
 
-    frame();
+    // frame();
   }, [canvasRef]);
   return (
     <>
@@ -128,7 +128,6 @@ const Home: NextPage = () => {
         </div>
       </div>
     </>
-
   );
 };
 

@@ -30,7 +30,7 @@ export const FightScene = () => {
 
     return <div className="h-full w-full relative">
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
-            <source src="bg6.mp4" type="video/mp4" />
+            <source src="bg8.mp4" type="video/mp4" />
         </video>
         <HStack className="absolute top-0 p-8 w-full justify-around">
             <StatusBar isOpponent={false}></StatusBar>
