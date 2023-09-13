@@ -133,5 +133,6 @@ export function upgrade(char:CharacterFields): CharacterFields {
         level_str = "3";
     }
     let key = removeSuffix(name) + level_str
-    return roles_info[key];
+    let clone = JSON.stringify(roles_info[key]);
+    return JSON.parse(clone);
 }

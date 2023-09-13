@@ -29,6 +29,11 @@ export const StatusBar = ({ isOpponent = false}: {
         let end = isOpponent? 335: 330;
         let total = get_total_life(char);
         let life = char == null ? 0 : char.life;
+        if (!isOpponent) {
+            console.log(char);
+            console.log("total:", total);
+
+        }
         return start + (life/total) * end
     }
 
