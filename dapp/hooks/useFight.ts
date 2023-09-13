@@ -46,6 +46,6 @@ export const useFight = () => {
             setEnemyChars(enemyChars.slice());
             await sleep(500);
         }
-        // setStage("shop");
+        setStage("shop");
     }, [enemyChars, setEnemyChars, chars, setChars]);
 }

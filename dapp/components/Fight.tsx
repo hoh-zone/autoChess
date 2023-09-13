@@ -20,8 +20,10 @@ export const Fight = () => {
         }
     }, [stage]);
 
-    return <Button className="" onClick={async () => {
+    return <>
+    { stage === "shop" && <Button className="" onClick={async () => {
         await operate_submit();
+        
         console.log("start fight");
 
         // sync enemy
@@ -31,5 +33,7 @@ export const Fight = () => {
         setEnemyName(name);
         setEnemyChars(enemy);
         setStage("fight");
-    }}> Fight </Button>
+    }}> Fight </Button>    }
+    </>
+    
 }

@@ -1,6 +1,6 @@
 import { Center, HStack, Text } from "@chakra-ui/react"
 import { useAtom } from "jotai"
-import { loseA, moneyA as moneyAtom, nameA, winA } from "../../store/stages"
+import { loseA, moneyA as moneyAtom, nameA, stageAtom, winA } from "../../store/stages"
 import { Fight } from "../Fight";
 
 export const Header = () => {
@@ -8,6 +8,7 @@ export const Header = () => {
     const [win, _setWin] = useAtom(winA);
     const [lose, _setLose] = useAtom(loseA);
     const [name, _setName] = useAtom(nameA);
+    const [stage, setStage] = useAtom(stageAtom);
     
     return <HStack flexBasis={"8%"} className="bg-slate-700 text-white">
         <Text>Name: {name}</Text>
