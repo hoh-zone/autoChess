@@ -7,10 +7,9 @@ import { CharacterFields } from "../../types/nft";
 import { useEffect } from "react";
 import { upgrade } from "../character/rawData";
 
-const PRICE = 3;
-
-export const Slot = ({ isOpponent = false, id }: {
+export const Slot = ({ isOpponent = false, showInfo = true, id }: {
     isOpponent?: boolean
+    showInfo?: boolean
     id: number
 }) => {
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
@@ -53,8 +52,8 @@ export const Slot = ({ isOpponent = false, id }: {
             // try to buy
             let char_shop_choosen = shopChars[shopSlotNumber!];
             if (shopSlotNumber !== null && !char && char_shop_choosen) {
-                if (money >= PRICE) {
-                    setMoney(money - PRICE);
+                if (money >= char_shop_choosen.price) {
+                    setMoney(money - char_shop_choosen.price);
                     chars[id] = shopChars[shopSlotNumber];
                     shopChars[shopSlotNumber] = null;
                     setChars(chars);
@@ -66,13 +65,15 @@ export const Slot = ({ isOpponent = false, id }: {
             // buy and upgrad chars
             } else if (shopSlotNumber != null && char && char_shop_choosen && 
                 canUpgrade(char, char_shop_choosen)) {
-                setMoney(money - char_shop_choosen.price);
-                let tmp = upgrade(char);
-                chars[id] = tmp;
-                shopChars[shopSlotNumber] = null;
-                setChars(chars);
-                setShopSlotNumber(null);
-                setSlotNumber(null);
+                if (money >= char_shop_choosen.price) {
+                    setMoney(money - char_shop_choosen.price);
+                    let tmp = upgrade(char);
+                    chars[id] = tmp;
+                    shopChars[shopSlotNumber] = null;
+                    setChars(chars);
+                    setShopSlotNumber(null);
+                    setSlotNumber(null);
+                }
             }
             // swap or upgrad chars
             else if (slotNumber !== null && slotNumber !== id) {
@@ -105,10 +106,10 @@ export const Slot = ({ isOpponent = false, id }: {
             }
         }}
     >
-        <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />
+        {showInfo && <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />}
         <div className="absolute bottom-[-2rem] left-1/2" style={{ marginLeft: '40px' }} >
-            <p>id:{id}</p>
-            {char && <div>
+            {showInfo && <p>id:{id}</p>}
+            {char && showInfo && <div>
                 <p>{removeSuffix(char.name)}</p>
                 <p>level:{char.level}</p>
                 <p>attack:{char.attack}</p>

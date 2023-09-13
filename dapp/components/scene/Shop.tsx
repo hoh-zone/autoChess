@@ -2,8 +2,6 @@ import { Box, Button, HStack } from "@chakra-ui/react"
 import { ShopSlot } from "../control/ShopSlot"
 import { useAtom } from "jotai"
 import { moneyA as moneyAtom, shopCharacter, stageAtom } from "../../store/stages"
-import { Fight } from "../Fight"
-
 
 export const Shop = () => {
     const [stage, setStage] = useAtom(stageAtom);
@@ -32,7 +30,6 @@ export const Shop = () => {
                         }
                     }>Refresh(-2💰)
                 </Button>
-                <Fight />
             </HStack>
         </HStack>
     </Box>

@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { StartGame } from "../components/scene/StartGame";
 import { useAtom } from "jotai";
 import { stageAtom } from "../store/stages";
+import { FightScene } from "../components/scene/FightScene";
 
 const Home: NextPage = () => {
   const { status, wallet } = ethos.useWallet();
@@ -73,15 +74,11 @@ const Home: NextPage = () => {
     <>
       <canvas ref={canvasRef} className="absolute h-[100vh] w-[100vw] z-50 pointer-events-none" />
       <Stack className="h-[100vh] w-[100vw] bg-slate-600" gap={0}>
-        {
-          stage === "init" ?
-            <StartGame /> :
-            <>
-              <Header />
-              <MainScene />
-              <Shop />
-            </>
-        }
+      {stage === "init" && <StartGame/>}
+      {(stage === "shop" || stage == "fight") && <Header/>}
+      {stage === "fight" && <FightScene/>}
+      {stage === "shop" && <MainScene/>}
+      {stage === "shop" && <Shop/>}
       </Stack>
 
       <div className="flex justify-between items-start">

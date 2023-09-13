@@ -1,6 +1,7 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { Center, HStack, Text } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import { loseA, moneyA as moneyAtom, nameA, winA } from "../../store/stages"
+import { Fight } from "../Fight";
 
 export const Header = () => {
     const [money] = useAtom(moneyAtom);
@@ -13,5 +14,6 @@ export const Header = () => {
         <Text>Money: {money}</Text>
         <Text>Win: {win}</Text>
         <Text>Lose: {lose}</Text>
+        <Fight/>
     </HStack>
 }

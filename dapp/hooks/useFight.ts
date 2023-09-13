@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { enemyCharacter, enemyFightingIndex, fightingIndex, slotCharacter } from "../store/stages";
+import { enemyCharacter, enemyFightingIndex, fightingIndex, slotCharacter, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import { sleep } from "../utils/sleep";
@@ -9,6 +9,7 @@ export const useFight = () => {
     const [chars, setChars] = useAtom(slotCharacter);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
+    const [stage, setStage] = useAtom(stageAtom);
 
     return useCallback(async () => {
         // both sides have characters, continue fighting
@@ -45,5 +46,6 @@ export const useFight = () => {
             setEnemyChars(enemyChars.slice());
             await sleep(500);
         }
+        // setStage("shop");
     }, [enemyChars, setEnemyChars, chars, setChars]);
 }
