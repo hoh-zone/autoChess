@@ -6,7 +6,7 @@ type Props = {
     username:string
 }
 
-const mint_chess = () => {
+const useMintChess = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
 
@@ -57,4 +57,4 @@ const mint_chess = () => {
     return { nftObjectId, mint };
 };
 
-export default mint_chess;
+export default useMintChess;

@@ -1,9 +1,6 @@
 import type { NextPage } from "next";
 import { SignInButton, ethos } from "ethos-connect";
-import { Disconnect, Fund, Mint, WalletActions } from "../components";
-import MintChess from "../components/button/MintChess";
-import useOperateAndMatch from "../components/button/OperateAndMatch";
-import QueryAllChesses from "../components/button/QueryAllChesses";
+import { Disconnect, Fund, Mint } from "../components";
 import { Stack } from "@chakra-ui/react";
 import { Header } from "../components/scene/Header";
 import { MainScene } from "../components/scene/MainScene";
@@ -110,8 +107,6 @@ const Home: NextPage = () => {
                <Fund />
                 then
                 <Mint />
-                or
-                <WalletActions />
                 or
                 <Disconnect />
               </div>

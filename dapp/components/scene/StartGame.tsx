@@ -1,7 +1,7 @@
 import { Box, Button, Center, HStack, Img, Input, Spinner, Stack } from "@chakra-ui/react"
 import { moneyA, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
-import mint_chess from "../button/MintChess";
+import useMintChess from "../button/MintChess";
 import { Character } from "../character/character";
 import useQueryChesses from "../button/QueryAllChesses";
 import { useEffect, useState } from "react";
@@ -13,7 +13,7 @@ import { Rank } from "../Rank";
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
-    const { nftObjectId, mint } = mint_chess();
+    const { nftObjectId, mint } = useMintChess();
     const [inputValue, setInputValue] = useState('');
     const { nfts, query_chesses } = useQueryChesses();
     const syncGameNFT = useSyncGameNFT();
@@ -48,6 +48,7 @@ export const StartGame = () => {
                             {
                                 nfts.map((nft, index) => (
                                     <Button
+                                        key={nft.id.id}
                                         className=" bg-slate-200"
                                         fontSize={"x-small"}
                                         onClick={async () => {
