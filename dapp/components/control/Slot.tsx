@@ -19,8 +19,8 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
     const [shopChars, setShopChars] = useAtom(shopCharacter);
     const [money, setMoney] = useAtom(moneyAtom);
     let char: CharacterFields | null = null;
-    if (id >= 6) {
-        char = enemyChars[id - 6];
+    if (id >= 10) {
+        char = enemyChars[id - 10];
     } else {
         char = chars[id];
     }

@@ -31,7 +31,7 @@ export const StartGame = () => {
 
     // query chesses when wallet connected
     useEffect(() => {
-        if(status !== 'connected') return;
+        if (status !== 'connected') return;
 
         async function fetch() {
             setIsLoading(false);
@@ -39,8 +39,8 @@ export const StartGame = () => {
             setIsLoading(true);
         }
         fetch();
-        
-    },[status, query_chesses, query_fight_rank]);
+
+    }, [status, query_chesses, query_fight_rank]);
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedGameNFT(event.target.value);
@@ -49,15 +49,15 @@ export const StartGame = () => {
     return (
         <Center className="h-full w-full">
 
-            <video style={{ width: '100%', height: '100%' }} autoPlay loop muted>
+            <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
                 <source src="bg7.mp4" type="video/mp4" />
             </video>
             <div className="text-start-game">
                 <HStack>
                     <Stack className="items-center" gap={4}>
                         <div>
-                            <p style={{marginBottom:'50px', fontSize:'100px'}}>Auto Chess</p>
-                            {nft_options.length > 0 ? <text>My Chesses:</text> : <Spinner/>}
+                            <p style={{ marginBottom: '50px', fontSize: '100px' }}>Auto Chess</p>
+                            {nft_options.length > 0 ? <text>My Chesses:</text> : <Spinner />}
                             {
                                 nft_options.map((nft, index) => (
                                     <div key={index}>
@@ -71,7 +71,7 @@ export const StartGame = () => {
                                             {nft.text}
                                         </label>
                                     </div>))}
-                                    
+
                             {nft_options.length > 0 &&
                                 <Button
                                     onClick={async () => {
@@ -87,7 +87,7 @@ export const StartGame = () => {
                                     }}
                                 >Continue Game</Button>}
                         </div>
-                        
+
                         <Input
                             type="text"
                             className='custom-input'
