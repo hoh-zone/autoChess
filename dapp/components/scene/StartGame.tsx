@@ -47,16 +47,16 @@ export const StartGame = () => {
     };
     const nft_options = parse_nft(nfts);
     return (
-        <Center className="h-full w-full">
+        <Center className="h-full w-full relative">
 
             <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
                 <source src="bg7.mp4" type="video/mp4" />
             </video>
-            <div className="text-start-game">
+            <div className="absolute text-white top-12 z-50">
                 <HStack>
-                    <Stack className="items-center" gap={4}>
+                    <Stack className="items-center text-center" gap={4}>
                         <div>
-                            <p style={{ marginBottom: '50px', fontSize: '100px' }}>Auto Chess</p>
+                            <p style={{ marginBottom: '50px', fontSize: '100px' }}>Auto<br />Chess</p>
                             {nft_options.length > 0 ? <text>My Chesses:</text> : <Spinner />}
                             {
                                 nft_options.map((nft, index) => (
@@ -112,24 +112,24 @@ export const StartGame = () => {
                                 ))}
                         </div>}
                 </HStack>
-                <div className="flex place-items-end" style={{ position: "absolute", transform: 'translate(-50%, 70%)' }}>
-                    <Character charType="archer" isOpponent={false} />
-                    <Character charType="shaman" isOpponent={false} />
-                    <Character charType="slime" isOpponent={true} />
-                </div>
-                <div className="flex place-items-end" style={{ position: "absolute", transform: 'translate(-30%, 90%)' }}>
-                    <Character charType="assa" isOpponent={false} />
-                    <Character charType="tank" isOpponent={false} />
-                    <Character charType="shaman" isOpponent={true} />
-                    <Character charType="tree" isOpponent={true} />
-                </div>
-                <div className="flex place-items-end" style={{ position: "absolute", transform: 'translate(-40%, 110%)' }}>
-                    <Character charType="firemega" isOpponent={false} />
-                    <Character charType="golem" isOpponent={false} />
-                    <Character charType="mega" isOpponent={true} />
-                    <Character charType="fighter" isOpponent={true} />
-                </div>
             </div>
-        </Center>
+            <HStack className="w-full flex justify-around absolute bottom-[5%]">
+                <Character charType="archer" isOpponent={false} />
+                <Character charType="shaman" isOpponent={false} />
+                <Character charType="slime" isOpponent={true} />
+            </HStack>
+            <HStack className="w-full flex justify-around absolute bottom-[15%] pl-24">
+                <Character charType="assa" isOpponent={false} />
+                <Character charType="tank" isOpponent={false} />
+                <Character charType="shaman" isOpponent={true} />
+                <Character charType="tree" isOpponent={true} />
+            </HStack>
+            <HStack className="w-full flex justify-around absolute bottom-[25%] pr-12"  >
+                <Character charType="firemega" isOpponent={false} />
+                <Character charType="golem" isOpponent={false} />
+                <Character charType="mega" isOpponent={true} />
+                <Character charType="fighter" isOpponent={true} />
+            </HStack>
+        </Center >
     )
 }

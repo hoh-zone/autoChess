@@ -24,26 +24,6 @@ p {
   font-size: small;
 }
 
-.text-start-game {
-  position: absolute;
-  font-family: PixcelFont;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-}
-
-.text-fight-game {
-  position: absolute;
-  font-family: PixcelFont;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-}
-
 .custom-input {
   font-family: PixcelFont;
   font-weight: 900;
