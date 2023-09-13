@@ -92,7 +92,7 @@ export const StatusBar = ({ isOpponent = false}: {
     }
     let char: CharacterFields | null = null;
     char = isOpponent ? enemy_chars[enemy_fight_index]: chars[fight_index];
-    return <div style={{width:'45%'}}>
+    return <div className="text-white" style={{width:'45%'}}>
         {!isOpponent ? 
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <Img src= {`${get_avatar()}`} style={{width:'100px'}}/>

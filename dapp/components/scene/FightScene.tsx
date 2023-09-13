@@ -1,9 +1,33 @@
-import { Box, Button, Center, HStack, Img, Stack } from "@chakra-ui/react"
+import { HStack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { StatusBar } from "../control/StatusBar"
-import { SellButton } from "../control/SellButton"
+import { useAtom } from "jotai"
+import { enemyCharacter, slotCharacter } from "../../store/stages"
+import { twMerge } from "tailwind-merge"
+import range from "lodash/range"
 
+const positionTable: { [key: string]: string } = {
+    0: "right-0 top-0",
+    1: "right-[10%] bottom-[10%]",
+    2: "right-[15%] top-[10%]",
+    3: "right-[25%] bottom-[25%]",
+    4: "right-[35%] top-[10%]",
+    5: "right-[45%] bottom-[20%]",
+    6: "right-[55%] bottom-[30%]",
+    10: "left-0 top-0",
+    11: "left-[10%] bottom-[10%]",
+    12: "left-[15%] top-[10%]",
+    13: "left-[25%] bottom-[25%]",
+    14: "left-[35%] top-[10%]",
+    15: "left-[45%] bottom-[20%]",
+    16: "left-[55%] bottom-[30%]",
+}
 export const FightScene = () => {
+    const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
+    const [chars, setChars] = useAtom(slotCharacter);
+    const charIndex = chars.findIndex(Boolean);
+    const enemyIndex = enemyChars.findIndex(Boolean);
+
     return <div className="h-full w-full relative">
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
             <source src="bg6.mp4" type="video/mp4" />
@@ -14,51 +38,29 @@ export const FightScene = () => {
         </HStack>
         <HStack className="absolute w-full h-[200px] bottom-0">
             <div className="w-1/2 h-full relative" >
-                <div className="absolute right-0 top-0">
-                    <Slot showInfo={false} id={0} />
-                </div>
-                <div className="absolute right-[10%] bottom-[10%]">
-                    <Slot showInfo={false} id={1} />
-                </div>
-                <div className="absolute right-[15%] top-[10%]">
-                    <Slot showInfo={false} id={2} />
-                </div>
-                <div className="absolute right-[25%] bottom-[25%]">
-                    <Slot showInfo={false} id={3} />
-                </div>
-                <div className="absolute right-[35%] top-[10%]">
-                    <Slot showInfo={false} id={4} />
-                </div>
-                <div className="absolute right-[45%] bottom-[20%]">
-                    <Slot showInfo={false} id={5} />
-                </div>
-                <div className="absolute right-[55%] bottom-[30%]">
-                    <Slot showInfo={false} id={6} />
-                </div>
+                {range(0, 7).map((id) =>
+                (<div className={twMerge(
+                    "absolute transition-all",
+                    charIndex === id ?
+                        "right-0 top-0" :
+                        positionTable[id] ?? "right-[20%] top-[20%]"
+                )}>
+                    <Slot showInfo={false} id={id} />
+                </div>)
+                )}
             </div>
 
             <div className="w-1/2 h-full relative" >
-                <div className="absolute left-0 top-0">
-                    <Slot showInfo={false} id={10} isOpponent={true} />
-                </div>
-                <div className="absolute left-[10%] bottom-[10%]">
-                    <Slot showInfo={false} id={11} isOpponent={true} />
-                </div>
-                <div className="absolute left-[15%] top-[10%]">
-                    <Slot showInfo={false} id={12} isOpponent={true} />
-                </div>
-                <div className="absolute left-[25%] bottom-[25%]">
-                    <Slot showInfo={false} id={13} isOpponent={true} />
-                </div>
-                <div className="absolute left-[35%] top-[10%]">
-                    <Slot showInfo={false} id={14} isOpponent={true} />
-                </div>
-                <div className="absolute left-[45%] bottom-[20%]">
-                    <Slot showInfo={false} id={15} isOpponent={true} />
-                </div>
-                <div className="absolute left-[55%] bottom-[30%]">
-                    <Slot showInfo={false} id={16} isOpponent={true} />
-                </div>
+                {range(10, 17).map((id) =>
+                (<div className={twMerge(
+                    "absolute transition-all",
+                    enemyIndex + 10 === id ?
+                        "left-0 top-0" :
+                        positionTable[id] ?? "left-[20%] top-[20%]"
+                )}>
+                    <Slot showInfo={false} id={id} isOpponent={true} />
+                </div>)
+                )}
             </div>
 
         </HStack>

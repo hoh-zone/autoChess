@@ -27,7 +27,7 @@ export const useFight = () => {
             enemyChar.attacking = true;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
-            await sleep(2000);
+            await sleep(1000);
 
             const charLife = Number(char.life) - Number(enemyChar.attack);
             const enemyLife = Number(enemyChar.life) - Number(char.attack);
