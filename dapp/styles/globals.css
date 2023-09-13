@@ -9,6 +9,10 @@ body {
   font-family: PixcelFont;
 }
 
+div {
+  font-family: PixcelFont;
+}
+
 @font-face {
   font-family: PixcelFont;
   src: url('./../public/PressStart2P-Regular.ttf') format('truetype');
