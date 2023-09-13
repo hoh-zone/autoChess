@@ -39,7 +39,7 @@ export const FightScene = () => {
         <HStack className="absolute w-full h-[200px] bottom-0">
             <div className="w-1/2 h-full relative" >
                 {range(0, 7).map((id) =>
-                (<div className={twMerge(
+                (<div key={id} className={twMerge(
                     "absolute transition-all",
                     charIndex === id ?
                         "right-0 top-0" :
@@ -52,7 +52,7 @@ export const FightScene = () => {
 
             <div className="w-1/2 h-full relative" >
                 {range(10, 17).map((id) =>
-                (<div className={twMerge(
+                (<div key={id} className={twMerge(
                     "absolute transition-all",
                     enemyIndex + 10 === id ?
                         "left-0 top-0" :

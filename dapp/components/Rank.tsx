@@ -24,7 +24,7 @@ export const Rank = () => {
             <p></p>
             {
                 ranks.map((fight, i) => (
-                    <p>{i + 1}:{fight}</p>
+                    <p key={i}>{i + 1}:{fight}</p>
                 ))}
         </div>
     } >

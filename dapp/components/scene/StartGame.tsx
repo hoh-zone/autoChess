@@ -1,7 +1,7 @@
 import { Box, Button, Center, HStack, Img, Input, Spinner, Stack } from "@chakra-ui/react"
 import { moneyA, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
-import mint_chess from "../button/MintChess";
+import useMintChess from "../button/MintChess";
 import { Character } from "../character/character";
 import useQueryChesses from "../button/QueryAllChesses";
 import { useEffect, useState } from "react";
@@ -11,21 +11,12 @@ import useQueryFight from "../button/QueryFightResult";
 import { ethos } from "ethos-connect";
 import { Rank } from "../Rank";
 
-const parse_nft = (nfts: GameNft[]) => {
-    return nfts.map((nft) => ({
-        text: "name : " + nft.name + " life : " + nft.life + " gold : " + nft.gold + " status : " + nft.win + " - " + nft.lose,
-        id: nft.id.id,
-        cards_pool: nft.cards_pool.fields
-    }));
-}
-
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
-    const { nftObjectId, mint } = mint_chess();
+    const { nftObjectId, mint } = useMintChess();
     const [inputValue, setInputValue] = useState('');
     const { nfts, query_chesses } = useQueryChesses();
     const syncGameNFT = useSyncGameNFT();
-    const [selectedGameNFT, setSelectedGameNFT] = useState('');
     const { status } = ethos.useWallet();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -42,10 +33,6 @@ export const StartGame = () => {
 
     }, [status, query_chesses]);
 
-    const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedGameNFT(event.target.value);
-    };
-    const nft_options = parse_nft(nfts);
     return (
         <Center className="h-full w-full relative">
 
@@ -55,43 +42,27 @@ export const StartGame = () => {
             <div className="absolute text-white top-12 z-50">
                 <HStack>
                     <Stack className="items-center text-center" gap={4}>
-                        <div>
+                        <div className="mb-12">
                             <p style={{ marginBottom: '50px', fontSize: '100px' }}>Auto<br />Chess</p>
-                            {isLoading ? <text>My Chesses:</text> : <Spinner />}
+                            {isLoading ? <div>Continue Game:</div> : <Spinner />}
                             {
-                                nft_options.map((nft, index) => (
-                                    <div key={index}>
-                                        <label >
-                                            <input
-                                                type="radio"
-                                                value={nft.id}
-                                                checked={selectedGameNFT === nft.id}
-                                                onChange={handleOptionChange}
-                                            />
-                                            {nft.text}
-                                        </label>
-                                    </div>))}
-
-                            {nft_options.length > 0 &&
-                                <Button
-                                    onClick={async () => {
-                                        const nft = nfts.find(nft => nft.id.id === selectedGameNFT);
-                                        if (!nft) throw new Error("nft not found");
-                                        console.log(nft.id);
-                                        syncGameNFT(nft);
-                                        setStage("shop");
-                                        // if (nft.lose == 3) {
-                                        //     alert("The game was end");
-                                        // } else {
-                                        //     setStage("shop");
-                                        // }
-                                    }}
-                                >Continue Game</Button>}
+                                nfts.map((nft, index) => (
+                                    <Button
+                                        key={nft.id.id}
+                                        className=" bg-slate-200"
+                                        fontSize={"x-small"}
+                                        onClick={async () => {
+                                            syncGameNFT(nft);
+                                            setStage("shop");
+                                        }}
+                                    >{"name: " + nft.name + " status: " + nft.win + " - " + nft.lose}</Button>
+                                ))}
                         </div>
 
                         <Input
                             type="text"
                             className='custom-input'
+                            width="300px"
                             value={inputValue}
                             placeholder="Enter your name"
                             onChange={(v) => setInputValue(v.target.value)} />
