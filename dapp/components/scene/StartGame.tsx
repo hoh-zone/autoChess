@@ -9,6 +9,7 @@ import { useSyncGameNFT } from "../../hooks/useSyncGameNFT";
 import { GameNft } from "../../types/nft";
 import useQueryFight from "../button/QueryFightResult";
 import { ethos } from "ethos-connect";
+import { Rank } from "../Rank";
 
 const parse_nft = (nfts: GameNft[]) => {
     return nfts.map((nft) => ({
@@ -23,7 +24,6 @@ export const StartGame = () => {
     const { nftObjectId, mint } = mint_chess();
     const [inputValue, setInputValue] = useState('');
     const { nfts, query_chesses } = useQueryChesses();
-    const { ranks, query_fight_rank } = useQueryFight();
     const syncGameNFT = useSyncGameNFT();
     const [selectedGameNFT, setSelectedGameNFT] = useState('');
     const { status } = ethos.useWallet();
@@ -35,12 +35,12 @@ export const StartGame = () => {
 
         async function fetch() {
             setIsLoading(false);
-            await Promise.all([query_chesses(), query_fight_rank()]);
+            await query_chesses();
             setIsLoading(true);
         }
         fetch();
 
-    }, [status, query_chesses, query_fight_rank]);
+    }, [status, query_chesses]);
 
     const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedGameNFT(event.target.value);
@@ -57,7 +57,7 @@ export const StartGame = () => {
                     <Stack className="items-center text-center" gap={4}>
                         <div>
                             <p style={{ marginBottom: '50px', fontSize: '100px' }}>Auto<br />Chess</p>
-                            {nft_options.length > 0 ? <text>My Chesses:</text> : <Spinner />}
+                            {isLoading ? <text>My Chesses:</text> : <Spinner />}
                             {
                                 nft_options.map((nft, index) => (
                                     <div key={index}>
@@ -104,15 +104,10 @@ export const StartGame = () => {
                             }}
                         >Start New Game</Button>
                     </Stack>
-                    {ranks && ranks.length > 0 &&
-                        <div style={{ marginLeft: '100px' }}>
-                            <p>Rank:</p>
-                            {
-                                ranks.map((fight) => (
-                                    <p>{fight}</p>
-                                ))}
-                        </div>}
                 </HStack>
+            </div>
+            <div className="absolute top-0 right-0 m-4">
+                <Rank />
             </div>
             <HStack className="w-full flex justify-around absolute bottom-[5%]">
                 <Character charType="archer" isOpponent={false} />
