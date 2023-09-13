@@ -13,6 +13,7 @@ export const useFight = () => {
 
     return useCallback(async () => {
         // both sides have characters, continue fighting
+        await sleep(1000);
         while(some(chars, Boolean) && some(enemyChars, Boolean)) {
             const charIndex = chars.findIndex(Boolean);
             setFightingIndex(charIndex);
@@ -27,7 +28,7 @@ export const useFight = () => {
             enemyChar.attacking = true;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
-            await sleep(1000);
+            await sleep(1500);
 
             const charLife = Number(char.life) - Number(enemyChar.attack);
             const enemyLife = Number(enemyChar.life) - Number(char.attack);
