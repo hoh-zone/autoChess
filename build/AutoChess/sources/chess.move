@@ -78,12 +78,6 @@ module auto_chess::chess {
 
     public entry fun operate_my_chess(role_global:&role::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
-        assert!(gold >= 0, ERR_INVALID_GOLD_COUNT);
-        //check for lineup length change against change in gold.
-        assert(chess.gold - gold == -1*(vector::length(&lineup_str_vec) - vector::length(&chess.lineup)), ERR_INVALID_PURCHASE);
-        //check if new card is in chess.card_pool
-        //&chess.cards_pool
-        
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         chess.gold = gold;
         chess.lineup = lineup::parse_lineup_str_vec(role_global, lineup_str_vec, ctx);
