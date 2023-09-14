@@ -1,5 +1,4 @@
 module auto_chess::chess {
-    // use auto_chess::role;
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self, public_transfer};
@@ -78,7 +77,6 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
-    
     #[test_only]
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
@@ -90,7 +88,7 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
-    public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, sui_pay_amount:u64, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+    public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         print(&utf8(b"mint new arena chess"));
         let sender = tx_context::sender(ctx);
         let game = Chess {
