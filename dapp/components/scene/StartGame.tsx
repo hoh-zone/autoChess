@@ -36,13 +36,15 @@ export const StartGame = () => {
 
     }, [status, query_chesses]);
     const [isOpen, setIsOpen] = useState(false);
-    const openModal = () => {
+    const [checkout_id, setCheckout_id] = useState('');
+    const openModal = (id:string) => {
+        setCheckout_id(id);
         setIsOpen(true);
-      };
+    };
     
-      const closeModal = () => {
+    const closeModal = () => {
         setIsOpen(false);
-      };
+    };
 
     return (
         <Center className="h-full w-full relative">
@@ -71,13 +73,12 @@ export const StartGame = () => {
                                                 }}
                                                 >{"name: " + nft.name + " " + (!nft.arena? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
                                             </Button>
-                                            {nft.arena &&
-                                                <button onClick={openModal}>chekout</button>
+                                            {nft.arena && 
+                                                <Button className="bg-slate-200" onClick={()=> openModal(nft.id.id)}>Check Out</Button>
                                             }
-                                            <PopupWindow isOpen={isOpen} ok = { () => checkout({chess_id:nft.id.id})} cancel={closeModal} content_str="Are you sure to checkout?"/>
+                                            <PopupWindow isOpen={isOpen} ok = { () => checkout({chess_id:checkout_id})} cancel={closeModal} content_str="Are you sure to checkout?"/>
                                     </HStack>
                                     </Center>
-                                    
                                 ))}
                         </div>
 

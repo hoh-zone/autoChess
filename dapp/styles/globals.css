@@ -272,7 +272,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+  background-color: rgba(94, 94, 94, 0.5); /* 半透明背景 */
 }
 
 .modal-content {

@@ -13,12 +13,17 @@ const PopupWindow: React.FC<ModalProps> = ({ isOpen, ok, cancel, content_str}) =
     return null;
   }
 
+  const ok_close = () => {
+    close();
+    ok();
+  }
+
   return (
     <div className="modal">
       <div className="modal-content">
         <p style={{color:'gray'}}>{content_str}</p>
         <HStack>
-          <button style={{color:'gray'}} onClick={ok}>Yes</button>
+          <button style={{color:'gray'}} onClick={ok_close}>Yes</button>
           <button style={{color:'gray'}} onClick={cancel}>Cancel</button>
         </HStack>
       </div>

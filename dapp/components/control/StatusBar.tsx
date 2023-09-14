@@ -35,6 +35,13 @@ export const StatusBar = ({ isOpponent = false}: {
         return start + (life/total) * end
     }
 
+    const get_hp = (char:any) => {
+        if (char) {
+            return char.life < 0? 0 : char.life
+        }
+        return 0;
+    }
+
     const get_bg1_url = () => {
         if (isOpponent) {
             return "url('health_right_bg.png') no-repeat"
@@ -104,7 +111,7 @@ export const StatusBar = ({ isOpponent = false}: {
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>
                 <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
-                <p>{char?.life}/{get_total_life(char)}</p>
+                <p>{get_hp(char)}/{get_total_life(char)}</p>
             </div>
         </HStack>
         <HStack style={{marginLeft:`${!isOpponent ? '70px' : '260px'}`}}>

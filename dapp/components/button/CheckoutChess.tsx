@@ -13,6 +13,7 @@ const useCheckout = () => {
         if (!wallet) return;
         let method = "check_out_arena"
         let module = "chess";
+        console.log("id:", chess_id);
         try {
             const transactionBlock = new TransactionBlock();
             transactionBlock.moveCall({
