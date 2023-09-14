@@ -4,20 +4,21 @@ import { charTable } from "./charTable";
 export function Character({
     isOpponent = false,
     charType,
-    attack = false,
+    attack = 0,
     level = 1,
 }: {
     isOpponent?: boolean,
     charType: string,
-    attack?: boolean,
+    attack: 0 | 1 | 2,
     level?: number,
 }) {
-    if(!charTable[charType as keyof typeof charTable]) {
+    if (!charTable[charType as keyof typeof charTable]) {
         console.error("not found", charType);
         return <>no</>
     }
     const {
         attackSrc,
+        attack2Src,
         moveSrc,
         moveWidth,
         moveHeight,
@@ -25,15 +26,18 @@ export function Character({
         attackHeight,
     } = charTable[charType as keyof typeof charTable];
 
-    const src = attack ? attackSrc : moveSrc;
-    
+    const src = attack === 1 ? attackSrc :
+        attack === 2 ? attack2Src
+            : moveSrc;
+
     return (
         <div className="w-full h-full overflow-visible flex place-items-end z-10 pointer-events-none">
             {
                 attack ? <div
                     className={
                         twMerge(
-                            "attack animBasic mx-auto",
+                            "animBasic mx-auto",
+                            `attack${attack}`,
                             charType,
                             isOpponent ? "opponentCharacter" : "",
                             level >= 3 ? "effect" : ""

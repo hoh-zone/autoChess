@@ -37,7 +37,7 @@ export interface CharacterFields {
     name:    string;
     price:   number;
     sellprice:   number;
-    attacking?: boolean;
+    attacking: 0 | 1 | 2;
 }
 
 export interface ID {

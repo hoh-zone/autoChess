@@ -239,12 +239,20 @@ a {
   --move-position: -1500px;
 }
 
-.attack {
+.attack1 {
   animation: attackAnim 1s steps(var(--attack-step)) 1;
 }
 
 @keyframes attackAnim {
   to { background-position: var(--attack-position); }
+}
+
+.attack2 {
+  animation: attackAnim2 1s steps(var(--attack2-step)) 1;
+}
+
+@keyframes attackAnim2 {
+  to { background-position: var(--attack2-position); }
 }
 
 .move {

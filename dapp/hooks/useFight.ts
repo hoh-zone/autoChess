@@ -73,8 +73,8 @@ export const useFight = () => {
             const enemyChar = enemyChars[enemyCharIndex]!;
 
             // attacking animation
-            char.attacking = true;
-            enemyChar.attacking = true;
+            char.attacking = Math.random() > 0.5 ? 2 : 1;
+            enemyChar.attacking = Math.random() > 0.5 ? 2 : 1;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
             await sleep(1500);

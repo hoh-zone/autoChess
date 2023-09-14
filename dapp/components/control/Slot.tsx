@@ -33,11 +33,11 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
         if (char && char.attacking) {
             setTimeout(() => {
                 if (!char || !char.attacking) return;
-                char.attacking = false;
+                char.attacking = 0;
                 isOpponent ?
                     setEnemyChars(enemyChars.slice()) :
                     setChars(chars.slice());
-            }, 1500);
+            }, 1000);
         }
     }, [char?.attacking]);
 
