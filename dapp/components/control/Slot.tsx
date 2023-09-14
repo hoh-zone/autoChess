@@ -58,7 +58,7 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
                     setMoney(money - char_shop_choosen.price);
                     chars[id] = shopChars[shopSlotNumber];
                     shopChars[shopSlotNumber] = null;
-                    setChars(chars);
+                    setChars(chars.slice());
                     setShopChars(shopChars);
 
                     setShopSlotNumber(null);
@@ -72,7 +72,7 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
                     let tmp = upgrade(char);
                     chars[id] = tmp;
                     shopChars[shopSlotNumber] = null;
-                    setChars(chars);
+                    setChars(chars.slice());
                     setShopSlotNumber(null);
                     setSlotNumber(null);
                 }
@@ -87,7 +87,7 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
                         temp = upgrade(temp);
                     }
                     chars[id] = temp;
-                    setChars(chars);
+                    setChars(chars.slice());
                     setSlotNumber(null);
                     setShopSlotNumber(null);
                 } else {

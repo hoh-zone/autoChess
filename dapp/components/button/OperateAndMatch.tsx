@@ -30,7 +30,7 @@ const useOperateAndMatch = () => {
         return vec;
     }
 
-    const operate_submit = useCallback(async () => {
+    const operate_submit = async () => {
         if (!wallet) return;
         try {
             const tx = new TransactionBlock();
@@ -80,7 +80,7 @@ const useOperateAndMatch = () => {
             console.log(error);
             return false;
         }
-    }, [wallet]);
+    };
 
     return { nftObjectId, operate_submit };
 };
