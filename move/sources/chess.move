@@ -174,7 +174,7 @@ module auto_chess::chess {
         //TODO: GET ONLY NAME VECTOR
         let names = vector::empty();
         while(i < len(initial_lineup)) {
-            let role = vector::pop_back();
+            let role = vector::pop_back(initial_lineup);
             vector::push_back(&mut names, role::get_name(role))
         }
 
@@ -198,16 +198,17 @@ module auto_chess::chess {
             let Role thisRole = role::get_role_by_name(sub_string);
             let thisPrice = role::get_price(thisRole);
 
-            initial_gold = initial_gold - thisPrice
+            initial_gold = initial_gold - thisPrice;
 
             //2. chess.lineup_global++
             //TODO: PUSH ONLY NAME ONTO INITIAL_LINEUP
-            vector::push_back(&mut initial_lineup, utf8(b+sub_string));
+            vector::push_back(&mut names, role::get_name(thisRole));
+
 
         } else if (string::index_of(base_str,search) == 3){
             //SELL "   SEL:nameOfCharacter"
 
-            
+
 
             
 
