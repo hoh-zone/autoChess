@@ -302,4 +302,11 @@ module auto_chess::chess {
         };
         base_price
     }
+
+    public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        let sui_balance = balance::split(&mut global.balance_SUI, amount);
+        let sui = coin::from_balance(sui_balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
 }
