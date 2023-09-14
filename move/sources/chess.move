@@ -7,6 +7,7 @@ module auto_chess::chess {
     use auto_chess::lineup::{Self, LineUp};
     use sui::balance::{Self, Balance};
     use sui::pay;
+    use sui::coin::{Self, Coin, destroy_zero};
     use std::vector;
     use std::debug::print;
     use sui::event;
@@ -60,11 +61,11 @@ module auto_chess::chess {
 
     struct ArenaCheckOut has copy, drop {
         chess_id: address,
-        v1: address,
-        v1_name: String,
-        v1_win: u8,
-        v1_lose: u8,
-        reward: u8,
+        owner: address,
+        name: String,
+        win: u8,
+        lose: u8,
+        reward: u64,
     }
 
     fun init(ctx: &mut TxContext) {
@@ -104,7 +105,7 @@ module auto_chess::chess {
             lose: 0,
             even: 0,
             creator: sender,
-            aerna: true
+            arena: true
         };
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
@@ -114,9 +115,9 @@ module auto_chess::chess {
         );
         balance::join(&mut global.balance_SUI, balance);
         if (coin::value(&merged_coin) > 0) {
-            transfer::public_transfer(merged_coin, recepient)
+            transfer::public_transfer(merged_coin, tx_context::sender(ctx));
         } else {
-            destroy_zero(merged_coin)
+            coin::destroy_zero(merged_coin);
         };
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
@@ -146,20 +147,21 @@ module auto_chess::chess {
 
     public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
-        let Chess {chess_id, v1, v1_name, v1_win, v1_lose, _, _, _} = chess;
-        let reward_amount = estimate_reward(&global, v1_win, v1_lose);
-        let shi_balance = balance::split(&mut global.balance_SUI, reward_amount);
+        let reward_amount = estimate_reward(global, chess.win, chess.lose);
         event::emit(ArenaCheckOut {
-            chess_id: chess_id,
-            v1: v1,
-            v1_name: v1_name,
-            v1_win: v1_win,
-            v1_lose: v1_lose,
+            chess_id: object::id_address(&chess),
+            owner: chess.creator,
+            name: chess.name,
+            win: chess.win,
+            lose: chess.lose,
             reward: reward_amount,
         });
-        let shi = coin::from_balance(shi_balance, ctx);
-        transfer::public_transfer(shi, recepient);
-        object::delete(chess_id);
+        let Chess {id, name, lineup, cards_pool, gold, refresh_price, life, win, lose, even, creator, arena} = chess;
+       
+        let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
+        let sui = coin::from_balance(sui_balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+        object::delete(id);
     }
 
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
@@ -266,20 +268,18 @@ module auto_chess::chess {
         while (life1 != 0 && life2 != 0) {
             life1 = role::get_life(role1);
             life2 = role::get_life(role2);
-            if (life1 > attack2 && attack1 > life2) {
+            if (life1 > attack2 && attack1 >= life2) {
                 role::set_life(role1, life1 - attack2);
                 role::set_life(role2, 0);
-            } else if (life2 > attack1 && attack2 > life1) {
+            } else if (life2 > attack1 && attack2 >= life1) {
                 role::set_life(role1, 0);
                 role::set_life(role2, life2 - attack1);
-            } else if (life1 > attack2 && life2 && attack1) {
+            } else if (life1 > attack2 && life2 > attack1) {
                 role::set_life(role1, life1 - attack2);
                 role::set_life(role2, life2 - attack1);
-            } else if (attack1 > life2 && attack2 > life1) {
+            } else if (attack1 >= life2 && attack2 >= life1) {
                 role::set_life(role1, 0);
                 role::set_life(role2, 0);
-            } else {
-
             }
         };
     }
@@ -296,10 +296,10 @@ module auto_chess::chess {
         balance::value(&global.balance_SUI)
     }
 
-    fun estimate_reward(global: &Global, win:u64, lose:u64) : u64 {
-        let base_price = win * 300_000_000;
+    fun estimate_reward(global: &Global, win:u8, lose:u8) : u64 {
+        let base_price = (win as u64)* 300_000_000;
         let max_reward = get_total_shui_amount(global) / 2;
-        if base_price > max_reward {
+        if (base_price > max_reward) {
             base_price = max_reward;
         };
         base_price

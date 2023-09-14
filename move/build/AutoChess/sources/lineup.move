@@ -90,7 +90,7 @@ module auto_chess::lineup {
         // todo:too much calculation
         let win = 0;
         let lose = 0;
-        while (win < 9) {
+        while (win < 10) {
             while (true) {
                 // todo: add win lose linup here
                 let duplicate_num = 2;
@@ -128,7 +128,7 @@ module auto_chess::lineup {
         LineUp {
             creator:tx_context::sender(ctx),
             name: utf8(b"I'm a super robot"),
-            role_num: vector::length(&roles);,
+            role_num:max_role_num,
             roles: roles
         }
     }
@@ -152,7 +152,10 @@ module auto_chess::lineup {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
         while (len > 0) {
-            let role_name = vector::pop_back(&mut str_vec);
+            // shinobi1:1:4:25:3' (name:level:attack:life:price)
+            let role_info = vector::pop_back(&mut str_vec);
+            let index = string::index_of(&role_info, &utf8(b":"));
+            let role_name = string::sub_string(&role_info, 0, index);
             let role = role::get_role_by_name(role_global, role_name);
             vector::push_back(&mut vec, role);
             len = len - 1;
