@@ -1,9 +1,10 @@
 import { useCallback } from "react"
-import { enemyCharacter, enemyFightingIndex, fightingIndex, slotCharacter, stageAtom } from "../store/stages";
+import { chessId, enemyCharacter, enemyFightingIndex, fightingIndex, slotCharacter, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import { sleep } from "../utils/sleep";
 import confetti from "canvas-confetti";
+import useQueryChesses from "../components/button/QueryAllChesses";
 
 export const useFight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
@@ -11,6 +12,8 @@ export const useFight = () => {
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
     const [stage, setStage] = useAtom(stageAtom);
+    const { query_chess } = useQueryChesses();
+    const [_chessId, setChessId] = useAtom(chessId);
 
     const duration = 4 * 1000,
     animationEnd = Date.now() + duration;
@@ -106,6 +109,12 @@ export const useFight = () => {
             await sleep(2000);
             console.log("I lose(client)")
         }
-        setStage("shop");
+
+        // 更新数据并进入shop
+        if (_chessId) {
+            await query_chess(_chessId);
+            // setEnemyChars([]);
+            setStage("shop");
+        }
     }, [enemyChars, setEnemyChars, chars, setChars]);
 }

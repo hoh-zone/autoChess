@@ -23,10 +23,13 @@ export const Fight = () => {
 
     return <>
     { stage === "shop" && <Button className="" onClick={async () => {
-        await operate_submit();
-        
-        console.log("start fight");
+        let success = await operate_submit();
+        if (!success) {
+            return;
+        }
 
+        console.log("start fight");
+  
         // sync enemy
         let json = await query_fight(chess_id);
         let enemy = json['v2_lineup']['roles'];

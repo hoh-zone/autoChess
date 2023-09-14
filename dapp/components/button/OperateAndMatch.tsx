@@ -24,7 +24,6 @@ const useOperateAndMatch = () => {
             let name = removeSuffix(cha.name);
             vec.push(addLevelSuffix(name, cha.level));
 
-
             // todo: version2:
             // vec.push(cha.name + ":" + cha.level + ":" + cha.attack + ":" + cha.life + ":" + cha.price);
         }
@@ -33,8 +32,6 @@ const useOperateAndMatch = () => {
 
     const operate_submit = useCallback(async () => {
         if (!wallet) return;
-        console.log("chars vec:", get_chars_strvec());
-        console.log("chessId:", chess_id);
         try {
             const tx = new TransactionBlock();
             const left_gold = money;
@@ -58,6 +55,15 @@ const useOperateAndMatch = () => {
                     showEvents:true,
                 }
             });
+            if (response.objectChanges) {
+                const createObjectChange = response.objectChanges.find(
+                    (objectChange) => objectChange.type === "created"
+                );
+                if (!!createObjectChange && "objectId" in createObjectChange) {
+                    console.log("objid", createObjectChange.objectId);
+                }
+            }
+
             if (response.events != null) {
                 let event_json = response.events[0].parsedJson as any;
                 let res = event_json['res']
@@ -69,18 +75,12 @@ const useOperateAndMatch = () => {
                     console.log("even");
                 }
             }
+            return true;
         } catch (error) {
             console.log(error);
+            return false;
         }
     }, [wallet]);
-
-    const reset = useCallback(() => {
-        setNftObjectId(null)
-    }, [])
-
-    useEffect(() => {
-        reset();
-    }, [reset])
 
     return { nftObjectId, operate_submit };
 };

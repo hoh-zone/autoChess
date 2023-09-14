@@ -24,14 +24,15 @@ export const StartGame = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     // query chesses when wallet connected
+
+    const fetch = async () => {
+        setIsLoading(false);
+        await query_chesses();
+        setIsLoading(true);
+    }
+
     useEffect(() => {
         if (status !== 'connected') return;
-
-        async function fetch() {
-            setIsLoading(false);
-            await query_chesses();
-            setIsLoading(true);
-        }
         fetch();
 
     }, [status, query_chesses]);
@@ -92,17 +93,13 @@ export const StartGame = () => {
                         <Button
                             onClick={async () => {
                                 await mint({ username: inputValue, is_arena : false});
-                                if (nftObjectId) {
-                                    setStage("shop");
-                                }
+                                fetch();
                             }}
                         >Start New Chess</Button>
                         <Button
                             onClick={async () => {
                                 await mint({ username: inputValue, is_arena : true});
-                                if (nftObjectId) {
-                                    setStage("shop");
-                                }
+                                fetch();
                             }}
                         >Start New Arena</Button>
                     </Stack>
