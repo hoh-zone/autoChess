@@ -193,6 +193,10 @@ module auto_chess::role {
         role.attack
     }
 
+    public fun get_price(role:&Role) : u64 {
+        role.price
+    }
+
     public fun get_life(role:&Role) : u64 {
         role.life
     }

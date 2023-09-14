@@ -25,7 +25,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.14.0",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@mysten/bcs": "^0.7.2",

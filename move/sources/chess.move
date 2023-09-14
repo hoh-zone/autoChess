@@ -166,6 +166,66 @@ module auto_chess::chess {
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
+        
+
+        let initial_gold = chess.gold;
+        let initial_lineup = chess.lineup_global;
+
+        //change these 2 fields ^^ according to the action list, then compare against gold and lineup_str_vec
+
+        //iterate thru action_list, set each string as base_str
+        let base_str = string::utf8(b"abc");
+        let search = string::utf8(b":");
+
+
+        if (string::index_of(base_str,search) == 2){
+            //BUY "BU:nameOfCharacter"
+
+            //1. gold-- [price]
+            //1.1 get nameOfCharacter
+            let j = string::length(base_str);
+            let sub_string = string::sub_string(base_str, 2, j);
+            //sub_string(s: &String, i: u64, j: u64):
+
+            //1.2 search for gold of character
+            
+            initial_gold = initial_gold - amountOfCharacter
+
+            //2. chess.lineup_global++
+
+
+
+        } else if (string::index_of(base_str,search) == 3){
+            //SELL "SEL:nameOfCharacter"
+
+        } else if (string::index_of(base_str,search) == 4){
+            //SWAP "SWAP:nameOfCharacter"
+
+        } else if (string::index_of(base_str,search) == 5){
+            //MERGE "MERGE:nameOfCharacter"
+
+        } else {
+            //ERR: invalid 
+
+        }
+
+        
+
+
+
+
+        //SELL " 
+
+
+
+        //CHANGE position " 
+
+
+
+        //merge
+
+
+
         chess.gold = gold;
         chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
         match(global, role_global, lineup_global, chess, ctx);
