@@ -109,7 +109,7 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
         }}
     >
         {showInfo && <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />}
-        <div className="absolute bottom-[-2rem] left-1/2" style={{ marginLeft: '40px' }} >
+        <div className="pointer-events-none absolute bottom-[-2rem] left-1/2" style={{ marginLeft: '40px' }} >
             {showInfo && <p>id:{id}</p>}
             {char && showInfo && <div>
                 <p>{removeSuffix(char.name)}</p>
@@ -121,7 +121,7 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
             }
         </div>
 
-        <div className="absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
+        <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -50%)" }} >
             {char && char.name && <Character
                 level={char.level}
                 attack={char.attacking}

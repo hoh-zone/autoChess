@@ -21,7 +21,7 @@ export const ShopSlot = ({ id }: {
             setAttack(true);
             if (attackAnimRef.current) clearInterval(attackAnimRef.current);
             attackAnimRef.current = setTimeout(() => setAttack(false), 1500);
-        }, 6000 + Math.random() * 3000);
+        }, 3000 + Math.random() * 3000);
     }, []);
     
     return <div className={
@@ -37,7 +37,7 @@ export const ShopSlot = ({ id }: {
         }}
     >
         <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />
-        <div className="absolute bottom-[-2rem] left-1/2" style={{marginLeft:'40px'}}>
+        <div className="pointer-events-none absolute bottom-[-2rem] left-1/2" style={{marginLeft:'40px'}}>
              <p>{char && char.name}</p>
              <p>price:{char && char.price}</p>
              <p>level:{char && char.level}</p>
@@ -45,9 +45,9 @@ export const ShopSlot = ({ id }: {
              <p>life:{char && char.life}</p>
         </div>
 
-        <div className="absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
+        <div className="pointer-events-none absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
             {char && <Character
-                attack={attack}
+                attack={attack ? 2 : 0}
                 charType={removeSuffix(char.name)}
             />
             }

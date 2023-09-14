@@ -17,10 +17,6 @@ export const Shop = () => {
             <ShopSlot id={4} />
 
             <HStack className="relative top-[20px]">
-                <Button onClick={async () => {
-                    setStage("init");;
-                }}
-                >GO BACK</Button>
                 <Button className=""
                     onClick={
                         () => {
