@@ -1,5 +1,4 @@
 module auto_chess::chess {
-    // use auto_chess::role;
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self, public_transfer};
@@ -25,6 +24,7 @@ module auto_chess::chess {
     const ERR_PAYMENT_NOT_ENOUGH:u64 = 0x03;
     const ERR_NOT_ARENA_CHESS:u64 = 0x04;
     const ERR_POOL_NOT_ENOUGH:u64 = 0x05;
+    const ERR_NOT_PERMISSION:u64 = 0x06;
 
     struct Global has key {
         id: UID,
@@ -78,7 +78,6 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
-    
     #[test_only]
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
@@ -90,7 +89,7 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
-    public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, sui_pay_amount:u64, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+    public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         print(&utf8(b"mint new arena chess"));
         let sender = tx_context::sender(ctx);
         let game = Chess {
@@ -109,7 +108,7 @@ module auto_chess::chess {
         };
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
-        assert!(coin::value(&merged_coin) < ARENA_CHESS_PRICE * AMOUNT_DECIMAL, ERR_PAYMENT_NOT_ENOUGH);
+        assert!(coin::value(&merged_coin) >= ARENA_CHESS_PRICE * AMOUNT_DECIMAL, ERR_PAYMENT_NOT_ENOUGH);
         let balance = coin::into_balance<SUI>(
             coin::split<SUI>(&mut merged_coin, ARENA_CHESS_PRICE * AMOUNT_DECIMAL, ctx)
         );
@@ -303,5 +302,12 @@ module auto_chess::chess {
             base_price = max_reward;
         };
         base_price
+    }
+
+    public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        let sui_balance = balance::split(&mut global.balance_SUI, amount);
+        let sui = coin::from_balance(sui_balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
     }
 }

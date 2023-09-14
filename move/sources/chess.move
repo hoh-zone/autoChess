@@ -24,6 +24,7 @@ module auto_chess::chess {
     const ERR_PAYMENT_NOT_ENOUGH:u64 = 0x03;
     const ERR_NOT_ARENA_CHESS:u64 = 0x04;
     const ERR_POOL_NOT_ENOUGH:u64 = 0x05;
+    const ERR_NOT_PERMISSION:u64 = 0x06;
 
     struct Global has key {
         id: UID,

@@ -6,7 +6,7 @@ compiled_package_info:
     auto_chess: "0000000000000000000000000000000000000000000000000000000000000000"
     std: "0000000000000000000000000000000000000000000000000000000000000001"
     sui: "0000000000000000000000000000000000000000000000000000000000000002"
-  source_digest: 56112428EF4361957F174A2A689A59DA206607CF10EB89110C1470563E21837A
+  source_digest: FD39DBA35C9CC392BE95A89301E635952F388C482A485D69830E625ADAEDD77E
   build_flags:
     dev_mode: true
     test_mode: true
@@ -17,7 +17,7 @@ compiled_package_info:
     lock_file: ~
     additional_named_addresses: {}
     fetch_deps_only: false
-    skip_fetch_latest_git_deps: false
+    skip_fetch_latest_git_deps: true
     default_flavor: ~
     default_edition: ~
     deps_as_root: false

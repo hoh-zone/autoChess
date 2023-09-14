@@ -87,7 +87,6 @@ module auto_chess::lineup {
     }
 
     public fun init_lineup_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
-        // todo:too much calculation
         let win = 0;
         let lose = 0;
         while (win < 10) {
