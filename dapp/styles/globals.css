@@ -1,0 +1,285 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: PixcelFont;
+}
+
+div {
+  font-family: PixcelFont;
+}
+
+@font-face {
+  font-family: PixcelFont;
+  src: url('./../public/PressStart2P-Regular.ttf') format('truetype');
+}
+
+button {
+  font-family: PixcelFont;
+  font-size: small;
+}
+
+p {
+  font-family: PixcelFont;
+  font-size: small;
+}
+
+.custom-input {
+  font-family: PixcelFont;
+  font-weight: 900;
+  background: rgb(251, 251, 238);
+}
+
+.custom-input::placeholder {
+  font-weight: 900;
+  color: rgb(246, 246, 247);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+.animBasic {
+  background-position-x: left;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.orcBarbare {
+  --attack-step: 12;
+  --attack-position: -1368px;
+  --move-step: 5;
+  --move-position: -570px;
+}
+
+.orcArcher {
+  --attack-step: 18;
+  --attack-position: -2664px;
+  --move-step: 6;
+  --move-position: -888px;
+}
+
+.humanKnight {
+  --attack-step: 11;
+  --attack-position: -1056px;
+  --move-step: 8;
+  --move-position: -480px;
+}
+
+.kunoichi {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 33;
+  --attack2-position: -9900px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.ani {
+  --attack-step: 15;
+  --attack-position: -4500px;
+  --attack2-step: 9;
+  --attack2-position: -2700px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.assa {
+  --attack-step: 17;
+  --attack-position: -5100px;
+  --attack2-step: 17;
+  --attack2-position: -5100px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.cleric {
+  --attack-step: 9;
+  --attack-position: -2700px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.archer {
+  --attack-step: 15;
+  --attack-position: -4500px;
+  --attack2-step: 29;
+  --attack2-position: -8700px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.kunoichi {
+  --attack-step: 9;
+  --attack-position: -2700px;
+  --attack2-step: 33;
+  --attack2-position: -9900px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.fighter {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --attack2-step: 15;
+  --attack2-position: -4500px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.golem {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 7;
+  --attack2-position: -2100px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.mega {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.priest {
+  --attack-step: 10;
+  --attack-position: -3000px;
+  --attack2-step: 10;
+  --attack2-position: -3000px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shaman {
+  --attack-step: 20;
+  --attack-position: -6000px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shinobi {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --attack2-step: 20;
+  --attack2-position: -6000px;
+  --move-step: 8;
+  --move-position: -2400px;
+}
+
+.firemega {
+  --attack-step: 24;
+  --attack-position: -7200px;
+  --attack2-step: 71;
+  --attack2-position: -21300px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.slime {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --attack2-step: 26;
+  --attack2-position: -7800px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tank {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --attack2-step: 11;
+  --attack2-position: -3300px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tree {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --attack2-step: 24;
+  --attack2-position: -7200px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.wizard {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 16;
+  --attack2-position: -4800px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.attack {
+  animation: attackAnim 1s steps(var(--attack-step)) 1;
+}
+
+@keyframes attackAnim {
+  to { background-position: var(--attack-position); }
+}
+
+.move {
+  animation: moveAnim 0.5s steps(var(--move-step)) infinite;
+}
+
+@keyframes moveAnim {
+  to { background-position: var(--move-position); }
+}
+
+.opponentCharacter {
+  transform: rotateY(180deg);
+}
+
+.slot {
+  transform: rotateX(69deg);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(94, 94, 94, 0.5); /* 半透明背景 */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+}
+
+.modal button {
+  margin-top: 10px;
+}
