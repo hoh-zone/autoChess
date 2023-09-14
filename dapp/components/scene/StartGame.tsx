@@ -24,7 +24,7 @@ export const StartGame = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     // query chesses when wallet connected
-
+    console.log(nfts);
     const fetch = async () => {
         setIsLoading(false);
         await query_chesses();
@@ -38,11 +38,11 @@ export const StartGame = () => {
     }, [status, query_chesses]);
     const [isOpen, setIsOpen] = useState(false);
     const [checkout_id, setCheckout_id] = useState('');
-    const openModal = (id:string) => {
+    const openModal = (id: string) => {
         setCheckout_id(id);
         setIsOpen(true);
     };
-    
+
     const closeModal = () => {
         setIsOpen(false);
     };
@@ -54,56 +54,54 @@ export const StartGame = () => {
                 <source src="bg7.mp4" type="video/mp4" />
             </video>
             <div className="absolute text-white top-12 z-50">
-                <HStack>
-                    <Stack className="items-center text-center" gap={4}>
-                        <div className="mb-12">
-                            <p style={{ marginBottom: '50px', fontSize: '100px' }}>Auto<br />Chess</p>
-                            {isLoading ? <div>Continue Game:</div> : <Spinner />}
-                            {
-                                nfts.map((nft, index) => (
-                                    <Center>
-                                        <HStack>
-                                            <Button 
-                                                key={nft.id.id}
-                                                className=" bg-slate-200"
-                                                fontSize={"x-small"}
-                                                isDisabled={nft.lose == 3}
-                                                onClick={async () => {
-                                                    syncGameNFT(nft);
-                                                    setStage("shop");
-                                                }}
-                                                >{"name: " + nft.name + " " + (!nft.arena? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
-                                            </Button>
-                                            {nft.arena && 
-                                                <Button className="bg-slate-200" style={{fontSize:'10px'}} onClick={()=> openModal(nft.id.id)}>Check Out</Button>
-                                            }
-                                            <PopupWindow isOpen={isOpen} ok = { () => checkout({chess_id:checkout_id})} cancel={closeModal} content_str="Are you sure to checkout?"/>
+                <Stack className="items-center text-center" gap={4}>
+                    <div className="mb-12">
+                        <p style={{ marginBottom: '30px', fontSize: '100px' }}>Auto<br />Chess</p>
+                        {isLoading ? <div>Continue Game:</div> : <Spinner />}
+                        {
+                            nfts.map((nft, index) => (
+                                <Center>
+                                    <HStack>
+                                        <Button
+                                            key={nft.id.id}
+                                            className=" bg-slate-200"
+                                            fontSize={"x-small"}
+                                            isDisabled={nft.lose == 3}
+                                            onClick={async () => {
+                                                syncGameNFT(nft);
+                                                setStage("shop");
+                                            }}
+                                        >{"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
+                                        </Button>
+                                        {nft.arena &&
+                                            <Button className="bg-slate-200" style={{ fontSize: '10px' }} onClick={() => openModal(nft.id.id)}>Check Out</Button>
+                                        }
+                                        <PopupWindow isOpen={isOpen} ok={() => checkout({ chess_id: checkout_id })} cancel={closeModal} content_str="Are you sure to checkout?" />
                                     </HStack>
-                                    </Center>
-                                ))}
-                        </div>
+                                </Center>
+                            ))}
+                    </div>
 
-                        <Input
-                            type="text"
-                            className='custom-input'
-                            width="300px"
-                            value={inputValue}
-                            placeholder="Enter your name"
-                            onChange={(v) => setInputValue(v.target.value)} />
-                        <Button
-                            onClick={async () => {
-                                await mint({ username: inputValue, is_arena : false});
-                                fetch();
-                            }}
-                        >Start New Chess</Button>
-                        <Button
-                            onClick={async () => {
-                                await mint({ username: inputValue, is_arena : true});
-                                fetch();
-                            }}
-                        >Start New Arena</Button>
-                    </Stack>
-                </HStack>
+                    <Input
+                        type="text"
+                        className='custom-input'
+                        width="300px"
+                        value={inputValue}
+                        placeholder="Enter your name"
+                        onChange={(v) => setInputValue(v.target.value)} />
+                    <Button
+                        onClick={async () => {
+                            await mint({ username: inputValue, is_arena: false });
+                            fetch();
+                        }}
+                    >Start New Chess</Button>
+                    <Button
+                        onClick={async () => {
+                            await mint({ username: inputValue, is_arena: true });
+                            fetch();
+                        }}
+                    >Start New Arena (To Earn)</Button>
+                </Stack>
             </div>
             <div className="absolute top-0 right-0 m-4">
                 <Rank />

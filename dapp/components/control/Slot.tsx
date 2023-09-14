@@ -1,11 +1,12 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
+import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom } from "../../store/stages"
 import { removeSuffix } from "../../utils/removeSuffix";
 import { CharacterFields } from "../../types/nft";
 import { useEffect } from "react";
 import { upgrade } from "../character/rawData";
+import { Levelup } from "../character/levelup";
 
 export const Slot = ({ isOpponent = false, showInfo = true, id }: {
     isOpponent?: boolean
@@ -40,12 +41,13 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
         }
     }, [char?.attacking]);
 
+    const [stage, setStage] = useAtom(stageAtom);
 
     return <div className={
         twMerge(
             "w-24 h-24 relative rounded-xl",
             "border-4 border-transparent z-20",
-            isOpponent ? "pointer-events-none" : "hover:border-slate-300",
+            isOpponent || stage === "fight" ? "pointer-events-none" : "hover:border-slate-300",
             selected ? "border-slate-800" : ""
         )}
         onClick={() => {
@@ -62,8 +64,8 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
                     setShopSlotNumber(null);
                     setSlotNumber(null);
                 }
-            // buy and upgrad chars
-            } else if (shopSlotNumber != null && char && char_shop_choosen && 
+                // buy and upgrad chars
+            } else if (shopSlotNumber != null && char && char_shop_choosen &&
                 canUpgrade(char, char_shop_choosen)) {
                 if (money >= char_shop_choosen.price) {
                     setMoney(money - char_shop_choosen.price);
@@ -117,16 +119,20 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
                 <p>price:{char.price}</p>
             </div>
             }
-
         </div>
 
         <div className="absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
             {char && char.name && <Character
+                level={char.level}
                 attack={char.attacking}
                 charType={removeSuffix(char.name)}
                 isOpponent={isOpponent} />
             }
         </div>
+
+        {/* <div className="absolute top-[60%] left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
+            <Levelup />
+        </div> */}
     </div >
 }
 

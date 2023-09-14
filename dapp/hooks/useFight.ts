@@ -85,12 +85,12 @@ export const useFight = () => {
             char.life = charLife.toString();
             enemyChar.life = enemyLife.toString();
             
-            if (charLife < 0) {
+            if (charLife <= 0) {
                 chars[charIndex] = null;
             }
             setChars(chars.slice());
 
-            if (enemyLife < 0) {
+            if (enemyLife <= 0) {
                 enemyChars[enemyCharIndex] = null;
             }
             setEnemyChars(enemyChars.slice());

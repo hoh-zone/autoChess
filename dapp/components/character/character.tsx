@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from "react"
 import { twMerge } from "tailwind-merge";
 import { charTable } from "./charTable";
 
 export function Character({
     isOpponent = false,
     charType,
-    attack = false
+    attack = false,
+    level = 1,
 }: {
     isOpponent?: boolean,
     charType: string,
-    attack?: boolean
+    attack?: boolean,
+    level?: number,
 }) {
     if(!charTable[charType as keyof typeof charTable]) {
         console.error("not found", charType);
@@ -24,7 +25,6 @@ export function Character({
         attackHeight,
     } = charTable[charType as keyof typeof charTable];
 
-
     const src = attack ? attackSrc : moveSrc;
     
     return (
@@ -35,7 +35,8 @@ export function Character({
                         twMerge(
                             "attack animBasic mx-auto",
                             charType,
-                            isOpponent ? "opponentCharacter" : ""
+                            isOpponent ? "opponentCharacter" : "",
+                            level >= 3 ? "effect" : ""
                         )
                     }
                     style={{
@@ -48,7 +49,8 @@ export function Character({
                         twMerge(
                             "move animBasic mx-auto",
                             charType,
-                            isOpponent ? "opponentCharacter" : ""
+                            isOpponent ? "opponentCharacter" : "",
+                            level >= 3 ? "effect" : ""
                         )
                     }
                     style={{
