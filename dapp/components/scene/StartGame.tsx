@@ -74,7 +74,7 @@ export const StartGame = () => {
                                                 >{"name: " + nft.name + " " + (!nft.arena? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
                                             </Button>
                                             {nft.arena && 
-                                                <Button className="bg-slate-200" onClick={()=> openModal(nft.id.id)}>Check Out</Button>
+                                                <Button className="bg-slate-200" style={{fontSize:'10px'}} onClick={()=> openModal(nft.id.id)}>Check Out</Button>
                                             }
                                             <PopupWindow isOpen={isOpen} ok = { () => checkout({chess_id:checkout_id})} cancel={closeModal} content_str="Are you sure to checkout?"/>
                                     </HStack>
