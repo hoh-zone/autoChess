@@ -188,12 +188,13 @@ module auto_chess::chess {
             //sub_string(s: &String, i: u64, j: u64):
 
             //1.2 search for gold of character
-            
-            initial_gold = initial_gold - amountOfCharacter
+            let Role thisRole = role::get_role_by_name(sub_string);
+            let thisPrice = role::get_price(thisRole);
+
+            initial_gold = initial_gold - thisPrice
 
             //2. chess.lineup_global++
-
-
+            vector::push_back(&mut initial_lineup, utf8(b+sub_string));
 
         } else if (string::index_of(base_str,search) == 3){
             //SELL "SEL:nameOfCharacter"
