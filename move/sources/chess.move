@@ -169,7 +169,14 @@ module auto_chess::chess {
         
 
         let initial_gold = chess.gold;
-        let initial_lineup = chess.lineup_global;
+        let initial_lineup = lineup::get_roles(chess.lineup);
+
+        //TODO: GET ONLY NAME VECTOR
+        let names = vector::empty();
+        while(i < len(initial_lineup)) {
+            let role = vector::pop_back();
+            vector::push_back(&mut names, role::get_name(role))
+        }
 
         //change these 2 fields ^^ according to the action list, then compare against gold and lineup_str_vec
 
@@ -194,13 +201,21 @@ module auto_chess::chess {
             initial_gold = initial_gold - thisPrice
 
             //2. chess.lineup_global++
+            //TODO: PUSH ONLY NAME ONTO INITIAL_LINEUP
             vector::push_back(&mut initial_lineup, utf8(b+sub_string));
 
         } else if (string::index_of(base_str,search) == 3){
-            //SELL "SEL:nameOfCharacter"
+            //SELL "   SEL:nameOfCharacter"
+
+            
+
+            
 
         } else if (string::index_of(base_str,search) == 4){
             //SWAP "SWAP:nameOfCharacter"
+
+
+            //use native public fun swap<Element>(v: &mut vector<Element>, i: u64, j: u64);
 
         } else if (string::index_of(base_str,search) == 5){
             //MERGE "MERGE:nameOfCharacter"
