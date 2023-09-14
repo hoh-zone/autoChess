@@ -5,22 +5,31 @@ module auto_chess::chess {
     use sui::transfer::{Self, public_transfer};
     use std::string::{utf8, String, Self};
     use auto_chess::lineup::{Self, LineUp};
+    use sui::balance::{Self, Balance};
+    use sui::pay;
     use std::vector;
     use std::debug::print;
     use sui::event;
     use auto_chess::role;
     use auto_chess::utils;
+    use sui::sui::SUI;
 
     const INIT_LIFE:u64 = 3;
     const INIT_GOLD:u64 = 10;
     const REFRESH_PRICE:u64 = 3;
+    const ARENA_CHESS_PRICE:u64 = 1;
+    const AMOUNT_DECIMAL:u64 = 1_000_000_000;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
     const ERR_EXCEED_NUM_LIMIT:u64 = 0x02;
+    const ERR_PAYMENT_NOT_ENOUGH:u64 = 0x03;
+    const ERR_NOT_ARENA_CHESS:u64 = 0x04;
+    const ERR_POOL_NOT_ENOUGH:u64 = 0x05;
 
     struct Global has key {
         id: UID,
         total_chesses: u64,
         total_match:u64,
+        balance_SUI: Balance<SUI>,
     }
 
     struct Chess has key, store {
@@ -34,7 +43,8 @@ module auto_chess::chess {
         win: u8,
         lose: u8,
         even: u8,
-        creator: address
+        creator: address,
+        arena: bool
     }
 
     struct FightEvent has copy, drop {
@@ -48,11 +58,21 @@ module auto_chess::chess {
         res: u8 // even:0, win:1, lose:2
     }
 
+    struct ArenaCheckOut has copy, drop {
+        chess_id: address,
+        v1: address,
+        v1_name: String,
+        v1_win: u8,
+        v1_lose: u8,
+        reward: u8,
+    }
+
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
             total_chesses: 0,
-            total_match: 0
+            total_match: 0,
+            balance_SUI: balance::zero(),
         };
         transfer::share_object(global);
     }
@@ -64,9 +84,44 @@ module auto_chess::chess {
             id: object::new(ctx),
             total_chesses: 0,
             total_match: 0,
+            balance_SUI: balance::zero(),
         };
         transfer::share_object(global);
     }
+
+    public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, sui_pay_amount:u64, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+        print(&utf8(b"mint new arena chess"));
+        let sender = tx_context::sender(ctx);
+        let game = Chess {
+            id: object::new(ctx),
+            name:name,
+            lineup: lineup::empty(ctx),
+            cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
+            gold: INIT_GOLD,
+            refresh_price: REFRESH_PRICE,
+            life: INIT_LIFE,
+            win: 0,
+            lose: 0,
+            even: 0,
+            creator: sender,
+            aerna: true
+        };
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        assert!(coin::value(&merged_coin) < ARENA_CHESS_PRICE * AMOUNT_DECIMAL, ERR_PAYMENT_NOT_ENOUGH);
+        let balance = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, ARENA_CHESS_PRICE * AMOUNT_DECIMAL, ctx)
+        );
+        balance::join(&mut global.balance_SUI, balance);
+        if (coin::value(&merged_coin) > 0) {
+            transfer::public_transfer(merged_coin, recepient)
+        } else {
+            destroy_zero(merged_coin)
+        };
+        global.total_chesses = global.total_chesses + 1;
+        public_transfer(game, sender);
+    }
+
 
     public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
@@ -82,10 +137,29 @@ module auto_chess::chess {
             win: 0,
             lose: 0,
             even: 0,
-            creator: sender
+            creator: sender,
+            arena: false
         };
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
+    }
+
+    public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
+        assert!(chess.arena, ERR_NOT_ARENA_CHESS);
+        let Chess {chess_id, v1, v1_name, v1_win, v1_lose, _, _, _} = chess;
+        let reward_amount = estimate_reward(&global, v1_win, v1_lose);
+        let shi_balance = balance::split(&mut global.balance_SUI, reward_amount);
+        event::emit(ArenaCheckOut {
+            chess_id: chess_id,
+            v1: v1,
+            v1_name: v1_name,
+            v1_win: v1_win,
+            v1_lose: v1_lose,
+            reward: reward_amount,
+        });
+        let shi = coin::from_balance(shi_balance, ctx);
+        transfer::public_transfer(shi, recepient);
+        object::delete(chess_id);
     }
 
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
@@ -216,5 +290,18 @@ module auto_chess::chess {
      
     public fun get_total_matches(global: &Global) : u64 {
         global.total_match
+    }
+
+    public fun get_total_shui_amount(global: &Global) : u64 {
+        balance::value(&global.balance_SUI)
+    }
+
+    fun estimate_reward(global: &Global, win:u64, lose:u64) : u64 {
+        let base_price = win * 300_000_000;
+        let max_reward = get_total_shui_amount(global) / 2;
+        if base_price > max_reward {
+            base_price = max_reward;
+        };
+        base_price
     }
 }

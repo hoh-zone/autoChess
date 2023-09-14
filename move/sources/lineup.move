@@ -90,7 +90,7 @@ module auto_chess::lineup {
         // todo:too much calculation
         let win = 0;
         let lose = 0;
-        while (win < 9) {
+        while (win < 10) {
             while (true) {
                 // todo: add win lose linup here
                 let duplicate_num = 2;
