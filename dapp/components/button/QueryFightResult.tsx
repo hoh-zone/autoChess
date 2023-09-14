@@ -60,7 +60,6 @@ const useQueryFight = () => {
                 let json = result.data[i].parsedJson as any;
                 let chess_id = json['chess_id'];
                 if (chess_id == nft_id) {
-                    console.log("找到了");
                     return json;
                 }
             }

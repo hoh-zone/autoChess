@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Img, Input, Spinner, Stack } from "@chakra-ui/react"
+import { Box, Button, Center, HStack, Img, Input, Modal, Spinner, Stack } from "@chakra-ui/react"
 import { moneyA, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
 import useMintChess from "../button/MintChess";
@@ -10,12 +10,15 @@ import { GameNft } from "../../types/nft";
 import useQueryFight from "../button/QueryFightResult";
 import { ethos } from "ethos-connect";
 import { Rank } from "../Rank";
+import useCheckout from "../button/CheckoutChess";
+import PopupWindow from "../dialog/CustomPopWindow";
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
     const { nftObjectId, mint } = useMintChess();
     const [inputValue, setInputValue] = useState('');
     const { nfts, query_chesses } = useQueryChesses();
+    const { checkout } = useCheckout();
     const syncGameNFT = useSyncGameNFT();
     const { status } = ethos.useWallet();
     const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +35,14 @@ export const StartGame = () => {
         fetch();
 
     }, [status, query_chesses]);
+    const [isOpen, setIsOpen] = useState(false);
+    const openModal = () => {
+        setIsOpen(true);
+      };
+    
+      const closeModal = () => {
+        setIsOpen(false);
+      };
 
     return (
         <Center className="h-full w-full relative">
@@ -47,15 +58,26 @@ export const StartGame = () => {
                             {isLoading ? <div>Continue Game:</div> : <Spinner />}
                             {
                                 nfts.map((nft, index) => (
-                                    <Button
-                                        key={nft.id.id}
-                                        className=" bg-slate-200"
-                                        fontSize={"x-small"}
-                                        onClick={async () => {
-                                            syncGameNFT(nft);
-                                            setStage("shop");
-                                        }}
-                                    >{"name: " + nft.name + " status: " + nft.win + " - " + nft.lose}</Button>
+                                    <Center>
+                                        <HStack>
+                                            <Button 
+                                                key={nft.id.id}
+                                                className=" bg-slate-200"
+                                                fontSize={"x-small"}
+                                                isDisabled={nft.lose == 3}
+                                                onClick={async () => {
+                                                    syncGameNFT(nft);
+                                                    setStage("shop");
+                                                }}
+                                                >{"name: " + nft.name + " " + (!nft.arena? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
+                                            </Button>
+                                            {nft.arena &&
+                                                <button onClick={openModal}>chekout</button>
+                                            }
+                                            <PopupWindow isOpen={isOpen} ok = { () => checkout({chess_id:nft.id.id})} cancel={closeModal} content_str="Are you sure to checkout?"/>
+                                    </HStack>
+                                    </Center>
+                                    
                                 ))}
                         </div>
 
@@ -68,12 +90,20 @@ export const StartGame = () => {
                             onChange={(v) => setInputValue(v.target.value)} />
                         <Button
                             onClick={async () => {
-                                await mint({ username: inputValue });
+                                await mint({ username: inputValue, is_arena : false});
                                 if (nftObjectId) {
                                     setStage("shop");
                                 }
                             }}
-                        >Start New Game</Button>
+                        >Start New Chess</Button>
+                        <Button
+                            onClick={async () => {
+                                await mint({ username: inputValue, is_arena : true});
+                                if (nftObjectId) {
+                                    setStage("shop");
+                                }
+                            }}
+                        >Start New Arena</Button>
                     </Stack>
                 </HStack>
             </div>
