@@ -9,7 +9,7 @@ export function Character({
 }: {
     isOpponent?: boolean,
     charType: string,
-    attack: 0 | 1 | 2,
+    attack?: 0 | 1 | 2,
     level?: number,
 }) {
     if (!charTable[charType as keyof typeof charTable]) {

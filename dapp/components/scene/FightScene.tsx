@@ -45,7 +45,7 @@ export const FightScene = () => {
                         "right-0 top-0" :
                         positionTable[id] ?? "right-[20%] top-[20%]"
                 )}>
-                    <Slot showInfo={false} id={id} />
+                    <Slot id={id} />
                 </div>)
                 )}
             </div>
@@ -58,7 +58,7 @@ export const FightScene = () => {
                         "left-0 top-0" :
                         positionTable[id] ?? "left-[20%] top-[20%]"
                 )}>
-                    <Slot showInfo={false} id={id} isOpponent={true} />
+                    <Slot id={id} isOpponent={true} />
                 </div>)
                 )}
             </div>

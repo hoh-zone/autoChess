@@ -15,7 +15,6 @@ export const Shop = () => {
             <ShopSlot id={2} />
             <ShopSlot id={3} />
             <ShopSlot id={4} />
-
             <HStack className="relative top-[20px]">
                 <Button className=""
                     onClick={

@@ -49,7 +49,6 @@ export const StartGame = () => {
 
     return (
         <Center className="h-full w-full relative">
-
             <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
                 <source src="bg7.mp4" type="video/mp4" />
             </video>
