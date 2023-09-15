@@ -168,13 +168,13 @@ module auto_chess::chess {
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         
 
-        let initial_gold = chess.gold;
+        let initial_gold = *&chess.gold;
         let initial_lineup = lineup::get_roles(chess.lineup);
         //change these 2 fields ^^ according to the action list, then compare against gold and lineup_str_vec
         //iterate thru action_list, set each string as base_str
         //let base_str = string::utf8(b"BU:assa1");
-        let base_str: &str = b"BU:assa1";
-        let search : &str = b":";
+        let base_str = string::utf8(b"BU:assa1");
+        let search = string::utf8(b":");
 
         //TODO: GET ONLY NAME VECTOR
         // let names = vector::empty();
@@ -184,26 +184,22 @@ module auto_chess::chess {
         //     vector::push_back(&mut names, role::get_name(role));
         // }
 
-       
-
-        
-
 
         if (string::index_of(base_str,search) == 2){
             //BUY "BU:nameOfCharacter"
 
             //1. gold-- [price]
             //1.1 get nameOfCharacter
-            // let j = string::length(base_str);
-            // let sub_string = string::sub_string(base_str, 2, j);
-            let sub_str: &str = base_str.split(':').nth(1).unwrap();
-            String.
+            let j = string::length(base_str);
+            let sub_string = string::sub_string(base_str, 2, j);
+            
+ 
             //sub_string(s: &String, i: u64, j: u64):
-            print(&utf8(b"substring:"));
-            print(sub_str);
+            //print(&utf8(b"substring:"));
+            //print(sub_str);
             //1.2 search for gold of character
-            let Role thisRole = role::get_role_by_name(sub_str);
-            let thisPrice = role::get_price(thisRole);
+            let this_role: &Role = role::get_role_by_name(sub_str);
+            let this_price = role::get_price(thisRole);
 
             initial_gold = initial_gold - thisPrice;
 
@@ -216,11 +212,9 @@ module auto_chess::chess {
             //SELL "   
             
             //get index
-            let num_str: &str = s.split(':').nth(1).unwrap();
-            let num: u64 = num_str.parse().unwrap();
+            let j = string::length(base_str);
+            let num_string = string::sub_string(base_str, 2, j);
             //check if index i is null
-
-            let 
 
             
 
@@ -236,24 +230,7 @@ module auto_chess::chess {
         } else {
             //ERR: invalid 
 
-        }
-
-        
-
-
-
-
-        //SELL " 
-
-
-
-        //CHANGE position " 
-
-
-
-        //merge
-
-
+        };
 
         chess.gold = gold;
         chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
