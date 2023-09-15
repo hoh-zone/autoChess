@@ -45,6 +45,6 @@ export const ShopSlot = ({ id }: {
             />
             }
         </div>
-        {<FloatCharInfo isShowInfo={true} id={id}/>}
+        {<FloatCharInfo isShopSlot={true} isShowInfo={true} id={id}/>}
     </div>
 }

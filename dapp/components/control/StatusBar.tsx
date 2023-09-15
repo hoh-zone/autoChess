@@ -100,13 +100,25 @@ export const StatusBar = ({ isOpponent = false}: {
     return <div className="text-white" style={{width:'45%'}}>
         {!isOpponent ? 
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
-            <Img src= {`${get_avatar()}`} style={{width:'100px'}}/>
+            <div className="relative">
+                <Img src= {`${get_avatar()}`} style={{width:'100px'}}>
+                </Img>
+                <div className="absolute w-full h-full top-0">
+                    <Img src="album.png" width={"100px"}></Img>
+                </div>
+            </div>
             <p style={{bottom:'0'}}>{isOpponent ? enemy_name : name}</p>
         </HStack>
         : 
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <p style={{bottom:'0'}}>{isOpponent ? enemy_name : name}</p>
-            <Img src={`${get_avatar()}`} style={{width:'100px'}}/>
+            <div className="relative">
+                <Img src= {`${get_avatar()}`} style={{ width:'100px', transform: 'scaleX(-1)' }} >
+                </Img>
+                <div className="absolute w-full h-full top-0">
+                    <Img src="album.png" width={"100px"}></Img>
+                </div>
+            </div>
         </HStack>}
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>

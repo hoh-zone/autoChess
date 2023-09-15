@@ -3,23 +3,29 @@ import { useAtom } from "jotai"
 
 import { CharacterFields } from "../../types/nft";
 import { HStack, Img } from "@chakra-ui/react";
-import { slotCharacter, enemyCharacter} from "../../store/stages";
+import { slotCharacter, enemyCharacter, shopCharacter} from "../../store/stages";
 
 import { get_star_num, get_total_life } from "../character/rawData";
 import { capitalizeFirstChar, removeSuffix } from "../../utils/TextUtils";
 
-export const FloatCharInfo = ({ id, isShowInfo = false, isOpponent = false}: {
+export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false}: {
     id: number,
     isShowInfo?: boolean,
+    isShopSlot?: boolean
     isOpponent?: boolean
 }) => {
     const [chars] = useAtom(slotCharacter);
     const [enemy_chars] = useAtom(enemyCharacter);
+    const [shopChars] = useAtom(shopCharacter);
     let char: CharacterFields | null = null;
-    if (id >= 10) {
-        char = enemy_chars[id - 10];
+    if (isShopSlot) {
+        char = shopChars[id]
     } else {
-        char = chars[id];
+        if (id >= 10) {
+            char = enemy_chars[id - 10];
+        } else {
+            char = chars[id];
+        }
     }
     return <div className="float-container pointer-events-none" >
             {/* 触发范围 */}

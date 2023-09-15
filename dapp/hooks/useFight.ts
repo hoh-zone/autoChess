@@ -112,9 +112,9 @@ export const useFight = () => {
 
         // 更新数据并进入shop
         if (_chessId) {
-            await query_chess(_chessId);
-            setEnemyChars([]);
-            setStage("shop");
+            // await query_chess(_chessId);
+            // setEnemyChars([]);
+            // setStage("shop");
         }
     }, [enemyChars, setEnemyChars, chars, setChars]);
 }
