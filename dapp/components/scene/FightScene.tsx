@@ -5,6 +5,7 @@ import { useAtom } from "jotai"
 import { enemyCharacter, slotCharacter } from "../../store/stages"
 import { twMerge } from "tailwind-merge"
 import range from "lodash/range"
+import { FightResultText } from "../effect/FightResultText"
 
 const positionTable: { [key: string]: string } = {
     0: "right-0 top-0",
@@ -29,6 +30,7 @@ export const FightScene = () => {
     const enemyIndex = enemyChars.findIndex(Boolean);
 
     return <div className="h-full w-full relative">
+        <FightResultText />
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
             <source src="bg8.mp4" type="video/mp4" />
         </video>
@@ -40,7 +42,7 @@ export const FightScene = () => {
             <div className="w-1/2 h-full relative" >
                 {range(0, 7).map((id) =>
                 (<div key={id} className={twMerge(
-                    "absolute transition-all",
+                    "absolute transition-all duration-500",
                     charIndex === id ?
                         "right-0 top-0" :
                         positionTable[id] ?? "right-[20%] top-[20%]"

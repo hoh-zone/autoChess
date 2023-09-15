@@ -248,7 +248,7 @@ a {
 }
 
 .attack2 {
-  animation: attackAnim2 1s steps(var(--attack2-step)) 1;
+  animation: attackAnim2 1.5s steps(var(--attack2-step)) 1;
 }
 
 @keyframes attackAnim2 {
@@ -270,6 +270,7 @@ a {
   height: "100px" */
   -webkit-filter:  drop-shadow(-8px 5px 2px rgba(49, 79, 156, 0.5)) drop-shadow(27px 9px 2px rgba(49, 79, 156, 0.5));
   filter: drop-shadow(-13px 2px 12px rgba(206, 202, 202, 0.832)) drop-shadow(13px 2px 2px rgba(199, 202, 195, 0.5));
+  transform: scale(1.5)
 }
 
 @keyframes effectAnim {
@@ -316,12 +317,12 @@ a {
 
 .fix_float {
   z-index: 300;
-  width: 200px;
+  padding: 5px;
   border-radius: 8%;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(30%, -50%);
+  transform: translate(93%, -41%);
   background-color: rgba(71, 66, 66, 0.5);
   color: #fff;
   padding: 10px;
@@ -335,7 +336,7 @@ a {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(50%, -50%);
+  transform: translate(93%, -41%);
   background-color: rgba(71, 66, 66, 0.5);
   color: #fff;
   padding: 10px;

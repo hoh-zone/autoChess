@@ -45,7 +45,7 @@ const Home: NextPage = () => {
 
     var skew = 1;
     skew = Math.max(0.8, skew - 0.001);
-  
+
     const frame = () => {
       confetti({
         particleCount: 1,
@@ -71,11 +71,11 @@ const Home: NextPage = () => {
     <>
       <canvas ref={canvasRef} className="absolute h-[100vh] w-[100vw] z-50 pointer-events-none" />
       <Stack className="h-[100vh] w-[100vw] bg-slate-600" gap={0}>
-      {stage === "init" && <StartGame/>}
-      {(stage === "shop" || stage == "fight") && <Header/>}
-      {stage === "fight" && <FightScene/>}
-      {stage === "shop" && <MainScene/>}
-      {stage === "shop" && <Shop/>}
+        {stage === "init" && <StartGame />}
+        {(stage === "shop" || stage == "fight") && <Header />}
+        {stage === "fight" && <FightScene />}
+        {stage === "shop" && <MainScene />}
+        {stage === "shop" && <Shop />}
       </Stack>
 
       <div className="flex justify-between items-start">
@@ -104,7 +104,7 @@ const Home: NextPage = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-               <Fund />
+                <Fund />
                 then
                 <Mint />
                 or

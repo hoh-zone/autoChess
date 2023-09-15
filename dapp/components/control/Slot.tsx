@@ -8,11 +8,13 @@ import { useEffect } from "react";
 import { upgrade } from "../character/rawData";
 import { Levelup } from "../character/levelup";
 import { FloatCharInfo } from "./FloatCharInfo";
+import { motion } from "framer-motion";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
     id: number
 }) => {
+
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
     const [chars, setChars] = useAtom(slotCharacter);
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
@@ -26,30 +28,36 @@ export const Slot = ({ isOpponent = false, id }: {
         char = chars[id];
     }
 
+    if (id === 0) {
+        console.log("is there", char);
+    }
+
     const selected = (slotNumber === id);
 
-    // reset attack after 1.5s
-    useEffect(() => {
-        if (char && char.attacking) {
-            setTimeout(() => {
-                if (!char || !char.attacking) return;
-                char.attacking = 0;
-                isOpponent ?
-                    setEnemyChars(enemyChars.slice()) :
-                    setChars(chars.slice());
-            }, 1000);
-        }
-    }, [char?.attacking]);
+    // // reset attack after 1.5s
+    // useEffect(() => {
+    //     if (char && char.attacking) {
+    //         setTimeout(() => {
+    //             if (!char || !char.attacking) return;
+    //             char.attacking = 0;
+    //             isOpponent ?
+    //                 setEnemyChars(enemyChars.slice()) :
+    //                 setChars(chars.slice());
+    //         }, 1500);
+    //     }
+    // }, [char, char?.attacking]);
 
     const [stage, setStage] = useAtom(stageAtom);
 
-    return <div className={
-        twMerge(
-            "w-24 h-24 relative rounded-xl slotContainer",
-            "border-4 border-transparent z-20",
-            (char == null && stage != "shop") ? "pointer-events-none" : "hover:border-slate-300",
-            selected ? "border-slate-800" : ""
-        )}
+    return <motion.div
+        whileHover={{ scale: 1.1 }}
+        className={
+            twMerge(
+                "w-24 h-24 relative rounded-xl slotContainer",
+                "border-4 border-transparent z-10",
+                (char == null && stage != "shop") ? "pointer-events-none" : "hover:border-slate-300",
+                selected ? "border-slate-800" : ""
+            )}
         onClick={() => {
             // try to buy
             let char_shop_choosen = shopChars[shopSlotNumber!];
@@ -116,8 +124,8 @@ export const Slot = ({ isOpponent = false, id }: {
                 isOpponent={isOpponent} />
             }
         </div>
-        {<FloatCharInfo isShowInfo={stage=="shop"} id={id}/>}
-    </div >
+        {<FloatCharInfo isShowInfo={stage == "shop"} id={id} />}
+    </motion.div  >
 }
 
 const canUpgrade = (char1: any, char2: any) => {

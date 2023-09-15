@@ -5,6 +5,8 @@ import { selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "..
 import { removeSuffix } from "../../utils/TextUtils"
 import { useEffect, useRef, useState } from "react"
 import { FloatCharInfo } from "./FloatCharInfo"
+import { motion } from "framer-motion"
+import { sleep } from "../../utils/sleep"
 
 export const ShopSlot = ({ id }: {
     id: number
@@ -15,23 +17,23 @@ export const ShopSlot = ({ id }: {
     const [shopChars, setShopChars] = useAtom(shopCharacter)
     const char = shopChars[id];
 
-    const attackAnimRef = useRef<NodeJS.Timeout>();
-    const [attack ,setAttack] = useState(false);
+    const [attack, setAttack] = useState(false);
     useEffect(() => {
-        setTimeout(() => {
+        setInterval(async () => {
             setAttack(true);
-            if (attackAnimRef.current) clearInterval(attackAnimRef.current);
-            attackAnimRef.current = setTimeout(() => setAttack(false), 1500);
-        }, 3000 + Math.random() * 3000);
+            await sleep(1500);
+            setAttack(false);
+        }, 3000 + Math.random() * 2000);
     }, []);
-    
-    return <div className={
-        twMerge(
-            "w-24 h-24 relative rounded-xl",
-            "border-4 border-transparent z-20 hover:border-slate-300",
-            selected ? "border-slate-800" : ""
-        )
-    }
+
+    return <motion.div
+        whileHover={{ scale: 1.1 }} className={
+            twMerge(
+                "w-24 h-24 relative rounded-xl",
+                "border-4 border-transparent z-20 hover:border-slate-300",
+                selected ? "border-slate-800" : ""
+            )
+        }
         onClick={() => {
             setShopSlotNumber(id);
             setSlotNumber(null);
@@ -45,6 +47,6 @@ export const ShopSlot = ({ id }: {
             />
             }
         </div>
-        {<FloatCharInfo isShopSlot={true} isShowInfo={true} id={id}/>}
-    </div>
+        {<FloatCharInfo isShopSlot={true} isShowInfo={true} id={id} />}
+    </motion.div>
 }

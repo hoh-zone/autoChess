@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { charTable } from "./charTable";
+import { motion } from "framer-motion";
 
 export function Character({
     isOpponent = false,
@@ -31,7 +32,11 @@ export function Character({
             : moveSrc;
 
     return (
-        <div className="w-full h-full overflow-visible flex place-items-end z-10 pointer-events-none">
+        <motion.div
+            initial={{ scale: 0.5, y: -200 }}
+            animate={{ scale: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full h-full overflow-visible flex place-items-end z-10 pointer-events-none">
             {
                 attack ? <div
                     className={
@@ -63,6 +68,6 @@ export function Character({
                         height: moveHeight
                     }}
                 />}
-        </div>
+        </motion.div>
     )
 }

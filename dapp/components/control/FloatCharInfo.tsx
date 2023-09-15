@@ -2,13 +2,13 @@
 import { useAtom } from "jotai"
 
 import { CharacterFields } from "../../types/nft";
-import { HStack, Img } from "@chakra-ui/react";
-import { slotCharacter, enemyCharacter, shopCharacter} from "../../store/stages";
+import { HStack, Img, Stack } from "@chakra-ui/react";
+import { slotCharacter, enemyCharacter, shopCharacter } from "../../store/stages";
 
 import { get_star_num, get_total_life } from "../character/rawData";
 import { capitalizeFirstChar, removeSuffix } from "../../utils/TextUtils";
 
-export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false}: {
+export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
     id: number,
     isShowInfo?: boolean,
     isShopSlot?: boolean
@@ -28,20 +28,20 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
         }
     }
     return <div className="float-container pointer-events-none" >
-            {/* 触发范围 */}
-            {char && <>
-            <div className={isShowInfo? "fix_float":"float"} >
+        {/* 触发范围 */}
+        {char && <>
+            <Stack className={isShowInfo ? "fix_float" : "float"} >
                 <HStack>
                     {Array.from({ length: get_star_num(char) }, (_, index) => (
-                        <Img style={{width:'20px'}} src="star.png"/>
+                        <Img style={{ width: '20px' }} src="star.png" />
                     ))}
-                    {(char?.level == 2 || char?.level == 6) && <Img style={{width:'20px'}} src="star_half.png"/>}
+                    {(char?.level == 2 || char?.level == 6) && <Img style={{ width: '20px' }} src="star_half.png" />}
+                    {/* <p className="text-[10px]">{capitalizeFirstChar(removeSuffix(char?.name))}</p> */}
                 </HStack>
-                <p>{capitalizeFirstChar(removeSuffix(char?.name))}</p>
-                <p>HP:{get_total_life(char)}</p>
-                <p>AK:{char?.attack}</p>
-                <p>Feature: All features to be finished</p>
-            </div>
-            </>}
-  </div>
+                <p className="text-[10px]">HP:{get_total_life(char)}</p>
+                <p className="text-[10px]">ACK:{char?.attack}</p>
+                {/* <p className="text-[10px]">Feature: All features to be finished</p> */}
+            </Stack>
+        </>}
+    </div>
 }

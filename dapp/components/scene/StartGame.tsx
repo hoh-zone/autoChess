@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Img, Input, Modal, Spinner, Stack } from "@chakra-ui/react"
+import { Box, Button, Center, HStack, Img, Input, Modal, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Spinner, Stack } from "@chakra-ui/react"
 import { moneyA, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
 import useMintChess from "../button/MintChess";
@@ -12,6 +12,7 @@ import { ethos } from "ethos-connect";
 import { Rank } from "../Rank";
 import useCheckout from "../button/CheckoutChess";
 import PopupWindow from "../dialog/CustomPopWindow";
+import { motion } from "framer-motion";
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
@@ -55,30 +56,46 @@ export const StartGame = () => {
             <div className="absolute text-white top-12 z-50">
                 <Stack className="items-center text-center" gap={4}>
                     <div className="mb-12">
-                        <p style={{ marginBottom: '30px', fontSize: '100px' }}>Auto<br />Chess</p>
-                        {isLoading ? <div>Continue Game:</div> : <Spinner />}
-                        {
-                            nfts.map((nft, index) => (
-                                <Center>
-                                    <HStack>
-                                        <Button
-                                            key={nft.id.id}
-                                            className=" bg-slate-200"
-                                            fontSize={"x-small"}
-                                            isDisabled={nft.lose == 3}
-                                            onClick={async () => {
-                                                syncGameNFT(nft);
-                                                setStage("shop");
-                                            }}
-                                        >{"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
-                                        </Button>
-                                        {nft.arena &&
-                                            <Button className="bg-slate-200" style={{ fontSize: '10px' }} onClick={() => openModal(nft.id.id)}>Check Out</Button>
-                                        }
-                                        <PopupWindow isOpen={isOpen} ok={() => checkout({ chess_id: checkout_id })} cancel={closeModal} content_str="Are you sure to checkout?" />
-                                    </HStack>
-                                </Center>
-                            ))}
+                        <motion.p
+                            initial={{ opacity: 0, scale: 0, y: -50 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ duration: 1 }}
+                            style={{ marginBottom: '30px', fontSize: '100px' }}>Auto<br />Chess</motion.p>
+                        <Popover>
+                            <PopoverTrigger>
+                                <Button >Continue Game</Button>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                                <PopoverArrow />
+                                <PopoverCloseButton />
+                                <PopoverBody p={0}>
+                                    {
+                                        nfts.map((nft, index) => (
+                                            <Center className="w-full border-slate-400 mb-1">
+                                                <HStack className="w-full">
+                                                    <Button
+                                                        key={nft.id.id}
+                                                        className="w-full bg-slate-200"
+                                                        fontSize={"x-small"}
+                                                        isDisabled={nft.lose == 3}
+                                                        onClick={async () => {
+                                                            syncGameNFT(nft);
+                                                            setStage("shop");
+                                                        }}
+                                                    >{"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
+                                                    </Button>
+                                                    {nft.arena &&
+                                                        <Button className="bg-slate-200" style={{ fontSize: '10px' }} onClick={() => openModal(nft.id.id)}>Check Out</Button>
+                                                    }
+                                                    <PopupWindow isOpen={isOpen} ok={() => checkout({ chess_id: checkout_id })} cancel={closeModal} content_str="Are you sure to checkout?" />
+                                                </HStack>
+                                            </Center>
+                                        ))}
+                                </PopoverBody>
+                            </PopoverContent>
+                        </Popover>
+                        {/* {isLoading ? <div>:</div> : <Spinner />} */}
+
                     </div>
 
                     <Input

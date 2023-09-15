@@ -26,3 +26,6 @@ export const stageAtom = atom<"init" | "shop" | "fight">('init');
 export const selectedShopSlot = atom<number | null>(null);
 export const selectedSlot = atom<number | null>(null);
 
+
+// effects
+export const fightResultEffectA = atom<null | string>(null);
