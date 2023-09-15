@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
 import { selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
-import { removeSuffix } from "../../utils/removeSuffix"
+import { removeSuffix } from "../../utils/TextUtils"
 import { useEffect, useRef, useState } from "react"
 
 export const ShopSlot = ({ id }: {

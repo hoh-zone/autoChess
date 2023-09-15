@@ -23,10 +23,10 @@ export const Fight = () => {
 
     return <>
     { stage === "shop" && <Button className="" onClick={async () => {
-        let success = await operate_submit();
-        if (!success) {
-            return;
-        }
+        // let success = await operate_submit();
+        // if (!success) {
+        //     return;
+        // }
 
         console.log("start fight");
   

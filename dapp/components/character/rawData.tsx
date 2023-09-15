@@ -1,5 +1,5 @@
 import { CharacterFields } from "../../types/nft";
-import { removeSuffix } from "../../utils/removeSuffix";
+import { removeSuffix } from "../../utils/TextUtils";
 
 interface Roles {
     [key: string]: CharacterFields;
@@ -109,6 +109,17 @@ export function get_sell_price(name:string | undefined): number {
     } else {
         return 2;
     }
+}
+
+export function get_star_num(char:CharacterFields | null) : number {
+    if (!char) {
+        return 0;
+    }
+    let level = char.level;
+    if (level >= 6) {
+        return level / 3;
+    }
+    return level / 3 + 1;
 }
 
 export function get_total_life(char:CharacterFields | null) : number {

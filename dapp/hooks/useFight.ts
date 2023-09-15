@@ -114,7 +114,7 @@ export const useFight = () => {
         if (_chessId) {
             await query_chess(_chessId);
             // setEnemyChars([]);
-            setStage("shop");
+            // setStage("shop");
         }
     }, [enemyChars, setEnemyChars, chars, setChars]);
 }

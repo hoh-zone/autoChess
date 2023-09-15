@@ -7,7 +7,7 @@ import { HStack, Img } from "@chakra-ui/react";
 import { loseA, nameA, enemyNameA, slotCharacter, winA, enemyWinA, enemyLoseA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
 import { moneyA as moneyAtom} from "../../store/stages"
 import { get_total_life } from "../character/rawData";
-import { removeSuffix } from "../../utils/removeSuffix";
+import { removeSuffix } from "../../utils/TextUtils";
 
 export const StatusBar = ({ isOpponent = false}: {
     isOpponent?: boolean

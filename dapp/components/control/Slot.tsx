@@ -2,11 +2,12 @@ import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
 import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom } from "../../store/stages"
-import { removeSuffix } from "../../utils/removeSuffix";
+import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFields } from "../../types/nft";
 import { useEffect } from "react";
 import { upgrade } from "../character/rawData";
 import { Levelup } from "../character/levelup";
+import { FloatCharInfo } from "./FloatCharInfo";
 
 export const Slot = ({ isOpponent = false, showInfo = true, id }: {
     isOpponent?: boolean
@@ -45,9 +46,9 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
 
     return <div className={
         twMerge(
-            "w-24 h-24 relative rounded-xl",
+            "w-24 h-24 relative rounded-xl slotContainer",
             "border-4 border-transparent z-20",
-            isOpponent || stage === "fight" ? "pointer-events-none" : "hover:border-slate-300",
+            isOpponent ? "pointer-events-none" : "hover:border-slate-300",
             selected ? "border-slate-800" : ""
         )}
         onClick={() => {
@@ -108,19 +109,6 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
             }
         }}
     >
-        {showInfo && <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />}
-        <div className="pointer-events-none absolute bottom-[-2rem] left-1/2" style={{ marginLeft: '40px' }} >
-            {showInfo && <p>id:{id}</p>}
-            {char && showInfo && <div>
-                <p>{removeSuffix(char.name)}</p>
-                <p>level:{char.level}</p>
-                <p>attack:{char.attack}</p>
-                <p>life:{char.life}</p>
-                <p>price:{char.price}</p>
-            </div>
-            }
-        </div>
-
         <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -50%)" }} >
             {char && char.name && <Character
                 level={char.level}
@@ -129,10 +117,7 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
                 isOpponent={isOpponent} />
             }
         </div>
-
-        {/* <div className="absolute top-[60%] left-1/2" style={{ transform: "translate(-50%, -50%)" }} >
-            <Levelup />
-        </div> */}
+        {<FloatCharInfo isShowInfo={stage=="shop"} id={id}/>}
     </div >
 }
 
