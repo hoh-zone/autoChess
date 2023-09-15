@@ -170,19 +170,23 @@ module auto_chess::chess {
 
         let initial_gold = chess.gold;
         let initial_lineup = lineup::get_roles(chess.lineup);
+        //change these 2 fields ^^ according to the action list, then compare against gold and lineup_str_vec
+        //iterate thru action_list, set each string as base_str
+        //let base_str = string::utf8(b"BU:assa1");
+        let base_str: &str = b"BU:assa1";
+        let search : &str = b":";
 
         //TODO: GET ONLY NAME VECTOR
-        let names = vector::empty();
-        while(i < len(initial_lineup)) {
-            let role = vector::pop_back(initial_lineup);
-            vector::push_back(&mut names, role::get_name(role))
-        }
+        // let names = vector::empty();
 
-        //change these 2 fields ^^ according to the action list, then compare against gold and lineup_str_vec
+        // while(i < len(initial_lineup)) {
+        //     let role = vector::pop_back(initial_lineup);
+        //     vector::push_back(&mut names, role::get_name(role));
+        // }
 
-        //iterate thru action_list, set each string as base_str
-        let base_str = string::utf8(b"abc");
-        let search = string::utf8(b":");
+       
+
+        
 
 
         if (string::index_of(base_str,search) == 2){
@@ -190,25 +194,33 @@ module auto_chess::chess {
 
             //1. gold-- [price]
             //1.1 get nameOfCharacter
-            let j = string::length(base_str);
-            let sub_string = string::sub_string(base_str, 2, j);
+            // let j = string::length(base_str);
+            // let sub_string = string::sub_string(base_str, 2, j);
+            let sub_str: &str = base_str.split(':').nth(1).unwrap();
+            String.
             //sub_string(s: &String, i: u64, j: u64):
-
+            print(&utf8(b"substring:"));
+            print(sub_str);
             //1.2 search for gold of character
-            let Role thisRole = role::get_role_by_name(sub_string);
+            let Role thisRole = role::get_role_by_name(sub_str);
             let thisPrice = role::get_price(thisRole);
 
             initial_gold = initial_gold - thisPrice;
 
             //2. chess.lineup_global++
-            //TODO: PUSH ONLY NAME ONTO INITIAL_LINEUP
+            //PUSH ONLY NAME ONTO INITIAL_LINEUP
             vector::push_back(&mut names, role::get_name(thisRole));
 
 
         } else if (string::index_of(base_str,search) == 3){
-            //SELL "   SEL:nameOfCharacter"
+            //SELL "   
+            
+            //get index
+            let num_str: &str = s.split(':').nth(1).unwrap();
+            let num: u64 = num_str.parse().unwrap();
+            //check if index i is null
 
-
+            let 
 
             
 
