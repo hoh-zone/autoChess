@@ -48,7 +48,7 @@ export const Slot = ({ isOpponent = false, showInfo = true, id }: {
         twMerge(
             "w-24 h-24 relative rounded-xl slotContainer",
             "border-4 border-transparent z-20",
-            isOpponent ? "pointer-events-none" : "hover:border-slate-300",
+            (char == null && stage != "shop") ? "pointer-events-none" : "hover:border-slate-300",
             selected ? "border-slate-800" : ""
         )}
         onClick={() => {
