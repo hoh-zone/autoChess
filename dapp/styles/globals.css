@@ -268,8 +268,8 @@ a {
   backgroundImage: `url(./effect.png)`,
   width: "75px",
   height: "100px" */
-  -webkit-filter:  drop-shadow(-8px 5px 2px rgba(49, 79, 156, 0.5)) drop-shadow(27px 9px 2px rgba(49, 79, 156, 0.5));
-  filter: drop-shadow(-13px 2px 12px rgba(206, 202, 202, 0.832)) drop-shadow(13px 2px 2px rgba(199, 202, 195, 0.5));
+  -webkit-filter:  drop-shadow(-8px 5px 2px rgba(237, 63, 24, 0.5)) drop-shadow(27px 9px 2px rgba(156, 53, 49, 0.5));
+  filter: drop-shadow(-13px 2px 12px rgba(238, 112, 2, 0.832)) drop-shadow(13px 2px 2px rgba(250, 209, 206, 0.5));
   transform: scale(1.5)
 }
 
