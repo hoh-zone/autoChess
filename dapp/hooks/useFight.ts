@@ -33,7 +33,6 @@ export const useFight = () => {
         });
     };
 
-
     const lose_effect = () => {
         const timeLeft = animationEnd - Date.now(),
             ticks = Math.max(200, 500 * (timeLeft / duration));

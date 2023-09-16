@@ -6,6 +6,9 @@ import type { AppProps } from "next/app";
 import { NETWORK } from "../lib/constants";
 import Head from "next/head";
 import { ChakraProvider } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
+import { useAtom } from "jotai";
+import { stageAtom } from "../store/stages";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
@@ -14,6 +17,46 @@ function MyApp({ Component, pageProps }: AppProps) {
     network: NETWORK,
     chain: Chain.SUI_TESTNET
   };
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioFightRef = useRef<HTMLAudioElement>(null);
+  const [stage, setStage] = useAtom(stageAtom);
+
+  useEffect(() => {
+    if (stage === "fight") {
+      audioFightRef.current?.play();
+      audioRef.current?.pause();
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0
+      }
+    }
+    else {
+      audioRef.current?.play();
+      audioFightRef.current?.pause();
+      if (audioFightRef.current) {
+        audioFightRef.current.currentTime = 0
+      }
+    }
+
+    const callback = (e) => {
+      if (stage === "fight") {
+        audioFightRef.current?.play();
+        audioRef.current?.pause();
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0
+        }
+      }
+      else {
+        audioRef.current?.play();
+        audioFightRef.current?.pause();
+        if (audioFightRef.current) {
+          audioFightRef.current.currentTime = 0
+        }
+      }
+    }
+    window.addEventListener("keydown", callback);
+    
+    return () => window.removeEventListener("keydown", callback)
+  }, [audioRef.current, stage]);
 
   return (
     <EthosConnectProvider
@@ -27,6 +70,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           <title>Ethos Connect Example App</title>
         </Head>
         <Component {...pageProps} />
+        <audio ref={audioRef} autoPlay controls>
+          <source src="./shop.mp3" type="audio/ogg" />
+        </audio>
+        <audio ref={audioFightRef} autoPlay controls>
+          <source src="./fight.mp3" type="audio/ogg" />
+        </audio>
       </ChakraProvider>
     </EthosConnectProvider>
   );

@@ -24,8 +24,6 @@ export const StartGame = () => {
     const { status } = ethos.useWallet();
     const [isLoading, setIsLoading] = useState(false);
 
-    // query chesses when wallet connected
-    console.log(nfts);
     const fetch = async () => {
         setIsLoading(false);
         await query_chesses();
