@@ -13,11 +13,9 @@ module auto_chess::effect {
         let forbid_my_buff = is_forbid_buff(enemy_lineup);
         let forbid_enemy_buff = is_forbid_buff(my_lineup_fight);
         if (effect == utf8(b"add_all_hp")) {
-            print(&utf8(b"here:"));
             let value = utils::utf8_to_u64(effect_value);
             add_all_hp(my_lineup_fight, value);
             add_all_hp(my_lineup_permanent, value);
-            print(my_lineup_permanent);
         } else if (effect == utf8(b"add_all_tmp_attack")) {
             let value = utils::utf8_to_u64(effect_value);
             add_all_attack(my_lineup_fight, value);
@@ -56,10 +54,10 @@ module auto_chess::effect {
     }
 
     fun add_all_attack(lineup: &mut LineUp, value : u64) {
-        let roles = *lineup::get_roles(lineup);
-        let (i, len) = (0u64, vector::length(&roles));
+        let roles = lineup::get_mut_roles(lineup);
+        let (i, len) = (0u64, vector::length(roles));
         while (i < len) {
-            let role:&mut Role = vector::borrow_mut(&mut roles, i);
+            let role:&mut Role = vector::borrow_mut(roles, i);
             let orgin_attack = role::get_attack(role);
             role::set_attack(role, orgin_attack + value);
             i = i + 1;
@@ -67,10 +65,10 @@ module auto_chess::effect {
     }
 
     fun aoe_attack(lineup: &mut LineUp, attack_value: u64) {
-        let roles = *lineup::get_roles(lineup);
-        let (i, len) = (0u64, vector::length(&roles));
+        let roles = lineup::get_mut_roles(lineup);
+        let (i, len) = (0u64, vector::length(roles));
         while (i < len) {
-            let role:&mut Role = vector::borrow_mut(&mut roles, i);
+            let role:&mut Role = vector::borrow_mut(roles, i);
             let orgin_life = role::get_life(role);
             if (orgin_life > attack_value) {
                 role::set_life(role, orgin_life - attack_value);

@@ -56,9 +56,9 @@ module auto_chess::test {
             let lineupGlobal = take_shared<lineup::Global>(test);
             let gold = 3;
             let str_vec = vector::empty<String>();
-            vector::push_back(&mut str_vec, utf8(b"priest1"));
-            vector::push_back(&mut str_vec, utf8(b"priest1"));
-            vector::push_back(&mut str_vec, utf8(b"priest1"));
+            vector::push_back(&mut str_vec, utf8(b"priest3"));
+            vector::push_back(&mut str_vec, utf8(b"mega1"));
+            vector::push_back(&mut str_vec, utf8(b"mega1"));
             print(&utf8(b"operate my chess"));
             chess::operate_and_match(&mut chessGlobal, &roleGlobal, &lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
             print_my_lineup(&chess_nft);
@@ -84,7 +84,7 @@ module auto_chess::test {
     }
 
     fun print_my_lineup (chess: &chess::Chess) {
-        print(&utf8(b"my card pools:"));
+        print(&utf8(b"my lineup:"));
         print(chess::get_lineup(chess));
     }
 

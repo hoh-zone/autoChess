@@ -205,8 +205,6 @@ module auto_chess::chess {
     }
 
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext):bool {
-        print(&utf8(b"enemy lineup"));
-        print(enemy_lineup);
         let my_lineup_fight = *&chess.lineup;
         let my_lineup_permanent = chess.lineup;
         let my_roles = *lineup::get_roles(&my_lineup_fight);
@@ -236,6 +234,7 @@ module auto_chess::chess {
                     v2_lineup:*enemy_lineup,
                     res: 2
                 });
+                chess.lineup = my_lineup_permanent;
                 return false
             };
             if (vector::length(&enemy_roles) == 0 && role::get_life(&enemy_first_role) == 0) {
@@ -251,18 +250,20 @@ module auto_chess::chess {
                     v2_lineup:*enemy_lineup,
                     res: 1
                 });
+                chess.lineup = my_lineup_permanent;
                 return true
             };
-            if (role::get_life(&my_first_role) == 0) {
+            while (vector::length(&my_roles) > 0 && role::get_life(&my_first_role) == 0) {
                 my_first_role = vector::pop_back(&mut my_roles);
             };
-            if (role::get_life(&enemy_first_role) == 0) {
+            while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
             combat(&mut my_lineup_fight, &mut my_lineup_permanent, enemy_lineup, &mut my_first_role, &mut enemy_first_role);
         };
         false
     }
+    
 
     fun combat(my_lineup_fight: &mut LineUp, my_lineup_permanent: &mut LineUp, enemy_lineup_fight: &mut LineUp, role1:&mut role::Role, role2:&mut role::Role) {
         let life1 = role::get_life(role1);
