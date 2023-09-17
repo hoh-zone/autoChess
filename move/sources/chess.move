@@ -12,6 +12,7 @@ module auto_chess::chess {
     use sui::event;
     use auto_chess::role;
     use auto_chess::utils;
+    use auto_chess::effect;
     use sui::sui::SUI;
 
     const INIT_LIFE:u64 = 3;
@@ -184,10 +185,10 @@ module auto_chess::chess {
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
-        let lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
+        let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
 
         // fight
-        fight(chess, &lineup, ctx);
+        fight(chess, &enemy_lineup, ctx);
 
         // record
         if (chess.life > 0) {
@@ -206,8 +207,9 @@ module auto_chess::chess {
     public fun fight(chess: &mut Chess, enemy_lineup: &LineUp, ctx:&mut TxContext):bool {
         print(&utf8(b"enemy lineup"));
         print(enemy_lineup);
-        let my_lineup = &chess.lineup;
-        let my_roles = vector::reverse(*lineup::get_roles(my_lineup));
+        let my_lineup_fight = &chess.lineup;
+        let my_lineup_permanent = *&my_lineup_fight;
+        let my_roles = vector::reverse(*lineup::get_roles(my_lineup_fight));
         let my_num = vector::length(&my_roles);
         let enemy_roles = vector::reverse(*lineup::get_roles(enemy_lineup));
         let enemy_num = vector::length(&enemy_roles);
@@ -217,6 +219,7 @@ module auto_chess::chess {
         let my_first_role = role::empty();
         let enemy_first_role = role::empty();
         while (true) {
+            // check game end condition
             if (vector::length(&my_roles) == 0 && role::get_life(&my_first_role) == 0) {
                 print(&utf8(b"I lose"));
                 chess.lose = chess.lose + 1;
@@ -254,14 +257,19 @@ module auto_chess::chess {
             if (role::get_life(&enemy_first_role) == 0) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
-            combat(&mut my_first_role, &mut enemy_first_role);
+            combat(&mut my_lineup_fight, &mut my_lineup_permanent, enemy_lineup, &mut my_first_role, &mut enemy_first_role);
         };
         false
     }
 
-    fun combat(role1:&mut role::Role, role2:&mut role::Role) {
+    fun combat(my_lineup_fight: &mut LineUp, my_lineup_permanent: &mut LineUp, enemy_lineup_fight: &mut LineUp, role1:&mut role::Role, role2:&mut role::Role) {
         let life1 = role::get_life(role1);
         let life2 = role::get_life(role2);
+
+        // todo: for test : before start, call the effect skill
+        // for test: if only I can call the skill 
+        effect::call_effect(role1, my_lineup_fight. my_lineup_permanent, enemy_lineup_fight);
+
         let attack1 = role::get_attack(role1);
         let attack2 = role::get_attack(role2);
         while (life1 != 0 && life2 != 0) {
