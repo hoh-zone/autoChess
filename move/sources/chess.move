@@ -207,9 +207,9 @@ module auto_chess::chess {
         print(&utf8(b"enemy lineup"));
         print(enemy_lineup);
         let my_lineup = &chess.lineup;
-        let my_roles = *lineup::get_roles(my_lineup);
+        let my_roles = vector::reverse(*lineup::get_roles(my_lineup));
         let my_num = vector::length(&my_roles);
-        let enemy_roles = *lineup::get_roles(enemy_lineup);
+        let enemy_roles = vector::reverse(*lineup::get_roles(enemy_lineup));
         let enemy_num = vector::length(&enemy_roles);
         if (my_num == 0) {
             return false
@@ -260,13 +260,11 @@ module auto_chess::chess {
     }
 
     fun combat(role1:&mut role::Role, role2:&mut role::Role) {
-        let life1 = 1;
-        let life2 = 1;
+        let life1 = role::get_life(role1);
+        let life2 = role::get_life(role2);
         let attack1 = role::get_attack(role1);
         let attack2 = role::get_attack(role2);
         while (life1 != 0 && life2 != 0) {
-            life1 = role::get_life(role1);
-            life2 = role::get_life(role2);
             if (life1 > attack2 && attack1 >= life2) {
                 role::set_life(role1, life1 - attack2);
                 role::set_life(role2, 0);
@@ -280,6 +278,8 @@ module auto_chess::chess {
                 role::set_life(role1, 0);
                 role::set_life(role2, 0);
             }
+            life1 = role::get_life(role1);
+            life2 = role::get_life(role2);
         };
     }
 

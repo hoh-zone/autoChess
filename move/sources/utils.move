@@ -14,6 +14,11 @@ module auto_chess::utils {
         string::utf8(vec)
     }
 
+    public fun utf8_to_u64(str: String): u64 {
+        let bytes = *string::bytes(&str);
+        bytes_to_u64(bytes)
+    }
+
     public fun u64_to_string(num: u64) : String {
         let vec = vector::empty<u8>();
         vector::push_back(&mut vec, (num as u8) + 48);
@@ -57,7 +62,7 @@ module auto_chess::utils {
 
     public fun get_role_num_by_lineup_power(power:u64):u64 {
         if (power >= 6) {
-            7
+            6
         } else if (power >= 4) {
             5
         } else if (power >= 3) {
