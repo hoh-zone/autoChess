@@ -16,7 +16,14 @@ module auto_chess::utils {
 
     public fun utf8_to_u64(str: String): u64 {
         let bytes = *string::bytes(&str);
-        bytes_to_u64(bytes)
+        let len = vector::length(&bytes);
+        let i = 0;
+        let res = 0;
+        while (i < len) {
+            res = res + i * 10 + ((*vector::borrow(&bytes, i) as u64) - 48);
+            i = i + 1;
+        };
+        res
     }
 
     public fun u64_to_string(num: u64) : String {
@@ -26,10 +33,10 @@ module auto_chess::utils {
     }
 
     public fun get_random_num(min:u64, max:u64, seed_u:u8, ctx:&mut TxContext) :u64 {
-        (min + bytes_to_u64(seed(ctx, seed_u))) % (max + 1)
+        (min + tx_bytes_to_u64(seed(ctx, seed_u))) % (max + 1)
     }
 
-    fun bytes_to_u64(bytes: vector<u8>): u64 {
+    fun tx_bytes_to_u64(bytes: vector<u8>): u64 {
         let value = 0u64;
         let i = 0u64;
         while (i < 8) {
