@@ -156,6 +156,9 @@ module auto_chess::role {
             life: 0,
             level: 0,
             price: 0,
+            magic: 99,
+            effect: utf8(b""),
+            effect_value: utf8(b"")
         }
     }
 
@@ -223,7 +226,7 @@ module auto_chess::role {
     }
 
     public fun get_effect(role: &Role) : String {
-        role.effect`
+        role.effect
     }
 
     public fun get_effect_value(role: &Role) : String {

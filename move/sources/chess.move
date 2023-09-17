@@ -188,7 +188,7 @@ module auto_chess::chess {
         let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
 
         // fight
-        fight(chess, &enemy_lineup, ctx);
+        fight(chess, &mut enemy_lineup, ctx);
 
         // record
         if (chess.life > 0) {
@@ -204,14 +204,16 @@ module auto_chess::chess {
         chess.cards_pool = lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(chess.win,chess.lose), ctx);
     }
 
-    public fun fight(chess: &mut Chess, enemy_lineup: &LineUp, ctx:&mut TxContext):bool {
+    public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext):bool {
         print(&utf8(b"enemy lineup"));
         print(enemy_lineup);
-        let my_lineup_fight = &chess.lineup;
+        let my_lineup_fight = *&chess.lineup;
         let my_lineup_permanent = *&my_lineup_fight;
-        let my_roles = vector::reverse(*lineup::get_roles(my_lineup_fight));
+        let my_roles = *lineup::get_roles(&my_lineup_fight);
+        vector::reverse<role::Role>(&mut my_roles);
         let my_num = vector::length(&my_roles);
-        let enemy_roles = vector::reverse(*lineup::get_roles(enemy_lineup));
+        let enemy_roles = *lineup::get_roles(enemy_lineup);
+        vector::reverse(&mut enemy_roles);
         let enemy_num = vector::length(&enemy_roles);
         if (my_num == 0) {
             return false
@@ -268,7 +270,7 @@ module auto_chess::chess {
 
         // todo: for test : before start, call the effect skill
         // for test: if only I can call the skill 
-        effect::call_effect(role1, my_lineup_fight. my_lineup_permanent, enemy_lineup_fight);
+        effect::call_effect(role1, my_lineup_fight, my_lineup_permanent, enemy_lineup_fight);
 
         let attack1 = role::get_attack(role1);
         let attack2 = role::get_attack(role2);
@@ -285,7 +287,7 @@ module auto_chess::chess {
             } else if (attack1 >= life2 && attack2 >= life1) {
                 role::set_life(role1, 0);
                 role::set_life(role2, 0);
-            }
+            } else {};
             life1 = role::get_life(role1);
             life2 = role::get_life(role2);
         };
