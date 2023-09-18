@@ -13,7 +13,8 @@ module auto_chess::chess {
     use auto_chess::role;
     use auto_chess::utils;
     use sui::sui::SUI;
-
+    use std::ascii::String;
+  
     const INIT_LIFE:u64 = 3;
     const INIT_GOLD:u64 = 10;
     const REFRESH_PRICE:u64 = 3;
@@ -163,6 +164,23 @@ module auto_chess::chess {
         object::delete(id);
     }
 
+    public fun to_string(value: u128): String {
+        if (value == 0) {
+            return ASCII::string(b"0")
+        };
+        let buffer = vector::empty<u8>();
+        while (value != 0) {
+            vector::push_back(&mut buffer, ((48 + value % 10) as u8));
+            value = value / 10;
+        };
+        vector::reverse(&mut buffer);
+        ASCII::string(buffer)
+
+
+    }
+
+    
+
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
@@ -183,7 +201,6 @@ module auto_chess::chess {
         //     let role = vector::pop_back(initial_lineup);
         //     vector::push_back(&mut names, role::get_name(role));
         // }
-
 
         if (string::index_of(base_str,search) == 2){
             //BUY "BU:nameOfCharacter"
@@ -209,18 +226,24 @@ module auto_chess::chess {
 
 
         } else if (string::index_of(base_str,search) == 3){
-            //SELL "   
+            //SELL "SEL:5"   
             
             //get index
             let j = string::length(base_str);
             let num_string = string::sub_string(base_str, 2, j);
             //check if index i is null
+            //TODO: Error handling and check method for parse
+            //let num_sell: u64 = num_string.parse().unwrap();
+
+            //vector::remove(&mut names, num_sell);
+            //TODO: insert null at the same index
 
             
 
         } else if (string::index_of(base_str,search) == 4){
-            //SWAP "SWAP:nameOfCharacter"
-
+            //SWAP "SWAP:idx1,idx2"
+            let j = string::length(base_str);
+            let num_string = string::sub_string(base_str, 2, j);
 
             //use native public fun swap<Element>(v: &mut vector<Element>, i: u64, j: u64);
 
