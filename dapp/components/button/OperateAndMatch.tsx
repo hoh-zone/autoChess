@@ -20,13 +20,9 @@ const useOperateAndMatch = () => {
             if (cha == null) {
                 continue
             }
-            // version1: namex_y
-            let name = removeSuffix(cha.name);
-            vec.push(addLevelSuffix(name, cha.level));
-
-            // todo: version2:
-            // vec.push(cha.name + ":" + cha.level + ":" + cha.attack + ":" + cha.life + ":" + cha.price);
+            vec.push(cha.name + ":" + cha.base_life + ":" + cha.attack);
         }
+        console.log("operate: ",vec);
         return vec;
     }
 
