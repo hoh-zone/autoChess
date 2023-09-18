@@ -263,15 +263,16 @@ module auto_chess::chess {
         };
         false
     }
-    
 
     fun combat(my_lineup_fight: &mut LineUp, my_lineup_permanent: &mut LineUp, enemy_lineup_fight: &mut LineUp, role1:&mut role::Role, role2:&mut role::Role) {
-        let life1 = role::get_life(role1);
-        let life2 = role::get_life(role2);
+        let enemy_lineup_permnent = copy enemy_lineup_fight;
 
         // todo: for test : before start, call the effect skill
-        // for test: if only I can call the skill 
-        effect::call_effect(role1, my_lineup_fight, my_lineup_permanent, enemy_lineup_fight);
+        effect::call_my_effect(role1, my_lineup_fight, my_lineup_permanent, enemy_lineup_fight);
+        effect::call_enemy_effect(role2, enemy_lineup_fight, my_lineup_fight);
+
+        let life1 = role::get_life(role1);
+        let life2 = role::get_life(role2);
 
         let attack1 = role::get_attack(role1);
         let attack2 = role::get_attack(role2);

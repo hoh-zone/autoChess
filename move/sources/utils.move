@@ -20,7 +20,7 @@ module auto_chess::utils {
         let i = 0;
         let res = 0;
         while (i < len) {
-            res = res + i * 10 + ((*vector::borrow(&bytes, i) as u64) - 48);
+            res = res * 10 + ((*vector::borrow(&bytes, i) as u64) - 48);
             i = i + 1;
         };
         res

@@ -7,22 +7,43 @@ module auto_chess::effect {
     use auto_chess::lineup::{Self, LineUp};
     friend auto_chess::chess;
 
-    public(friend) fun call_effect(role:&mut Role,  my_lineup_fight:&mut LineUp, my_lineup_permanent:&mut LineUp, enemy_lineup: &mut LineUp) {
+    public(friend) fun call_enemy_effect(role:&mut Role, enemy_lineup_fight:&mut LineUp, my_lineup: &mut LineUp) {
         let effect = role::get_effect(role);
         let effect_value = role::get_effect_value(role);
-        let forbid_my_buff = is_forbid_buff(enemy_lineup);
-        let forbid_enemy_buff = is_forbid_buff(my_lineup_fight);
-        if (effect == utf8(b"add_all_hp")) {
+        let forbid_buff = is_forbid_buff(my_lineup);
+        if (effect == utf8(b"add_all_hp") && !forbid_buff) {
+            let value = utils::utf8_to_u64(effect_value);
+            add_all_hp(enemy_lineup_fight, value);
+        } else if (effect == utf8(b"add_all_tmp_attack") && !forbid_buff) {
+            let value = utils::utf8_to_u64(effect_value);
+            add_all_attack(enemy_lineup_fight, value);
+        } else if (effect == utf8(b"aoe")) {
+            let value = utils::utf8_to_u64(effect_value);
+            aoe_attack(my_lineup, value);
+        } else if (effect == utf8(b"add_all_tmp_hp") && !forbid_buff){
+            let value = utils::utf8_to_u64(effect_value);
+            add_all_hp(enemy_lineup_fight, value);
+        } else if (effect == utf8(b"attack_lowest_hp") ){
+            let value = utils::utf8_to_u64(effect_value);
+            attack_lowest_hp(my_lineup, value);
+        };
+    }
+
+    public(friend) fun call_my_effect(role:&mut Role,  my_lineup_fight:&mut LineUp, my_lineup_permanent:&mut LineUp, enemy_lineup: &mut LineUp) {
+        let effect = role::get_effect(role);
+        let effect_value = role::get_effect_value(role);
+        let forbid_buff = is_forbid_buff(enemy_lineup);
+        if (effect == utf8(b"add_all_hp") && !forbid_buff) {
             let value = utils::utf8_to_u64(effect_value);
             add_all_hp(my_lineup_fight, value);
             add_all_hp(my_lineup_permanent, value);
-        } else if (effect == utf8(b"add_all_tmp_attack")) {
+        } else if (effect == utf8(b"add_all_tmp_attack") && !forbid_buff) {
             let value = utils::utf8_to_u64(effect_value);
             add_all_attack(my_lineup_fight, value);
         } else if (effect == utf8(b"aoe")) {
             let value = utils::utf8_to_u64(effect_value);
             aoe_attack(enemy_lineup, value);
-        } else if (effect == utf8(b"add_all_tmp_hp") ){
+        } else if (effect == utf8(b"add_all_tmp_hp") && !forbid_buff){
             let value = utils::utf8_to_u64(effect_value);
             add_all_hp(my_lineup_fight, value);
         } else if (effect == utf8(b"attack_lowest_hp") ){
