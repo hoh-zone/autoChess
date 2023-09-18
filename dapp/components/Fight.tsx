@@ -27,7 +27,6 @@ export const Fight = () => {
         if (!success) {
             return;
         }
-
         console.log("start fight");
   
         // sync enemy

@@ -31,12 +31,14 @@ export interface Role {
 }
 
 export interface CharacterFields {
-    attack:  string;
-    life: string;
+    attack:  number;
+    life: number;
     level:   number;
     name:    string;
     price:   number;
     sellprice:   number;
+    effect: string;
+    effect_value: string;
     attacking: 0 | 1 | 2;
 }
 

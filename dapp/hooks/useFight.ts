@@ -6,6 +6,9 @@ import { sleep } from "../utils/sleep";
 import confetti from "canvas-confetti";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import range from "lodash/range";
+import { CharacterFields } from "../types/nft";
+import { match } from "assert";
+import { get_effect, get_effect_value } from "../components/character/rawData";
 
 export const useFight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
@@ -60,6 +63,73 @@ export const useFight = () => {
         }
     }
 
+    const call_effect = (char:CharacterFields, is_opponent:boolean) => {
+        if (!char) {
+            return;
+        }
+
+        // todo:改成直接从合约解析而不是读本地
+        let effect = get_effect(char);
+        let effect_value = get_effect_value(char);
+        if (effect === "aoe") {
+            aoe(parseInt(effect_value), is_opponent);
+        } else if (effect === "add_all_tmp_hp") {
+            add_all_tmp_hp(parseInt(effect_value), is_opponent);
+        } else if (effect === "add_all_tmp_attack") {
+            add_all_tmp_attack(parseInt(effect_value), is_opponent);
+        }
+    }
+
+    const add_all_tmp_attack = (value:number, is_opponent:boolean) => {
+        let target_group;
+        if (is_opponent) {
+            target_group = enemyChars;
+        } else {
+            target_group = chars;
+        }
+        target_group.map((character) => {
+            if (character == null || character.attack == null) {
+                return
+            }
+            character.attack = Number(character.attack) + Number(value);
+        });
+        console.log("全体加攻:", value, " is enemy:",is_opponent)
+    }
+
+    const add_all_tmp_hp = (value:number, is_opponent:boolean) => {
+        let target_group;
+        if (is_opponent) {
+            target_group = enemyChars;
+        } else {
+            target_group = chars;
+        }
+        target_group.map((character) => {
+            if (character == null || character.life == null) {
+                return
+            }
+            character.life = Number(character.life) + Number(value);
+        });
+        console.log("全体加血:", value, " is enemy:",is_opponent)
+    }
+
+    const aoe = (attack:number, is_opponent:boolean) => {
+        let target_group;
+        if (is_opponent) {
+            target_group = chars;
+        } else {
+            target_group = enemyChars;
+        }
+        target_group.map((character, index) => {
+            if (character == null || character.life == null) {
+                return
+            }
+            character.life = Number(character.life) - Number(attack);
+            if (character.life <= 0) {
+                enemyChars[index] = null;
+            }
+        });
+        console.log("范围伤害:", attack, " is enemy:", is_opponent)
+    }
 
     return useCallback(async () => {
         // both sides have characters, continue fighting
@@ -86,11 +156,21 @@ export const useFight = () => {
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
 
+            // effect skill
+            call_effect(char, false);
+            call_effect(enemyChar, true);
+
+            // 可能已经挂了要换人
+            if (!some(chars, Boolean) || !some(enemyChars, Boolean)) {
+                break;
+            }
+
+            // attack
             const charLife = Number(char.life) - Number(enemyChar.attack);
             const enemyLife = Number(enemyChar.life) - Number(char.attack);
 
-            char.life = charLife.toString();
-            enemyChar.life = enemyLife.toString();
+            char.life = charLife;
+            enemyChar.life = enemyLife;
 
             if (charLife <= 0) {
                 chars[charIndex] = null;
@@ -101,6 +181,7 @@ export const useFight = () => {
                 enemyChars[enemyCharIndex] = null;
             }
             setEnemyChars(enemyChars.slice());
+
             await sleep(500);
         }
 

@@ -9,6 +9,7 @@ import { upgrade } from "../character/rawData";
 import { Levelup } from "../character/levelup";
 import { FloatCharInfo } from "./FloatCharInfo";
 import { motion } from "framer-motion";
+import { HStack } from "@chakra-ui/react";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
@@ -26,10 +27,6 @@ export const Slot = ({ isOpponent = false, id }: {
         char = enemyChars[id - 10];
     } else {
         char = chars[id];
-    }
-
-    if (id === 0) {
-        console.log("is there", char);
     }
 
     const selected = (slotNumber === id);
@@ -124,6 +121,10 @@ export const Slot = ({ isOpponent = false, id }: {
                 isOpponent={isOpponent} />
             }
         </div>
+        <HStack>
+            {char?.attack && (char?.life > 0) && <p style={{color:"white", zIndex:1000}}>AK:{char?.attack}</p>}
+            {char?.life && (char?.life > 0) && <p style={{color:"white", zIndex:1000}}>hp:{char?.life}</p>}
+        </HStack>
         {<FloatCharInfo isShowInfo={stage == "shop"} id={id} />}
     </motion.div  >
 }
@@ -135,10 +136,6 @@ const canUpgrade = (char1: any, char2: any) => {
     if (removeSuffix(char1.name) != removeSuffix(char2.name)) {
         return false;
     }
-    // 1 + 1 = 2
-    // 1 + 2 = 3
-    // 3 + 3 = 6
-    // 3 + 6 = 9
     let level1 = char1.level;
     let level2 = char2.level;
     if (level1 > level2) {
