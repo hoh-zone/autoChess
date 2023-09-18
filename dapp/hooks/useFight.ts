@@ -63,6 +63,23 @@ export const useFight = () => {
         }
     }
 
+    const is_forbid_buff = (is_opponent:boolean) => {
+        let target_group;
+        if (is_opponent) {
+            target_group = chars;
+        } else {
+            target_group = enemyChars;
+        }
+        for (const character of target_group) {
+            if (character != null && character.life > 0) {
+                if (get_effect(character) === "forbid_buff") {
+                    return true
+                }
+            }
+        }
+        return false;
+    }
+
     const call_effect = (char:CharacterFields, is_opponent:boolean) => {
         if (!char) {
             return;
@@ -70,12 +87,19 @@ export const useFight = () => {
 
         // todo:改成直接从合约解析而不是读本地
         let effect = get_effect(char);
+        if (effect === "") {
+            return
+        }
         let effect_value = get_effect_value(char);
+        let forbid_buff = is_forbid_buff(is_opponent);
+        if (forbid_buff) {
+            console.log("触发强化失败: 禁强化")
+        }
         if (effect === "aoe") {
             aoe(parseInt(effect_value), is_opponent);
-        } else if (effect === "add_all_tmp_hp") {
+        } else if (effect === "add_all_tmp_hp" && !forbid_buff) {
             add_all_tmp_hp(parseInt(effect_value), is_opponent);
-        } else if (effect === "add_all_tmp_attack") {
+        } else if (effect === "add_all_tmp_attack" && !forbid_buff) {
             add_all_tmp_attack(parseInt(effect_value), is_opponent);
         }
     }

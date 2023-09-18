@@ -42,11 +42,11 @@ const roles_info: Roles = {
     "mega2_1": {name:"mega2_1", attack:12, life:10, level:6, price:7, sellprice:6, attacking:0 ,effect:"aoe", effect_value:"4"},
     "mega3": {name:"mega3", attack:24, life:20, level:9, price:9, sellprice:8, attacking:0 ,effect:"aoe", effect_value:"6"},
 
-    "shaman1": {name:"shaman1", attack:6, life:5, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_attack", effect_value:"3"},
-    "shaman1_1": {name:"shaman1_1", attack:6, life:5, level:2, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_attack", effect_value:"3"},
-    "shaman2": {name:"shaman2", attack:12, life:11, level:3, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_attack", effect_value:"6"},
-    "shaman2_1": {name:"shaman2_1", attack:12, life:11, level:6, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_attack", effect_value:"6"},
-    "shaman3": {name:"shaman3", attack:22, life:22, level:9, price:9, sellprice:8, attacking:0 ,effect:"add_all_tmp_attack", effect_value:"12"},
+    "shaman1": {name:"shaman1", attack:6, life:5, level:1, price:3, sellprice:2, attacking:0 ,effect:"forbid_buff", effect_value:""},
+    "shaman1_1": {name:"shaman1_1", attack:6, life:5, level:2, price:3, sellprice:2, attacking:0 ,effect:"forbid_buff", effect_value:""},
+    "shaman2": {name:"shaman2", attack:12, life:11, level:3, price:7, sellprice:6, attacking:0 ,effect:"forbid_buff", effect_value:""},
+    "shaman2_1": {name:"shaman2_1", attack:12, life:11, level:6, price:7, sellprice:6, attacking:0 ,effect:"forbid_buff", effect_value:""},
+    "shaman3": {name:"shaman3", attack:22, life:22, level:9, price:9, sellprice:8, attacking:0 ,effect:"forbid_buff", effect_value:""},
 
     "firemega1": {name:"firemega1", attack:7, life:4, level:1, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},
     "firemega1_1": {name:"firemega1_1", attack:7, life:4, level:2, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},
@@ -84,11 +84,11 @@ const roles_info: Roles = {
     "slime2_1": {name:"slime2_1", attack:8, life:15, level:6, price:7, sellprice:6, attacking:0 ,effect:"", effect_value:""},
     "slime3": {name:"slime3", attack:24, life:26, level:9, price:9, sellprice:8, attacking:0 ,effect:"", effect_value:""},
 
-    "tank1": {name:"tank1", attack:3, life:8, level:1, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},
-    "tank1_1": {name:"tank1_1", attack:3, life:8, level:2, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},
-    "tank2": {name:"tank2", attack:5, life:22, level:3, price:7, sellprice:6, attacking:0 ,effect:"", effect_value:""},
-    "tank2_1": {name:"tank2_1", attack:5, life:22, level:6, price:7, sellprice:6, attacking:0 ,effect:"", effect_value:""},
-    "tank3": {name:"tank3", attack:10, life:44, level:9, price:9, sellprice:8, attacking:0 ,effect:"", effect_value:""},
+    "tank1": {name:"tank1", attack:3, life:8, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"1"},
+    "tank1_1": {name:"tank1_1", attack:3, life:8, level:2, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"1"},
+    "tank2": {name:"tank2", attack:5, life:22, level:3, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"2"},
+    "tank2_1": {name:"tank2_1", attack:5, life:22, level:6, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"2"},
+    "tank3": {name:"tank3", attack:10, life:44, level:9, price:9, sellprice:8, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"3"},
 
     "priest1": {name:"priest1", attack:3, life:10, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_hp", effect_value:"1"},
     "priest1_1": {name:"priest1_1", attack:3, life:10, level:2, price:4, sellprice:3, attacking:0 ,effect:"add_all_hp", effect_value:"1"},
