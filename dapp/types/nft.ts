@@ -32,7 +32,12 @@ export interface Role {
 
 export interface CharacterFields {
     attack:  number;
+
+    // on-time-life for fight
     life: number;
+
+    // max-life
+    base_life?: number;
     level:   number;
     name:    string;
     price:   number;

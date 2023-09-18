@@ -5,6 +5,7 @@ import useQueryFight from "./button/QueryFightResult";
 import { Button } from "@chakra-ui/react";
 import { useFight } from "../hooks/useFight";
 import { useEffect } from "react";
+import { CharacterFields } from "../types/nft";
 
 export const Fight = () => {
     const { nftObjectId, operate_submit } = useOperateAndMatch();
@@ -23,20 +24,22 @@ export const Fight = () => {
 
     return <>
     { stage === "shop" && <Button className="" onClick={async () => {
-        let success = await operate_submit();
-        if (!success) {
-            return;
-        }
+        // let success = await operate_submit();
+        // if (!success) {
+        //     return;
+        // }
         console.log("start fight");
   
         // sync enemy
         let json = await query_fight(chess_id);
-        let enemy = json['v2_lineup']['roles'];
+        let enemy:CharacterFields[] = json['v2_lineup']['roles'];
         let name = json['v2_name'];
         setEnemyName(name);
+        enemy.map((role) => {
+            role.base_life = role.life;
+        })
         setEnemyChars(enemy);
         setStage("fight");
     }}> Fight </Button>    }
     </>
-    
 }

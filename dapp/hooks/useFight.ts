@@ -99,6 +99,8 @@ export const useFight = () => {
             aoe(parseInt(effect_value), is_opponent);
         } else if (effect === "add_all_tmp_hp" && !forbid_buff) {
             add_all_tmp_hp(parseInt(effect_value), is_opponent);
+        } else if (effect === "add_all_hp" && !forbid_buff) {
+            add_all_hp(parseInt(effect_value), is_opponent);
         } else if (effect === "add_all_tmp_attack" && !forbid_buff) {
             add_all_tmp_attack(parseInt(effect_value), is_opponent);
         }
@@ -118,6 +120,22 @@ export const useFight = () => {
             character.attack = Number(character.attack) + Number(value);
         });
         console.log("全体加攻:", value, " is enemy:",is_opponent)
+    }
+
+    const add_all_hp = (value:number, is_opponent:boolean) => {
+        let target_group;
+        if (is_opponent) {
+            target_group = enemyChars;
+        } else {
+            target_group = chars;
+        }
+        target_group.map((character) => {
+            if (character == null || character.life == null) {
+                return
+            }
+            character.life = Number(character.life) + Number(value);
+        });
+        console.log("全体加血:", value, " is enemy:",is_opponent)
     }
 
     const add_all_tmp_hp = (value:number, is_opponent:boolean) => {
@@ -158,7 +176,6 @@ export const useFight = () => {
 
     return useCallback(async () => {
         // both sides have characters, continue fighting
-        // return;
         await sleep(1000);
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             const charIndex = chars.findIndex(Boolean);

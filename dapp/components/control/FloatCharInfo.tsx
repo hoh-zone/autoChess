@@ -5,7 +5,7 @@ import { CharacterFields } from "../../types/nft";
 import { HStack, Img, Stack } from "@chakra-ui/react";
 import { slotCharacter, enemyCharacter, shopCharacter } from "../../store/stages";
 
-import { get_star_num, get_total_life } from "../character/rawData";
+import { get_base_raw_life, get_star_num } from "../character/rawData";
 import { capitalizeFirstChar, removeSuffix } from "../../utils/TextUtils";
 
 export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
@@ -27,6 +27,18 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
             char = chars[id];
         }
     }
+
+    const get_base_life = (char:CharacterFields | null) => {
+        if (!char) {
+            return 0
+        }
+        if (isShopSlot) {
+            return get_base_raw_life(char)
+        } else {
+            return char.base_life;
+        }
+    }
+
     return <div className="float-container pointer-events-none" >
         {/* 触发范围 */}
         {char && <>
@@ -38,7 +50,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                     {(char?.level == 2 || char?.level == 6) && <Img style={{ width: '20px' }} src="star_half.png" />}
                     {/* <p className="text-[10px]">{capitalizeFirstChar(removeSuffix(char?.name))}</p> */}
                 </HStack>
-                <p className="text-[10px]">HP:{get_total_life(char)}</p>
+                <p className="text-[10px]">HP:{get_base_life(char)}</p>
                 <p className="text-[10px]">ACK:{char?.attack}</p>
                 {/* <p className="text-[10px]">Feature: All features to be finished</p> */}
             </Stack>

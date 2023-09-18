@@ -4,11 +4,16 @@ import { ethos } from 'ethos-connect';
 import { PACKAGE_ID } from '../../lib/constants';
 import { GameNft } from '../../types/nft';
 import { useSyncGameNFT } from '../../hooks/useSyncGameNFT';
+import { PaginatedObjectsResponse } from '@mysten/sui.js';
 
 const useQueryChesses = () => {
     const { wallet } = ethos.useWallet();
     const [nfts, setNfts] = useState<GameNft[]>([]);
     const syncGameNFT = useSyncGameNFT();
+    const record_nfts = (result: PaginatedObjectsResponse) => {
+        let games = result.data.map(d => (d.data?.content as any)?.fields).filter(Boolean) as GameNft[];
+        setNfts(games);
+    }
 
     const update_chess = useCallback(async (chess_id:string) => {
         if (!wallet) return;
@@ -21,7 +26,6 @@ const useQueryChesses = () => {
         let updated_nft = (result.data?.content as any)?.fields as GameNft;
         console.log("updated nft:",updated_nft);
         syncGameNFT(updated_nft);
-
     }, [wallet]);
 
     const query_chesses = useCallback(async () => {
@@ -38,9 +42,7 @@ const useQueryChesses = () => {
                 }
             }
         });
-        setNfts(
-            result.data.map(d => (d.data?.content as any)?.fields).filter(Boolean) as GameNft[]
-        );
+        record_nfts(result);
     }, [wallet]);
     return { nfts, query_chess: update_chess, query_chesses };
 }

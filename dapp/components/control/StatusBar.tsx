@@ -2,11 +2,9 @@
 import { useAtom } from "jotai"
 
 import { CharacterFields } from "../../types/nft";
-import { useEffect } from "react";
 import { HStack, Img } from "@chakra-ui/react";
 import { loseA, nameA, enemyNameA, slotCharacter, winA, enemyWinA, enemyLoseA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
 import { moneyA as moneyAtom} from "../../store/stages"
-import { get_total_life } from "../character/rawData";
 import { removeSuffix } from "../../utils/TextUtils";
 
 export const StatusBar = ({ isOpponent = false}: {
@@ -24,11 +22,14 @@ export const StatusBar = ({ isOpponent = false}: {
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
 
-    const get_width_by_life = (char:any) => {
+    const get_width_by_life = (char:CharacterFields | null) => {
+        if (!char) {
+            return 0;
+        }
         let start = isOpponent? 10: 60;
         let end = isOpponent? 335: 330;
-        let total = get_total_life(char);
-        if (total == -1) {
+        let total = char.base_life;
+        if (total == undefined) {
             return end;
         }
         let life = char == null ? 0 : char.life;
@@ -123,7 +124,7 @@ export const StatusBar = ({ isOpponent = false}: {
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>
                 <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
-                <p>{get_hp(char)}/{get_total_life(char)}</p>
+                <p>{get_hp(char)}/{char?.base_life}</p>
             </div>
         </HStack>
         <HStack style={{marginLeft:`${!isOpponent ? '70px' : '260px'}`}}>

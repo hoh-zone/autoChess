@@ -4,7 +4,6 @@ import { useAtom } from "jotai"
 import { CharacterFields } from "../../types/nft";
 import { slotCharacter, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
 import { HStack, Img } from "@chakra-ui/react";
-import { get_total_life } from "../character/rawData";
 
 export const HpBar = ({id}: {
     id: number,
@@ -29,14 +28,15 @@ export const HpBar = ({id}: {
         }
     }
 
-    const get_width_by_life = (char:any) => {
+    const get_width_by_life = (char:CharacterFields | null) => {
         let start = isOpponent? 10: 10;
         let end = isOpponent? 40: 40;
-
-        // todo:需要读取tmp life
-        let total = get_total_life(char);
-        if (total == -1) {
-            return end;
+        if (!char) {
+            return start;
+        }
+        let total = char.base_life
+        if (total == undefined) {
+            return start;
         }
         let life = char == null ? 0 : char.life;
         return start + (life / total) * end

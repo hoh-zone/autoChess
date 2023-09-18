@@ -18,7 +18,13 @@ export const useSyncGameNFT = () => {
         setWin(nft.win);
         setLose(nft.lose);
         setName(nft.name);
-        setSlotCharacter(nft.lineup.fields.roles.map((role) => role.fields));
-        setShopCharacter(nft.cards_pool.fields.roles.map((role) => role.fields));
+        setSlotCharacter(nft.lineup.fields.roles.map((role) => {
+            role.fields.base_life = role.fields.life;
+            return role.fields
+        }));
+        setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
+            role.fields.base_life = role.fields.life;
+            return role.fields
+        }));
     }, []);
 }

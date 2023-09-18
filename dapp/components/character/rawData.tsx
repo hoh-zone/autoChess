@@ -122,7 +122,7 @@ export function get_star_num(char:CharacterFields | null) : number {
     return level / 3 + 1;
 }
 
-export function get_total_life(char:CharacterFields | null) : number {
+export function get_base_raw_life(char:CharacterFields | null) : number {
     if (char && char.name) {
         return roles_info[char.name].life;
     } else {
@@ -146,11 +146,14 @@ export function get_effect_value(char:CharacterFields | null) : string {
     }
 }
 
-
 export function upgrade(char:CharacterFields): CharacterFields {
+    // 属性受角色战场永久buff效果影响，合成属性会高于基础值
     let level_str = "";
     let level = char.level;
     let name = char.name;
+    let life = char.life;
+    let base_life = roles_info[name].life;
+    let life_buff = life - base_life;
     if (level == 1) {
         level_str = "1_1";
     } else if (level == 2) {
@@ -162,5 +165,8 @@ export function upgrade(char:CharacterFields): CharacterFields {
     }
     let key = removeSuffix(name) + level_str
     let clone = JSON.stringify(roles_info[key]);
-    return JSON.parse(clone);
+    let res:CharacterFields = JSON.parse(clone);
+    res.life = res.life + life_buff;
+    res.base_life = res.life;
+    return res;
 }
