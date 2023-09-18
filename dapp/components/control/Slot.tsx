@@ -72,10 +72,10 @@ export const Slot = ({ isOpponent = false, id }: {
                 }
                 // buy and upgrad chars
             } else if (shopSlotNumber != null && char && char_shop_choosen &&
-                canUpgrade(char, char_shop_choosen)) {
+            canUpgrade(char, char_shop_choosen)) {
                 if (money >= char_shop_choosen.price) {
                     setMoney(money - char_shop_choosen.price);
-                    let tmp = upgrade(char);
+                    let tmp = upgrade(char, char_shop_choosen);
                     chars[id] = tmp;
                     shopChars[shopSlotNumber] = null;
                     setChars(chars.slice());
@@ -89,9 +89,7 @@ export const Slot = ({ isOpponent = false, id }: {
                 chars[id] = chars[slotNumber];
                 if (canUpgrade(chars[id], temp)) {
                     chars[slotNumber] = null;
-                    if (temp != null) {
-                        temp = upgrade(temp);
-                    }
+                    temp = upgrade(chars[id]!, temp!);
                     chars[id] = temp;
                     setChars(chars.slice());
                     setSlotNumber(null);

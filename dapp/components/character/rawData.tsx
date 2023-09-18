@@ -146,14 +146,24 @@ export function get_effect_value(char:CharacterFields | null) : string {
     }
 }
 
-export function upgrade(char:CharacterFields): CharacterFields {
+export function upgrade(char1:CharacterFields, char2:CharacterFields): CharacterFields {
     // 属性受角色战场永久buff效果影响，合成属性会高于基础值
+    let level1 = char1.level;
+    let name1= char1.name;
+    let life1 = char1.life;
+    let base_life1 = roles_info[name1].life;
+    let life_buff1 = life1 - base_life1;
+
+    let level2 = char2.level;
+    let name2 = char2.name;
+    let life2 = char2.life;
+    let base_life2 = roles_info[name2].life;
+    let life_buff2 = life2- base_life2;
+
+    let life_buff = life_buff1 + life_buff2
+
+    let level = level1 > level2 ? level1 : level2;
     let level_str = "";
-    let level = char.level;
-    let name = char.name;
-    let life = char.life;
-    let base_life = roles_info[name].life;
-    let life_buff = life - base_life;
     if (level == 1) {
         level_str = "1_1";
     } else if (level == 2) {
@@ -163,10 +173,11 @@ export function upgrade(char:CharacterFields): CharacterFields {
     } else if (level == 6) {
         level_str = "3";
     }
-    let key = removeSuffix(name) + level_str
+    let key = removeSuffix(name1) + level_str
     let clone = JSON.stringify(roles_info[key]);
     let res:CharacterFields = JSON.parse(clone);
     res.life = res.life + life_buff;
     res.base_life = res.life;
+    console.log(res);
     return res;
 }
