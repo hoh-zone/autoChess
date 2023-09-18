@@ -18,11 +18,11 @@ const roles_info: Roles = {
     "archer2_1": {name:"archer2_1", attack:10, life:8, level:6, price:7, sellprice:6, attacking:0 ,effect:"", effect_value:""},
     "archer3": {name:"archer3", attack:18, life:22, level:9, price:9, sellprice:8, attacking:0 ,effect:"", effect_value:""},
 
-    "assa1": {name:"assa1", attack:7, life:4, level:1, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},
-    "assa1_1": {name:"assa1_1", attack:7, life: 4, level:2, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},
-    "assa2": {name:"assa2", attack:13, life:9, level:3, price:7, sellprice:6, attacking:0 ,effect:"", effect_value:""},
-    "assa2_1": {name:"assa2_1", attack:13, life:9, level:6, price:7, sellprice:6, attacking:0 ,effect:"", effect_value:""},
-    "assa3": {name:"assa3", attack:23, life:13, level:9, price:9, sellprice:8, attacking:0 ,effect:"", effect_value:""},
+    "assa1": {name:"assa1", attack:7, life:4, level:1, price:3, sellprice:2, attacking:0 ,effect:"attack_lowest_hp", effect_value:"5"},
+    "assa1_1": {name:"assa1_1", attack:7, life: 4, level:2, price:3, sellprice:2, attacking:0 ,effect:"attack_lowest_hp", effect_value:"5"},
+    "assa2": {name:"assa2", attack:13, life:9, level:3, price:7, sellprice:6, attacking:0 ,effect:"attack_lowest_hp", effect_value:"10"},
+    "assa2_1": {name:"assa2_1", attack:13, life:9, level:6, price:7, sellprice:6, attacking:0 ,effect:"attack_lowest_hp", effect_value:"10"},
+    "assa3": {name:"assa3", attack:23, life:13, level:9, price:9, sellprice:8, attacking:0 ,effect:"attack_lowest_hp", effect_value:"15"},
 
     "kunoichi1": {name:"kunoichi1", attack:5, life:5, level:1, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},
     "kunoichi1_1": {name:"kunoichi1_1", attack:5, life:5, level:2, price:3, sellprice:2, attacking:0 ,effect:"", effect_value:""},

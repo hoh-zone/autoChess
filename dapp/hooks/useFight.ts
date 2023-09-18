@@ -103,7 +103,37 @@ export const useFight = () => {
             add_all_hp(parseInt(effect_value), is_opponent);
         } else if (effect === "add_all_tmp_attack" && !forbid_buff) {
             add_all_tmp_attack(parseInt(effect_value), is_opponent);
+        } else if (effect === "attack_lowest_hp") {
+            attack_lowest_hp(parseInt(effect_value), is_opponent);
         }
+    }
+
+    const attack_lowest_hp = (value:number, is_opponent:boolean) => {
+        let target_group;
+        if (is_opponent) {
+            target_group = chars;
+        } else {
+            target_group = enemyChars;
+        }
+        let min_hp_index = 0;
+        let min_hp = 10000;
+        target_group.map((character, index) => {
+            if (character == null || character.life == null) {
+                return
+            }
+            if (min_hp_index < character.life) {
+                min_hp = character.life;
+                min_hp_index = index;
+            }
+        });
+        if (enemyChars[min_hp_index] != null) {
+            enemyChars[min_hp_index]!.life = enemyChars[min_hp_index]!.life - value < 0? 0 : enemyChars[min_hp_index]!.life - value;
+            if (enemyChars[min_hp_index]!.life == 0) {
+                enemyChars[min_hp_index] = null
+            }
+        }
+        setEnemyChars(enemyChars);
+        console.log("刺客攻击:", value, " is enemy:", is_opponent, enemyChars[min_hp_index])
     }
 
     const add_all_tmp_attack = (value:number, is_opponent:boolean) => {

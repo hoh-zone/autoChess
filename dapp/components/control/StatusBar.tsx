@@ -2,6 +2,7 @@
 import { useAtom } from "jotai"
 
 import { CharacterFields } from "../../types/nft";
+
 import { HStack, Img } from "@chakra-ui/react";
 import { loseA, nameA, enemyNameA, slotCharacter, winA, enemyWinA, enemyLoseA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
 import { moneyA as moneyAtom} from "../../store/stages"
@@ -67,6 +68,13 @@ export const StatusBar = ({ isOpponent = false}: {
         }
     }
 
+    const get_base_life =(char:CharacterFields | null) => {
+        if (!char) {
+            return 0;
+        }
+        return char.base_life;
+    }
+
     const get_avatar= () => {
         let path;
         let name;
@@ -124,7 +132,7 @@ export const StatusBar = ({ isOpponent = false}: {
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>
                 <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
-                <p>{get_hp(char)}/{char?.base_life}</p>
+                <p>{get_hp(char)}/{get_base_life(char)}</p>
             </div>
         </HStack>
         <HStack style={{marginLeft:`${!isOpponent ? '70px' : '260px'}`}}>
