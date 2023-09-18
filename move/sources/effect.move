@@ -25,6 +25,9 @@ module auto_chess::effect {
         } else if (effect == utf8(b"add_all_tmp_hp") ){
             let value = utils::utf8_to_u64(effect_value);
             add_all_hp(my_lineup_fight, value);
+        } else if (effect == utf8(b"attack_lowest_hp") ){
+            let value = utils::utf8_to_u64(effect_value);
+            attack_lowest_hp(enemy_lineup, value);
         };
     }
 
@@ -77,5 +80,31 @@ module auto_chess::effect {
             };
             i = i + 1;
         };
+    }
+
+    fun attack_lowest_hp(lineup: &mut LineUp, attack_value: u64) {
+        let roles = lineup::get_mut_roles(lineup);
+        let (i, len) = (0u64, vector::length(roles));
+        let min_hp:u64 = 10000;
+        let min_index:u64 = 0;
+        while (i < len) {
+            let role:&Role = vector::borrow(roles, i);
+            let life = role::get_life(role);
+            if (life < min_hp) {
+                min_hp = life;
+                min_index = i;
+            }
+            i = i + 1;
+        };
+        if (min_hp != 10000) {
+            let role:&mut Role = vector::borrow_mut(roles, min_index);
+            if (min_hp > attack_value) {
+                role::set_life(role, min_hp - attack_value);
+            } else {
+                role::set_life(role, 0);
+            };
+            print(&utf8(b"attack lowest:"));
+            print(role);
+        }
     }
 }

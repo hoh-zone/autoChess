@@ -273,6 +273,8 @@ module auto_chess::chess {
         // for test: if only I can call the skill 
         effect::call_effect(role1, my_lineup_fight, my_lineup_permanent, enemy_lineup_fight);
 
+        // todo: sb may already die
+
         let attack1 = role::get_attack(role1);
         let attack2 = role::get_attack(role2);
         while (life1 != 0 && life2 != 0) {
