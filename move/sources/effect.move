@@ -93,7 +93,7 @@ module auto_chess::effect {
             if (life < min_hp) {
                 min_hp = life;
                 min_index = i;
-            }
+            };
             i = i + 1;
         };
         if (min_hp != 10000) {

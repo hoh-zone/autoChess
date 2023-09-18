@@ -64,11 +64,11 @@ module auto_chess::role {
         vec_map::insert(&mut global.charactors, utf8(b"archer2_1"), Role {name:utf8(b"archer2_1"), attack:10, life:8, level:6, magic: 1, price:7, effect:utf8(b""), effect_value:utf8(b"")});
         vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {name:utf8(b"archer3"), attack:18, life:22, level:9, magic: 1, price:9, effect:utf8(b""), effect_value:utf8(b"")});
 
-        vec_map::insert(&mut global.charactors, utf8(b"assa1"), Role {name:utf8(b"assa1"), attack:7, life:4, level:1, magic: 1, price:3, effect:utf8(b""), effect_value:utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"assa1_1"), Role {name:utf8(b"assa1_1"), attack:7, life: 4, level:2, magic: 1, price:5, effect:utf8(b""), effect_value:utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"assa2"), Role {name:utf8(b"assa2"), attack:13, life:9, level:3, magic: 1, price:7, effect:utf8(b""), effect_value:utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"assa2_1"), Role {name:utf8(b"assa2_1"), attack:13, life:9, level:6, magic: 1, price:7, effect:utf8(b""), effect_value:utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"assa3"), Role {name:utf8(b"assa3"), attack:23, life:13, level:9, magic: 1, price:9, effect:utf8(b""), effect_value:utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"assa1"), Role {name:utf8(b"assa1"), attack:7, life:4, level:1, magic: 1, price:3, effect:utf8(b"attack_lowest_hp"), effect_value:utf8(b"5")});
+        vec_map::insert(&mut global.charactors, utf8(b"assa1_1"), Role {name:utf8(b"assa1_1"), attack:7, life: 4, level:2, magic: 1, price:5, effect:utf8(b"attack_lowest_hp"), effect_value:utf8(b"5")});
+        vec_map::insert(&mut global.charactors, utf8(b"assa2"), Role {name:utf8(b"assa2"), attack:13, life:9, level:3, magic: 1, price:7, effect:utf8(b"attack_lowest_hp"), effect_value:utf8(b"8")});
+        vec_map::insert(&mut global.charactors, utf8(b"assa2_1"), Role {name:utf8(b"assa2_1"), attack:13, life:9, level:6, magic: 1, price:7, effect:utf8(b"attack_lowest_hp"), effect_value:utf8(b"8")});
+        vec_map::insert(&mut global.charactors, utf8(b"assa3"), Role {name:utf8(b"assa3"), attack:23, life:13, level:9, magic: 1, price:9, effect:utf8(b"attack_lowest_hp"), effect_value:utf8(b"12")});
         
         vec_map::insert(&mut global.charactors, utf8(b"kunoichi1"), Role {name:utf8(b"kunoichi1"), attack:5, life:5, level:1, magic: 1, price:3, effect:utf8(b""), effect_value:utf8(b"")});
         vec_map::insert(&mut global.charactors, utf8(b"kunoichi1_1"), Role {name:utf8(b"kunoichi1_1"), attack:5, life:5, level:2, magic: 1, price:5, effect:utf8(b""), effect_value:utf8(b"")});
