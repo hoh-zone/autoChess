@@ -30,7 +30,7 @@ export const HpBar = ({id}: {
 
     const get_width_by_life = (char:CharacterFields | null) => {
         let start = isOpponent? 10: 10;
-        let end = isOpponent? 40: 40;
+        let end = isOpponent? 30: 30;
         if (!char) {
             return start;
         }
