@@ -136,7 +136,7 @@ export const useFight = () => {
         console.log("全体加血:", value, " is enemy:",is_opponent)
     }
 
-    const aoe = (attack:number, is_opponent:boolean) => {
+    const aoe = (value:number, is_opponent:boolean) => {
         let target_group;
         if (is_opponent) {
             target_group = chars;
@@ -147,16 +147,18 @@ export const useFight = () => {
             if (character == null || character.life == null) {
                 return
             }
-            character.life = Number(character.life) - Number(attack);
+            character.life = Number(character.life) - Number(value);
             if (character.life <= 0) {
                 enemyChars[index] = null;
             }
+            setEnemyChars(enemyChars);
         });
-        console.log("范围伤害:", attack, " is enemy:", is_opponent)
+        console.log("范围伤害:", value, " is enemy:", is_opponent)
     }
 
     return useCallback(async () => {
         // both sides have characters, continue fighting
+        // return;
         await sleep(1000);
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             const charIndex = chars.findIndex(Boolean);

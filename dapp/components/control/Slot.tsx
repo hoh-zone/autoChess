@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { upgrade } from "../character/rawData";
 import { Levelup } from "../character/levelup";
 import { FloatCharInfo } from "./FloatCharInfo";
+import { HpBar } from "./HpBar";
 import { motion } from "framer-motion";
 import { HStack } from "@chakra-ui/react";
 
@@ -112,7 +113,9 @@ export const Slot = ({ isOpponent = false, id }: {
                 setShopSlotNumber(null);
             }
         }}
-    >   {stage == "shop" && <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />}
+    >   
+
+    {stage == "shop" && <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-3rem]" />}
         <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -50%)" }} >
             {char && char.name && <Character
                 level={char.level}
@@ -121,10 +124,7 @@ export const Slot = ({ isOpponent = false, id }: {
                 isOpponent={isOpponent} />
             }
         </div>
-        <HStack>
-            {char?.attack && (char?.life > 0) && <p style={{color:"white", zIndex:1000}}>AK:{char?.attack}</p>}
-            {char?.life && (char?.life > 0) && <p style={{color:"white", zIndex:1000}}>hp:{char?.life}</p>}
-        </HStack>
+        {char && <HpBar id={id}/>}
         {<FloatCharInfo isShowInfo={stage == "shop"} id={id} />}
     </motion.div  >
 }
