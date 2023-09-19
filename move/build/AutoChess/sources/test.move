@@ -17,6 +17,11 @@ module auto_chess::test {
     fun scenario(): Scenario { begin(@account) }
 
     #[test]
+    fun test_operate_and_play() {
+        print(&1);
+    }
+
+    //#[test]
     fun test_play_chess() {
         let scenario = scenario();
         let test = &mut scenario;

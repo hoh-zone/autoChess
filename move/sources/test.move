@@ -16,6 +16,12 @@ module auto_chess::test {
 
     fun scenario(): Scenario { begin(@account) }
 
+    //sui move test test_operate_and_play --skip-fetch-latest-git-deps
+    #[test]
+    fun test_operate_and_play() {
+        print(&1);
+    }
+
     #[test]
     fun test_play_chess() {
         let scenario = scenario();

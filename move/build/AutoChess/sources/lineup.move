@@ -151,7 +151,7 @@ module auto_chess::lineup {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
         while (len > 0) {
-            // shinobi1:1:4:25:3' (namex_y:life:attack)
+            // priest1:10:3' (namex_y:life:attack)
             let role_info = vector::pop_back(&mut str_vec);
             let index = string::index_of(&role_info, &utf8(b":"));
             let role_name = string::sub_string(&role_info, 0, index);

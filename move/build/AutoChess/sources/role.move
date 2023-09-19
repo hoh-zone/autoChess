@@ -207,9 +207,11 @@ module auto_chess::role {
         role.attack
     }
 
+
     public fun set_attack(role:&mut Role, attack:u64) {
         role.attack = attack;
     }
+
     public fun get_price(role:&Role) : u8 {
         role.price
     }
