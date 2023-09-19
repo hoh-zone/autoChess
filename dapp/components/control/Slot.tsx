@@ -1,16 +1,14 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom } from "../../store/stages"
+import { enemyCharacter, levelUpEffectA, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFields } from "../../types/nft";
-import { useEffect } from "react";
 import { upgrade } from "../character/rawData";
-import { Levelup } from "../character/levelup";
 import { FloatCharInfo } from "./FloatCharInfo";
 import { HpBar } from "./HpBar";
 import { motion } from "framer-motion";
-import { HStack } from "@chakra-ui/react";
+import { sleep } from "../../utils/sleep";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
@@ -18,6 +16,7 @@ export const Slot = ({ isOpponent = false, id }: {
 }) => {
 
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
+    const [levelUpEffect, setLevelUpEffect] = useAtom(levelUpEffectA);
     const [chars, setChars] = useAtom(slotCharacter);
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot);
@@ -56,7 +55,7 @@ export const Slot = ({ isOpponent = false, id }: {
                 (char == null && stage != "shop") ? "pointer-events-none" : "hover:border-slate-300",
                 selected ? "border-slate-800" : ""
             )}
-        onClick={() => {
+        onClick={async () => {
             // try to buy
             let char_shop_choosen = shopChars[shopSlotNumber!];
             if (shopSlotNumber !== null && !char && char_shop_choosen) {
@@ -76,11 +75,19 @@ export const Slot = ({ isOpponent = false, id }: {
                 if (money >= char_shop_choosen.price) {
                     setMoney(money - char_shop_choosen.price);
                     let tmp = upgrade(char, char_shop_choosen);
+
                     chars[id] = tmp;
                     shopChars[shopSlotNumber] = null;
                     setChars(chars.slice());
                     setShopSlotNumber(null);
                     setSlotNumber(null);
+
+                    if (tmp.level === 3) {
+                        setLevelUpEffect(true);
+                        await sleep(2000);
+                        setLevelUpEffect(false);
+                    }
+
                 }
             }
             // swap or upgrad chars
@@ -94,6 +101,12 @@ export const Slot = ({ isOpponent = false, id }: {
                     setChars(chars.slice());
                     setSlotNumber(null);
                     setShopSlotNumber(null);
+
+                    if (temp?.level === 3) {
+                        setLevelUpEffect(true);
+                        await sleep(2000);
+                        setLevelUpEffect(false);
+                    }
                 } else {
                     chars[slotNumber] = temp;
                     setChars(chars);

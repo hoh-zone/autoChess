@@ -1,10 +1,11 @@
 import { Box, HStack, Stack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { SellButton } from "../control/SellButton"
-import { FightResultText } from "../effect/FightResultText"
+import { LevelUp } from "../effect/LevelUp"
 
 export const MainScene = () => {
     return <div className="h-full w-full relative">
+        <LevelUp />
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
             <source src="bg4.mp4" type="video/mp4" />
         </video>
