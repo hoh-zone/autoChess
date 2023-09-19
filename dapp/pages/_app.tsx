@@ -74,10 +74,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           <title>Ethos Connect Example App</title>
         </Head>
         <Component {...pageProps} />
-        <audio ref={audioRef} autoPlay controls>
+        <audio ref={audioRef} autoPlay>
           <source src="./shop.mp3" type="audio/ogg" />
         </audio>
-        <audio ref={audioFightRef} autoPlay controls>
+        <audio ref={audioFightRef} autoPlay>
           <source src="./fight.mp3" type="audio/ogg" />
         </audio>
       </ChakraProvider>
