@@ -29,6 +29,11 @@ module auto_chess::test {
             lineup::init_for_test(ctx(test));
             next_epoch(test, admin);
 
+            //TODO: KRISTIE CODE
+            let action_list = vector::empty<String>();
+            vector::push_back(&mut action_list, utf8(b"b1"));
+            
+
             let roleGlobal = take_shared<role::Global>(test);
             role::init_charactos1(&mut roleGlobal);
             role::init_charactos2(&mut roleGlobal);
