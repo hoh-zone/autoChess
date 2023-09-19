@@ -166,7 +166,7 @@ module auto_chess::chess {
 
     
 
-    public entry fun operate_and_match2(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         
