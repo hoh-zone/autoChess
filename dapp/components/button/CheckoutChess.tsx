@@ -12,12 +12,12 @@ const useCheckout = () => {
     const checkout = useCallback(async ({chess_id}: Props) => {
         if (!wallet) return;
         let method = "check_out_arena"
-        let module = "chess";
+        let moveModule = "chess";
         console.log("id:", chess_id);
         try {
             const transactionBlock = new TransactionBlock();
             transactionBlock.moveCall({
-                target: `${PACKAGE_ID}::${module}::${method}`,
+                target: `${PACKAGE_ID}::${moveModule}::${method}`,
                 arguments: [
                     transactionBlock.pure(`${CHESS_GLOBAL}`),
                     transactionBlock.pure(`${chess_id}`),

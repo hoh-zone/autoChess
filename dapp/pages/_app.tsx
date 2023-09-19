@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       }
     }
 
-    const callback = (e) => {
+    const callback = () => {
       if (stage === "fight") {
         audioFightRef.current?.play();
         audioRef.current?.pause();

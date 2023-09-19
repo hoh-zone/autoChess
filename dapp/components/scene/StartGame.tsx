@@ -69,7 +69,7 @@ export const StartGame = () => {
                                 <PopoverBody p={0}>
                                     {
                                         nfts.map((nft, index) => (
-                                            <Center className="w-full border-slate-400 mb-1">
+                                            <Center className="w-full border-slate-400 mb-1" key={nft.id.id}>
                                                 <HStack className="w-full">
                                                     <Button
                                                         key={nft.id.id}

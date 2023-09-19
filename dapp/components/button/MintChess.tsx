@@ -14,7 +14,7 @@ const useMintChess = () => {
     const mint = useCallback(async ({username, is_arena}: Props) => {
         if (!wallet) return;
         let method = is_arena ? "mint_arena_chess" : "mint_chess";
-        let module = "chess";
+        let moveModule = "chess";
         try {
             const transactionBlock = new TransactionBlock();
             if (is_arena) {
@@ -22,7 +22,7 @@ const useMintChess = () => {
                 let coins = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price * 1_000_000_000)]);
                 let coin_vec = transactionBlock.makeMoveVec({objects:[coins]});
                 transactionBlock.moveCall({
-                    target: `${PACKAGE_ID}::${module}::${method}`,
+                    target: `${PACKAGE_ID}::${moveModule}::${method}`,
                     arguments: [
                         transactionBlock.pure(`${ROLE_GLOBAL}`),
                         transactionBlock.pure(`${CHESS_GLOBAL}`),
@@ -32,7 +32,7 @@ const useMintChess = () => {
                 })
             } else {
                 transactionBlock.moveCall({
-                    target: `${PACKAGE_ID}::${module}::${method}`,
+                    target: `${PACKAGE_ID}::${moveModule}::${method}`,
                     arguments: [
                         transactionBlock.pure(`${ROLE_GLOBAL}`),
                         transactionBlock.pure(`${CHESS_GLOBAL}`),
