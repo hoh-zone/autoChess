@@ -54,8 +54,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       }
     }
     window.addEventListener("keydown", callback);
+    window.addEventListener("mousedown", callback);
     
-    return () => window.removeEventListener("keydown", callback)
+    return () => {
+      window.removeEventListener("keydown", callback)
+      window.removeEventListener("mousedown", callback)
+    }
   }, [audioRef.current, stage]);
 
   return (
