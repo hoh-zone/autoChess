@@ -13,7 +13,6 @@ module auto_chess::chess {
     use auto_chess::role;
     use auto_chess::utils;
     use sui::sui::SUI;
-    use std::ascii::String;
   
     const INIT_LIFE:u64 = 3;
     const INIT_GOLD:u64 = 10;
@@ -164,21 +163,6 @@ module auto_chess::chess {
         object::delete(id);
     }
 
-    public fun to_string(value: u128): String {
-        if (value == 0) {
-            return ASCII::string(b"0")
-        };
-        let buffer = vector::empty<u8>();
-        while (value != 0) {
-            vector::push_back(&mut buffer, ((48 + value % 10) as u8));
-            value = value / 10;
-        };
-        vector::reverse(&mut buffer);
-        ASCII::string(buffer)
-
-
-    }
-
     
 
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
@@ -187,7 +171,8 @@ module auto_chess::chess {
         
 
         let initial_gold = *&chess.gold;
-        let initial_lineup = lineup::get_roles(chess.lineup);
+        //&vector<Role>
+        let initial_lineup = *lineup::get_roles(&chess.lineup);
         //change these 2 fields ^^ according to the action list, then compare against gold and lineup_str_vec
         //iterate thru action_list, set each string as base_str
         //let base_str = string::utf8(b"BU:assa1");
@@ -195,42 +180,48 @@ module auto_chess::chess {
         let search = string::utf8(b":");
 
         //TODO: GET ONLY NAME VECTOR
-        // let names = vector::empty();
+        let names = vector::empty();
 
-        // while(i < len(initial_lineup)) {
-        //     let role = vector::pop_back(initial_lineup);
-        //     vector::push_back(&mut names, role::get_name(role));
-        // }
+        let initial_lineup_len = vector::length(&initial_lineup);
 
-        if (string::index_of(base_str,search) == 2){
+        let i: u64 = 0;
+
+        while(i < initial_lineup_len) {
+            let role = vector::pop_back(&mut initial_lineup);
+            vector::push_back(&mut names, role::get_name(&role));
+            i = i + 1;
+        };
+
+
+        if (string::index_of(&base_str,&search) == 2){
             //BUY "BU:nameOfCharacter"
 
             //1. gold-- [price]
             //1.1 get nameOfCharacter
-            let j = string::length(base_str);
-            let sub_string = string::sub_string(base_str, 2, j);
+            let j = string::length(&base_str);
+            let sub_str = string::sub_string(&base_str, 2, j);
             
  
             //sub_string(s: &String, i: u64, j: u64):
             //print(&utf8(b"substring:"));
             //print(sub_str);
             //1.2 search for gold of character
-            let this_role: &Role = role::get_role_by_name(sub_str);
-            let this_price = role::get_price(thisRole);
+            let this_role = role::get_role_by_name(role_global, sub_str);
+            let this_price = role::get_price(&this_role);
 
-            initial_gold = initial_gold - thisPrice;
+            initial_gold = initial_gold - (this_price as u64);
 
             //2. chess.lineup_global++
             //PUSH ONLY NAME ONTO INITIAL_LINEUP
-            vector::push_back(&mut names, role::get_name(thisRole));
+            vector::push_back(&mut names, role::get_name(&this_role));
 
 
-        } else if (string::index_of(base_str,search) == 3){
+        } else if (string::index_of(&base_str,&search) == 3){
             //SELL "SEL:5"   
             
             //get index
-            let j = string::length(base_str);
-            let num_string = string::sub_string(base_str, 2, j);
+            let j = string::length(&base_str);
+            let num_string = string::sub_string(&base_str, 2, j);
             //check if index i is null
             //TODO: Error handling and check method for parse
             //let num_sell: u64 = num_string.parse().unwrap();
@@ -240,14 +231,14 @@ module auto_chess::chess {
 
             
 
-        } else if (string::index_of(base_str,search) == 4){
+        } else if (string::index_of(&base_str,&search) == 4){
             //SWAP "SWAP:idx1,idx2"
-            let j = string::length(base_str);
-            let num_string = string::sub_string(base_str, 2, j);
+            let j = string::length(&base_str);
+            let num_string = string::sub_string(&base_str, 2, j);
 
             //use native public fun swap<Element>(v: &mut vector<Element>, i: u64, j: u64);
 
-        } else if (string::index_of(base_str,search) == 5){
+        } else if (string::index_of(&base_str,&search) == 5){
             //MERGE "MERGE:nameOfCharacter"
 
         } else {
