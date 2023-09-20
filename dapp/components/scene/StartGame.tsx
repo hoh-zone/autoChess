@@ -26,9 +26,10 @@ export const StartGame = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const fetch = async () => {
-        setIsLoading(false);
-        await query_chesses();
         setIsLoading(true);
+        const result = await query_chesses();
+        setIsLoading(false);
+        return result;
     }
 
     useEffect(() => {
@@ -62,7 +63,7 @@ export const StartGame = () => {
                             style={{ marginBottom: '30px', fontSize: '100px' }}>Auto<br />Chess</motion.p>
                         <Popover>
                             <PopoverTrigger>
-                                <Button >Continue Game</Button>
+                                <Button isLoading={isLoading} >Continue Game</Button>
                             </PopoverTrigger>
                             <PopoverContent>
                                 <PopoverArrow />
@@ -112,9 +113,8 @@ export const StartGame = () => {
                             }
                             await mint({ username: inputValue, is_arena: false });
                             setTimeout(async function() {
-                                await fetch()
-                                console.log("长度：", nfts.length);
-                                nfts.map((nft, index) => {
+                                const nfts = await fetch();
+                                nfts && nfts.map((nft, index) => {
                                     if (nft.name == inputValue) {
                                         syncGameNFT(nft);
                                         setStage("shop");
@@ -130,8 +130,8 @@ export const StartGame = () => {
                                 return;
                             }
                             await mint({ username: inputValue, is_arena: true });
-                            await fetch();
-                            nfts.map((nft, index) => {
+                            const nfts = await fetch();
+                            nfts && nfts.map((nft, index) => {
                                 if (nft.name == inputValue) {
                                     syncGameNFT(nft);
                                     setStage("shop");

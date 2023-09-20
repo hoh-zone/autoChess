@@ -14,6 +14,7 @@ const useQueryChesses = () => {
         console.log("resut:", result);
         let games = result.data.map(d => (d.data?.content as any)?.fields).filter(Boolean) as GameNft[];
         setNfts(games);
+        return games;
     }
 
     const update_chess = useCallback(async (chess_id:string) => {
@@ -43,7 +44,7 @@ const useQueryChesses = () => {
                 }
             }
         });
-        record_nfts(result);
+        return record_nfts(result);
     }, [wallet]);
     return { nfts, query_chess: update_chess, query_chesses };
 }
