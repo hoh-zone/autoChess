@@ -13,6 +13,7 @@ import { Rank } from "../Rank";
 import useCheckout from "../button/CheckoutChess";
 import PopupWindow from "../dialog/CustomPopWindow";
 import { motion } from "framer-motion";
+import { sleep } from "../../utils/sleep";
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
@@ -105,14 +106,37 @@ export const StartGame = () => {
                         onChange={(v) => setInputValue(v.target.value)} />
                     <Button
                         onClick={async () => {
+                            if (inputValue == "") {
+                                alert("Please enter your name");
+                                return;
+                            }
                             await mint({ username: inputValue, is_arena: false });
-                            fetch();
+                            setTimeout(async function() {
+                                await fetch()
+                                nfts.map((nft, index) => {
+                                    console.log("fetch: ",nft.name, ":", inputValue);
+                                    if (nft.name == inputValue) {
+                                        syncGameNFT(nft);
+                                        setStage("shop");
+                                    }
+                                });
+                            }, 10000);
                         }}
                     >Start New Chess</Button>
                     <Button
                         onClick={async () => {
+                            if (inputValue == "") {
+                                alert("Please enter your name");
+                                return;
+                            }
                             await mint({ username: inputValue, is_arena: true });
-                            fetch();
+                            await fetch();
+                            nfts.map((nft, index) => {
+                                if (nft.name == inputValue) {
+                                    syncGameNFT(nft);
+                                    setStage("shop");
+                                }
+                            });
                         }}
                     >Start New Arena (To Earn)</Button>
                 </Stack>

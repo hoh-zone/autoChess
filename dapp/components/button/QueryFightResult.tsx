@@ -18,9 +18,9 @@ const useQueryFight = () => {
             const result = await wallet.client.queryEvents( {
                 query: {
                   MoveEventType: PACKAGE_ID + '::chess::FightEvent',
-                },
-                limit: 20
+                }
             });
+            console.log(result);
             result.data.map((fight) => {
                 let json = fight.parsedJson as any;
                 if (json['v1_name'] != "") {

@@ -11,6 +11,7 @@ const useQueryChesses = () => {
     const [nfts, setNfts] = useState<GameNft[]>([]);
     const syncGameNFT = useSyncGameNFT();
     const record_nfts = (result: PaginatedObjectsResponse) => {
+        console.log("resut:", result);
         let games = result.data.map(d => (d.data?.content as any)?.fields).filter(Boolean) as GameNft[];
         setNfts(games);
     }
