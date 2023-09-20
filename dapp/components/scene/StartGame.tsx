@@ -113,14 +113,14 @@ export const StartGame = () => {
                             await mint({ username: inputValue, is_arena: false });
                             setTimeout(async function() {
                                 await fetch()
+                                console.log("长度：", nfts.length);
                                 nfts.map((nft, index) => {
-                                    console.log("fetch: ",nft.name, ":", inputValue);
                                     if (nft.name == inputValue) {
                                         syncGameNFT(nft);
                                         setStage("shop");
                                     }
                                 });
-                            }, 10000);
+                            }, 2000);
                         }}
                     >Start New Chess</Button>
                     <Button
