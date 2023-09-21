@@ -51,7 +51,7 @@ var sigin = function (param) {
 };
 var mint_chess = function () {
     var module = 'role';
-    var fn = 'init_charactos2';
+    var fn = 'init_charactos1';
     var connect = function () { return __awaiter(void 0, void 0, void 0, function () {
         var provider, signer, tx, res, result;
         return __generator(this, function (_a) {
