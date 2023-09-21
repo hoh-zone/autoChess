@@ -134,8 +134,14 @@ export const Slot = ({ isOpponent = false, id }: {
                 charType={removeSuffix(char.name)}
                 isOpponent={isOpponent} />
             }
+                    {char && <div className="absolute " style={{
+                            top: "13%",
+                            left: "50%",
+                            transform: "translateX(-64%)"
+                    }}><HpBar id={id}/>
+        </div>}
         </div>
-        {char && <HpBar id={id}/>}
+
         {<FloatCharInfo isShowInfo={stage == "shop"} id={id} />}
     </motion.div  >
 }

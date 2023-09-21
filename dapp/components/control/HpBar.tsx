@@ -20,17 +20,9 @@ export const HpBar = ({id}: {
         isOpponent = false
     }
 
-    const get_bg_direction = () => {
-        if (isOpponent) {
-            return "right"
-        } else {
-            return "left"
-        }
-    }
-
     const get_width_by_life = (char:CharacterFields | null) => {
-        let start = isOpponent? 10: 10;
-        let end = isOpponent? 30: 30;
+        let start = 10;
+        let end = 40;
         if (!char) {
             return start;
         }
@@ -41,33 +33,10 @@ export const HpBar = ({id}: {
         let life = char == null ? 0 : char.life;
         return start + (life / total) * end
     }
-    
-    const get_bg1_url = () => {
-        if (isOpponent) {
-            return "url('health_right_bg.png') no-repeat"
-        } else {
-            return "url('health_left_bg.png') no-repeat"
-        }
-    }
 
-    const get_bg2_url = () => {
-        if (isOpponent) {
-            return "url('health_right_life.png') no-repeat"
-        } else {
-            return "url('health_left_life.png') no-repeat"
-        }
-    }
-    const get_bar_direction = () => {
-        if (isOpponent) {
-            return "left"
-        } else {
-            return "left"
-        }
-    }
-
-    return <HStack style={{zIndex:122321,position:"relative", justifyContent:`${get_bg_direction()}`}}>
-            <div style={{ justifyContent:`${get_bg_direction()}` ,width: '50px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '50px auto', backgroundPosition: `${get_bg_direction()}` }}>
-                <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '50px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
+    return <HStack style={{zIndex:1000,position:"relative", justifyContent:"left"}}>
+            <div style={{ justifyContent:"left" ,width: '50px', height: '30px', background: "url('hp_bg.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left" }}>
+                <div style={{ width:  `${get_width_by_life(char)}px`, height: '30px', background: "url('hp.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left" }}></div>
             </div>
     </HStack >
 }
