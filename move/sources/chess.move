@@ -297,7 +297,7 @@ module auto_chess::chess {
         vector::reverse<role::Role>(&mut my_roles);
         let my_num = vector::length(&my_roles);
         let enemy_roles = *lineup::get_roles(enemy_lineup);
-        vector::reverse(&mut enemy_roles);
+        vector::reverse<role::Role>(&mut enemy_roles);
         let enemy_num = vector::length(&enemy_roles);
         if (my_num == 0) {
             return false

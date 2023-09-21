@@ -150,6 +150,7 @@ module auto_chess::lineup {
     public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, ctx:&mut TxContext) : LineUp {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
+        vector::reverse<String>(&mut str_vec);
         while (len > 0) {
             // priest1:10:3' (namex_y:life:attack)
             let role_info = vector::pop_back(&mut str_vec);
