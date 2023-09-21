@@ -14,6 +14,7 @@ import useCheckout from "../button/CheckoutChess";
 import PopupWindow from "../dialog/CustomPopWindow";
 import { motion } from "framer-motion";
 import { sleep } from "../../utils/sleep";
+import { Instruction } from "../Instruction";
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
@@ -143,6 +144,9 @@ export const StartGame = () => {
             </div>
             <div className="absolute top-0 right-0 m-4">
                 <Rank />
+            </div>
+            <div className="absolute top-0 left-0 m-4">
+                <Instruction />
             </div>
             <HStack className="w-full flex justify-around absolute bottom-[5%]">
                 <Character charType="archer" isOpponent={false} />
