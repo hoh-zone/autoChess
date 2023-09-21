@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Img, Input, Modal, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Spinner, Stack } from "@chakra-ui/react"
+import { Box, Button, Center, HStack, Img, Input, Modal, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Spinner, Stack, useToast } from "@chakra-ui/react"
 import { moneyA, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
 import useMintChess from "../button/MintChess";
@@ -48,7 +48,7 @@ export const StartGame = () => {
     const closeModal = () => {
         setIsOpen(false);
     };
-
+    const toast = useToast()
     return (
         <Center className="h-full w-full relative">
             <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
@@ -109,7 +109,12 @@ export const StartGame = () => {
                     <Button
                         onClick={async () => {
                             if (inputValue == "") {
-                                alert("Please enter your name");
+                                toast({
+                                    title: 'Please enter your name',
+                                    status: 'warning',
+                                    duration: 2000,
+                                    isClosable: true,
+                                  })
                                 return;
                             }
                             await mint({ username: inputValue, is_arena: false });
@@ -127,7 +132,12 @@ export const StartGame = () => {
                     <Button
                         onClick={async () => {
                             if (inputValue == "") {
-                                alert("Please enter your name");
+                                toast({
+                                    title: 'Please enter your name',
+                                    status: 'warning',
+                                    duration: 2000,
+                                    isClosable: true,
+                                  })
                                 return;
                             }
                             await mint({ username: inputValue, is_arena: true });

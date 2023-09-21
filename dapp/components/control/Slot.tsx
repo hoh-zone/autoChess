@@ -9,6 +9,7 @@ import { FloatCharInfo } from "./FloatCharInfo";
 import { HpBar } from "./HpBar";
 import { motion } from "framer-motion";
 import { sleep } from "../../utils/sleep";
+import { Button, useToast } from '@chakra-ui/react'
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
@@ -45,6 +46,16 @@ export const Slot = ({ isOpponent = false, id }: {
     // }, [char, char?.attacking]);
 
     const [stage, setStage] = useAtom(stageAtom);
+    const toast = useToast()
+
+    function show_failed_toast() {
+        toast({
+            title: 'Money is not enough',
+            status: 'warning',
+            duration: 2000,
+            isClosable: true,
+        })
+    }
 
     return <motion.div
         whileHover={{ scale: 1.1 }}
@@ -68,6 +79,8 @@ export const Slot = ({ isOpponent = false, id }: {
 
                     setShopSlotNumber(null);
                     setSlotNumber(null);
+                } else {
+                    show_failed_toast()
                 }
                 // buy and upgrad chars
             } else if (shopSlotNumber != null && char && char_shop_choosen &&
@@ -75,19 +88,18 @@ export const Slot = ({ isOpponent = false, id }: {
                 if (money >= char_shop_choosen.price) {
                     setMoney(money - char_shop_choosen.price);
                     let tmp = upgrade(char, char_shop_choosen);
-
                     chars[id] = tmp;
                     shopChars[shopSlotNumber] = null;
                     setChars(chars.slice());
                     setShopSlotNumber(null);
                     setSlotNumber(null);
-
                     if (tmp.level === 3) {
                         setLevelUpEffect(true);
                         await sleep(2000);
                         setLevelUpEffect(false);
                     }
-
+                } else {
+                    show_failed_toast()
                 }
             }
             // swap or upgrad chars
