@@ -14,7 +14,7 @@ import useCheckout from "../button/CheckoutChess";
 import PopupWindow from "../dialog/CustomPopWindow";
 import { motion } from "framer-motion";
 import { sleep } from "../../utils/sleep";
-import { Instruction } from "../Instruction";
+import { Instruction } from "../MainInstruction";
 
 export const StartGame = () => {
     const [stage, setStage] = useAtom(stageAtom);
@@ -88,7 +88,7 @@ export const StartGame = () => {
                                                     {nft.arena &&
                                                         <Button className="bg-slate-200" style={{ fontSize: '10px' }} onClick={() => openModal(nft.id.id)}>Check Out</Button>
                                                     }
-                                                    <PopupWindow isOpen={isOpen} ok={() => checkout({ chess_id: checkout_id })} cancel={closeModal} content_str="Are you sure to checkout?" />
+                                                    <PopupWindow isOpen={isOpen} ok={() => checkout({ chess_id: checkout_id })} cancel={closeModal} content_str="You can checkout to get sui rewards, the amuont depends on your winning records, are you sure to checkout now?" />
                                                 </HStack>
                                             </Center>
                                         ))}

@@ -5,7 +5,7 @@ import { CharacterFields } from "../../types/nft";
 import { HStack, Img, Stack } from "@chakra-ui/react";
 import { slotCharacter, enemyCharacter, shopCharacter } from "../../store/stages";
 
-import { get_base_raw_life, get_star_num } from "../character/rawData";
+import { get_base_raw_life, get_effect, get_star_num } from "../character/rawData";
 import { capitalizeFirstChar, removeSuffix } from "../../utils/TextUtils";
 
 export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
@@ -52,6 +52,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                 </HStack>
                 <p className="text-[10px]">HP:{get_base_life(char)}</p>
                 <p className="text-[10px]">ACK:{char?.attack}</p>
+                <p className="text-[10px]" style={{fontSize:"8px"}}>Feature: {get_effect(char)}</p>
                 {/* <p className="text-[10px]">Feature: All features to be finished</p> */}
             </Stack>
         </>}
