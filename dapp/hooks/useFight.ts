@@ -5,9 +5,7 @@ import some from "lodash/some";
 import { sleep } from "../utils/sleep";
 import confetti from "canvas-confetti";
 import useQueryChesses from "../components/button/QueryAllChesses";
-import range from "lodash/range";
 import { CharacterFields } from "../types/nft";
-import { match } from "assert";
 import { get_effect, get_effect_value } from "../components/character/rawData";
 
 export const useFight = () => {
@@ -19,9 +17,7 @@ export const useFight = () => {
     const { query_chess } = useQueryChesses();
     const [_chessId, setChessId] = useAtom(chessId);
     const [fightResult, setFightResult] = useAtom(fightResultEffectA);
-
-    const duration = 4 * 1000,
-        animationEnd = Date.now() + duration;
+    let animationEnd = Date.now() + 4000;
     let skew = 1;
 
     function randomInRange(min: number, max: number) {
@@ -39,7 +35,7 @@ export const useFight = () => {
 
     const lose_effect = () => {
         const timeLeft = animationEnd - Date.now(),
-            ticks = Math.max(200, 500 * (timeLeft / duration));
+            ticks = Math.max(200, 500 * (timeLeft / 4000));
 
         skew = Math.max(0.8, skew - 0.001);
 
@@ -273,6 +269,7 @@ export const useFight = () => {
             setFightResult(null);
         } else {
             setFightResult("You Lose");
+            animationEnd = Date.now() + 2000;
             lose_effect();
             await sleep(2000);
             setFightResult(null);

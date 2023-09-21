@@ -17,14 +17,18 @@ export const Fight = () => {
     const [win, _setWin] = useAtom(winA);
     const [lose, _setLose] = useAtom(loseA);
     const toast = useToast();
-
+    function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+    }
     const fight = useFight();
-
     useEffect(() => {
         if (stage === "fight") {
             fight();
         }
     }, [stage]);
+    const duration = 4 * 1000;
+    let animationEnd = Date.now() + duration;
+    let skew = 5;
 
     return <>
     { stage === "shop" && <Button className="" onClick={async () => {

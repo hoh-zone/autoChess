@@ -1,28 +1,49 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { enemyCharacter, levelUpEffectA, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom } from "../../store/stages"
+import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFields } from "../../types/nft";
 import { upgrade } from "../character/rawData";
 import { FloatCharInfo } from "./FloatCharInfo";
 import { HpBar } from "./HpBar";
 import { motion } from "framer-motion";
-import { sleep } from "../../utils/sleep";
 import { Button, useToast } from '@chakra-ui/react'
+import confetti from "canvas-confetti";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
     id: number
 }) => {
-
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
-    const [levelUpEffect, setLevelUpEffect] = useAtom(levelUpEffectA);
     const [chars, setChars] = useAtom(slotCharacter);
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot);
     const [shopChars, setShopChars] = useAtom(shopCharacter);
     const [money, setMoney] = useAtom(moneyAtom);
+    let end = Date.now() + 1 * 1000;
+    const level_up_effect = () => {   
+        confetti({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#bb0000', '#ffffff'],
+            ticks: 100,
+        });
+        confetti({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#bb0000', '#ffffff'],
+            ticks: 100,
+        });
+        if (Date.now() < end) {
+            requestAnimationFrame(level_up_effect);
+        }
+    };
+
     let char: CharacterFields | null = null;
     if (id >= 10) {
         char = enemyChars[id - 10];
@@ -94,9 +115,8 @@ export const Slot = ({ isOpponent = false, id }: {
                     setShopSlotNumber(null);
                     setSlotNumber(null);
                     if (tmp.level === 3) {
-                        setLevelUpEffect(true);
-                        await sleep(2000);
-                        setLevelUpEffect(false);
+                        end = Date.now() + 1 * 1000;
+                        level_up_effect();
                     }
                 } else {
                     show_failed_toast()
@@ -115,9 +135,8 @@ export const Slot = ({ isOpponent = false, id }: {
                     setShopSlotNumber(null);
 
                     if (temp?.level === 3) {
-                        setLevelUpEffect(true);
-                        await sleep(2000);
-                        setLevelUpEffect(false);
+                        end = Date.now() + 1 * 1000;
+                        level_up_effect();
                     }
                 } else {
                     chars[slotNumber] = temp;

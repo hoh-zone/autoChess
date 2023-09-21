@@ -29,4 +29,3 @@ export const selectedSlot = atom<number | null>(null);
 
 // effects
 export const fightResultEffectA = atom<null | string>(null);
-export const levelUpEffectA = atom(false);
