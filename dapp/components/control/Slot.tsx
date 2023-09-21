@@ -114,7 +114,7 @@ export const Slot = ({ isOpponent = false, id }: {
                     setChars(chars.slice());
                     setShopSlotNumber(null);
                     setSlotNumber(null);
-                    if (tmp.level === 3) {
+                    if (tmp.level === 3 || tmp.level === 9) {
                         end = Date.now() + 1 * 1000;
                         level_up_effect();
                     }
@@ -133,8 +133,7 @@ export const Slot = ({ isOpponent = false, id }: {
                     setChars(chars.slice());
                     setSlotNumber(null);
                     setShopSlotNumber(null);
-
-                    if (temp?.level === 3) {
+                    if (temp?.level === 3 || temp?.level === 9) {
                         end = Date.now() + 1 * 1000;
                         level_up_effect();
                     }

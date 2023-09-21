@@ -26,10 +26,6 @@ export const Fight = () => {
             fight();
         }
     }, [stage]);
-    const duration = 4 * 1000;
-    let animationEnd = Date.now() + duration;
-    let skew = 5;
-
     return <>
     { stage === "shop" && <Button className="" onClick={async () => {
         if (win >= 10) {
