@@ -97,6 +97,7 @@ export const useFight = () => {
             console.log("触发强化失败: 禁强化")
         }
         if (effect === "aoe") {
+            console.log("aoe:", char);
             aoe(parseInt(effect_value), is_opponent);
         } else if (effect === "add_all_tmp_hp" && !forbid_buff) {
             add_all_tmp_hp(parseInt(effect_value), is_opponent);
@@ -127,14 +128,12 @@ export const useFight = () => {
                 min_hp_index = index;
             }
         });
-        if (enemyChars[min_hp_index] != null) {
-            enemyChars[min_hp_index]!.life = enemyChars[min_hp_index]!.life - value < 0? 0 : enemyChars[min_hp_index]!.life - value;
-            if (enemyChars[min_hp_index]!.life == 0) {
-                enemyChars[min_hp_index] = null
+        if (target_group[min_hp_index] != null) {
+            target_group[min_hp_index]!.life = target_group[min_hp_index]!.life - value < 0? 0 : target_group[min_hp_index]!.life - value;
+            if (target_group[min_hp_index]!.life == 0) {
+                target_group[min_hp_index] = null
             }
         }
-        setEnemyChars(enemyChars);
-        console.log("刺客攻击:", value, " is enemy:", is_opponent, enemyChars[min_hp_index])
     }
 
     const add_all_tmp_attack = (value:number, is_opponent:boolean) => {
@@ -198,9 +197,8 @@ export const useFight = () => {
             }
             character.life = Number(character.life) - Number(value);
             if (character.life <= 0) {
-                enemyChars[index] = null;
+                target_group[index] = null;
             }
-            setEnemyChars(enemyChars);
         });
         console.log("范围伤害:", value, " is enemy:", is_opponent)
     }
@@ -223,7 +221,7 @@ export const useFight = () => {
             enemyChar.attacking = 2;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
-            await sleep(1500);
+            await sleep(2000);
 
             // reset
             char.attacking = 0;
@@ -234,6 +232,7 @@ export const useFight = () => {
             // effect skill call once
             call_effect(char, false);
             call_effect(enemyChar, true);
+            await sleep(500);
 
             // 激情互殴至死
             while(char.life > 0 && enemyChar.life > 0) {
