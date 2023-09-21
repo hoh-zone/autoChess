@@ -7,7 +7,7 @@ import { winA } from "../../store/stages"
 import { useAtom } from "jotai"
 
 export const MainScene = () => {
-    const [win] = useAtom(winA);
+
     return <div className="h-full w-full relative">
         <LevelUp />
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
