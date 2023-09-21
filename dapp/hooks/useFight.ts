@@ -32,7 +32,8 @@ export const useFight = () => {
             angle: randomInRange(55, 125),
             spread: randomInRange(50, 70),
             particleCount: randomInRange(50, 100),
-            origin: { y: 0.6 }
+            origin: { y: 0.6 },
+            ticks: 3000
         });
     };
 
@@ -216,9 +217,10 @@ export const useFight = () => {
             setEnemyFightingIndex(enemyCharIndex);
             const enemyChar = enemyChars[enemyCharIndex]!;
 
-            // attacking animation
-            char.attacking = Math.random() > 0.5 ? 2 : 1;
-            enemyChar.attacking = Math.random() > 0.5 ? 2 : 1;
+            // combat
+            // 起手开1次大招
+            char.attacking = 2;
+            enemyChar.attacking = 2;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
             await sleep(1500);
@@ -229,38 +231,42 @@ export const useFight = () => {
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
 
-            // effect skill
+            // effect skill call once
             call_effect(char, false);
             call_effect(enemyChar, true);
 
-            // 可能已经挂了要换人
-            if (!some(chars, Boolean) || !some(enemyChars, Boolean)) {
-                break;
+            // 激情互殴至死
+            while(char.life > 0 && enemyChar.life > 0) {
+                char.attacking = 1;
+                enemyChar.attacking = 1;
+                setEnemyChars(enemyChars.slice());
+                setChars(chars.slice());
+                await sleep(1500);
+
+                // reset
+                char.attacking = 0;
+                enemyChar.attacking = 0;
+                setEnemyChars(enemyChars.slice());
+                setChars(chars.slice());
+
+                char.life = Number(char.life) - Number(enemyChar.attack);
+                enemyChar.life = Number(enemyChar.life) - Number(char.attack);
+                if (char.life <= 0) {
+                    chars[charIndex] = null;
+                }
+                setChars(chars.slice());
+    
+                if (enemyChar.life <= 0) {
+                    enemyChars[enemyCharIndex] = null;
+                }
+                setEnemyChars(enemyChars.slice());
+                await sleep(500);
             }
-
-            // attack
-            const charLife = Number(char.life) - Number(enemyChar.attack);
-            const enemyLife = Number(enemyChar.life) - Number(char.attack);
-
-            char.life = charLife;
-            enemyChar.life = enemyLife;
-
-            if (charLife <= 0) {
-                chars[charIndex] = null;
-            }
-            setChars(chars.slice());
-
-            if (enemyLife <= 0) {
-                enemyChars[enemyCharIndex] = null;
-            }
-            setEnemyChars(enemyChars.slice());
-
-            await sleep(500);
         }
 
         if (some(chars, Boolean)) {
             setFightResult("You Win");
-            for (let i = 0; i < 10; ++i) {
+            for (let i = 0; i < 5; ++i) {
                 win_effect();
                 await sleep(200);
             }
