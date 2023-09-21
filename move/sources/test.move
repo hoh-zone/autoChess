@@ -71,8 +71,8 @@ module auto_chess::test {
             vector::push_back(&mut str_vec, utf8(b"assa1:213:11"));
             vector::push_back(&mut str_vec, utf8(b"mega1:12:12"));
             print(&utf8(b"operate my chess"));
-            chess::operate_and_match(&mut chessGlobal, &roleGlobal, &lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
-            // print_my_lineup(&chess_nft);
+            chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
+            print_my_lineup(&chess_nft);
             next_epoch(test, admin);
 
             // // second round

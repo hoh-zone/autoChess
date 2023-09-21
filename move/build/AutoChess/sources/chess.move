@@ -164,9 +164,15 @@ module auto_chess::chess {
         object::delete(id);
     }
 
-    
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
+        // todo: for safety, verify the data.
+        assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
+        chess.gold = gold;
+        chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
+        match(global, role_global, lineup_global, chess, ctx);
+    }
 
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
+    public entry fun operate_and_match_v2(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         
@@ -260,7 +266,7 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    fun match(global: &mut Global, role_global:&role::Global, lineup_global:&lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    fun match(global: &mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
         print(&utf8(b"start match chess"));
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
@@ -271,6 +277,7 @@ module auto_chess::chess {
         fight(chess, &mut enemy_lineup, ctx);
 
         // record
+        lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup);
         if (chess.life > 0) {
             refresh_cards_pools(role_global, chess, ctx);
         };
@@ -291,7 +298,7 @@ module auto_chess::chess {
         vector::reverse<role::Role>(&mut my_roles);
         let my_num = vector::length(&my_roles);
         let enemy_roles = *lineup::get_roles(enemy_lineup);
-        vector::reverse(&mut enemy_roles);
+        vector::reverse<role::Role>(&mut enemy_roles);
         let enemy_num = vector::length(&enemy_roles);
         if (my_num == 0) {
             return false

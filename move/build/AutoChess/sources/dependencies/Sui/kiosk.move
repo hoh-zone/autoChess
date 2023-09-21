@@ -94,6 +94,7 @@ module sui::kiosk {
     use sui::balance::{Self, Balance};
     use sui::coin::{Self, Coin};
     use sui::sui::SUI;
+    use std::debug::print;
     use sui::event;
 
     // Gets access to:
@@ -388,6 +389,7 @@ module sui::kiosk {
         let inner = dof::remove<Item, T>(&mut self.id, Item { id });
 
         self.item_count = self.item_count - 1;
+        print(&price);
         assert!(price == coin::value(&payment), EIncorrectAmount);
         df::remove_if_exists<Lock, bool>(&mut self.id, Lock { id });
         coin::put(&mut self.profits, payment);
