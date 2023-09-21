@@ -273,11 +273,12 @@ module auto_chess::chess {
         // match an enemy config
         let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
 
+        // record
+        lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup);
+
         // fight
         fight(chess, &mut enemy_lineup, ctx);
 
-        // record
-        lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup);
         if (chess.life > 0) {
             refresh_cards_pools(role_global, chess, ctx);
         };
