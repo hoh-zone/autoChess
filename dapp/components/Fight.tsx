@@ -46,10 +46,10 @@ export const Fight = () => {
             })
             return;
         }
-        let success = await operate_submit();
-        if (!success) {
-            return;
-        }
+        // let success = await operate_submit();
+        // if (!success) {
+        //     return;
+        // }
         console.log("start fight");
   
         // sync enemy

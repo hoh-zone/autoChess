@@ -241,7 +241,7 @@ export const useFight = () => {
 
     return useCallback(async () => {
         // both sides have characters, continue fighting
-        await sleep(5000);
+        await sleep(500);
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             const charIndex = chars.findIndex(Boolean);
             setFightingIndex(charIndex);
@@ -257,7 +257,7 @@ export const useFight = () => {
             enemyChar.attacking = 2;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
-            await sleep(5000);
+            await sleep(1500);
 
             // reset
             char.attacking = 0;
@@ -268,7 +268,7 @@ export const useFight = () => {
             // effect skill call once
             call_effect(char, false);
             call_effect(enemyChar, true);
-            await sleep(400);
+            await sleep(500);
 
             // 激情互殴至死
             while(char.life > 0 && enemyChar.life > 0) {
@@ -276,7 +276,7 @@ export const useFight = () => {
                 enemyChar.attacking = 1;
                 setEnemyChars(enemyChars.slice());
                 setChars(chars.slice());
-                await sleep(4500);
+                await sleep(1500);
 
                 // reset
                 char.attacking = 0;
@@ -304,7 +304,7 @@ export const useFight = () => {
                     enemyChars[enemyCharIndex] = null;
                 }
                 setEnemyChars(enemyChars.slice());
-                await sleep(2000);
+                await sleep(500);
             }
         }
 
