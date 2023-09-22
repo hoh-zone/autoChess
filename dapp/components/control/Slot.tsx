@@ -8,8 +8,9 @@ import { upgrade } from "../character/rawData";
 import { FloatCharInfo } from "./FloatCharInfo";
 import { HpBar } from "./HpBar";
 import { motion } from "framer-motion";
-import { Button, useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import confetti from "canvas-confetti";
+import { StatusChange } from "./StatusChange";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
@@ -52,20 +53,6 @@ export const Slot = ({ isOpponent = false, id }: {
     }
 
     const selected = (slotNumber === id);
-
-    // // reset attack after 1.5s
-    // useEffect(() => {
-    //     if (char && char.attacking) {
-    //         setTimeout(() => {
-    //             if (!char || !char.attacking) return;
-    //             char.attacking = 0;
-    //             isOpponent ?
-    //                 setEnemyChars(enemyChars.slice()) :
-    //                 setChars(chars.slice());
-    //         }, 1500);
-    //     }
-    // }, [char, char?.attacking]);
-
     const [stage, setStage] = useAtom(stageAtom);
     const toast = useToast()
 
@@ -164,11 +151,13 @@ export const Slot = ({ isOpponent = false, id }: {
                 charType={removeSuffix(char.name)}
                 isOpponent={isOpponent} />
             }
+            
                     {char && <div className="absolute " style={{
                             top: "13%",
                             left: "50%",
                             transform: "translateX(-64%)"
                     }}><HpBar id={id}/>
+                    <StatusChange id={id}/>
         </div>}
         </div>
 

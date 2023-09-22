@@ -343,3 +343,27 @@ a {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
+
+.text_animation {
+  position: relative;
+  height: 20px;
+}
+
+.moving-text {
+  position: relative;
+  color:white;
+  bottom: 0;
+  animation: move-up 1s ease-in-out;
+  opacity: 0;
+}
+
+@keyframes move-up {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}

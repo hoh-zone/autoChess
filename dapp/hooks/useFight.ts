@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { chessId, enemyCharacter, enemyFightingIndex, fightResultEffectA, fightingIndex, slotCharacter, stageAtom } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, fightResultEffectA, fightingIndex, hpChangeA, slotCharacter, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import { sleep } from "../utils/sleep";
@@ -17,6 +17,12 @@ export const useFight = () => {
     const { query_chess } = useQueryChesses();
     const [_chessId, setChessId] = useAtom(chessId);
     const [fightResult, setFightResult] = useAtom(fightResultEffectA);
+
+    const [hpChange, setHpChange] = useAtom(hpChangeA);
+    const [enemyHpChange, setEnemyHpChange] = useAtom(enemyHpChangeA);
+    const [attackChange, setAttackChange] = useAtom(attackChangeA);
+    const [enemyAttackChange, setEnemyAttackChange] = useAtom(enemyAttackChangeA);
+
     let animationEnd = Date.now() + 4000;
     let skew = 1;
 
@@ -108,10 +114,13 @@ export const useFight = () => {
 
     const attack_lowest_hp = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = chars;
+            target_hp_change = hpChange;
         } else {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         }
         let min_hp_index = 0;
         let min_hp = 10000;
@@ -126,76 +135,96 @@ export const useFight = () => {
         });
         if (target_group[min_hp_index] != null) {
             target_group[min_hp_index]!.life = target_group[min_hp_index]!.life - value < 0? 0 : target_group[min_hp_index]!.life - value;
+            target_hp_change[min_hp_index] = - value;
             if (target_group[min_hp_index]!.life == 0) {
                 target_group[min_hp_index] = null
             }
         }
+        setHpChange(hpChange);
+        setEnemyHpChange(enemyHpChange);
     }
 
     const add_all_tmp_attack = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_attack_change;
         if (is_opponent) {
             target_group = enemyChars;
+            target_attack_change = enemyAttackChange;
         } else {
             target_group = chars;
+            target_attack_change = attackChange;
         }
-        target_group.map((character) => {
+        target_group.map((character, index) => {
             if (character == null || character.attack == null) {
                 return
             }
             character.attack = Number(character.attack) + Number(value);
+            target_attack_change[index] = Number(value);
         });
         console.log("全体加攻:", value, " is enemy:",is_opponent)
     }
 
     const add_all_hp = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         } else {
             target_group = chars;
+            target_hp_change = hpChange;
         }
-        target_group.map((character) => {
+        target_group.map((character, index) => {
             if (character == null || character.life == null) {
                 return
             }
             character.life = Number(character.life) + Number(value);
+            target_hp_change[index] = Number(value);
         });
         console.log("全体加血:", value, " is enemy:",is_opponent)
     }
 
     const add_all_tmp_hp = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         } else {
             target_group = chars;
+            target_hp_change = hpChange;
         }
-        target_group.map((character) => {
+        target_group.map((character, index) => {
             if (character == null || character.life == null) {
                 return
             }
             character.life = Number(character.life) + Number(value);
+            target_hp_change[index] = Number(value);
         });
-        console.log("全体加血:", value, " is enemy:",is_opponent)
     }
 
     const aoe = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = chars;
+            target_hp_change = hpChange;
         } else {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         }
         target_group.map((character, index) => {
             if (character == null || character.life == null) {
                 return
             }
             character.life = Number(character.life) - Number(value);
+            target_hp_change[index] = - Number(value);
             if (character.life <= 0) {
                 target_group[index] = null;
             }
         });
+        console.log("范围伤害enemy hp change:", enemyHpChange);
+        console.log("范围伤害hp change:", hpChange);
         console.log("范围伤害:", value, " is enemy:", is_opponent)
     }
 
@@ -245,7 +274,16 @@ export const useFight = () => {
                 setChars(chars.slice());
 
                 char.life = Number(char.life) - Number(enemyChar.attack);
+                hpChange[charIndex] = - Number(enemyChar.attack);
+
                 enemyChar.life = Number(enemyChar.life) - Number(char.attack);
+                enemyHpChange[enemyCharIndex] = - Number(char.attack);
+                
+                setEnemyHpChange(enemyHpChange);
+                setHpChange(hpChange);
+
+                console.log("enemy hp change:", enemyHpChange);
+                console.log("hp change:", hpChange);
                 if (char.life <= 0) {
                     chars[charIndex] = null;
                 }
@@ -277,9 +315,9 @@ export const useFight = () => {
 
         // 更新数据并进入shop
         if (_chessId) {
-            await query_chess(_chessId);
-            setEnemyChars([]);
-            setStage("shop");
+            // await query_chess(_chessId);
+            // setEnemyChars([]);
+            // setStage("shop");
         }
     }, [enemyChars, setEnemyChars, chars, setChars]);
 }
