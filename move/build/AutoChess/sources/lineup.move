@@ -49,7 +49,7 @@ module auto_chess::lineup {
     }
 
     public fun generate_random_cards(role_global:&role::Global, power:u64, ctx:&mut TxContext) : LineUp {
-        let max_cards = 30;
+        let max_cards = 25;
         let vec = vector::empty<Role>();
         let p2 = utils::get_cards_level2_prop_by_lineup_power(power);
         let seed = 20;
