@@ -20,7 +20,7 @@ const useQueryFight = () => {
                   MoveEventType: PACKAGE_ID + '::chess::FightEvent',
                 }
             });
-            console.log(result);
+            console.log("enemy:", result);
             result.data.map((fight) => {
                 let json = fight.parsedJson as any;
                 if (json['v1_name'] != "") {

@@ -155,7 +155,7 @@ export const useFight = () => {
             target_attack_change = attackChange;
         }
         target_group.map((character, index) => {
-            if (character == null || character.attack == null) {
+            if (character == null || character.attack == null || character.life == 0) {
                 return
             }
             character.attack = Number(character.attack) + Number(value);
@@ -175,7 +175,8 @@ export const useFight = () => {
             target_hp_change = hpChange;
         }
         target_group.map((character, index) => {
-            if (character == null || character.life == null) {
+            // 禁止死亡时奶回来
+            if (character == null || character.life == null ||  character.life == 0) {
                 return
             }
             character.life = Number(character.life) + Number(value);
@@ -195,7 +196,8 @@ export const useFight = () => {
             target_hp_change = hpChange;
         }
         target_group.map((character, index) => {
-            if (character == null || character.life == null) {
+            // 禁止死亡时奶回来
+            if (character == null || character.life == null || character.life == 0) {
                 return
             }
             character.life = Number(character.life) + Number(value);
@@ -223,8 +225,11 @@ export const useFight = () => {
                 target_group[index] = null;
             }
         });
-        console.log("范围伤害enemy hp change:", enemyHpChange);
-        console.log("范围伤害hp change:", hpChange);
+        if (is_opponent) {
+            setChars(target_group);
+        } else {
+            setEnemyChars(target_group);
+        }
         console.log("范围伤害:", value, " is enemy:", is_opponent)
     }
 
