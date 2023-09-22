@@ -35,7 +35,7 @@ export const Fight = () => {
                 duration: 2000,
                 isClosable: true,
             })
-            // return;
+            return;
         };
         if (lose >= 3) {
             toast({
@@ -46,10 +46,10 @@ export const Fight = () => {
             })
             return;
         }
-        // let success = await operate_submit();
-        // if (!success) {
-        //     return;
-        // }
+        let success = await operate_submit();
+        if (!success) {
+            return;
+        }
         console.log("start fight");
   
         // sync enemy
