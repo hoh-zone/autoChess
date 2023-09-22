@@ -91,13 +91,11 @@ export const useFight = () => {
         // todo:改成直接从合约解析而不是读本地
         let effect = get_effect(char);
         if (effect === "") {
+            console.log("异常:没有查询到effect", char);
             return
         }
         let effect_value = get_effect_value(char);
         let forbid_buff = is_forbid_buff(is_opponent);
-        if (forbid_buff) {
-            console.log("触发强化失败: 禁强化")
-        }
         if (effect === "aoe") {
             console.log("aoe:", char);
             aoe(parseInt(effect_value), is_opponent);
@@ -113,6 +111,7 @@ export const useFight = () => {
     }
 
     const attack_lowest_hp = (value:number, is_opponent:boolean) => {
+        console.log("出手！");
         let target_group;
         let target_hp_change;
         if (is_opponent) {
@@ -233,9 +232,16 @@ export const useFight = () => {
         console.log("范围伤害:", value, " is enemy:", is_opponent)
     }
 
+    const clear_change = () => {
+        setAttackChange([0, 0, 0, 0, 0, 0]);
+        setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
+        setHpChange([0, 0, 0, 0, 0, 0]);
+        setEnemyHpChange([0, 0, 0, 0, 0, 0]);
+    }
+
     return useCallback(async () => {
         // both sides have characters, continue fighting
-        await sleep(1000);
+        await sleep(5000);
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             const charIndex = chars.findIndex(Boolean);
             setFightingIndex(charIndex);
@@ -251,7 +257,7 @@ export const useFight = () => {
             enemyChar.attacking = 2;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
-            await sleep(2000);
+            await sleep(5000);
 
             // reset
             char.attacking = 0;
@@ -262,7 +268,7 @@ export const useFight = () => {
             // effect skill call once
             call_effect(char, false);
             call_effect(enemyChar, true);
-            await sleep(500);
+            await sleep(400);
 
             // 激情互殴至死
             while(char.life > 0 && enemyChar.life > 0) {
@@ -270,7 +276,7 @@ export const useFight = () => {
                 enemyChar.attacking = 1;
                 setEnemyChars(enemyChars.slice());
                 setChars(chars.slice());
-                await sleep(1500);
+                await sleep(4500);
 
                 // reset
                 char.attacking = 0;
@@ -298,7 +304,7 @@ export const useFight = () => {
                     enemyChars[enemyCharIndex] = null;
                 }
                 setEnemyChars(enemyChars.slice());
-                await sleep(500);
+                await sleep(2000);
             }
         }
 
@@ -317,6 +323,8 @@ export const useFight = () => {
             await sleep(2000);
             setFightResult(null);
         }
+
+        clear_change();
 
         // 更新数据并进入shop
         if (_chessId) {
