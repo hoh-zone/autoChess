@@ -67,6 +67,23 @@ module auto_chess::lineup {
         }
     }
 
+    public fun record_player_lineup(win:u8, lose:u8, global:&mut Global, lineup:LineUp) {
+        let lineup_pool_tag = utils::get_pool_tag(win, lose);
+        if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
+            let lineup_vec = table::borrow_mut(&mut global.lineup_pools, lineup_pool_tag);
+            if (vector::length(lineup_vec) > 10) {
+                vector::remove(lineup_vec, 0);
+                vector::push_back(lineup_vec, lineup);
+            } else {
+                vector::push_back(lineup_vec, lineup);
+            };
+        } else {
+            let lineup_vec = vector::empty<LineUp>();
+            vector::push_back(&mut lineup_vec, lineup);
+            table::add(&mut global.lineup_pools, lineup_pool_tag, lineup_vec);
+        };
+    }
+
     public fun select_random_lineup(win:u8, lose:u8, global:&Global, ctx: &mut TxContext) : LineUp {
         let seed = 10;
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
@@ -150,6 +167,7 @@ module auto_chess::lineup {
     public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, ctx:&mut TxContext) : LineUp {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
+        vector::reverse<String>(&mut str_vec);
         while (len > 0) {
             // priest1:10:3' (namex_y:life:attack)
             let role_info = vector::pop_back(&mut str_vec);

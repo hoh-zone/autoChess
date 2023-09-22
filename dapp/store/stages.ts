@@ -10,6 +10,10 @@ export const loseA = atom<number>(99);
 export const nameA = atom<string>("Default name");
 export const slotCharacter = atom<(CharacterFields | null)[]>([null, null, null, null, null, null]);
 export const fightingIndex = atom<number>(0);
+export const hpChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
+export const enemyHpChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
+export const attackChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
+export const enemyAttackChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
 
 // enemy
 export const enemyWinA = atom<number>(0);
@@ -29,4 +33,3 @@ export const selectedSlot = atom<number | null>(null);
 
 // effects
 export const fightResultEffectA = atom<null | string>(null);
-export const levelUpEffectA = atom(false);

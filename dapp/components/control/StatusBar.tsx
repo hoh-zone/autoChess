@@ -4,8 +4,7 @@ import { useAtom } from "jotai"
 import { CharacterFields } from "../../types/nft";
 
 import { HStack, Img } from "@chakra-ui/react";
-import { loseA, nameA, enemyNameA, slotCharacter, winA, enemyWinA, enemyLoseA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
-import { moneyA as moneyAtom} from "../../store/stages"
+import { loseA, nameA, enemyNameA, slotCharacter, winA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
 import { removeSuffix } from "../../utils/TextUtils";
 
 export const StatusBar = ({ isOpponent = false}: {
@@ -15,11 +14,8 @@ export const StatusBar = ({ isOpponent = false}: {
     const [win, _setWin] = useAtom(winA);
     const [chars] = useAtom(slotCharacter);
     const [enemy_chars] = useAtom(enemyCharacter);
-    const [money] = useAtom(moneyAtom);
     const [name] = useAtom(nameA);
     const [enemy_name] = useAtom(enemyNameA);
-    const [enemy_win] = useAtom(enemyWinA);
-    const [enemy_lose] = useAtom(enemyLoseA);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
 
@@ -129,33 +125,34 @@ export const StatusBar = ({ isOpponent = false}: {
                 </div>
             </div>
         </HStack>}
+
+        {/* 血条 */}
         <HStack style={{justifyContent:`${get_bg_direction()}`}}>
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>
                 <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
-                <p>{get_hp(char)}/{get_base_life(char)}</p>
+                <HStack style={{justifyContent:`${get_bg_direction()}`}}>
+                    <p>{get_hp(char)}/{get_base_life(char)}</p>
+                    {lose == 0 && <HStack>
+                        <Img src="heart.png"/>
+                        <Img src="heart.png"/>
+                        <Img src="heart.png"/>
+                        <p>{win} - {lose}</p>
+                    </HStack>}
+                    {lose == 1 && <HStack>
+                        <Img src="heart.png"/>
+                        <Img src="heart.png"/>
+                        <Img src="heart_broken.png"/>
+                        <p>{win} - {lose}</p>
+                    </HStack>}
+                    {lose == 2 && <HStack>
+                        <Img src="heart.png"/>
+                        <Img src="heart_broken.png"/>
+                        <Img src="heart_broken.png"/>
+                        <p>{win} - {lose}</p>
+                    </HStack>}
+                </HStack>
             </div>
         </HStack>
-        <HStack style={{marginLeft:`${!isOpponent ? '70px' : '260px'}`}}>
-            {!isOpponent && <Img src="gold.png" style={{width:'23px'}}/>}
-            {!isOpponent && <p style={{marginRight:'30px'}}>{money}</p>}
-            {lose == 0 && <HStack>
-                <Img src="heart.png"/>
-                <Img src="heart.png"/>
-                <Img src="heart.png"/>
-                <p>{isOpponent ? enemy_win : win} - {isOpponent ? enemy_lose : lose}</p>
-            </HStack>}
-            {lose == 1 && <HStack>
-                <Img src="heart.png"/>
-                <Img src="heart.png"/>
-                <Img src="heart_broken.png"/>
-                <p>{isOpponent ? enemy_win : win} - {isOpponent ? enemy_lose : lose}</p>
-            </HStack>}
-            {lose == 2 && <HStack>
-                <Img src="heart.png"/>
-                <Img src="heart_broken.png"/>
-                <Img src="heart_broken.png"/>
-                <p className=" whitespace-nowrap">{win} - {lose}</p>
-            </HStack>}
-        </HStack>
+        
     </div >
 }

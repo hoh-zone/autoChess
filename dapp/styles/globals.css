@@ -273,6 +273,12 @@ a {
   transform: scale(1.5)
 }
 
+.enemy_effect {
+  -webkit-filter:  drop-shadow(-8px 5px 2px rgba(237, 63, 24, 0.5)) drop-shadow(27px 9px 2px rgba(156, 53, 49, 0.5));
+  filter: drop-shadow(-13px 2px 12px rgba(238, 112, 2, 0.832)) drop-shadow(13px 2px 2px rgba(250, 209, 206, 0.5));
+  transform: scale(1.5)  rotateY(180deg)
+}
+
 @keyframes effectAnim {
   to { background-position: -900px; }
 }
@@ -319,10 +325,10 @@ a {
   z-index: 300;
   padding: 5px;
   border-radius: 8%;
-  position: absolute;
+  position: relative;
   top: 50%;
-  left: 50%;
-  transform: translate(93%, -41%);
+  left: 70px;
+  /* transform: translate(93%, -41%); */
   background-color: rgba(71, 66, 66, 0.5);
   color: #fff;
   padding: 10px;
@@ -342,4 +348,28 @@ a {
   padding: 10px;
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+
+.text_animation {
+  position: relative;
+  height: 20px;
+}
+
+.moving-text {
+  position: relative;
+  color:white;
+  bottom: 0;
+  animation: move-up 1s ease-in-out;
+  opacity: 0;
+}
+
+@keyframes move-up {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
 }

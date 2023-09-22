@@ -13,6 +13,9 @@ export function Character({
     attack?: 0 | 1 | 2,
     level?: number,
 }) {
+    if (isOpponent) {
+        console.log("level ",level);
+    }
     if (!charTable[charType as keyof typeof charTable]) {
         console.error("not found", charType);
         return <>no</>
@@ -44,8 +47,9 @@ export function Character({
                             "animBasic mx-auto",
                             `attack${attack}`,
                             charType,
-                            isOpponent ? "opponentCharacter" : "",
-                            level >= 3 ? "effect" : ""
+                            (isOpponent && level < 3)? "opponentCharacter" : "",
+                            (isOpponent && level >= 3)? "enemy_effect" : "",
+                            (!isOpponent && level >= 3)? "effect" : "",
                         )
                     }
                     style={{
@@ -58,8 +62,9 @@ export function Character({
                         twMerge(
                             "move animBasic mx-auto",
                             charType,
-                            isOpponent ? "opponentCharacter" : "",
-                            level >= 3 ? "effect" : ""
+                            (isOpponent && level < 3)? "opponentCharacter" : "",
+                            (isOpponent && level >= 3)? "enemy_effect" : "",
+                            (!isOpponent && level >= 3)? "effect" : "",
                         )
                     }
                     style={{

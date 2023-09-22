@@ -72,8 +72,8 @@ const roles_info: Roles = {
     "fighter2_1": {name:"fighter2_1", attack:10, life:10, level:6, price:7, sellprice:6, attacking:0 ,effect:"attack_lowest_hp", effect_value:"7"},
     "fighter3": {name:"fighter3", attack:25, life:25, level:9, price:9, sellprice:8, attacking:0 ,effect:"attack_lowest_hp", effect_value:"12"},
 
-    "golem1": {name:"golem1", attack:4, life:7, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"2"},
-    "golem1_1": {name:"golem1_1", attack:4, life:7, level:2, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"2"},
+    "golem1": {name:"golem1", attack:4, life:7, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"1"},
+    "golem1_1": {name:"golem1_1", attack:4, life:7, level:2, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"1"},
     "golem2": {name:"golem2", attack:8, life:16, level:3, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"4"},
     "golem2_1": {name:"golem2_1", attack:8, life:16, level:6, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"4"},
     "golem3": {name:"golem3", attack:19, life:40, level:9, price:9, sellprice:8, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"8"},
@@ -84,11 +84,11 @@ const roles_info: Roles = {
     "slime2_1": {name:"slime2_1", attack:8, life:15, level:6, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"4"},
     "slime3": {name:"slime3", attack:24, life:26, level:9, price:9, sellprice:8, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"8"},
 
-    "tank1": {name:"tank1", attack:3, life:8, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"2"},
-    "tank1_1": {name:"tank1_1", attack:3, life:8, level:2, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"2"},
-    "tank2": {name:"tank2", attack:5, life:22, level:3, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"4"},
-    "tank2_1": {name:"tank2_1", attack:5, life:22, level:6, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"4"},
-    "tank3": {name:"tank3", attack:10, life:44, level:9, price:9, sellprice:8, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"8"},
+    "tank1": {name:"tank1", attack:3, life:8, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"1"},
+    "tank1_1": {name:"tank1_1", attack:3, life:8, level:2, price:3, sellprice:2, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"1"},
+    "tank2": {name:"tank2", attack:5, life:22, level:3, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"3"},
+    "tank2_1": {name:"tank2_1", attack:5, life:22, level:6, price:7, sellprice:6, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"3"},
+    "tank3": {name:"tank3", attack:10, life:44, level:9, price:9, sellprice:8, attacking:0 ,effect:"add_all_tmp_hp", effect_value:"7"},
 
     "priest1": {name:"priest1", attack:3, life:10, level:1, price:3, sellprice:2, attacking:0 ,effect:"add_all_hp", effect_value:"1"},
     "priest1_1": {name:"priest1_1", attack:3, life:10, level:2, price:4, sellprice:3, attacking:0 ,effect:"add_all_hp", effect_value:"1"},

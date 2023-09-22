@@ -1,19 +1,15 @@
 import { Box, HStack, Stack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { SellButton } from "../control/SellButton"
-import { LevelUp } from "../effect/LevelUp"
 import { CharInstruction } from "../CharInstruction"
-
 export const MainScene = () => {
     return <div className="h-full w-full relative">
-        <LevelUp />
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
             <source src="bg4.mp4" type="video/mp4" />
         </video>
         <HStack className="absolute top-0 p-8 w-full h-3/4 justify-around" align={"center"}>
             {/* left side */}
             <div className="w-full h-full relative" >
-            <CharInstruction/>
                 <div className="absolute top-[-5%] left-1/4 h-full">
                     <Stack gap={70} className=" justify-around h-full">
                         <Slot id={0} />
@@ -28,9 +24,10 @@ export const MainScene = () => {
                         <Slot id={5} />
                     </Stack>
                 </div>
-                <Box className="absolute">
+                <Stack className="absolute">
                     <SellButton />
-                </Box>
+                    <CharInstruction/>
+                </Stack>
             </div>
         </HStack>
     </div>

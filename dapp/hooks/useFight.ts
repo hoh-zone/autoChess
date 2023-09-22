@@ -1,13 +1,11 @@
 import { useCallback } from "react"
-import { chessId, enemyCharacter, enemyFightingIndex, fightResultEffectA, fightingIndex, slotCharacter, stageAtom } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, fightResultEffectA, fightingIndex, hpChangeA, slotCharacter, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import { sleep } from "../utils/sleep";
 import confetti from "canvas-confetti";
 import useQueryChesses from "../components/button/QueryAllChesses";
-import range from "lodash/range";
 import { CharacterFields } from "../types/nft";
-import { match } from "assert";
 import { get_effect, get_effect_value } from "../components/character/rawData";
 
 export const useFight = () => {
@@ -20,8 +18,12 @@ export const useFight = () => {
     const [_chessId, setChessId] = useAtom(chessId);
     const [fightResult, setFightResult] = useAtom(fightResultEffectA);
 
-    const duration = 4 * 1000,
-        animationEnd = Date.now() + duration;
+    const [hpChange, setHpChange] = useAtom(hpChangeA);
+    const [enemyHpChange, setEnemyHpChange] = useAtom(enemyHpChangeA);
+    const [attackChange, setAttackChange] = useAtom(attackChangeA);
+    const [enemyAttackChange, setEnemyAttackChange] = useAtom(enemyAttackChangeA);
+
+    let animationEnd = Date.now() + 4000;
     let skew = 1;
 
     function randomInRange(min: number, max: number) {
@@ -33,12 +35,13 @@ export const useFight = () => {
             spread: randomInRange(50, 70),
             particleCount: randomInRange(50, 100),
             origin: { y: 0.6 },
+            ticks: 3000
         });
     };
 
     const lose_effect = () => {
         const timeLeft = animationEnd - Date.now(),
-            ticks = Math.max(200, 500 * (timeLeft / duration));
+            ticks = Math.max(200, 500 * (timeLeft / 4000));
 
         skew = Math.max(0.8, skew - 0.001);
 
@@ -88,14 +91,13 @@ export const useFight = () => {
         // todo:改成直接从合约解析而不是读本地
         let effect = get_effect(char);
         if (effect === "") {
+            console.log("异常:没有查询到effect", char);
             return
         }
         let effect_value = get_effect_value(char);
         let forbid_buff = is_forbid_buff(is_opponent);
-        if (forbid_buff) {
-            console.log("触发强化失败: 禁强化")
-        }
         if (effect === "aoe") {
+            console.log("aoe:", char);
             aoe(parseInt(effect_value), is_opponent);
         } else if (effect === "add_all_tmp_hp" && !forbid_buff) {
             add_all_tmp_hp(parseInt(effect_value), is_opponent);
@@ -109,11 +111,15 @@ export const useFight = () => {
     }
 
     const attack_lowest_hp = (value:number, is_opponent:boolean) => {
+        console.log("出手！");
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = chars;
+            target_hp_change = hpChange;
         } else {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         }
         let min_hp_index = 0;
         let min_hp = 10000;
@@ -126,87 +132,116 @@ export const useFight = () => {
                 min_hp_index = index;
             }
         });
-        if (enemyChars[min_hp_index] != null) {
-            enemyChars[min_hp_index]!.life = enemyChars[min_hp_index]!.life - value < 0? 0 : enemyChars[min_hp_index]!.life - value;
-            if (enemyChars[min_hp_index]!.life == 0) {
-                enemyChars[min_hp_index] = null
+        if (target_group[min_hp_index] != null) {
+            target_group[min_hp_index]!.life = target_group[min_hp_index]!.life - value < 0? 0 : target_group[min_hp_index]!.life - value;
+            target_hp_change[min_hp_index] = - value;
+            if (target_group[min_hp_index]!.life == 0) {
+                target_group[min_hp_index] = null
             }
         }
-        setEnemyChars(enemyChars);
-        console.log("刺客攻击:", value, " is enemy:", is_opponent, enemyChars[min_hp_index])
+        setHpChange(hpChange);
+        setEnemyHpChange(enemyHpChange);
     }
 
     const add_all_tmp_attack = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_attack_change;
         if (is_opponent) {
             target_group = enemyChars;
+            target_attack_change = enemyAttackChange;
         } else {
             target_group = chars;
+            target_attack_change = attackChange;
         }
-        target_group.map((character) => {
-            if (character == null || character.attack == null) {
+        target_group.map((character, index) => {
+            if (character == null || character.attack == null || character.life == 0) {
                 return
             }
             character.attack = Number(character.attack) + Number(value);
+            target_attack_change[index] = Number(value);
         });
         console.log("全体加攻:", value, " is enemy:",is_opponent)
     }
 
     const add_all_hp = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         } else {
             target_group = chars;
+            target_hp_change = hpChange;
         }
-        target_group.map((character) => {
-            if (character == null || character.life == null) {
+        target_group.map((character, index) => {
+            // 禁止死亡时奶回来
+            if (character == null || character.life == null ||  character.life == 0) {
                 return
             }
             character.life = Number(character.life) + Number(value);
+            target_hp_change[index] = Number(value);
         });
         console.log("全体加血:", value, " is enemy:",is_opponent)
     }
 
     const add_all_tmp_hp = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         } else {
             target_group = chars;
+            target_hp_change = hpChange;
         }
-        target_group.map((character) => {
-            if (character == null || character.life == null) {
+        target_group.map((character, index) => {
+            // 禁止死亡时奶回来
+            if (character == null || character.life == null || character.life == 0) {
                 return
             }
             character.life = Number(character.life) + Number(value);
+            target_hp_change[index] = Number(value);
         });
-        console.log("全体加血:", value, " is enemy:",is_opponent)
     }
 
     const aoe = (value:number, is_opponent:boolean) => {
         let target_group;
+        let target_hp_change;
         if (is_opponent) {
             target_group = chars;
+            target_hp_change = hpChange;
         } else {
             target_group = enemyChars;
+            target_hp_change = enemyHpChange;
         }
         target_group.map((character, index) => {
             if (character == null || character.life == null) {
                 return
             }
             character.life = Number(character.life) - Number(value);
+            target_hp_change[index] = - Number(value);
             if (character.life <= 0) {
-                enemyChars[index] = null;
+                target_group[index] = null;
             }
-            setEnemyChars(enemyChars);
         });
+        if (is_opponent) {
+            setChars(target_group);
+        } else {
+            setEnemyChars(target_group);
+        }
         console.log("范围伤害:", value, " is enemy:", is_opponent)
+    }
+
+    const clear_change = () => {
+        setAttackChange([0, 0, 0, 0, 0, 0]);
+        setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
+        setHpChange([0, 0, 0, 0, 0, 0]);
+        setEnemyHpChange([0, 0, 0, 0, 0, 0]);
     }
 
     return useCallback(async () => {
         // both sides have characters, continue fighting
-        await sleep(1000);
+        await sleep(500);
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             const charIndex = chars.findIndex(Boolean);
             setFightingIndex(charIndex);
@@ -216,9 +251,10 @@ export const useFight = () => {
             setEnemyFightingIndex(enemyCharIndex);
             const enemyChar = enemyChars[enemyCharIndex]!;
 
-            // attacking animation
-            char.attacking = Math.random() > 0.5 ? 2 : 1;
-            enemyChar.attacking = Math.random() > 0.5 ? 2 : 1;
+            // combat
+            // 起手开1次大招
+            char.attacking = 2;
+            enemyChar.attacking = 2;
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
             await sleep(1500);
@@ -229,38 +265,52 @@ export const useFight = () => {
             setEnemyChars(enemyChars.slice());
             setChars(chars.slice());
 
-            // effect skill
+            // effect skill call once
             call_effect(char, false);
             call_effect(enemyChar, true);
-
-            // 可能已经挂了要换人
-            if (!some(chars, Boolean) || !some(enemyChars, Boolean)) {
-                break;
-            }
-
-            // attack
-            const charLife = Number(char.life) - Number(enemyChar.attack);
-            const enemyLife = Number(enemyChar.life) - Number(char.attack);
-
-            char.life = charLife;
-            enemyChar.life = enemyLife;
-
-            if (charLife <= 0) {
-                chars[charIndex] = null;
-            }
-            setChars(chars.slice());
-
-            if (enemyLife <= 0) {
-                enemyChars[enemyCharIndex] = null;
-            }
-            setEnemyChars(enemyChars.slice());
-
             await sleep(500);
+
+            // 激情互殴至死
+            while(char.life > 0 && enemyChar.life > 0) {
+                char.attacking = 1;
+                enemyChar.attacking = 1;
+                setEnemyChars(enemyChars.slice());
+                setChars(chars.slice());
+                await sleep(1500);
+
+                // reset
+                char.attacking = 0;
+                enemyChar.attacking = 0;
+                setEnemyChars(enemyChars.slice());
+                setChars(chars.slice());
+
+                char.life = Number(char.life) - Number(enemyChar.attack);
+                hpChange[charIndex] = - Number(enemyChar.attack);
+
+                enemyChar.life = Number(enemyChar.life) - Number(char.attack);
+                enemyHpChange[enemyCharIndex] = - Number(char.attack);
+                
+                setEnemyHpChange(enemyHpChange);
+                setHpChange(hpChange);
+
+                console.log("enemy hp change:", enemyHpChange);
+                console.log("hp change:", hpChange);
+                if (char.life <= 0) {
+                    chars[charIndex] = null;
+                }
+                setChars(chars.slice());
+    
+                if (enemyChar.life <= 0) {
+                    enemyChars[enemyCharIndex] = null;
+                }
+                setEnemyChars(enemyChars.slice());
+                await sleep(500);
+            }
         }
 
         if (some(chars, Boolean)) {
             setFightResult("You Win");
-            for (let i = 0; i < 10; ++i) {
+            for (let i = 0; i < 5; ++i) {
                 win_effect();
                 await sleep(200);
             }
@@ -268,10 +318,13 @@ export const useFight = () => {
             setFightResult(null);
         } else {
             setFightResult("You Lose");
+            animationEnd = Date.now() + 2000;
             lose_effect();
             await sleep(2000);
             setFightResult(null);
         }
+
+        clear_change();
 
         // 更新数据并进入shop
         if (_chessId) {

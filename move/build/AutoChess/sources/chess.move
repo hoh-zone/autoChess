@@ -164,9 +164,15 @@ module auto_chess::chess {
         object::delete(id);
     }
 
-    
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
+        // todo: for safety, verify the data.
+        assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
+        chess.gold = gold;
+        chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
+        match(global, role_global, lineup_global, chess, ctx);
+    }
 
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
+    public entry fun operate_and_match_v2(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
         assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
         
@@ -260,17 +266,20 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    fun match(global: &mut Global, role_global:&role::Global, lineup_global:&lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    fun match(global: &mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
         print(&utf8(b"start match chess"));
         assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
         let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
 
-        // fight
-        fight(chess, &mut enemy_lineup, ctx);
+        // fight and record lineup
+        if (fight(chess, &mut enemy_lineup, ctx)) {
+            lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup);
+        } else {
+            lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup);
+        }
 
-        // record
         if (chess.life > 0) {
             refresh_cards_pools(role_global, chess, ctx);
         };
@@ -286,12 +295,15 @@ module auto_chess::chess {
 
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext):bool {
         let my_lineup_fight = *&chess.lineup;
+
+        // backup to avoid base_life to be changed
+        let enemy_lineup_fight = *&enemy_lineup;
         let my_lineup_permanent = chess.lineup;
         let my_roles = *lineup::get_roles(&my_lineup_fight);
         vector::reverse<role::Role>(&mut my_roles);
         let my_num = vector::length(&my_roles);
-        let enemy_roles = *lineup::get_roles(enemy_lineup);
-        vector::reverse(&mut enemy_roles);
+        let enemy_roles = *lineup::get_roles(enemy_lineup_fight);
+        vector::reverse<role::Role>(&mut enemy_roles);
         let enemy_num = vector::length(&enemy_roles);
         if (my_num == 0) {
             return false
@@ -339,7 +351,7 @@ module auto_chess::chess {
             while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
-            combat(&mut my_lineup_fight, &mut my_lineup_permanent, enemy_lineup, &mut my_first_role, &mut enemy_first_role);
+            combat(&mut my_lineup_fight, &mut my_lineup_permanent, enemy_lineup_fight, &mut my_first_role, &mut enemy_first_role);
         };
         false
     }

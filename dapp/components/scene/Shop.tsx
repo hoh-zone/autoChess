@@ -1,4 +1,4 @@
-import { Box, Button, HStack } from "@chakra-ui/react"
+import { Box, Button, HStack, useToast } from "@chakra-ui/react"
 import { ShopSlot } from "../control/ShopSlot"
 import { useAtom } from "jotai"
 import { moneyA as moneyAtom, shopCharacter, stageAtom } from "../../store/stages"
@@ -7,7 +7,17 @@ export const Shop = () => {
     const [stage, setStage] = useAtom(stageAtom);
     const [money, setMoney] = useAtom(moneyAtom);
     const [chars, setChars] = useAtom(shopCharacter);
-    
+    const toast = useToast()
+
+    function refresh_failed_toast() {
+        toast({
+            title: 'Money is not enough',
+            status: 'warning',
+            duration: 2000,
+            isClosable: true,
+        })
+    }
+
     return <Box flexBasis={"15%"} className="bg-indigo-200">
         <HStack className="justify-around relative top-[-20px] " gap={0}>
             <ShopSlot id={0} />
@@ -19,7 +29,10 @@ export const Shop = () => {
                 <Button className=""
                     onClick={
                         () => {
-                            if (money < 2) return;
+                            if (money < 2) {
+                                refresh_failed_toast();
+                                return;
+                            }
                             setMoney(money - 2);
                             setChars(chars.slice(5));
                         }

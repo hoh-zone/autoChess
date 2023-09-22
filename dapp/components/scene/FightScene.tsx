@@ -2,7 +2,7 @@ import { HStack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { StatusBar } from "../control/StatusBar"
 import { useAtom } from "jotai"
-import { enemyCharacter, slotCharacter } from "../../store/stages"
+import { enemyCharacter, slotCharacter, winA } from "../../store/stages"
 import { twMerge } from "tailwind-merge"
 import range from "lodash/range"
 import { FightResultText } from "../effect/FightResultText"
@@ -28,6 +28,15 @@ export const FightScene = () => {
     const [chars, setChars] = useAtom(slotCharacter);
     const charIndex = chars.findIndex(Boolean);
     const enemyIndex = enemyChars.findIndex(Boolean);
+
+    const [win] = useAtom(winA);
+    const get_video_bg = () => {
+        let index = win + 1;
+        if (index > 8) {
+            index == 8;
+        }
+        return "bg" + index + ".mp4";
+    }
 
     return <div className="h-full w-full relative">
         <FightResultText />
