@@ -273,11 +273,13 @@ module auto_chess::chess {
         // match an enemy config
         let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
 
-        // fight
-        fight(chess, &mut enemy_lineup, ctx);
+        // fight and record lineup
+        if (fight(chess, &mut enemy_lineup, ctx)) {
+            lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup);
+        } else {
+            lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup);
+        }
 
-        // record
-        lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup);
         if (chess.life > 0) {
             refresh_cards_pools(role_global, chess, ctx);
         };
@@ -293,11 +295,14 @@ module auto_chess::chess {
 
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext):bool {
         let my_lineup_fight = *&chess.lineup;
+
+        // backup to avoid base_life to be changed
+        let enemy_lineup_fight = *&enemy_lineup;
         let my_lineup_permanent = chess.lineup;
         let my_roles = *lineup::get_roles(&my_lineup_fight);
         vector::reverse<role::Role>(&mut my_roles);
         let my_num = vector::length(&my_roles);
-        let enemy_roles = *lineup::get_roles(enemy_lineup);
+        let enemy_roles = *lineup::get_roles(enemy_lineup_fight);
         vector::reverse<role::Role>(&mut enemy_roles);
         let enemy_num = vector::length(&enemy_roles);
         if (my_num == 0) {
@@ -346,7 +351,7 @@ module auto_chess::chess {
             while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
-            combat(&mut my_lineup_fight, &mut my_lineup_permanent, enemy_lineup, &mut my_first_role, &mut enemy_first_role);
+            combat(&mut my_lineup_fight, &mut my_lineup_permanent, enemy_lineup_fight, &mut my_first_role, &mut enemy_first_role);
         };
         false
     }
