@@ -55,7 +55,7 @@ export const StatusChange = ({id}: {
         if (change > 0) {
             return "HP+" +change;
         } else {
-            return "HP-" + change;
+            return "HP" + change;
         }
     }
 

@@ -7,7 +7,7 @@ export const FightResultText = () => {
     const [fightResult, setFightResult] = useAtom(fightResultEffectA);
 
     return <>
-        {fightResult !== null && (<Center className="absolute top-0 w-full h-full z-50 text-[500%]  text-white">
+        {fightResult !== null && (<Center style={{color:"rgba(232, 219, 98, 0.832)"}}className="absolute top-0 w-full h-full z-50 text-[400%] ">
             <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}

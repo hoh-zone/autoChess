@@ -232,6 +232,11 @@ export const useFight = () => {
         console.log("范围伤害:", value, " is enemy:", is_opponent)
     }
 
+    const get_random_number = () => {
+        let num = 2 + 3 * Math.random();
+        return "Reward: " + (num.toFixed(2)) +" SUI";
+    }
+
     const clear_change = () => {
         setAttackChange([0, 0, 0, 0, 0, 0]);
         setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
@@ -276,7 +281,7 @@ export const useFight = () => {
                 enemyChar.attacking = 1;
                 setEnemyChars(enemyChars.slice());
                 setChars(chars.slice());
-                await sleep(1500);
+                await sleep(1000);
 
                 // reset
                 char.attacking = 0;
@@ -309,7 +314,7 @@ export const useFight = () => {
         }
 
         if (some(chars, Boolean)) {
-            setFightResult("You Win");
+            setFightResult(get_random_number());
             for (let i = 0; i < 5; ++i) {
                 win_effect();
                 await sleep(200);

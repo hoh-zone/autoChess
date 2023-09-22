@@ -13,9 +13,6 @@ export function Character({
     attack?: 0 | 1 | 2,
     level?: number,
 }) {
-    if (isOpponent) {
-        console.log("level ",level);
-    }
     if (!charTable[charType as keyof typeof charTable]) {
         console.error("not found", charType);
         return <>no</>
