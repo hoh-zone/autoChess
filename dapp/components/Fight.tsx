@@ -50,10 +50,11 @@ export const Fight = () => {
         if (!success) {
             return;
         }
-        console.log("start fight");
+        console.log("chessid: ", chessId);
   
         // sync enemy
         let json = await query_fight(chess_id);
+        console.log("json res: ", json);
         let enemy:CharacterFields[] = json['v2_lineup']['roles'];
         let name = json['v2_name'];
         setEnemyName(name);
