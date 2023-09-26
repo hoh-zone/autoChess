@@ -15,6 +15,7 @@ export interface CharacterFieldsV2 {
     magic: number;
 
     // max-life
+    base_attack: number;
     max_life: number;
     max_magic: number;
     effect_type: string; // 常驻触发，主动释放，被动触发
