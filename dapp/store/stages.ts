@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { CharacterFields, ID } from "../types/nft";
+import { CharacterFieldsV2 } from "../types/entity";
 
 export const currentNftId = atom<string>("");
 
@@ -33,3 +34,10 @@ export const selectedSlot = atom<number | null>(null);
 
 // effects
 export const fightResultEffectA = atom<null | string>(null);
+
+
+
+
+// v2 charactors
+export const slotCharacterV2 = atom<(CharacterFieldsV2 | null)[]>([null, null, null, null, null, null]);
+export const enemyCharacterV2 = atom<(CharacterFieldsV2 | null)[]>([null, null, null, null, null, null]);
