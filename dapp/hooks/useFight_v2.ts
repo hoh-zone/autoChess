@@ -42,14 +42,12 @@ export const useFightV2 = () => {
 
     const call_attack = (char: CharacterFieldsV2, enemyChar: CharacterFieldsV2, enemyIndex:number, is_opponent: boolean) => {
         let attack = get_attack_with_buff(char, true);
-        console.log("attack:", attack, ":", enemyChar.life);
         enemyChar.life -= attack;
         if (is_opponent) {
             console.log("敌人：", char.name, " 普攻: 攻击", enemyChar.name);
         } else {
             console.log("我军：", char.name, " 普攻: 攻击", enemyChar.name);
         }
-        
         died_check(enemyChar, enemyIndex, !is_opponent);
     }
 
@@ -74,7 +72,12 @@ export const useFightV2 = () => {
     const call_skill = (char: CharacterFieldsV2, is_opponent:boolean) => {
         let effect = char.effect;
         let value = parseInt(char.effect_value);
-        console.log(char.name, " 释放技能:", char.effect);
+        if (is_opponent) {
+            console.log("敌人:",char.name, " 释放技能:", char.effect);
+        } else {
+            console.log("我军:", char.name, " 释放技能:", char.effect);
+        }
+        
         if (effect == "aoe") {
             enemyChars.map((ele:CharacterFieldsV2 | null, index:number) => {
                 if (ele == null) {
@@ -100,7 +103,11 @@ export const useFightV2 = () => {
     }
 
     const died_check = (char: CharacterFieldsV2, enemyIndex:number, is_opponent:boolean) => {
-        console.log("敌人生命:", char.life);
+        if (is_opponent) {
+            console.log("敌人：被攻击者剩余生命:", char.life);
+        } else {
+            console.log("我军：被攻击者剩余生命:", char.life);
+        }
         if (char.life <= 0) {
             if (is_opponent) {
                 console.log("敌人:", char.name, " 死亡");
@@ -134,6 +141,27 @@ export const useFightV2 = () => {
         }
     }
 
+    const reset_status = () => {
+        chars.map((chr)=> {
+            if (chr == null) {
+                return;
+            }
+            chr.life = chr.max_life;
+            chr.magic = 0;
+            chr.buffs = [];
+            chr.debuffs = [];
+        })
+        enemyChars.map((chr)=> {
+            if (chr == null) {
+                return;
+            }
+            chr.life = chr.max_life;
+            chr.magic = 0;
+            chr.buffs = [];
+            chr.debuffs = [];
+        })
+    }
+
     return useCallback(async () => {
         console.log("--------开始战斗-------");
         console.log(chars);
@@ -147,29 +175,16 @@ export const useFightV2 = () => {
             setEnemyFightingIndex(enemyCharIndex);
             let enemyChar = enemyChars[enemyCharIndex]!;
 
-            // todo:速度相等？ 速度快先出手 
-            if (char.speed >= enemyChar.speed) {
-                // 释放普攻或者技能
-                action(char, enemyChar, enemyCharIndex, false);
-                let res = check_find_alive_char(enemyChar);
-                if (res == null) {
-                    break;
-                }
-                enemyChar = res;
-
-                // 另一方释放普攻或技能
-                action(enemyChar, char, charIndex, true);
-            } else {
-                action(enemyChar, char, charIndex, true);
-
-                let res = check_find_alive_char(char);
-                if (res == null) {
-                    break;
-                }
-                char = res;
-
-                action(char, enemyChar, enemyCharIndex, false);
+            // todo: 同时攻击逻辑
+            action(char, enemyChar, enemyCharIndex, false);
+            let res = check_find_alive_char(enemyChar);
+            if (res == null) {
+                break;
             }
+            enemyChar = res;
+
+            // 另一方释放普攻或技能
+            action(enemyChar, char, charIndex, true);
         }
 
         if (some(chars, Boolean)) {
@@ -177,5 +192,7 @@ export const useFightV2 = () => {
         } else {
             console.log("you lose");
         }
+
+        reset_status();
     }, []);
 }

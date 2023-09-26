@@ -11,16 +11,14 @@ export interface CharacterFieldsV2 {
     level:   number;
 
     attack:  number;
-    defense: number;
     life: number;
     magic: number;
-    speed: number;
     buffs: Buff[];
     debuffs: Buff[];
 
 
     // max-life
-    max_life?: number;
+    max_life: number;
     max_magic: number;
     effect_type: string; // 常驻触发，主动释放，被动触发
     effect: string; // 可能有亡语，需要读取释放
