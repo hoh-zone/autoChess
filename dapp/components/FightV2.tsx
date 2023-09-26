@@ -25,7 +25,7 @@ export const FightV2 = () => {
     const init_chars = () => {
         console.log("初始化角色");
         let chars_names = ["char1"];
-        let enemy_names = ["char1"];
+        let enemy_names = ["char2"];
         let init_chars = get_chars(chars_names);
         let init_enemys = get_chars(enemy_names);
         chars.map((chr, index) => {

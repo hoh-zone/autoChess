@@ -13,9 +13,6 @@ export interface CharacterFieldsV2 {
     attack:  number;
     life: number;
     magic: number;
-    buffs: Buff[];
-    debuffs: Buff[];
-
 
     // max-life
     max_life: number;
