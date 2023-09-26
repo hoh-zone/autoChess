@@ -103,11 +103,11 @@ todo:
 
 ## 角色信息  
 角色设计
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/25808f20-b3aa-42c0-ba08-5afaa3b24f98)
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/162bb486-b114-4bb7-ba4e-9daa4c1400c6)
 
 
 ## 主棋盘信息(nft)  
-胜场X-Y，生命值，金币，阵容  
+胜场X-Y，生命值（总数为3），金币每次固定10，阵容  
 阵容上限：6
 
 ## 经济模拟：
