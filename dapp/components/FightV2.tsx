@@ -25,8 +25,13 @@ export const FightV2 = () => {
         console.log("初始化角色");
         let chars_names = ["char1"];
         let enemy_names = ["char1"];
-        setChars(get_chars(chars_names).slice());
-        setEnemyChars(get_chars(enemy_names));
+
+        let init_chars = get_chars(chars_names);
+        let init_enemys = get_chars(enemy_names);
+        console.log("initchars:", init_chars);
+        setChars(init_chars);
+        setEnemyChars(init_enemys);
+        console.log("initchars2:", chars);
         
         console.log("我军阵容：", chars);
         console.log("敌军阵容: ", enemyChars);
