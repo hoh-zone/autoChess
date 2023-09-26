@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import some from "lodash/some";
 import { Buff, CharacterFieldsV2 } from "../types/entity";
 
-export const useFight = () => {
+export const useFightV2 = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
     const [chars, setChars] = useAtom(slotCharacterV2);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
@@ -40,19 +40,74 @@ export const useFight = () => {
         return attack;
     }
 
-    const call_attack = (char: CharacterFieldsV2, enemyChar: CharacterFieldsV2, enemyIndex:number) => {
+    const call_attack = (char: CharacterFieldsV2, enemyChar: CharacterFieldsV2, enemyIndex:number, is_opponent: boolean) => {
         let attack = get_attack_with_buff(char, true);
+        console.log("attack:", attack, ":", enemyChar.life);
         enemyChar.life -= attack;
-        died_check(enemyChar, enemyIndex);
+        if (is_opponent) {
+            console.log("敌人：", char.name, " 普攻: 攻击", enemyChar.name);
+        } else {
+            console.log("我军：", char.name, " 普攻: 攻击", enemyChar.name);
+        }
+        
+        died_check(enemyChar, enemyIndex, !is_opponent);
     }
 
-    const call_skill = (char: CharacterFieldsV2) => {
+    const add_buff = (char: CharacterFieldsV2, new_buff:Buff) => {
+        let buffs = char.buffs;
+        let is_contain = false;
+        buffs.map((buff) => {
+            if (buff.name == new_buff.name) {
+                is_contain = true;
+                buff.left_loop += 1;
+                buff.effect_value = new_buff.effect_value;
+            }
+        });
+        if (!is_contain) {
+
+            buffs.push(new_buff);
+        }
+        // todo:检查下这个赋值是否多余
+        // char.buffs = buffs;
+    }
+
+    const call_skill = (char: CharacterFieldsV2, is_opponent:boolean) => {
         let effect = char.effect;
-        console.log("call skill ", effect);
+        let value = parseInt(char.effect_value);
+        console.log(char.name, " 释放技能:", char.effect);
+        if (effect == "aoe") {
+            enemyChars.map((ele:CharacterFieldsV2 | null, index:number) => {
+                if (ele == null) {
+                    return;
+                }
+                call_attack(char, ele, index, is_opponent);
+            })
+        } else if (effect = "add_all_tmp_hp") {
+            chars.map((ele:CharacterFieldsV2 | null)=>{
+                if (ele == null) {
+                    return;
+                }
+                let new_buff = {
+                    name:"hp_increase",
+                    desc: "HP上升",
+                    left_loop: 2,
+                    effect: "hp_increase",
+                    effect_value: value
+                };
+                add_buff(ele, new_buff);
+            })
+        }
     }
 
-    const died_check = (char: CharacterFieldsV2, enemyIndex:number) => {
+    const died_check = (char: CharacterFieldsV2, enemyIndex:number, is_opponent:boolean) => {
+        console.log("敌人生命:", char.life);
         if (char.life <= 0) {
+            if (is_opponent) {
+                console.log("敌人:", char.name, " 死亡");
+            } else {
+                console.log("我军：", char.name, " 死亡");
+            }
+            
             if (char.effect == "deathrattle") {
                 console.log("deathrattle effect");
             }
@@ -70,8 +125,18 @@ export const useFight = () => {
         }
     }
 
+    const action = (char:CharacterFieldsV2, enemy:CharacterFieldsV2, enemyIndex:number, is_opponent:boolean) => {
+        if (char.magic == char.max_magic) {
+            call_skill(char, is_opponent);
+        } else {
+            call_attack(char, enemy, enemyIndex, is_opponent);
+            char.magic = char.magic + 1;
+        }
+    }
+
     return useCallback(async () => {
-        // 循环体：
+        console.log("--------开始战斗-------");
+        console.log(chars);
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
             const charIndex = chars.findIndex(Boolean);
@@ -82,34 +147,20 @@ export const useFight = () => {
             setEnemyFightingIndex(enemyCharIndex);
             let enemyChar = enemyChars[enemyCharIndex]!;
 
-            if (char.speed > enemyChar.speed) {
-                if (char.magic == char.max_magic) {
-                    call_skill(char);
-                } else {
-                    call_attack(char, enemyChar, enemyCharIndex);
-                    char.magic = char.magic + 1;
-                }
-
+            // todo:速度相等？ 速度快先出手 
+            if (char.speed >= enemyChar.speed) {
+                // 释放普攻或者技能
+                action(char, enemyChar, enemyCharIndex, false);
                 let res = check_find_alive_char(enemyChar);
                 if (res == null) {
                     break;
                 }
                 enemyChar = res;
 
-
-                if (enemyChar.magic == enemyChar.max_magic) {
-                    call_skill(enemyChar);
-                } else {
-                    call_attack(enemyChar, char, enemyCharIndex);
-                    enemyChar.magic = enemyChar.magic + 1;
-                }
+                // 另一方释放普攻或技能
+                action(enemyChar, char, charIndex, true);
             } else {
-                if (enemyChar.magic == enemyChar.max_magic) {
-                    call_skill(enemyChar);
-                } else {
-                    call_attack(enemyChar, char, enemyCharIndex);
-                    enemyChar.magic = enemyChar.magic + 1;
-                }
+                action(enemyChar, char, charIndex, true);
 
                 let res = check_find_alive_char(char);
                 if (res == null) {
@@ -117,28 +168,14 @@ export const useFight = () => {
                 }
                 char = res;
 
-                if (char.magic == char.max_magic) {
-                    call_skill(char);
-                } else {
-                    call_attack(char, enemyChar, enemyCharIndex);
-                    char.magic = char.magic + 1;
-                }
+                action(char, enemyChar, enemyCharIndex, false);
             }
-        // 	根据速度判断谁先出手，后出手
-        // 	先手：
-        // 	然后出手前，判断蓝量，满蓝即触发技能释放，否则普通攻击
-            
-        // 	1、技能：读取技能效果和作用人群范围，以及对方是否允许我触发
-        // 	2、普通技能
+        }
 
-        // 	生效前检查是否存在buff（这个要不要直接做到数值里）
-        // 	根据buff算出最后的效果值，并作用到对应的人群(对方也有buff,也要考虑)
-
-        // 	检查是否杀死了别人：是否有击杀特效，对方是否有亡语特效
-        // 	如果有就触发
-            
-        // 	后手：
-        // 	如果死了，就换下一个上来，没死就继续准备出手
+        if (some(chars, Boolean)) {
+            console.log("you win");
+        } else {
+            console.log("you lose");
         }
     }, []);
 }
