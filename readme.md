@@ -26,6 +26,7 @@ blocker:
 - 背景预加载
 - 开一个 telegram 群或者 discord，用来回答问题或反馈。
 - 开一个 twitter，时不时发点东西。
+- block 一些 IP，规避一点法律风险。
 
 ----
 
