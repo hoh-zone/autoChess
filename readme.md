@@ -43,6 +43,7 @@ blocker:
 - 确认去哪些地方发广告（群、discord、twitter）
 - 中英双语支持
 - 加一些 faq，比如如何登上排行榜，钱怎么算的之类
+- 增加点传播性，上排行榜的时候提醒用户分享：“Share the link, and make the treasury pool bigger! 10 times play, $1000 additional you earn”
 
 ----
 
@@ -52,7 +53,7 @@ blocker:
 todo:
 - 英雄（NFT）机制。引入1个可合作的nft角色作为宣传点
 - 增加魔法值设定，英雄满魔法值之后再释放技能，全体角色提高点生命值，不然技能放不出来
-- 增加角色特性：反弹，攻击，魔法的buff和debuff，毒伤，解除debuff，套盾等
+- 增加角色特性：反弹，攻击，魔法的 buff 和 debuff，毒伤，解除 debuff，套盾等
 - 增加前端和链端的战斗日志打印和战斗模拟测试功能，方便进行比对测试，战力平衡测试
 - 经济模式玩法强化：历史残局继续赚钱或者10局之后进入挑战模式轮训挑战
 
