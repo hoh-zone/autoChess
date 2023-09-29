@@ -87,7 +87,7 @@ export const Slot = ({ isOpponent = false, id }: {
                     setShopChars(shopChars);
                     setShopSlotNumber(null);
                     setSlotNumber(null);
-                    operations.push("buy:" + shopSlotNumber + ":" + id);
+                    operations.push("buy:" + shopSlotNumber + "-" + id);
                 } else {
                     show_failed_toast()
                 }
@@ -126,13 +126,13 @@ export const Slot = ({ isOpponent = false, id }: {
                         end = Date.now() + 1 * 1000;
                         level_up_effect();
                     }
-                    operations.push("upgrade:" + slotNumber + ":" + id);
+                    operations.push("upgrade:" + slotNumber + "-" + id);
                 } else {
                     chars[slotNumber] = temp;
                     setChars(chars);
                     setSlotNumber(null);
                     setShopSlotNumber(null);
-                    operations.push("swap:" + slotNumber + ":" + id);
+                    operations.push("swap:" + slotNumber + "-" + id);
                 }
             } else {
                 if (slotNumber == null) {
