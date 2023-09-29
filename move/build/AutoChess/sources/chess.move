@@ -279,7 +279,6 @@ module auto_chess::chess {
         } else {
             lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup);
         };
-
         if (chess.life > 0) {
             refresh_cards_pools(role_global, chess, ctx);
         };
@@ -312,6 +311,9 @@ module auto_chess::chess {
         let enemy_first_role = role::init_role();
         while (true) {
             // check game end condition
+            print(&12);
+            print(&vector::length(&my_roles));
+            print(&role::get_name(&my_first_role));
             if (vector::length(&my_roles) == 0 && role::get_life(&my_first_role) == 0) {
                 print(&utf8(b"I lose"));
                 chess.lose = chess.lose + 1;
@@ -345,10 +347,10 @@ module auto_chess::chess {
                 chess.lineup = my_lineup_permanent;
                 return true
             };
-            while (vector::length(&my_roles) > 0 && role::get_life(&my_first_role) == 0 && role::get_name(&my_first_role) != utf8(b"none")) {
+            while (vector::length(&my_roles) > 0 && role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init"))) {
                 my_first_role = vector::pop_back(&mut my_roles);
             };
-            while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0 && role::get_name(&enemy_first_role) != utf8(b"none")) {
+            while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init"))) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
             combat(&mut my_lineup_fight, &mut my_lineup_permanent, &mut enemy_lineup_fight, &mut my_first_role, &mut enemy_first_role);

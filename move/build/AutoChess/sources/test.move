@@ -56,19 +56,15 @@ module auto_chess::test {
             next_epoch(test, admin);
 
             let chess_nft = take_from_sender<chess::Chess>(test);
-            // print(&utf8(b"my lineup:"));
-            // print(chess::get_lineup(&chess_nft));
-            // print(&utf8(b"my card_pools:"));
-            // print(chess::get_cards_pool(&chess_nft));
             let lineupGlobal = take_shared<lineup::Global>(test);
             let gold = 3;
             let str_vec = vector::empty<String>();
-            vector::push_back(&mut str_vec, utf8(b"priest3:12:12"));
-            vector::push_back(&mut str_vec, utf8(b"assa1:213:11"));
+            vector::push_back(&mut str_vec, utf8(b"tank1:8:3"));
             vector::push_back(&mut str_vec, utf8(b""));
             vector::push_back(&mut str_vec, utf8(b""));
+            vector::push_back(&mut str_vec, utf8(b"shaman1:5:6"));
             vector::push_back(&mut str_vec, utf8(b""));
-            vector::push_back(&mut str_vec, utf8(b"mega1:12:12"));
+            vector::push_back(&mut str_vec, utf8(b"fighter1:5:5"));
             print(&utf8(b"operate my chess"));
             chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
             print_my_lineup(&chess_nft);
