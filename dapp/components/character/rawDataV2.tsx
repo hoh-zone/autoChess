@@ -49,11 +49,11 @@ const roles_info: Roles = {
     "shaman2_1": {name: "shaman2_1",level: 6,attack:  10, life: 15, magic: 0, base_attack: 10, max_life: 15, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
     "shaman3": {name: "shaman3",level: 9,attack:  20, life: 45, magic: 0, base_attack: 20, max_life: 45, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
 
-    "fireMega1": {name: "fireMega1",level: 1,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: "5"},
-    "fireMega1_1": {name: "fireMega1_1",level: 2,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: "5"},
-    "fireMega2": {name: "fireMega2",level: 3,attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: "6"},
-    "fireMega2_1": {name: "fireMega2_1",level: 6, attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: "6"},
-    "fireMega3": {name: "fireMega3",level: 9,attack:  24, life: 25, magic: 0, base_attack: 24, max_life: 25, max_magic: 1, effect_type: "skill", effect: "forbid_debuff", effect_value: "10"},
+    "fireMega1": {name: "fireMega1",level: 1,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "fireMega1_1": {name: "fireMega1_1",level: 2,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "fireMega2": {name: "fireMega2",level: 3,attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "fireMega2_1": {name: "fireMega2_1",level: 6, attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "fireMega3": {name: "fireMega3",level: 9,attack:  24, life: 25, magic: 0, base_attack: 24, max_life: 25, max_magic: 1, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
 
     "slime1": {name: "slime1",level: 1,attack:  6, life: 6, magic: 0, base_attack: 6, max_life: 6, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
     "slime1_1": {name: "slime1_1",level: 2,attack:  6, life: 6, magic: 0, base_attack: 6, max_life: 6, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
