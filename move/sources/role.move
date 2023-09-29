@@ -151,6 +151,20 @@ module auto_chess::role {
         vec_map::insert(&mut global.charactors, utf8(b"tree3"), Role {name:utf8(b"tree3"), attack:12, life:40, level:9, magic: 1, price:9, effect:utf8(b"add_all_tmp_hp"), effect_value:utf8(b"12")});
     }
 
+    // for loop init
+    public fun init_role() : Role {
+        Role {
+            name:utf8(b"init"),
+            attack: 0,
+            life: 0,
+            level: 0,
+            price: 0,
+            magic: 0,
+            effect: utf8(b""),
+            effect_value: utf8(b"")
+        }
+    }
+
     public fun empty() : Role {
         Role {
             name:utf8(b"none"),
@@ -158,7 +172,7 @@ module auto_chess::role {
             life: 0,
             level: 0,
             price: 0,
-            magic: 99,
+            magic: 0,
             effect: utf8(b""),
             effect_value: utf8(b"")
         }

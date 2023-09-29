@@ -166,7 +166,7 @@ module auto_chess::chess {
 
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
-        assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
+        assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         chess.gold = gold;
         chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
         match(global, role_global, lineup_global, chess, ctx);
@@ -174,7 +174,7 @@ module auto_chess::chess {
 
     public entry fun operate_and_match_v2(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
         // todo: for safety, verify the data.
-        assert!(vector::length(&lineup_str_vec) <= 7, ERR_EXCEED_NUM_LIMIT);
+        assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         
 
         let initial_gold = *&chess.gold;
@@ -308,8 +308,8 @@ module auto_chess::chess {
         if (my_num == 0) {
             return false
         };
-        let my_first_role = role::empty();
-        let enemy_first_role = role::empty();
+        let my_first_role = role::init_role();
+        let enemy_first_role = role::init_role();
         while (true) {
             // check game end condition
             if (vector::length(&my_roles) == 0 && role::get_life(&my_first_role) == 0) {
@@ -345,10 +345,10 @@ module auto_chess::chess {
                 chess.lineup = my_lineup_permanent;
                 return true
             };
-            while (vector::length(&my_roles) > 0 && role::get_life(&my_first_role) == 0) {
+            while (vector::length(&my_roles) > 0 && role::get_life(&my_first_role) == 0 && role::get_name(&my_first_role) != utf8(b"none")) {
                 my_first_role = vector::pop_back(&mut my_roles);
             };
-            while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0) {
+            while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0 && role::get_name(&enemy_first_role) != utf8(b"none")) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
             combat(&mut my_lineup_fight, &mut my_lineup_permanent, &mut enemy_lineup_fight, &mut my_first_role, &mut enemy_first_role);

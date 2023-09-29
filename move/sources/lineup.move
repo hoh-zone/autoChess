@@ -9,6 +9,8 @@ module auto_chess::lineup {
     use auto_chess::utils;
     use std::debug::print;
 
+    const ERR_WRONG_ROLES_NUMBER:u64 = 0x01;
+
     struct Global has key {
         id: UID,
         // used for fight
@@ -167,10 +169,16 @@ module auto_chess::lineup {
     public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, ctx:&mut TxContext) : LineUp {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
+        assert!(len == 6, ERR_WRONG_ROLES_NUMBER);
         vector::reverse<String>(&mut str_vec);
         while (len > 0) {
             // priest1:10:3' (namex_y:life:attack)
             let role_info = vector::pop_back(&mut str_vec);
+            if (string::length(&role_info) == 0) {
+                vector::push_back(&mut vec, role::empty());
+                len = len - 1;
+                continue
+            };
             let index = string::index_of(&role_info, &utf8(b":"));
             let role_name = string::sub_string(&role_info, 0, index);
             let property = string::sub_string(&role_info, index + 1, string::length(&role_info));
