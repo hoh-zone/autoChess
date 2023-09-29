@@ -41,7 +41,7 @@ todo:
     - 新手引导，交互式的，或者一些 gif
     - 前端角色、页面布局自适应问题
     - 强化前端技能效果显示，让玩家能看懂发生了什么
-    - 素材在启动时预加载
+    - 素材在启动时预加载(https://createjs.com/docs/preloadjs/modules/PreloadJS.html)
 - 排行榜，以及排行榜的奖励分发，前端+后端 （1w）
     - 每周把奖池的钱瓜分给排行榜上的玩家
     - 参考一下 https://sui8192.ethoswallet.xyz/
