@@ -17,8 +17,9 @@ module auto_chess::chess {
   
     const INIT_LIFE:u64 = 3;
     const INIT_GOLD:u64 = 10;
-    const REFRESH_PRICE:u64 = 3;
+    const REFRESH_PRICE:u8 = 3;
     const ARENA_CHESS_PRICE:u64 = 1;
+    const CARDS_IN_ONE_REFRESH:u64 = 5;
     const AMOUNT_DECIMAL:u64 = 1_000_000_000;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
     const ERR_EXCEED_NUM_LIMIT:u64 = 0x02;
@@ -26,6 +27,10 @@ module auto_chess::chess {
     const ERR_NOT_ARENA_CHESS:u64 = 0x04;
     const ERR_POOL_NOT_ENOUGH:u64 = 0x05;
     const ERR_NOT_PERMISSION:u64 = 0x06;
+    const ERR_NOT_ENOUGH_GOLD:u64 = 0x07;
+    const ERR_INVALID_CHARACTOR:u64 = 0x08;
+    const ERR_CHARACTOR_IS_NONE:u64 = 0x09;
+    const ERR_UPGRADE_FAILED:u64 = 0x10;
 
     struct Global has key {
         id: UID,
@@ -40,7 +45,7 @@ module auto_chess::chess {
         lineup: LineUp,
         cards_pool: LineUp,
         gold: u64,
-        refresh_price: u64,
+        refresh_price: u8,
         life: u64,
         win: u8,
         lose: u8,
@@ -164,10 +169,79 @@ module auto_chess::chess {
         object::delete(id);
     }
 
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, gold:u64, lineup_str_vec: vector<String>, chess:&mut Chess, ctx:&mut TxContext) {
-        // todo: for safety, verify the data.
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, operations: vector<String>, left_gold:u64, lineup_str_vec: vector<String>, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
-        chess.gold = gold;
+        let init_lineup = *&chess.lineup;
+        let init_roles = lineup::get_mut_roles(&mut init_lineup);
+        let gold = 10;
+        let cards_pool = chess.cards_pool;
+        let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
+        // print(cards_pool_roles); 
+        let refresh_time = 0;
+        // operations
+        vector::reverse(&mut operations);
+        while(vector::length(&operations) > 0) {
+            let operate = vector::pop_back(&mut operations);
+            if (string::index_of(&operate, &utf8(b"buy")) == 0) {
+                print(&utf8(b"buy operation"));
+                let sub_str = string::sub_string(&operate, 3 + 1, string::length(&operate));
+                let (from_index, to_index) = utils::get_left_right_number(sub_str);
+                let from_role = vector::borrow_mut<role::Role>(cards_pool_roles, from_index + CARDS_IN_ONE_REFRESH * refresh_time);
+                assert!(role::get_name(from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
+                let copy_role = *from_role;
+                role::set_name(from_role, utf8(b"none"));
+                let empty = vector::borrow<role::Role>(init_roles, to_index);
+                assert!(role::get_name(empty) == utf8(b"none"), ERR_INVALID_CHARACTOR);
+                vector::remove(init_roles, to_index);
+                vector::insert(init_roles, copy_role, to_index);
+                let price = role::get_price(&copy_role);
+                assert!(gold >= price, ERR_NOT_ENOUGH_GOLD);
+                gold = gold - price;
+            } else if (string::index_of(&operate, &utf8(b"swap")) == 0) {
+                print(&utf8(b"swap operation"));
+                let sub_str = string::sub_string(&operate, 4 + 1, string::length(&operate));
+                let (from_index, to_index) = utils::get_left_right_number(sub_str);
+                vector::swap(init_roles, from_index, to_index);
+            } else if (string::index_of(&operate, &utf8(b"sell")) == 0) {
+                print(&utf8(b"sell operation"));
+                let sub_str = string::sub_string(&operate, 4 + 1, string::length(&operate));
+                let from_index = utils::utf8_to_u64(sub_str);
+                let from_role = vector::borrow_mut<role::Role>(cards_pool_roles, from_index);
+                assert!(role::get_name(from_role) != utf8(b"none"), ERR_INVALID_CHARACTOR);
+                role::set_name(from_role, utf8(b"none"));
+                gold = gold + role::get_sell_price(from_role);
+            } else if (string::index_of(&operate, &utf8(b"upgrade")) == 0) {
+                print(&utf8(b"upgrade operation"));
+                let sub_str = string::sub_string(&operate, 7 + 1, string::length(&operate));
+                let (from_index, to_index) = utils::get_left_right_number(sub_str);
+                let from_role = role::init_role();
+                {
+                    from_role = *vector::borrow<role::Role>(init_roles, from_index);
+                    assert!(role::get_name(&from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
+                };
+
+                let to_role = vector::borrow_mut<role::Role>(init_roles, to_index);
+                assert!(role::get_name(to_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
+                let res = role::upgrade(role_global, &from_role, to_role);
+                assert!(res, ERR_UPGRADE_FAILED);
+                
+                let from_role_mut = vector::borrow_mut<role::Role>(init_roles, from_index);
+                role::set_name(from_role_mut, utf8(b"none"));
+            } else if (string::index_of(&operate, &utf8(b"refresh")) == 0) {
+                print(&utf8(b"refresh operation"));
+                assert!(gold >= REFRESH_PRICE, ERR_NOT_ENOUGH_GOLD);
+                gold = gold - REFRESH_PRICE;
+                refresh_time = refresh_time + 1;
+            } else {
+                print(&utf8(b"invalid operation"));
+            }
+        };
+        // print(init_roles);
+
+        // asert!(init_lineup == expected_lineup, 0x01);
+        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
+
+        chess.gold = left_gold;
         chess.lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
         match(global, role_global, lineup_global, chess, ctx);
     }
@@ -311,9 +385,6 @@ module auto_chess::chess {
         let enemy_first_role = role::init_role();
         while (true) {
             // check game end condition
-            print(&12);
-            print(&vector::length(&my_roles));
-            print(&role::get_name(&my_first_role));
             if (vector::length(&my_roles) == 0 && role::get_life(&my_first_role) == 0) {
                 print(&utf8(b"I lose"));
                 chess.lose = chess.lose + 1;
@@ -347,10 +418,10 @@ module auto_chess::chess {
                 chess.lineup = my_lineup_permanent;
                 return true
             };
-            while (vector::length(&my_roles) > 0 && role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init"))) {
+            while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
                 my_first_role = vector::pop_back(&mut my_roles);
             };
-            while (vector::length(&enemy_roles) > 0 && role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init"))) {
+            while (vector::length(&enemy_roles) > 0 && (role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init")))) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
             combat(&mut my_lineup_fight, &mut my_lineup_permanent, &mut enemy_lineup_fight, &mut my_first_role, &mut enemy_first_role);

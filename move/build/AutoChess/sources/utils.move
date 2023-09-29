@@ -14,6 +14,13 @@ module auto_chess::utils {
         string::utf8(vec)
     }
 
+    public fun get_left_right_number(input:String) : (u64, u64) {
+        let comma_index = string::index_of(&input, &utf8(b"-"));
+        let from_index = utf8_to_u64(string::sub_string(&input, 0, comma_index));
+        let to_index = utf8_to_u64(string::sub_string(&input, comma_index + 1, string::length(&input)));
+        (from_index, to_index)
+    }
+
     public fun utf8_to_u64(str: String): u64 {
         let bytes = *string::bytes(&str);
         let len = vector::length(&bytes);
@@ -107,5 +114,40 @@ module auto_chess::utils {
         string::append(&mut tag, string::utf8(b"-"));
         string::append(&mut tag, u8_to_string(lose));
         tag
+    }
+
+    public fun removeSuffix(name:String) : String {
+        // ani1 -> ani
+        if (string::index_of(&name, &utf8(b"3")) < string::length(&name)) {
+            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"3")))
+        } else if (string::index_of(&name, &utf8(b"2_1")) < string::length(&name)) {
+            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"2_1")))
+        } else if (string::index_of(&name, &utf8(b"2")) < string::length(&name)) {
+            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"2")))
+        } else if (string::index_of(&name, &utf8(b"1_1")) < string::length(&name)) {
+            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"1_1")))
+        } else if (string::index_of(&name, &utf8(b"1")) < string::length(&name)) {
+            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"1")))
+        } else {
+            return name
+        }
+    }
+
+    public fun get_name_by_level(base_name:String, level:u8) : String {
+        let name = *&base_name;
+        let level_str;
+        if (level == 1) {
+            level_str = utf8(b"1");
+        } else if (level == 2) {
+            level_str = utf8(b"1_1");
+        } else if (level == 3) {
+            level_str = utf8(b"2");
+        } else if (level == 6) {
+            level_str = utf8(b"2_1");
+        } else {
+            level_str = utf8(b"3");
+        };
+        string::append(&mut name, level_str);
+        name
     }
 }

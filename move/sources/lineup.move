@@ -42,11 +42,17 @@ module auto_chess::lineup {
     }
 
     public fun empty(ctx: &mut TxContext) : LineUp {
+        let vec = vector::empty<Role>();
+        let i = 0;
+        while (i < 6) {
+            vector::push_back(&mut vec, role::empty());
+            i = i + 1;
+        };
         LineUp {
             creator: tx_context::sender(ctx),
             name:utf8(b""),
             role_num: 0,
-            roles: vector::empty<Role>()
+            roles: vec
         }
     }
 
@@ -184,8 +190,6 @@ module auto_chess::lineup {
             let property = string::sub_string(&role_info, index + 1, string::length(&role_info));
             let second_index = string::index_of(&property, &utf8(b":"));
             let life = utils::utf8_to_u64(string::sub_string(&property, 0, second_index));
-            print(&string::sub_string(&property, 0, second_index));
-            print(&life);
             let attack = utils::utf8_to_u64(string::sub_string(&property, second_index + 1, string::length(&property)));
             let role = role::get_role_by_name(role_global, role_name);
             role::set_life(&mut role, life);

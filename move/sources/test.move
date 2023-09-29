@@ -57,17 +57,41 @@ module auto_chess::test {
 
             let chess_nft = take_from_sender<chess::Chess>(test);
             let lineupGlobal = take_shared<lineup::Global>(test);
-            let gold = 3;
-            let str_vec = vector::empty<String>();
-            vector::push_back(&mut str_vec, utf8(b"tank1:8:3"));
-            vector::push_back(&mut str_vec, utf8(b""));
-            vector::push_back(&mut str_vec, utf8(b""));
-            vector::push_back(&mut str_vec, utf8(b"shaman1:5:6"));
-            vector::push_back(&mut str_vec, utf8(b""));
-            vector::push_back(&mut str_vec, utf8(b"fighter1:5:5"));
+            
+            // print_my_cards_pool(&chess_nft);
+
+            let operations = vector::empty<String>();
+
+            // buy operation
+            vector::push_back(&mut operations, utf8(b"buy:4-0"));
+            vector::push_back(&mut operations, utf8(b"refresh"));
+            vector::push_back(&mut operations, utf8(b"buy:1-2"));
+            // vector::push_back(&mut operations, utf8(b"upgrade:2-0"));
+            // swap operation
+            // vector::push_back(&mut operations, utf8(b"swap:0-1"));
+            // vector::push_back(&mut operations, utf8(b"swap:1-3"));
+
+            // sell operation
+            // vector::push_back(&mut operations, utf8(b"sell:5"));
+
+            // refresh operation
+            // vector::push_back(&mut operations, utf8(b"refresh"));
+            
+            // upgrade operation
+            // vector::push_back(&mut operations, utf8(b"upgrad:3-1"));
+
+            let left_gold = 3;
+            let lineup_str_vec = vector::empty<String>();
+            vector::push_back(&mut lineup_str_vec, utf8(b""));
+            vector::push_back(&mut lineup_str_vec, utf8(b"archer1:4:6"));
+            vector::push_back(&mut lineup_str_vec, utf8(b""));
+            vector::push_back(&mut lineup_str_vec, utf8(b"assa1:4:7"));
+            vector::push_back(&mut lineup_str_vec, utf8(b""));
+            vector::push_back(&mut lineup_str_vec, utf8(b""));
             print(&utf8(b"operate my chess"));
-            chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
-            print_my_lineup(&chess_nft);
+
+            chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, &mut chess_nft, operations, left_gold, lineup_str_vec, ctx(test));
+            // print_my_lineup(&chess_nft);
             next_epoch(test, admin);
 
             // // second round
@@ -141,7 +165,7 @@ module auto_chess::test {
             vector::push_back(&mut str_vec, utf8(b""));
             vector::push_back(&mut str_vec, utf8(b"mega1:12:12"));
             print(&utf8(b"operate my chess"));
-            chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
+            // chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, gold, str_vec, &mut chess_nft, ctx(test));
             print_my_lineup(&chess_nft);
             next_epoch(test, admin);
 
