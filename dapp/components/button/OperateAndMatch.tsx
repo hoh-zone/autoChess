@@ -15,12 +15,13 @@ const useOperateAndMatch = () => {
 
     const get_chars_strvec = () => {
         let vec:string[] = [];
-        for (const index in chars) {
+        for (let index = 0; index < chars.length; index++) {
             let cha = chars[index];
-            if (cha == null) {
-                continue
+            if (cha == null || cha == undefined) {
+                vec.push("");
+            } else {
+                vec.push(cha.name + ":" + cha.base_life + ":" + cha.attack);
             }
-            vec.push(cha.name + ":" + cha.base_life + ":" + cha.attack);
         }
         console.log("operate: ",vec);
         return vec;

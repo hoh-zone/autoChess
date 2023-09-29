@@ -50,8 +50,8 @@ var sigin = function (param) {
     return signer;
 };
 var mint_chess = function () {
-    var module = 'role';
-    var fn = 'init_charactos2';
+    var module_name = 'role';
+    var fn = 'init_charactos1';
     var connect = function () { return __awaiter(void 0, void 0, void 0, function () {
         var provider, signer, tx, res, result;
         return __generator(this, function (_a) {
@@ -61,7 +61,7 @@ var mint_chess = function () {
                     signer = sigin({ provider: provider });
                     tx = new sui_js_1.TransactionBlock();
                     res = tx.moveCall({
-                        target: "".concat(constants_js_1.config.PACKAGE_ID, "::").concat(module, "::").concat(fn),
+                        target: "".concat(constants_js_1.config.PACKAGE_ID, "::").concat(module_name, "::").concat(fn),
                         arguments: [tx.object((0, sui_js_1.normalizeSuiObjectId)(constants_js_1.config.ROLE_GLOBAL))],
                     });
                     return [4 /*yield*/, signer.signAndExecuteTransactionBlock({

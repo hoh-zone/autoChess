@@ -19,10 +19,16 @@ export const useSyncGameNFT = () => {
         setLose(nft.lose);
         setName(nft.name);
         setSlotCharacter(nft.lineup.fields.roles.map((role) => {
+            if (role.fields.name == "none") {
+                return null;
+            }
             role.fields.base_life = role.fields.life;
             return role.fields
         }));
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
+            if (role.fields.name == "none") {
+                return null;
+            }
             role.fields.base_life = role.fields.life;
             return role.fields
         }));

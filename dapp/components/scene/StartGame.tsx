@@ -1,5 +1,5 @@
 import { Box, Button, Center, HStack, Img, Input, Modal, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Spinner, Stack, useToast } from "@chakra-ui/react"
-import { moneyA, stageAtom } from "../../store/stages";
+import { moneyA, operationsA, slotCharacterV2, stageAtom } from "../../store/stages";
 import { useAtom } from "jotai";
 import useMintChess from "../button/MintChess";
 import { Character } from "../character/character";
@@ -17,6 +17,7 @@ import { sleep } from "../../utils/sleep";
 import { Instruction } from "../MainInstruction";
 
 export const StartGame = () => {
+    const [chars, setChars] = useAtom(slotCharacterV2);
     const [stage, setStage] = useAtom(stageAtom);
     const { nftObjectId, mint } = useMintChess();
     const [inputValue, setInputValue] = useState('');
@@ -25,7 +26,8 @@ export const StartGame = () => {
     const syncGameNFT = useSyncGameNFT();
     const { status } = ethos.useWallet();
     const [isLoading, setIsLoading] = useState(false);
-
+    const [operations, setOperations] = useAtom(operationsA);
+    
     const fetch = async () => {
         setIsLoading(true);
         const result = await query_chesses();
@@ -82,6 +84,8 @@ export const StartGame = () => {
                                                         onClick={async () => {
                                                             syncGameNFT(nft);
                                                             setStage("shop");
+                                                            setOperations([]);
+                                                            // todo: operations.push(chars.toString());
                                                         }}
                                                     >{"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
                                                     </Button>
@@ -124,6 +128,8 @@ export const StartGame = () => {
                                     if (nft.name == inputValue) {
                                         syncGameNFT(nft);
                                         setStage("shop");
+                                        setOperations([]);
+                                        operations.push(chars.toString());
                                     }
                                 });
                             }, 2000);
@@ -146,6 +152,8 @@ export const StartGame = () => {
                                 if (nft.name == inputValue) {
                                     syncGameNFT(nft);
                                     setStage("shop");
+                                    setOperations([]);
+                                    operations.push(chars.toString());
                                 }
                             });
                         }}

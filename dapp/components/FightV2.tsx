@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
-import { chessId, enemyCharacterV2, stageAtom, winA, loseA, slotCharacterV2 } from "../store/stages";
-import useOperateAndMatch from "./button/OperateAndMatch";
+import { chessId, enemyCharacterV2, stageAtom, winA, loseA, slotCharacterV2, operationsA } from "../store/stages";
+import useOperateAndMatch from "./button/OperateAndMatchV2";
 import useQueryFight from "./button/QueryFightResult";
 import { useFightV2 } from "../hooks/useFight_v2";
 import { useEffect } from "react";
@@ -10,11 +10,11 @@ import { get_chars } from "./character/rawDataV2";
 import { range } from "lodash";
 
 export const FightV2 = () => {
-    // const { nftObjectId, operate_submit } = useOperateAndMatch();
+    const { nftObjectId, operate_submit } = useOperateAndMatch();
     // const { query_fight } = useQueryFight();
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
     const [chars, setChars] = useAtom(slotCharacterV2);
-
+    const [operations, setOperations] = useAtom(operationsA);
     const [stage, setStage] = useAtom(stageAtom);
     const [chess_id] = useAtom(chessId);
     const [win, _setWin] = useAtom(winA);
@@ -58,6 +58,11 @@ export const FightV2 = () => {
                 duration: 2000,
                 isClosable: true,
             })
+            return;
+        }
+        let success = await operate_submit(operations);
+        setOperations([]);
+        if (!success) {
             return;
         }
         init_chars();

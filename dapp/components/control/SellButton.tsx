@@ -1,13 +1,13 @@
 import { Button } from "@chakra-ui/react"
 import { useAtom } from "jotai";
-import { moneyA as moneyAtom, selectedSlot, slotCharacter } from "../../store/stages";
+import { moneyA as moneyAtom, operationsA, selectedSlot, slotCharacter } from "../../store/stages";
 import { get_sell_price } from "../character/rawData";
 
 export const SellButton = () => {
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
     const [chars, setChars] = useAtom(slotCharacter);
     const [money, setMoney] = useAtom(moneyAtom);
-    
+    const [operations, setOperations] = useAtom(operationsA);
     return (
         <Button
             colorScheme='blue'
@@ -19,6 +19,7 @@ export const SellButton = () => {
                     setSlotNumber(null);
                     setChars(chars);
                     setMoney(money + get_sell_price(name));
+                    operations.push("sell:" + slotNumber);
                 }
             }}
         >Sell(

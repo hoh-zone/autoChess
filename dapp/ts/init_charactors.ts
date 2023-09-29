@@ -26,14 +26,14 @@ const sigin = (param: { sBase64?: string; provider: JsonRpcProvider }) => {
 };
 
 export const mint_chess = () => {
-  let module = 'role';
-  let fn = 'init_charactos';
+  let module_name = 'role';
+  let fn = 'init_charactos1';
   const connect = async () => {
     const provider = new JsonRpcProvider(testnetConnection);
     const signer = sigin({ provider });
     const tx = new TransactionBlock();
     let res = tx.moveCall({
-      target: `${config.PACKAGE_ID}::${module}::${fn}`,
+      target: `${config.PACKAGE_ID}::${module_name}::${fn}`,
       arguments: [tx.object(normalizeSuiObjectId(config.ROLE_GLOBAL))],
     });
     const result = await signer.signAndExecuteTransactionBlock({

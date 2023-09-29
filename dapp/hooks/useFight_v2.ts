@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { enemyCharacterV2, enemyFightingIndex, enemyHpChangeA, fightResultEffectA, fightingIndex, hpChangeA, slotCharacterV2, stageAtom } from "../store/stages";
+import { enemyCharacterV2, enemyFightingIndex, enemyHpChangeA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, slotCharacterV2, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import { CharacterFieldsV2 } from "../types/entity";
@@ -8,7 +8,8 @@ export const useFightV2 = () => {
     const [chars, setChars] = useAtom(slotCharacterV2);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
-
+    const [operations, setOperations] = useAtom(operationsA);
+    
     const call_attack = (char: CharacterFieldsV2, enemyChar: CharacterFieldsV2, enemyIndex:number, is_opponent: boolean) => {
         let attack = char.attack;
         enemyChar.life -= attack;
@@ -352,6 +353,8 @@ export const useFightV2 = () => {
             enemyChars[index]!.attack = chr.base_attack;
             enemyChars[index]!.magic = 0;
         })
+        setOperations([]);
+        operations.push(chars.toString());
     }
 
     return useCallback(async () => {

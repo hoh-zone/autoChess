@@ -30,6 +30,7 @@ export const chessId = atom<string>("");
 export const stageAtom = atom<"init" | "shop" | "fight">('init');
 export const selectedShopSlot = atom<number | null>(null);
 export const selectedSlot = atom<number | null>(null);
+export const operationsA = atom<string[]>([]);
 
 
 // effects

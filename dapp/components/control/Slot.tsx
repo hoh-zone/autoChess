@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom } from "../../store/stages"
+import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom, operationsA } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFields } from "../../types/nft";
 import { upgrade } from "../character/rawData";
@@ -22,6 +22,7 @@ export const Slot = ({ isOpponent = false, id }: {
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot);
     const [shopChars, setShopChars] = useAtom(shopCharacter);
     const [money, setMoney] = useAtom(moneyAtom);
+    const [operations, setOperations] = useAtom(operationsA);
     let end = Date.now() + 1 * 1000;
     const level_up_effect = () => {   
         confetti({
@@ -84,9 +85,9 @@ export const Slot = ({ isOpponent = false, id }: {
                     shopChars[shopSlotNumber] = null;
                     setChars(chars.slice());
                     setShopChars(shopChars);
-
                     setShopSlotNumber(null);
                     setSlotNumber(null);
+                    operations.push("buy:" + shopSlotNumber + ":" + id);
                 } else {
                     show_failed_toast()
                 }
@@ -105,6 +106,7 @@ export const Slot = ({ isOpponent = false, id }: {
                         end = Date.now() + 1 * 1000;
                         level_up_effect();
                     }
+                    operations.push("buy_upgrade:" + shopSlotNumber + "-" + id);
                 } else {
                     show_failed_toast()
                 }
@@ -124,14 +126,15 @@ export const Slot = ({ isOpponent = false, id }: {
                         end = Date.now() + 1 * 1000;
                         level_up_effect();
                     }
+                    operations.push("upgrade:" + slotNumber + ":" + id);
                 } else {
                     chars[slotNumber] = temp;
                     setChars(chars);
                     setSlotNumber(null);
                     setShopSlotNumber(null);
+                    operations.push("swap:" + slotNumber + ":" + id);
                 }
-            }
-            else {
+            } else {
                 if (slotNumber == null) {
                     setSlotNumber(id);
                 } else {
