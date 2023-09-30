@@ -1,2 +1,5 @@
 Name, Date, Time duration (h), Task description, Commit id(s)
 SEAN,2023/9/29,6,前端传递操作流数据（完成），链端完成操作流数据的解析验证（80%）,6d52c02a204e188b42539b66509e59f8cf425031
+SEAN,2023/9/30,2,链端数据解析验证对接（完成） 已可以在fightV2中完成操作流合理性验证,"c116e82f3d17f9b7a1b821a7db3561457f43290c
+03695a6a46f3d7c61de4ecf1d6a8865883befb48
+bb96b0e86e0b2453ba00e2b196aa89c86b752944"
