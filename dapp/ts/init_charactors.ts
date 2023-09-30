@@ -27,7 +27,7 @@ const sigin = (param: { sBase64?: string; provider: JsonRpcProvider }) => {
 
 export const mint_chess = () => {
   let module_name = 'role';
-  let fn = 'init_charactos1';
+  let fn = 'init_charactors2';
   const connect = async () => {
     const provider = new JsonRpcProvider(testnetConnection);
     const signer = sigin({ provider });

@@ -114,3 +114,99 @@ export function get_chars(names:string[]) : CharacterFieldsV2[] {
     })
     return chars;
 }
+
+
+export function get_sell_price(char:CharacterFields | null): number {
+    if (!char) {
+        return 0;
+    }
+    let level = char.level;
+    if (level < 3) {
+        return 2
+    } else if (level < 9) {
+        return 6
+    } else {
+        return 8
+    }
+}
+
+export function get_star_num(char:CharacterFields | null) : number {
+    if (!char) {
+        return 0;
+    }
+    let level = char.level;
+    if (level >= 6) {
+        return level / 3;
+    }
+    return level / 3 + 1;
+}
+
+export function get_base_raw_life(char:CharacterFields | null) : number {
+    if (char && char.name) {
+        return roles_info[char.name].life;
+    } else {
+        return 99;
+    }
+}
+
+export function get_effect(char:CharacterFields | null) : string {
+    if (char && char.name) {
+        return roles_info[char.name].effect;
+    } else {
+        return "";
+    }
+}
+
+export function get_effect_value(char:CharacterFields | null) : string {
+    if (char && char.name) {
+        return roles_info[char.name].effect_value;
+    } else {
+        return "";
+    }
+}
+
+export function upgrade(char1:CharacterFields, char2:CharacterFields): CharacterFields {
+    console.log(char1);
+    console.log(char2);
+    // 属性受角色战场永久buff效果影响，合成属性会高于基础值
+    let level1 = char1.level;
+    let name1= char1.name;
+    let life1 = char1.life;
+    let attack1 = char1.attack;
+    let base_life1 = roles_info[name1].max_life;
+    let base_attack1 = roles_info[name1].attack;
+    let life_buff1 = life1 - base_life1;
+    let attack_buff1 = attack1 - base_attack1;
+
+    let level2 = char2.level;
+    let name2 = char2.name;
+    let life2 = char2.life;
+    let attack2 = char2.attack;
+    let base_life2 = roles_info[name2].max_life;
+    let base_attack2 = roles_info[name2].attack;
+    let life_buff2 = life2- base_life2;
+    let attack_buff2 = attack2 - base_attack2;
+
+    let life_buff = Math.max(life_buff1, life_buff2);
+    let attack_buff = Math.max(attack_buff1, attack_buff2);
+
+    let level = level1 > level2 ? level1 : level2;
+    let level_str = "";
+    if (level == 1) {
+        level_str = "1_1";
+    } else if (level == 2) {
+        level_str = "2";
+    } else if (level == 3) {
+        level_str = "2_1";
+    } else if (level == 6) {
+        level_str = "3";
+    }
+    let key = removeSuffix(name1) + level_str
+    let clone = JSON.stringify(roles_info[key]);
+    let res:CharacterFields = JSON.parse(clone);
+    res.attack = res.attack + attack_buff;
+    res.life = res.life + life_buff;
+    res.base_life = res.life;
+    console.log(res);
+    return res;
+}

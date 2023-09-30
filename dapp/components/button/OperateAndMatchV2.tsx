@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
-
+import { useState } from 'react'
 import { ethos, TransactionBlock} from 'ethos-connect';
 import { chessId, moneyA as moneyAtom, slotCharacter} from "../../store/stages";
+import { CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
 import { useAtom } from 'jotai';
-import { addLevelSuffix, removeSuffix } from '../../utils/TextUtils';
 
 const useOperateAndMatch = () => {
     const { wallet } = ethos.useWallet();
@@ -19,68 +18,66 @@ const useOperateAndMatch = () => {
             if (cha == null || cha == undefined) {
                 vec.push("");
             } else {
-                vec.push(cha.name + ":" + cha.base_life + ":" + cha.attack);
+                vec.push(cha.name + ":" + cha.attack + ":" + cha.base_life);
             }
         }
-        
+
         console.log("operate: ",vec);
         return vec;
     }
 
     const operate_submit = async (operations: string[]) => {
         console.log("operations:", operations);
-        get_chars_strvec();
-        return false;
-        // if (!wallet) return;
-        // try {
-        //     const tx = new TransactionBlock();
-        //     const left_gold = money;
-        //     tx.moveCall({
-        //         target: `${PACKAGE_ID}::chess::operate_and_match`,
-        //         arguments: [
-        //             tx.pure(`${CHESS_GLOBAL}`),
-        //             tx.pure(`${ROLE_GLOBAL}`),
-        //             tx.pure(`${LINEUP_GLOBAL}`),
-        //             tx.pure(left_gold),
-        //             tx.pure(get_chars_strvec()),
-        //             tx.pure(operations), // 新增
-        //             tx.pure(chess_id),
-        //         ]
-        //     })
+        if (!wallet) return;
+        try {
+            const tx = new TransactionBlock();
+            const left_gold = money;
+            tx.moveCall({
+                target: `${PACKAGE_ID}::chess::operate_and_match`,
+                arguments: [
+                    tx.pure(`${CHESS_GLOBAL}`),
+                    tx.pure(`${ROLE_GLOBAL}`),
+                    tx.pure(`${LINEUP_GLOBAL}`),
+                    tx.pure(chess_id),
+                    tx.pure(operations),
+                    tx.pure(left_gold),
+                    tx.pure(get_chars_strvec())
+                ]
+            })
 
-        //     const response = await wallet.signAndExecuteTransactionBlock({
-        //         transactionBlock:tx,
-        //         options: {
-        //             showObjectChanges: true,
-        //             showEffects:true,
-        //             showEvents:true,
-        //         }
-        //     });
-        //     if (response.objectChanges) {
-        //         const createObjectChange = response.objectChanges.find(
-        //             (objectChange) => objectChange.type === "created"
-        //         );
-        //         if (!!createObjectChange && "objectId" in createObjectChange) {
-        //             console.log("objid", createObjectChange.objectId);
-        //         }
-        //     }
+            const response = await wallet.signAndExecuteTransactionBlock({
+                transactionBlock:tx,
+                options: {
+                    showObjectChanges: true,
+                    showEffects:true,
+                    showEvents:true,
+                }
+            });
+            if (response.objectChanges) {
+                const createObjectChange = response.objectChanges.find(
+                    (objectChange) => objectChange.type === "created"
+                );
+                if (!!createObjectChange && "objectId" in createObjectChange) {
+                    console.log("objid", createObjectChange.objectId);
+                }
+            }
 
-        //     if (response.events != null) {
-        //         let event_json = response.events[0].parsedJson as any;
-        //         let res = event_json['res']
-        //         if (res == 1) {
-        //             console.log("you win");
-        //         } else if (res == 2) {
-        //             console.log("you lose")
-        //         } else {
-        //             console.log("even");
-        //         }
-        //     }
-        //     return true;
-        // } catch (error) {
-        //     console.log(error);
-        //     return false;
-        // }
+            if (response.events != null) {
+                let event_json = response.events[0].parsedJson as any;
+                let res = event_json['res']
+                if (res == 1) {
+                    console.log("you win");
+                } else if (res == 2) {
+                    console.log("you lose")
+                } else {
+                    console.log("even");
+                }
+            }
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     };
 
     return { nftObjectId, operate_submit };

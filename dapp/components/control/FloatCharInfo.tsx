@@ -5,8 +5,7 @@ import { CharacterFields } from "../../types/nft";
 import { HStack, Img, Stack } from "@chakra-ui/react";
 import { slotCharacter, enemyCharacter, shopCharacter, stageAtom } from "../../store/stages";
 
-import { get_base_raw_life, get_effect, get_star_num } from "../character/rawData";
-import { capitalizeFirstChar, removeSuffix } from "../../utils/TextUtils";
+import { get_base_raw_life, get_effect, get_star_num } from "../character/rawDataV2";
 
 export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
     id: number,

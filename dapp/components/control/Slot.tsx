@@ -4,7 +4,7 @@ import { useAtom } from "jotai"
 import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom, operationsA } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFields } from "../../types/nft";
-import { upgrade } from "../character/rawData";
+import { upgrade } from "../character/rawDataV2";
 import { FloatCharInfo } from "./FloatCharInfo";
 import { HpBar } from "./HpBar";
 import { motion } from "framer-motion";
