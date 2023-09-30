@@ -85,7 +85,7 @@ module auto_chess::test {
             let left_gold = 3;
             let lineup_str_vec = vector::empty<String>();
             vector::push_back(&mut lineup_str_vec, utf8(b""));
-            vector::push_back(&mut lineup_str_vec, utf8(b"tank1_1:8:3"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"tank1_1:3:8"));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
