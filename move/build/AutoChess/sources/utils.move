@@ -1,8 +1,7 @@
 module auto_chess::utils {
     use std::string::{Self, utf8, String};
     use sui::tx_context::{Self, TxContext};
-    use sui::object::{UID, Self};
-    use sui::transfer::{Self};
+    use sui::object::{Self};
     use sui::hash;
     use std::vector;
     use sui::bcs;

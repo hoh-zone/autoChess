@@ -37,8 +37,8 @@ module auto_chess::test {
             
 
             let roleGlobal = take_shared<role::Global>(test);
-            role::init_charactos1(&mut roleGlobal);
-            role::init_charactos2(&mut roleGlobal);
+            role::init_charactors1(&mut roleGlobal);
+            role::init_charactors2(&mut roleGlobal);
             next_epoch(test, admin);
 
             let lineupGlobal = take_shared<lineup::Global>(test);
@@ -129,11 +129,10 @@ module auto_chess::test {
             //TODO: KRISTIE CODE
             let action_list = vector::empty<String>();
             vector::push_back(&mut action_list, utf8(b"b1"));
-            
 
             let roleGlobal = take_shared<role::Global>(test);
-            role::init_charactos1(&mut roleGlobal);
-            role::init_charactos2(&mut roleGlobal);
+            role::init_charactors1(&mut roleGlobal);
+            role::init_charactors2(&mut roleGlobal);
             next_epoch(test, admin);
 
             let lineupGlobal = take_shared<lineup::Global>(test);

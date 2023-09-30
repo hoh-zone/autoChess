@@ -1,5 +1,5 @@
 module auto_chess::effect {
-    use std::string::{utf8, String, Self};
+    use std::string::{utf8};
     use std::vector;
     use std::debug::print;
     use auto_chess::role::{Self, Role};

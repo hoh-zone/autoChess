@@ -6,7 +6,7 @@ module auto_chess::chess {
     use auto_chess::lineup::{Self, LineUp};
     use sui::balance::{Self, Balance};
     use sui::pay;
-    use sui::coin::{Self, Coin, destroy_zero};
+    use sui::coin::{Self, Coin};
     use std::vector;
     use std::debug::print;
     use sui::event;
@@ -219,14 +219,33 @@ module auto_chess::chess {
                     from_role = *vector::borrow<role::Role>(init_roles, from_index);
                     assert!(role::get_name(&from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 };
-
                 let to_role = vector::borrow_mut<role::Role>(init_roles, to_index);
                 assert!(role::get_name(to_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 let res = role::upgrade(role_global, &from_role, to_role);
                 assert!(res, ERR_UPGRADE_FAILED);
-                
                 let from_role_mut = vector::borrow_mut<role::Role>(init_roles, from_index);
                 role::set_name(from_role_mut, utf8(b"none"));
+            } else if (string::index_of(&operate, &utf8(b"buy_upgrade")) == 0) {
+                print(&utf8(b"buy_upgrade operation"));
+                let sub_str = string::sub_string(&operate, 11 + 1, string::length(&operate));
+                let (from_index, to_index) = utils::get_left_right_number(sub_str);
+                let from_role = role::init_role();
+                {
+                    from_role = *vector::borrow<role::Role>(init_roles, from_index);
+                    assert!(role::get_name(&from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
+                };
+                let copy_role = *&from_role;
+                let to_role = vector::borrow_mut<role::Role>(init_roles, to_index);
+                assert!(role::get_name(to_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
+                let res = role::upgrade(role_global, &from_role, to_role);
+                assert!(res, ERR_UPGRADE_FAILED);
+                vector::remove(init_roles, to_index);
+                vector::insert(init_roles, copy_role, to_index);
+                let from_role_mut = vector::borrow_mut<role::Role>(init_roles, from_index);
+                role::set_name(from_role_mut, utf8(b"none"));
+                let price = role::get_price(&copy_role);
+                assert!(gold >= price, ERR_NOT_ENOUGH_GOLD);
+                gold = gold - price;
             } else if (string::index_of(&operate, &utf8(b"refresh")) == 0) {
                 print(&utf8(b"refresh operation"));
                 assert!(gold >= REFRESH_PRICE, ERR_NOT_ENOUGH_GOLD);

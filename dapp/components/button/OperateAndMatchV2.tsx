@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { ethos, TransactionBlock} from 'ethos-connect';
-import { CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
 import { chessId, moneyA as moneyAtom, slotCharacter} from "../../store/stages";
 import { useAtom } from 'jotai';
 import { addLevelSuffix, removeSuffix } from '../../utils/TextUtils';
