@@ -33,6 +33,7 @@ module auto_chess::chess {
     const ERR_UPGRADE_FAILED:u64 = 0x10;
     const ERR_SAME_INDEX_UPGRADE:u64 = 0x11;
     const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x12;
+    const ERR_WRONG_LEFT_GOLD:u64 = 0x13;
 
     struct Global has key {
         id: UID,
@@ -171,7 +172,7 @@ module auto_chess::chess {
         object::delete(id);
     }
 
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, operations: vector<String>, left_gold:u64, lineup_str_vec: vector<String>, ctx:&mut TxContext) {
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let init_lineup = *&chess.lineup;
         let init_roles = lineup::get_mut_roles(&mut init_lineup);
@@ -258,9 +259,9 @@ module auto_chess::chess {
         let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
         let expected_roles = lineup::get_roles(&expected_lineup);
 
-        assert!(role::check_roles_equal(init_roles, expected_roles) , ERR_CHECK_ROLES_NOT_EQUAL);
-
-        chess.gold = left_gold;
+        assert!(role::check_roles_equal(init_roles, expected_roles), ERR_CHECK_ROLES_NOT_EQUAL);
+        assert!(gold == left_gold, ERR_WRONG_LEFT_GOLD);
+        chess.gold = INIT_GOLD;
         chess.lineup = expected_lineup;
         match(global, role_global, lineup_global, chess, ctx);
     }

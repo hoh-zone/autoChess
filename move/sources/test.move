@@ -82,7 +82,7 @@ module auto_chess::test {
             // upgrade operation
             // vector::push_back(&mut operations, utf8(b"upgrad:3-1"));
 
-            let left_gold = 3;
+            let left_gold = 0;
             let lineup_str_vec = vector::empty<String>();
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b"tank1_1:3:8"));
