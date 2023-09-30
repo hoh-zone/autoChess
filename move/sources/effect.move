@@ -125,7 +125,6 @@ module auto_chess::effect {
                 role::set_life(role, 0);
             };
             print(&utf8(b"attack lowest:"));
-            print(role);
         }
     }
 }

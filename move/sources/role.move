@@ -6,9 +6,15 @@ module auto_chess::role {
     use sui::transfer::{Self};
     use std::string;
     use sui::vec_map::{Self, VecMap};
+    use std::vector;
     use auto_chess::utils;
     friend auto_chess::chess;
     friend auto_chess::lineup;
+
+    const ERR_WRONG_LINEUP_LENGTH:u64 = 0x01;
+    const ERR_DIFFERENT_NAME:u64 = 0x02;
+    const ERR_DIFFERENT_LIFE:u64 = 0x03;
+    const ERR_DIFFERENT_ATTACK:u64 = 0x04;
 
     struct Global has key {
         id: UID,
@@ -329,5 +335,24 @@ module auto_chess::role {
         } else {
             8
         }
+    }
+
+    public fun check_roles_equal(roles1: &vector<Role>, roles2: &vector<Role>) : bool {
+        assert!(vector::length(roles1) == 6, ERR_WRONG_LINEUP_LENGTH);
+        assert!(vector::length(roles2) == 6, ERR_WRONG_LINEUP_LENGTH);
+        let i = 0;
+        while (i < 6) {
+            let role1 = vector::borrow(roles1, i);
+            let role2 = vector::borrow(roles2, i);
+            if (role1.name == utf8(b"none") && role2.name == utf8(b"none")) {
+                i = i + 1;
+                continue
+            };
+            assert!(role1.name == role2.name, ERR_DIFFERENT_NAME);
+            assert!(role1.life == role2.life, ERR_DIFFERENT_LIFE);
+            assert!(role1.attack == role2.attack, ERR_DIFFERENT_ATTACK);
+            i = i + 1;
+        };
+        true
     }
 }
