@@ -49,7 +49,6 @@ module auto_chess::chess {
         cards_pool: LineUp,
         gold: u64,
         refresh_price: u8,
-        life: u64,
         win: u8,
         lose: u8,
         even: u8,
@@ -108,7 +107,6 @@ module auto_chess::chess {
             cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
             gold: INIT_GOLD,
             refresh_price: REFRESH_PRICE,
-            life: INIT_LIFE,
             win: 0,
             lose: 0,
             even: 0,
@@ -142,7 +140,6 @@ module auto_chess::chess {
             cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
             gold: INIT_GOLD,
             refresh_price: REFRESH_PRICE,
-            life: INIT_LIFE,
             win: 0,
             lose: 0,
             even: 0,
@@ -164,7 +161,7 @@ module auto_chess::chess {
             lose: chess.lose,
             reward: reward_amount,
         });
-        let Chess {id, name, lineup, cards_pool, gold, refresh_price, life, win, lose, even, creator, arena} = chess;
+        let Chess {id, name, lineup, cards_pool, gold, refresh_price, win, lose, even, creator, arena} = chess;
        
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
         let sui = coin::from_balance(sui_balance, ctx);
@@ -263,7 +260,9 @@ module auto_chess::chess {
         assert!(gold == left_gold, ERR_WRONG_LEFT_GOLD);
         chess.gold = INIT_GOLD;
         chess.lineup = expected_lineup;
-        match(global, role_global, lineup_global, chess, ctx);
+        match(role_global, lineup_global, chess, ctx);
+        global.total_match = global.total_match + 1;
+        print(&utf8(b"match finish"));
     }
 
     public fun get_lineup(chess:&Chess): &LineUp {
@@ -274,9 +273,9 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    fun match(global: &mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    fun match(role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
         print(&utf8(b"start match chess"));
-        assert!(chess.life > 0, ERR_YOU_ARE_DEAD);
+        assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
         let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
@@ -287,12 +286,10 @@ module auto_chess::chess {
         } else {
             lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup);
         };
-        if (chess.life > 0) {
+        if (chess.lose <= 2) {
             refresh_cards_pools(role_global, chess, ctx);
         };
         chess.gold = INIT_GOLD;
-        global.total_match = global.total_match + 1;
-        print(&utf8(b"match finish"));
     }
 
     fun refresh_cards_pools(role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
@@ -322,7 +319,6 @@ module auto_chess::chess {
             if (vector::length(&my_roles) == 0 && role::get_life(&my_first_role) == 0) {
                 print(&utf8(b"I lose"));
                 chess.lose = chess.lose + 1;
-                chess.life = chess.life - 1;
                 event::emit(FightEvent {
                     chess_id: object::id_address(chess),
                     v1: tx_context::sender(ctx),
