@@ -293,7 +293,6 @@ module auto_chess::chess {
     }
 
     fun refresh_cards_pools(role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
-        let seed = 20;
         chess.cards_pool = lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(chess.win,chess.lose), ctx);
     }
 
@@ -329,29 +328,164 @@ module auto_chess::chess {
         value
     }
 
-    fun call_skill(role: &Role, _: &mut Role) {
-        print(&role::get_name(role));
-        print(&utf8(b"call the skill"));
+
+    fun call_skill(role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>) {
+        let effect = role::get_effect(role);
+        let effect_value = role::get_effect_value(role);
+
+        print(&utf8(b"skill"));
+        print(&effect);
+
+        let is_forbid_buff = false;
+        let is_forbid_debuff = false;
+
+        let i = 0;
+        let len = vector::length(enemy_roles);
+        while (i < len) {
+            let role = vector::borrow(enemy_roles, i);
+            let effect = role::get_effect(role);
+            if (effect == utf8(b"forbid_buff")) {
+                is_forbid_buff = true;
+            };
+            if (effect == utf8(b"forbid_debuff")) {
+                is_forbid_debuff = true;
+            };
+            if (is_forbid_buff && is_forbid_debuff) {
+                break
+            };
+            i = i + 1;
+        };
+
+        if (effect == utf8(b"aoe")) {
+            let i = 0;
+            let attack = utils::utf8_to_u64(effect_value);
+            safe_attack(attack, enemy_role);
+            while (i < len) {
+                let char = vector::borrow_mut(enemy_roles, i);
+                safe_attack(attack, role);
+                i = i + 1;
+            };
+        } else if (effect == utf8(b"add_all_tmp_hp")) {
+            if (is_forbid_buff) {
+                print(&utf8(b"buff forbiden"));
+                return
+            };
+            let add_hp = utils::utf8_to_u64(effect_value);
+            let life = role::get_life(role);
+            role::set_life(role, life + add_hp);
+            while (i < len) {
+                let char = vector::borrow_mut(my_roles, i);
+                safe_add_hp(add_hp, char);
+                i = i + 1;
+            };
+        } else if (effect == utf8(b"add_all_tmp_attack")) {
+            if (is_forbid_buff) {
+                print(&utf8(b"buff forbiden"));
+                return
+            };
+            let add_attack = utils::utf8_to_u64(effect_value);
+            let attack = role::get_life(role);
+            role::set_attack(role, attack + add_attack);
+            while (i < len) {
+                let char = vector::borrow_mut(my_roles, i);
+                safe_add_attack(add_attack, char);
+                i = i + 1;
+            };
+        } else if (effect == utf8(b"reduce_all_tmp_attack")) {
+            if (is_forbid_debuff) {
+                print(&utf8(b"debuff forbiden"));
+                return
+            };
+            let reduce_attack = utils::utf8_to_u64(effect_value);
+            let attack = role::get_life(enemy_role);
+            safe_reduce_attack(reduce_attack, enemy_role);
+            while (i < len) {
+                let char = vector::borrow_mut(enemy_roles, i);
+                safe_reduce_attack(reduce_attack, char);
+                i = i + 1;
+            };
+        } else if (effect == utf8(b"attack_sputter_to_second_by_percent")) {
+            let percent_by_ten = utils::utf8_to_u64(effect_value);
+            let base_attack = role::get_attack(role);
+            let suppter_attack = base_attack * percent_by_ten / 10;
+            safe_attack(base_attack, enemy_role);
+            if (vector::length(enemy_roles) == 0) {
+                return;
+            };
+            let next_one = vector::borrow_mut(enemy_roles, 0);
+            safe_attack(suppter_attack, next_one);
+        } else if (effect == utf8(b"attack_last_char")) {
+            let effect_attack = utils::utf8_to_u64(effect_value);
+            let attack = role::get_attack(role);
+            safe_attack(attack, enemy_role);
+            if (vector::length(enemy_roles) == 0) {
+                safe_attack(effect_attack, enemy_role);
+            } else {
+                let len = vector::length(enemy_roles);
+                let last_one = vector::borrow_mut(enemy_roles, len - 1);
+                safe_attack(effect_attack, last_one);
+            }
+        } 
     }
 
-    fun call_attack(role: &Role, other_role: &mut Role) {
-        let attack = role::get_attack(role);
-        let enemy_life = role::get_life(other_role);
-        if (enemy_life <= attack) {
+
+
+    fun safe_reduce_attack(reduce_value:u64, role: &mut Role) {
+        let char_life = role::get_life(role);
+        let char_attack = role::get_attack(role);
+        if (char_life == 0) {
+            return;
+        };
+        if (char_attack <= reduce_value) {
+            role::set_attack(role, 1);
+        } else {
+            role::set_attack(role, char_attack - reduce_value);
+        }
+    }
+
+    fun safe_add_attack(add_value:u64, role: &mut Role) {
+        let char_life = role::get_life(role);
+        let char_attack = role::get_attack(role);
+        if (char_life == 0) {
+            return;
+        };
+        role::set_attack(role, char_attack + add_value);
+    }
+
+    fun safe_add_hp(add_value:u64, role: &mut Role) {
+        // todo:check max life?
+        let char_life = role::get_life(role);
+        if (char_life == 0) {
+            return
+        };
+        role::set_life(role, char_life + add_value);
+    }
+
+    fun safe_attack(attack:u64, other_role:&mut Role) {
+        let other_life = role::get_life(other_role);
+        if (other_life <= attack) {
             role::set_life(other_role, 0);
             print(&role::get_name(other_role));
             print(&utf8(b"is dead"));
         } else {
-            role::set_life(other_role, enemy_life - attack);
+            role::set_life(other_role, other_life - attack);
         };
     }
 
+    fun call_attack(role: &Role, other_role: &mut Role) {
+        let attack = role::get_attack(role);
+        print(&utf8(b"attack"));
+        print(&attack);
+        safe_attack(attack, other_role);
+    }
+
     fun action(role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>) {
+        print(&role::get_name(role));
         let extra_max_magic_debuff = get_extra_max_magic_debuff(enemy_roles);
         let max_magic = role::get_max_magic(role);
         let magic = role::get_magic(role);
         if (magic >= (max_magic + extra_max_magic_debuff) && role::get_effect_type(role) == utf8(b"skill")) {
-            call_skill(role, enemy_role);
+            call_skill(role, enemy_role, my_roles, enemy_roles);
             role::set_magic(role, 0);
         } else {
             call_attack(role, enemy_role);

@@ -58,15 +58,15 @@ module auto_chess::test {
             let chess_nft = take_from_sender<chess::Chess>(test);
             let lineupGlobal = take_shared<lineup::Global>(test);
             
-            // print_my_cards_pool(&chess_nft);
+            print_my_cards_pool(&chess_nft);
 
             let operations = vector::empty<String>();
 
             // buy operation
-            vector::push_back(&mut operations, utf8(b"buy:4-1"));
-            vector::push_back(&mut operations, utf8(b"refresh"));
-            vector::push_back(&mut operations, utf8(b"buy_upgrade:1-1"));
-            vector::push_back(&mut operations, utf8(b"refresh"));
+            vector::push_back(&mut operations, utf8(b"buy:0-0"));
+            vector::push_back(&mut operations, utf8(b"buy:1-1"));
+            vector::push_back(&mut operations, utf8(b"buy:2-2"));
+            // vector::push_back(&mut operations, utf8(b"refresh"));
             // vector::push_back(&mut operations, utf8(b"upgrade:0-1"));
 
             // swap operation
@@ -82,11 +82,11 @@ module auto_chess::test {
             // upgrade operation
             // vector::push_back(&mut operations, utf8(b"upgrad:3-1"));
 
-            let left_gold = 0;
+            let left_gold = 1;
             let lineup_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup_str_vec, utf8(b""));
-            vector::push_back(&mut lineup_str_vec, utf8(b"tank1_1:3:8"));
-            vector::push_back(&mut lineup_str_vec, utf8(b""));
+            vector::push_back(&mut lineup_str_vec, utf8(b"fighter1:4:6"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"cleric1:3:5"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"fireMega1:6:5"));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
