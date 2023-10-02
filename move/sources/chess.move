@@ -10,7 +10,7 @@ module auto_chess::chess {
     use std::vector;
     use std::debug::print;
     use sui::event;
-    use auto_chess::role;
+    use auto_chess::role::{Self, Role};
     use auto_chess::utils;
     use auto_chess::effect;
     use sui::sui::SUI;
@@ -297,6 +297,68 @@ module auto_chess::chess {
         chess.cards_pool = lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(chess.win,chess.lose), ctx);
     }
 
+    fun some_alive(first_role: &Role, roles: &vector<Role>) : bool {
+        let i = 0;
+        if (role::get_name(first_role) != utf8(b"init") && role::get_life(first_role) > 0) {
+            return true
+        };
+        while (i < vector::length(roles)) {
+            let role = vector::borrow(roles, i);
+            if (role::get_name(role) != utf8(b"none") && role::get_life(role) > 0) {
+                return true
+            };
+            i = i + 1;
+        };
+        return false
+    }
+
+    fun get_extra_max_magic_debuff(roles: &vector<Role>): u8 {
+        let value:u8 = 0;
+        let len = vector::length(roles);
+        let i = 0;
+        while (i < len) {
+            let role = vector::borrow(roles, i);
+            if (role::get_effect(role)== utf8(b"add_all_tmp_max_magic")) {
+                let tmp = (utils::utf8_to_u64(role::get_effect_value(role)) as u8);
+                if (tmp > value) {
+                    value = tmp;
+                }
+            };
+            i = i + 1;
+        };
+        value
+    }
+
+    fun call_skill(role: &Role, _: &mut Role) {
+        print(&role::get_name(role));
+        print(&utf8(b"call the skill"));
+    }
+
+    fun call_attack(role: &Role, other_role: &mut Role) {
+        let attack = role::get_attack(role);
+        let enemy_life = role::get_life(other_role);
+        if (enemy_life <= attack) {
+            role::set_life(other_role, 0);
+            print(&role::get_name(other_role));
+            print(&utf8(b"is dead"));
+        } else {
+            role::set_life(other_role, enemy_life - attack);
+        };
+    }
+
+    fun action(role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>) {
+        let extra_max_magic_debuff = get_extra_max_magic_debuff(enemy_roles);
+        let max_magic = role::get_max_magic(role);
+        let magic = role::get_magic(role);
+        if (magic >= (max_magic + extra_max_magic_debuff) && role::get_effect_type(role) == utf8(b"skill")) {
+            call_skill(role, enemy_role);
+            role::set_magic(role, 0);
+        } else {
+            call_attack(role, enemy_role);
+            role::set_magic(role, magic + 1);
+        };
+    }
+
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext):bool {
         let my_lineup_fight = *&chess.lineup;
 
@@ -314,49 +376,52 @@ module auto_chess::chess {
         };
         let my_first_role = role::init_role();
         let enemy_first_role = role::init_role();
-        while (true) {
-            // check game end condition
-            if (vector::length(&my_roles) == 0 && role::get_life(&my_first_role) == 0) {
-                print(&utf8(b"I lose"));
-                chess.lose = chess.lose + 1;
-                event::emit(FightEvent {
-                    chess_id: object::id_address(chess),
-                    v1: tx_context::sender(ctx),
-                    v1_name: chess.name,
-                    v1_win: chess.win,
-                    v1_lose: chess.lose,
-                    v2_name: lineup::get_name(enemy_lineup),
-                    v2_lineup:*enemy_lineup,
-                    res: 2
-                });
-                chess.lineup = my_lineup_permanent;
-                return false
-            };
-            if (vector::length(&enemy_roles) == 0 && role::get_life(&enemy_first_role) == 0) {
-                chess.win = chess.win + 1;
-                print(&utf8(b"I win, my left lineup:"));
-                event::emit(FightEvent {
-                    chess_id: object::id_address(chess),
-                    v1: tx_context::sender(ctx),
-                    v1_name: chess.name,
-                    v1_win: chess.win,
-                    v1_lose: chess.lose, 
-                    v2_name: lineup::get_name(enemy_lineup),
-                    v2_lineup:*enemy_lineup,
-                    res: 1
-                });
-                chess.lineup = my_lineup_permanent;
-                return true
-            };
+        while (some_alive(&my_first_role, &my_roles) && some_alive(&enemy_first_role, &enemy_roles)) {
             while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
                 my_first_role = vector::pop_back(&mut my_roles);
             };
             while (vector::length(&enemy_roles) > 0 && (role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init")))) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
             };
-            combat(&mut my_lineup_fight, &mut my_lineup_permanent, &mut enemy_lineup_fight, &mut my_first_role, &mut enemy_first_role);
+            while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
+                print(&utf8(b"we action:"));
+                action(&mut my_first_role, &mut enemy_first_role, &mut my_roles, &mut enemy_roles);
+                print(&utf8(b"enemy action:"));
+                action(&mut enemy_first_role, &mut my_first_role, &mut enemy_roles, &mut my_roles);
+            };
         };
-        false
+
+        if (some_alive(&enemy_first_role, &enemy_roles)) {
+            print(&utf8(b"I lose"));
+            chess.lose = chess.lose + 1;
+            event::emit(FightEvent {
+                chess_id: object::id_address(chess),
+                v1: tx_context::sender(ctx),
+                v1_name: chess.name,
+                v1_win: chess.win,
+                v1_lose: chess.lose,
+                v2_name: lineup::get_name(enemy_lineup),
+                v2_lineup:*enemy_lineup,
+                res: 2
+            });
+            chess.lineup = my_lineup_permanent;
+            false
+        } else {
+            print(&utf8(b"I win, my left lineup:"));
+            chess.win = chess.win + 1;
+            event::emit(FightEvent {
+                chess_id: object::id_address(chess),
+                v1: tx_context::sender(ctx),
+                v1_name: chess.name,
+                v1_win: chess.win,
+                v1_lose: chess.lose, 
+                v2_name: lineup::get_name(enemy_lineup),
+                v2_lineup:*enemy_lineup,
+                res: 1
+            });
+            chess.lineup = my_lineup_permanent;
+            true
+        }
     }
 
     fun combat(my_lineup_fight: &mut LineUp, my_lineup_permanent: &mut LineUp, enemy_lineup_fight: &mut LineUp, role1:&mut role::Role, role2:&mut role::Role) {
