@@ -72,6 +72,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ChakraProvider>
         <Head>
           <title>Ethos Connect Example App</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
         </Head>
         <Component {...pageProps} />
         <audio ref={audioRef} autoPlay>

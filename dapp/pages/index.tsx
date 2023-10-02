@@ -76,7 +76,7 @@ const Home: NextPage = () => {
       </div>
       }
       <canvas ref={canvasRef} className="absolute h-[100vh] w-[100vw] z-50 pointer-events-none" />
-      <Stack className="h-[100vh] w-[100vw] bg-slate-600" gap={0}>
+      <Stack className="w-[100vw] bg-slate-600" gap={0}>
         {stage === "init" && <StartGame />}
         {(stage === "shop" || stage == "fight") && <Header />}
         {stage === "fight" && <FightScene />}
