@@ -122,17 +122,35 @@ export const useFightV2 = () => {
     const call_skill = (char: CharacterFieldsV2, enemy: CharacterFieldsV2, is_opponent:boolean) => {
         let effect = char.effect;
         let value = parseInt(char.effect_value);
+        let is_forbid_buff = false;
+        let is_forbid_debuff = false;
 
-        // todo:这几个循环可以优化成一个
-        let is_forbid_buff = has_effect(is_opponent, "forbid_buff");
-        let is_forbid_debuff = has_effect(is_opponent, "forbid_debuff");
+        let target_group;
+        if (is_opponent) {
+            target_group = chars;
+        } else {
+            target_group = enemyChars;
+        }
+        for (const character of target_group) {
+            if (character != null && character.life > 0) {
+                if (character.effect === "forbid_buff") {
+                    is_forbid_buff = true;
+                };
+                if (character.effect === "forbid_debuff") {
+                    is_forbid_debuff = true;
+                };
+            }
+            if (is_forbid_debuff && is_forbid_buff) {
+                break;
+            };
+        }
 
         if (is_opponent) {
             console.log("敌人:",char.name, " 释放技能:", char.effect, ":", value);
         } else {
             console.log("我军:", char.name, " 释放技能:", char.effect, ":", value);
         }
-        let target_group;
+
         if (effect == "aoe") {
             target_group = get_target_group(is_opponent, true);
             target_group.map((ele:CharacterFieldsV2 | null, index:number) => {
@@ -149,9 +167,9 @@ export const useFightV2 = () => {
             }
             target_group = get_target_group(is_opponent, false);
             target_group.map((ele:CharacterFieldsV2 | null, index:number)=>{
-                if (ele == null) {
+                if (ele == null || ele.life <= 0) {
                     return;
-                }
+                };
                 ele.life += value;
             });
             console.log("全体加血:", value);
@@ -169,6 +187,20 @@ export const useFightV2 = () => {
                 ele.attack += value;
             });
             console.log("全体加攻:", value);
+            set_target_group(target_group, is_opponent, false);
+        } else if (effect == "all_max_hp_to_back1") {
+            if (is_forbid_buff) {
+                console.log("触发特效: 加buff失败")
+                return;
+            }
+            let next_one = find_next_alive_char_index(is_opponent);
+            if (next_one == null) {
+                return;
+            }
+            target_group = get_target_group(is_opponent, false);
+            target_group[next_one]!.max_life += value;
+            target_group[next_one]!.life += value;
+            console.log("触发后一个角色永久生命值增加:", value);
             set_target_group(target_group, is_opponent, false);
         } else if (effect == "reduce_all_tmp_attack") {
             if (is_forbid_debuff) {
@@ -199,26 +231,13 @@ export const useFightV2 = () => {
             console.log("造成溅射伤害:", suppter_attack);
         } else if (effect == "attack_last_char") {
             target_group = get_target_group(is_opponent, true);
+            // 如果对手第一个就是最后一个，则基础伤害+效果伤害。
             let last_one_index = find_last_one_index(!is_opponent);
             if (last_one_index == null) {
                 return;
             }
             target_group[last_one_index]!.life -= value;
             console.log("攻击最后一名角色:", target_group[last_one_index]?.name, value);
-        } else if (effect == "all_max_hp_to_back1") {
-            if (is_forbid_buff) {
-                console.log("触发特效: 加buff失败")
-                return;
-            }
-            let next_one = find_next_alive_char_index(is_opponent);
-            if (next_one == null) {
-                return;
-            }
-            target_group = get_target_group(is_opponent, false);
-            target_group[next_one]!.max_life += value;
-            target_group[next_one]!.life += value;
-            console.log("触发后一个角色永久生命值增加:", value);
-            set_target_group(target_group, is_opponent, false);
         } else if (effect == "reduce_tmp_attack") {
             if (is_forbid_debuff) {
                 console.log("触发特效: 加debuff失败")
@@ -236,7 +255,7 @@ export const useFightV2 = () => {
             }
             target_group = get_target_group(is_opponent, false);
             target_group.map((ele:CharacterFieldsV2 | null, index:number)=>{
-                if (ele == null) {
+                if (ele == null || index == fight_index) {
                     return;
                 }
                 ele.magic += value;
