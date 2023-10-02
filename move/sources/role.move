@@ -172,13 +172,13 @@ module auto_chess::role {
         let max_roles_per_level = vec_map::size(&global.charactors) / 5;
         let index = random % max_roles_per_level;
         if (level == 1) {
-            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 5 * index);
+            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 5 * index);
             *role
         } else if (level == 3) {
-           let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 1 + 5 * index);
+           let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 1 + 5 * index);
             *role
         } else {
-            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 2 + 5 * index);
+            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 2 + 5 * index);
             *role
         }
     }

@@ -34,6 +34,7 @@ module auto_chess::chess {
     const ERR_SAME_INDEX_UPGRADE:u64 = 0x11;
     const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x12;
     const ERR_WRONG_LEFT_GOLD:u64 = 0x13;
+    const INVALID_INDEX:u64 = 10000;
 
     struct Global has key {
         id: UID,
@@ -329,7 +330,7 @@ module auto_chess::chess {
     }
 
 
-    fun call_skill(role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>) {
+    fun call_skill(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: LineUp) {
         let effect = role::get_effect(role);
         let effect_value = role::get_effect_value(role);
 
@@ -340,8 +341,9 @@ module auto_chess::chess {
         let is_forbid_debuff = false;
 
         let i = 0;
-        let len = vector::length(enemy_roles);
-        while (i < len) {
+        let enemy_len = vector::length(enemy_roles);
+        let my_len = vector::length(my_roles);
+        while (i < enemy_len) {
             let role = vector::borrow(enemy_roles, i);
             let effect = role::get_effect(role);
             if (effect == utf8(b"forbid_buff")) {
@@ -357,10 +359,10 @@ module auto_chess::chess {
         };
 
         if (effect == utf8(b"aoe")) {
-            let i = 0;
             let attack = utils::utf8_to_u64(effect_value);
             safe_attack(attack, enemy_role);
-            while (i < len) {
+            let i = 0;
+            while (i < enemy_len) {
                 let char = vector::borrow_mut(enemy_roles, i);
                 safe_attack(attack, role);
                 i = i + 1;
@@ -373,7 +375,8 @@ module auto_chess::chess {
             let add_hp = utils::utf8_to_u64(effect_value);
             let life = role::get_life(role);
             role::set_life(role, life + add_hp);
-            while (i < len) {
+            let i = 0;
+            while (i < my_len) {
                 let char = vector::borrow_mut(my_roles, i);
                 safe_add_hp(add_hp, char);
                 i = i + 1;
@@ -386,11 +389,48 @@ module auto_chess::chess {
             let add_attack = utils::utf8_to_u64(effect_value);
             let attack = role::get_life(role);
             role::set_attack(role, attack + add_attack);
-            while (i < len) {
+            let i = 0;
+            while (i < my_len) {
                 let char = vector::borrow_mut(my_roles, i);
                 safe_add_attack(add_attack, char);
                 i = i + 1;
             };
+        } else if (effect == utf8(b"add_all_tmp_magic")) {
+            if (is_forbid_buff) {
+                print(&utf8(b"buff forbiden"));
+                return
+            };
+            let add_magic = (utils::utf8_to_u64(effect_value) as u8);
+            let magic = role::get_magic(role);
+            let i = 0;
+            while (i < my_len) {
+                let char = vector::borrow_mut(my_roles, i);
+                let magic = role::get_magic(char);
+                role::set_magic(char, magic + add_magic);
+                i = i + 1;
+            };
+        } else if (effect == utf8(b"all_max_hp_to_back1")) {
+            if (is_forbid_buff) {
+                print(&utf8(b"buff forbiden"));
+                return
+            };
+            let add_hp = utils::utf8_to_u64(effect_value);
+            let roles = lineup::get_mut_roles(&mut my_lineup_permanent);
+            if (role_index == 5) {
+                return
+            };
+            // todo: reverse check
+            let back_char = vector::borrow_mut(roles, role_index + 1);
+            let life = role::get_life(back_char);
+            role::set_life(back_char, life + add_hp);
+        } else if (effect == utf8(b"reduce_tmp_attack")) {
+            if (is_forbid_debuff) {
+                print(&utf8(b"debuff forbiden"));
+                return
+            };
+            let reduce_attack = utils::utf8_to_u64(effect_value);
+            let attack = role::get_life(enemy_role);
+            safe_reduce_attack(reduce_attack, enemy_role);
         } else if (effect == utf8(b"reduce_all_tmp_attack")) {
             if (is_forbid_debuff) {
                 print(&utf8(b"debuff forbiden"));
@@ -399,7 +439,8 @@ module auto_chess::chess {
             let reduce_attack = utils::utf8_to_u64(effect_value);
             let attack = role::get_life(enemy_role);
             safe_reduce_attack(reduce_attack, enemy_role);
-            while (i < len) {
+            let i = 0;
+            while (i < enemy_len) {
                 let char = vector::borrow_mut(enemy_roles, i);
                 safe_reduce_attack(reduce_attack, char);
                 i = i + 1;
@@ -421,14 +462,44 @@ module auto_chess::chess {
             if (vector::length(enemy_roles) == 0) {
                 safe_attack(effect_attack, enemy_role);
             } else {
-                let len = vector::length(enemy_roles);
-                let last_one = vector::borrow_mut(enemy_roles, len - 1);
+                let last_one = vector::borrow_mut(enemy_roles, enemy_len - 1);
                 safe_attack(effect_attack, last_one);
             }
+        } else if (effect == utf8(b"attack_lowest_hp")) {
+            let attack = utils::utf8_to_u64(effect_value);
+            let role = find_lowest_life_one(enemy_role, enemy_roles);
+            safe_attack(attack, role);
+        } else if (effect == utf8(b"attack_by_life_percent")) {
+            let value = utils::utf8_to_u64(effect_value);
+            let enemy_life = role::get_life(enemy_role);
+            let base_attack = role::get_attack(role);
+            let extra_attack = enemy_life * value / 10;
+            safe_attack(base_attack + extra_attack, role);
         } 
     }
 
-
+    fun find_lowest_life_one(default_role: &mut Role, roles: &mut vector<Role>) : &mut Role {
+        let min_hp = INVALID_INDEX;
+        let min_hp_index = INVALID_INDEX;
+        let len = vector::length(roles);
+        if (len == 0) {
+            return default_role;
+        };
+        let i = 0;
+        while(i < len) {
+            let role = vector::borrow(roles, i);
+            let life = role::get_life(role);
+            if (life > 0 && life < min_hp) {
+                min_hp = life;
+                min_hp_index = i;
+            };
+            i = i + 1;
+        };
+        if (min_hp_index != INVALID_INDEX) {
+            return vector::borrow_mut(roles, min_hp_index)
+        };
+        return default_role
+    }
 
     fun safe_reduce_attack(reduce_value:u64, role: &mut Role) {
         let char_life = role::get_life(role);
@@ -447,7 +518,7 @@ module auto_chess::chess {
         let char_life = role::get_life(role);
         let char_attack = role::get_attack(role);
         if (char_life == 0) {
-            return;
+            return
         };
         role::set_attack(role, char_attack + add_value);
     }
@@ -479,13 +550,13 @@ module auto_chess::chess {
         safe_attack(attack, other_role);
     }
 
-    fun action(role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>) {
+    fun action(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: LineUp) {
         print(&role::get_name(role));
         let extra_max_magic_debuff = get_extra_max_magic_debuff(enemy_roles);
         let max_magic = role::get_max_magic(role);
         let magic = role::get_magic(role);
         if (magic >= (max_magic + extra_max_magic_debuff) && role::get_effect_type(role) == utf8(b"skill")) {
-            call_skill(role, enemy_role, my_roles, enemy_roles);
+            call_skill(role_index, role, enemy_role_index, enemy_role, my_roles, enemy_roles, my_lineup_permanent);
             role::set_magic(role, 0);
         } else {
             call_attack(role, enemy_role);
@@ -504,24 +575,31 @@ module auto_chess::chess {
         let my_num = vector::length(&my_roles);
         let enemy_roles = *lineup::get_roles(&enemy_lineup_fight);
         vector::reverse<role::Role>(&mut enemy_roles);
-        let enemy_num = vector::length(&enemy_roles);
         if (my_num == 0) {
             return false
         };
         let my_first_role = role::init_role();
         let enemy_first_role = role::init_role();
+        let my_fist_role_index = 0;
+        let enemy_first_role_index = 0;
         while (some_alive(&my_first_role, &my_roles) && some_alive(&enemy_first_role, &enemy_roles)) {
             while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
                 my_first_role = vector::pop_back(&mut my_roles);
+                if (vector::length(&my_roles) < 5) {
+                    my_fist_role_index = my_fist_role_index + 1;
+                };
             };
             while (vector::length(&enemy_roles) > 0 && (role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init")))) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
+                if (vector::length(&enemy_roles) < 5) {
+                    enemy_first_role_index = enemy_first_role_index + 1;
+                };
             };
             while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
                 print(&utf8(b"we action:"));
-                action(&mut my_first_role, &mut enemy_first_role, &mut my_roles, &mut enemy_roles);
+                action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
                 print(&utf8(b"enemy action:"));
-                action(&mut enemy_first_role, &mut my_first_role, &mut enemy_roles, &mut my_roles);
+                action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
             };
         };
 
@@ -556,37 +634,6 @@ module auto_chess::chess {
             chess.lineup = my_lineup_permanent;
             true
         }
-    }
-
-    fun combat(my_lineup_fight: &mut LineUp, my_lineup_permanent: &mut LineUp, enemy_lineup_fight: &mut LineUp, role1:&mut role::Role, role2:&mut role::Role) {
-        let enemy_lineup_permnent = copy enemy_lineup_fight;
-
-        // todo: for test : before start, call the effect skill
-        effect::call_my_effect(role1, my_lineup_fight, my_lineup_permanent, enemy_lineup_fight);
-        effect::call_enemy_effect(role2, enemy_lineup_fight, my_lineup_fight);
-
-        let life1 = role::get_life(role1);
-        let life2 = role::get_life(role2);
-
-        let attack1 = role::get_attack(role1);
-        let attack2 = role::get_attack(role2);
-        while (life1 != 0 && life2 != 0) {
-            if (life1 > attack2 && attack1 >= life2) {
-                role::set_life(role1, life1 - attack2);
-                role::set_life(role2, 0);
-            } else if (life2 > attack1 && attack2 >= life1) {
-                role::set_life(role1, 0);
-                role::set_life(role2, life2 - attack1);
-            } else if (life1 > attack2 && life2 > attack1) {
-                role::set_life(role1, life1 - attack2);
-                role::set_life(role2, life2 - attack1);
-            } else if (attack1 >= life2 && attack2 >= life1) {
-                role::set_life(role1, 0);
-                role::set_life(role2, 0);
-            } else {};
-            life1 = role::get_life(role1);
-            life2 = role::get_life(role2);
-        };
     }
 
     public fun get_total_chesses(global: &Global) : u64 {
