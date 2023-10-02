@@ -1,8 +1,9 @@
 import { ethos } from "ethos-connect";
 import { Button, Tooltip } from "@chakra-ui/react";
+import { getVw } from '../utils/index';
 
 export const CharInstruction = () => {
-    return <Tooltip maxWidth="900px" label={
+    return <Tooltip maxWidth={getVw(900)} label={
         <div>
             <p>Charactor Features:</p>
             <br/>

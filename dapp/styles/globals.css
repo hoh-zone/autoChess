@@ -7,6 +7,8 @@ body {
   padding: 0;
   margin: 0;
   font-family: PixcelFont;
+  overflow-x: hidden;
+  font-size: 1vw;
 }
 
 div {
