@@ -39,7 +39,7 @@ const roles_info: Roles = {
     "mega1": {name: "mega1",level: 1,attack:  4, life: 7, magic: 0, base_attack: 4, max_life: 7, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "4"},
     "mega1_1": {name: "mega1_1",level: 2,attack:  4, life: 7, magic: 0, base_attack: 4, max_life: 7, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "4"},
     "mega2": {name: "mega2",level: 3,attack:  8, life: 14, magic: 0, base_attack: 8, max_life: 14, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "8"},
-    "mega2_1": {name: "mega2_1",level: 3,attack:  8, life: 14, magic: 0, base_attack: 8, max_life: 14, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "8"},
+    "mega2_1": {name: "mega2_1",level: 6,attack:  8, life: 14, magic: 0, base_attack: 8, max_life: 14, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "8"},
     "mega3": {name: "mega3",level: 9,attack:  16, life: 35, magic: 0, base_attack: 16, max_life: 35, max_magic: 2, effect_type: "skill", effect: "aoe", effect_value: "16"},
 
     "shaman1": {name: "shaman1",level: 1,attack:  5, life: 6, magic: 0, base_attack: 5, max_life: 6, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
@@ -121,14 +121,16 @@ export function get_buy_price(char:CharacterFields | null): number {
         return 0;
     }
     let level = char.level;
-    if (level < 3) {
+    if (level == 1) {
         return 3
-    } else if (level < 6) {
-        return 5   
-    }else if (level < 9) {
+    } else if (level == 2) {
+        return 5;  
+    } else if (level == 3) {
         return 8
-    } else {
+    }else if (level == 6) {
         return 9
+    } else {
+        return 10
     }
 }
 
@@ -200,6 +202,6 @@ export function upgrade(char1:CharacterFields, char2:CharacterFields): Character
     res.attack = res.attack + attack_buff;
     res.life = res.life + life_buff;
     res.max_life = res.life;
-    console.log(res);
+    console.log("upgrade:", res);
     return res;
 }

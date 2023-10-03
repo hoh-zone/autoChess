@@ -26,6 +26,7 @@ export const useSyncGameNFT = () => {
             role.fields.magic = 0;
             return role.fields
         }));
+        console.log("nft:", nft.lineup);
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
             if (role.fields.name == "none") {
                 return null;

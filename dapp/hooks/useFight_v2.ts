@@ -260,10 +260,13 @@ export const useFightV2 = () => {
             if (next_one == null) {
                 return;
             }
+
             target_group = get_target_group(is_opponent, false);
-            target_group[next_one]!.max_life += value;
-            target_group[next_one]!.life += value;
+            console.log("check1:", target_group[next_one]!.max_life, target_group[next_one]!.life, value);
+            target_group[next_one]!.max_life =  Number(target_group[next_one]!.max_life) + Number(value);
+            target_group[next_one]!.life = Number(target_group[next_one]!.life) + Number(value);
             console.log("触发后一个角色永久生命值增加:", value);
+            console.log("check2:", target_group[next_one]!.max_life, target_group[next_one]!.life, value);
             if (is_opponent) {
                 enemyHpChange[next_one] = value;
             } else {
@@ -447,7 +450,8 @@ export const useFightV2 = () => {
 
     const action = async (char:CharacterFields, enemy:CharacterFields, enemyIndex:number, is_opponent:boolean) => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
-        if (char.magic >= (char.max_magic + extra_max_magic_debuff) && char.effect_type === "skill") {
+        console.log(char.name, char.effect_type, char.magic, char.max_magic, char.magic >= char.max_magic);
+        if (char.magic >= (Number(char.max_magic) + Number(extra_max_magic_debuff)) && char.effect_type === "skill") {
             char.attacking = 2;
             call_skill(char, enemy, enemyIndex, is_opponent);
             char.magic = 0;
