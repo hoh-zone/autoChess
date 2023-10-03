@@ -6,19 +6,19 @@ compiled_package_info:
     auto_chess: "0000000000000000000000000000000000000000000000000000000000000000"
     std: "0000000000000000000000000000000000000000000000000000000000000001"
     sui: "0000000000000000000000000000000000000000000000000000000000000002"
-  source_digest: 118B6DDB5E2F89AE38CB4AD5D49567EECF0BAF71C985A5986E585737476547DC
+  source_digest: C277DB60C9A08A718EE4B4AE93D7BD03EBE75A83325C0E3166AE33D7CA991738
   build_flags:
-    dev_mode: false
-    test_mode: false
+    dev_mode: true
+    test_mode: true
     generate_docs: false
     generate_abis: false
     install_dir: ~
     force_recompilation: false
-    lock_file: ".\\Move.lock"
+    lock_file: ~
     additional_named_addresses: {}
     fetch_deps_only: false
     skip_fetch_latest_git_deps: true
-    default_flavor: sui
+    default_flavor: ~
     default_edition: ~
 dependencies:
   - MoveStdlib

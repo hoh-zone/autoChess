@@ -250,7 +250,7 @@ module auto_chess::chess {
     }
 
 
-    fun call_skill(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: LineUp) {
+    fun call_skill(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
         let effect = role::get_effect(role);
         let effect_value = role::get_effect_value(role);
 
@@ -335,7 +335,7 @@ module auto_chess::chess {
                 return
             };
             let add_hp = utils::utf8_to_u64(effect_value);
-            let roles = lineup::get_mut_roles(&mut my_lineup_permanent);
+            let roles = lineup::get_mut_roles(my_lineup_permanent);
             if (role_index == 5) {
                 return
             };
@@ -469,7 +469,7 @@ module auto_chess::chess {
         safe_attack(attack, other_role);
     }
 
-    fun action(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: LineUp) {
+    fun action(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
         print(&role::get_name(role));
         let extra_max_magic_debuff = get_extra_max_magic_debuff(enemy_roles);
         let max_magic = role::get_max_magic(role);
@@ -488,7 +488,7 @@ module auto_chess::chess {
 
         // backup to avoid base_life to be changed
         let enemy_lineup_fight = *enemy_lineup;
-        let my_lineup_permanent = chess.lineup;
+        let my_lineup_permanent = &mut chess.lineup;
         let my_roles = *lineup::get_roles(&my_lineup_fight);
         vector::reverse<role::Role>(&mut my_roles);
         let my_num = vector::length(&my_roles);
@@ -535,7 +535,6 @@ module auto_chess::chess {
                 v2_lineup:*enemy_lineup,
                 res: 2
             });
-            chess.lineup = my_lineup_permanent;
             false
         } else {
             print(&utf8(b"I win, my left lineup:"));
@@ -550,7 +549,6 @@ module auto_chess::chess {
                 v2_lineup:*enemy_lineup,
                 res: 1
             });
-            chess.lineup = my_lineup_permanent;
             true
         }
     }
