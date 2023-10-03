@@ -1,5 +1,3 @@
-import { CharacterFieldsV2 } from "./entity";
-
 export interface GameNft {
     cards_pool:    CardsPool;
     creator:       string;
@@ -29,31 +27,30 @@ export interface CardsPoolFields {
 
 export interface Role {
     type:   string;
-    fields: CharacterFieldsV2;
-}
-
-export interface CharacterFields {
-    attack:  number;
-
-    // on-time-life for fight
-    life: number;
-
-    // max-life
-    base_life?: number;
-    level:   number;
-    name:    string;
-    price:   number;
-    sellprice:   number;
-    effect: string;
-    effect_value: string;
-    attacking: 0 | 1 | 2;
+    fields: CharacterFields;
 }
 
 export interface ID {
     id: string;
 }
 
+export interface CharacterFields {
+    name:    string;
+    level:   number;
 
+    attack:  number;
+    life: number;
+    magic: number;
+
+    // max-life
+    base_attack: number;
+    max_life: number;
+    max_magic: number;
+    effect_type: string; // 常驻触发，主动释放，被动触发
+    effect: string; // 可能有亡语，需要读取释放
+    effect_value: string;
+    attacking?: 0 | 1 | 2;
+}
 // Example:
 // {
 //     "cards_pool": {

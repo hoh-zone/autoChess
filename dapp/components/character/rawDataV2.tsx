@@ -1,9 +1,8 @@
-import { CharacterFieldsV2 } from "../../types/entity";
 import { CharacterFields } from "../../types/nft";
 import { removeSuffix } from "../../utils/TextUtils";
 
 interface Roles {
-    [key: string]: CharacterFieldsV2;
+    [key: string]: CharacterFields;
 }
 
 const roles_info: Roles = {
@@ -104,8 +103,8 @@ const roles_info: Roles = {
     "archer3": {name: "archer3",level: 9,attack:  24, life: 30, magic: 0, base_attack: 24, max_life: 30, max_magic: 1, effect_type: "skill", effect: "attack_last_char", effect_value: "24"},
 }
 
-export function get_chars(names:string[]) : CharacterFieldsV2[] {
-    let chars:CharacterFieldsV2[] = [];
+export function get_chars(names:string[]) : CharacterFields[] {
+    let chars:CharacterFields[] = [];
     names.map((name) => {
         let role = {...roles_info[name]};
         if (role != null) {
@@ -116,7 +115,7 @@ export function get_chars(names:string[]) : CharacterFieldsV2[] {
 }
 
 
-export function get_sell_price(char:CharacterFieldsV2 | null): number {
+export function get_sell_price(char:CharacterFields | null): number {
     if (!char) {
         return 0;
     }
@@ -130,7 +129,7 @@ export function get_sell_price(char:CharacterFieldsV2 | null): number {
     }
 }
 
-export function get_star_num(char:CharacterFieldsV2 | null) : number {
+export function get_star_num(char:CharacterFields | null) : number {
     if (!char) {
         return 0;
     }
@@ -141,31 +140,7 @@ export function get_star_num(char:CharacterFieldsV2 | null) : number {
     return level / 3 + 1;
 }
 
-export function get_base_raw_life(char:CharacterFields | null) : number {
-    if (char && char.name) {
-        return roles_info[char.name].life;
-    } else {
-        return 99;
-    }
-}
-
-export function get_effect(char:CharacterFields | null) : string {
-    if (char && char.name) {
-        return roles_info[char.name].effect;
-    } else {
-        return "";
-    }
-}
-
-export function get_effect_value(char:CharacterFields | null) : string {
-    if (char && char.name) {
-        return roles_info[char.name].effect_value;
-    } else {
-        return "";
-    }
-}
-
-export function upgrade(char1:CharacterFieldsV2, char2:CharacterFieldsV2): CharacterFieldsV2 {
+export function upgrade(char1:CharacterFields, char2:CharacterFields): CharacterFields {
     console.log(char1);
     console.log(char2);
     // 属性受角色战场永久buff效果影响，合成属性会高于基础值
@@ -203,7 +178,7 @@ export function upgrade(char1:CharacterFieldsV2, char2:CharacterFieldsV2): Chara
     }
     let key = removeSuffix(name1) + level_str
     let clone = JSON.stringify(roles_info[key]);
-    let res:CharacterFieldsV2 = JSON.parse(clone);
+    let res:CharacterFields = JSON.parse(clone);
     res.attack = res.attack + attack_buff;
     res.life = res.life + life_buff;
     res.max_life = res.life;

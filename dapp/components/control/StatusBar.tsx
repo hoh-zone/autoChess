@@ -1,12 +1,9 @@
 
 import { useAtom } from "jotai"
-
-import { CharacterFields } from "../../types/nft";
-
 import { HStack, Img } from "@chakra-ui/react";
-import { loseA, nameA, enemyNameA, winA, fightingIndex, enemyFightingIndex, enemyCharacter, enemyCharacterV2, slotCharacterV2} from "../../store/stages";
+import { loseA, nameA, enemyNameA, winA, fightingIndex, enemyFightingIndex, enemyCharacterV2, slotCharacterV2} from "../../store/stages";
 import { removeSuffix } from "../../utils/TextUtils";
-import { CharacterFieldsV2 } from "../../types/entity";
+import { CharacterFields } from "../../types/nft";
 
 export const StatusBar = ({ isOpponent = false}: {
     isOpponent?: boolean
@@ -20,7 +17,7 @@ export const StatusBar = ({ isOpponent = false}: {
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
 
-    const get_width_by_life = (char:CharacterFieldsV2 | null) => {
+    const get_width_by_life = (char:CharacterFields | null) => {
         if (!char) {
             return 0;
         }
@@ -65,13 +62,6 @@ export const StatusBar = ({ isOpponent = false}: {
         }
     }
 
-    const get_base_life =(char:CharacterFields | null) => {
-        if (!char) {
-            return 0;
-        }
-        return char.base_life;
-    }
-
     const get_avatar= () => {
         let path;
         let name;
@@ -101,7 +91,7 @@ export const StatusBar = ({ isOpponent = false}: {
             return "left"
         }
     }
-    let char: CharacterFieldsV2 | null = null;
+    let char: CharacterFields | null = null;
     char = isOpponent ? enemy_chars[enemy_fight_index]: chars[fight_index];
     return <div className="text-white" style={{width:'45%'}}>
         {!isOpponent ? 

@@ -3,14 +3,14 @@ import { useAtom } from "jotai"
 
 import { slotCharacterV2, enemyCharacterV2} from "../../store/stages";
 import { HStack } from "@chakra-ui/react";
-import { CharacterFieldsV2 } from "../../types/entity";
+import { CharacterFields } from "../../types/nft";
 
 export const HpBar = ({id}: {
     id: number,
 }) => {
     const [chars] = useAtom(slotCharacterV2);
     const [enemy_chars] = useAtom(enemyCharacterV2);
-    let char: CharacterFieldsV2 | null = null;
+    let char: CharacterFields | null = null;
     let isOpponent = false;
     if (id >= 10) {
         char = enemy_chars[id - 10];
@@ -20,7 +20,7 @@ export const HpBar = ({id}: {
         isOpponent = false
     }
 
-    const get_width_by_life = (char:CharacterFieldsV2 | null) => {
+    const get_width_by_life = (char:CharacterFields | null) => {
         let start = 10;
         let end = 40;
         if (!char) {

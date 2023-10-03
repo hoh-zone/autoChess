@@ -4,12 +4,9 @@ import useOperateAndMatch from "./button/OperateAndMatchV2";
 import useQueryFight from "./button/QueryFightResult";
 import { useFightV2 } from "../hooks/useFight_v2";
 import { useEffect } from "react";
-import { CharacterFields } from "../types/nft";
 import { Button, useToast } from '@chakra-ui/react'
 import { get_chars } from "./character/rawDataV2";
-import { range } from "lodash";
-import { sleep } from "../utils/sleep";
-import { CharacterFieldsV2 } from "../types/entity";
+import { CharacterFields } from "../types/nft";
 
 export const FightV2 = () => {
     const { nftObjectId, operate_submit } = useOperateAndMatch();
@@ -76,7 +73,7 @@ export const FightV2 = () => {
 
         // sync enemy
         let json = await query_fight(chess_id);
-        let enemys:CharacterFieldsV2[] = json['v2_lineup']['roles'];
+        let enemys:CharacterFields[] = json['v2_lineup']['roles'];
         console.log("json res: ", enemys);
         enemys.map((ele) => {
             ele.magic = 0;

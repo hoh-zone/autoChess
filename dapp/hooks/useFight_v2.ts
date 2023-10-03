@@ -3,7 +3,7 @@ import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacterV2, enemyFigh
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
-import { CharacterFieldsV2 } from "../types/entity";
+import { CharacterFields } from "../types/nft";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
 import { at } from "lodash";
@@ -76,7 +76,7 @@ export const useFightV2 = () => {
     };
 
     
-    const call_attack = (char: CharacterFieldsV2, enemyChar: CharacterFieldsV2, enemyIndex:number, is_opponent: boolean) => {
+    const call_attack = (char: CharacterFields, enemyChar: CharacterFields, enemyIndex:number, is_opponent: boolean) => {
         let attack:number = char.attack;
         if (enemyChar.life < attack) {
             enemyChar.life = 0;
@@ -106,7 +106,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const set_target_group = (group: (CharacterFieldsV2 | null)[],is_opponent:boolean, is_attack:boolean) => {
+    const set_target_group = (group: (CharacterFields | null)[],is_opponent:boolean, is_attack:boolean) => {
         if (is_opponent && is_attack) {
             setChars(group);
         } else if (!is_opponent && is_attack) {
@@ -174,7 +174,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const call_skill = (char: CharacterFieldsV2, enemy: CharacterFieldsV2, is_opponent:boolean) => {
+    const call_skill = (char: CharacterFields, enemy: CharacterFields, is_opponent:boolean) => {
         let effect = char.effect;
         let value = parseInt(char.effect_value);
         let is_forbid_buff = false;
@@ -208,7 +208,7 @@ export const useFightV2 = () => {
 
         if (effect == "aoe") {
             target_group = get_target_group(is_opponent, true);
-            target_group.map((ele:CharacterFieldsV2 | null, index:number) => {
+            target_group.map((ele:CharacterFields | null, index:number) => {
                 if (ele == null) {
                     return;
                 }
@@ -221,7 +221,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, false);
-            target_group.map((ele:CharacterFieldsV2 | null, index:number)=>{
+            target_group.map((ele:CharacterFields | null, index:number)=>{
                 if (ele == null || ele.life <= 0) {
                     return;
                 };
@@ -235,7 +235,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, false);
-            target_group.map((ele:CharacterFieldsV2 | null, index:number)=>{
+            target_group.map((ele:CharacterFields | null, index:number)=>{
                 if (ele == null) {
                     return;
                 }
@@ -263,7 +263,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, true);
-            target_group.map((ele:CharacterFieldsV2 | null, index:number)=>{
+            target_group.map((ele:CharacterFields | null, index:number)=>{
                 if (ele == null) {
                     return;
                 }
@@ -309,7 +309,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, false);
-            target_group.map((ele:CharacterFieldsV2 | null, index:number)=>{
+            target_group.map((ele:CharacterFields | null, index:number)=>{
                 if (ele == null || index == fight_index) {
                     return;
                 }
@@ -349,7 +349,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const died_check = (charactors: (CharacterFieldsV2 | null)[], is_opponent:boolean) => {
+    const died_check = (charactors: (CharacterFields | null)[], is_opponent:boolean) => {
         if (charactors == null) {
             return;
         }
@@ -399,7 +399,7 @@ export const useFightV2 = () => {
         return value;
     }
 
-    const action = async (char:CharacterFieldsV2, enemy:CharacterFieldsV2, enemyIndex:number, is_opponent:boolean) => {
+    const action = async (char:CharacterFields, enemy:CharacterFields, enemyIndex:number, is_opponent:boolean) => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
         if (char.magic >= (char.max_magic + extra_max_magic_debuff) && char.effect_type === "skill") {
             char.attacking = 2;

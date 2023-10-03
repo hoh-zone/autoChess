@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import { useToast } from '@chakra-ui/react'
 import confetti from "canvas-confetti";
 import { StatusChange } from "./StatusChange";
-import { CharacterFieldsV2 } from "../../types/entity";
+import { CharacterFields } from "../../types/nft";
 import { get_sell_price } from "../character/rawDataV2";
 
 export const Slot = ({ isOpponent = false, id }: {
@@ -48,7 +48,7 @@ export const Slot = ({ isOpponent = false, id }: {
         }
     };
 
-    let char: CharacterFieldsV2 | null = null;
+    let char: CharacterFields | null = null;
     if (id >= 10) {
         char = enemyChars[id - 10];
     } else {

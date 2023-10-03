@@ -1,12 +1,11 @@
 
 import { useAtom } from "jotai"
 
-import { CharacterFields } from "../../types/nft";
 import { HStack, Img, Stack } from "@chakra-ui/react";
 import { shopCharacter, stageAtom, enemyCharacterV2, slotCharacterV2 } from "../../store/stages";
 
-import { get_base_raw_life, get_effect, get_star_num } from "../character/rawDataV2";
-import { CharacterFieldsV2 } from "../../types/entity";
+import { get_star_num } from "../character/rawDataV2";
+import { CharacterFields } from "../../types/nft";
 
 export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
     id: number,
@@ -18,7 +17,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
     const [enemy_chars] = useAtom(enemyCharacterV2);
     const [shopChars] = useAtom(shopCharacter);
     const [stage] = useAtom(stageAtom);
-    let char: CharacterFieldsV2 | null = null;
+    let char: CharacterFields | null = null;
     if (isShopSlot) {
         char = shopChars[id]
     } else {
@@ -29,7 +28,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
         }
     }
 
-    const get_base_life = (char:CharacterFieldsV2 | null) => {
+    const get_base_life = (char:CharacterFields | null) => {
         if (!char) {
             return 0
         }
