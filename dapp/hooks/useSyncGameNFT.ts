@@ -23,6 +23,7 @@ export const useSyncGameNFT = () => {
                 return null;
             }
             role.fields.max_life = role.fields.life;
+            role.fields.magic = 0;
             return role.fields
         }));
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {

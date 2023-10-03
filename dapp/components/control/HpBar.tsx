@@ -1,15 +1,15 @@
 
 import { useAtom } from "jotai"
 
-import { slotCharacterV2, enemyCharacterV2} from "../../store/stages";
+import { slotCharacterV2, enemyCharacterV2, stageAtom} from "../../store/stages";
 import { HStack } from "@chakra-ui/react";
 import { CharacterFields } from "../../types/nft";
-
 export const HpBar = ({id}: {
     id: number,
 }) => {
     const [chars] = useAtom(slotCharacterV2);
     const [enemy_chars] = useAtom(enemyCharacterV2);
+    const [stage] = useAtom(stageAtom);
     let char: CharacterFields | null = null;
     let isOpponent = false;
     if (id >= 10) {
@@ -34,9 +34,37 @@ export const HpBar = ({id}: {
         return start + (life / total) * end
     }
 
+    const get_mp_url_by_magic = (char:CharacterFields | null) => {
+        if (char != null && char.max_magic == 0) {
+            return "url('fix_inner.png') no-repeat";
+        };
+        return "url('mp_inner.png') no-repeat";
+    }
+
+    const get_width_by_magic = (char:CharacterFields | null) => {
+        let start = 10;
+        let end = 45;
+        if (stage == "shop") {
+            return end;
+        }
+        if (!char) {
+            return start;
+        };
+        let max = char.max_magic;
+        if (max == 0) {
+            return end;
+        }
+        if (max == 0) {
+            return end;
+        }
+        return start + (end - start) * (char.magic) / max;
+    }
+
     return <HStack style={{zIndex:1000,position:"relative", justifyContent:"left"}}>
-            <div style={{ justifyContent:"left" ,width: '50px', height: '30px', background: "url('hp_bg.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left" }}>
-                <div style={{ width:  `${get_width_by_life(char)}px`, height: '30px', background: "url('hp.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left" }}></div>
+            <div style={{ justifyContent:"left" ,width: '50px', height: '30px', background: "url('status_bg.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left" }}>
+                <div style={{ width:  `${get_width_by_magic(char)}px`, height: '30px', background: `${get_mp_url_by_magic(char)}`, backgroundSize: '50px auto', backgroundPosition: "left" }}>
+                    <div style={{ width:  `${get_width_by_life(char)}px`, height: '30px', background: "url('hp_inner.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left"}}></div>
+                </div>
             </div>
     </HStack >
 }
