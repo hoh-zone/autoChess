@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react"
 import { useAtom } from "jotai";
-import { moneyA as moneyAtom, operationsA, selectedSlot, slotCharacter, slotCharacterV2 } from "../../store/stages";
+import { moneyA as moneyAtom, operationsA, selectedSlot, slotCharacterV2 } from "../../store/stages";
 import { get_sell_price } from "../character/rawDataV2";
 
 export const SellButton = () => {

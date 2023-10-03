@@ -80,7 +80,9 @@ export const FightV2 = () => {
         console.log("json res: ", enemys);
         enemys.map((ele) => {
             ele.magic = 0;
-            ele.max_life = ele.life;
+            ele.life = Number(ele.life);
+            ele.max_life = Number(ele.life);
+            ele.attack = Number(ele.attack);
         })
         let name = json['v2_name'];
         setEnemyName(name);

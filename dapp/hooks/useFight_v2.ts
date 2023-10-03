@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 import { CharacterFieldsV2 } from "../types/entity";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
+import { at } from "lodash";
 export const useFightV2 = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
     const [chars, setChars] = useAtom(slotCharacterV2);
@@ -30,10 +31,10 @@ export const useFightV2 = () => {
     }
 
     const clear_change = () => {
-        setAttackChange([0, 0, 0, 0, 0, 0]);
-        setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
-        setHpChange([0, 0, 0, 0, 0, 0]);
-        setEnemyHpChange([0, 0, 0, 0, 0, 0]);
+        // setAttackChange([0, 0, 0, 0, 0, 0]);
+        // setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
+        // setHpChange([0, 0, 0, 0, 0, 0]);
+        // setEnemyHpChange([0, 0, 0, 0, 0, 0]);
     }
 
     const lose_effect = () => {
@@ -76,11 +77,12 @@ export const useFightV2 = () => {
 
     
     const call_attack = (char: CharacterFieldsV2, enemyChar: CharacterFieldsV2, enemyIndex:number, is_opponent: boolean) => {
-        let attack = char.attack;
+        let attack:number = char.attack;
         if (enemyChar.life < attack) {
             enemyChar.life = 0;
             died_check(enemyChars, is_opponent);
         } else {
+            console.log("here2");
             enemyChar.life -= attack;
         }
         if (is_opponent) {
@@ -420,22 +422,22 @@ export const useFightV2 = () => {
     }
 
     const reset_status = () => {
-        chars.map((chr, index)=> {
-            if (chr == null) {
-                return;
-            }
-            chars[index]!.life = chr.max_life;
-            chars[index]!.attack = chr.base_attack;
-            chars[index]!.magic = 0;
-        })
-        enemyChars.map((chr, index)=> {
-            if (chr == null) {
-                return;
-            }
-            enemyChars[index]!.life = chr.max_life;
-            enemyChars[index]!.attack = chr.base_attack;
-            enemyChars[index]!.magic = 0;
-        })
+        // chars.map((chr, index)=> {
+        //     if (chr == null) {
+        //         return;
+        //     }
+        //     chars[index]!.life = chr.max_life;
+        //     chars[index]!.attack = chr.base_attack;
+        //     chars[index]!.magic = 0;
+        // })
+        // enemyChars.map((chr, index)=> {
+        //     if (chr == null) {
+        //         return;
+        //     }
+        //     enemyChars[index]!.life = chr.max_life;
+        //     enemyChars[index]!.attack = chr.base_attack;
+        //     enemyChars[index]!.magic = 0;
+        // })
         setOperations([]);
         operations.push(chars.toString());
         clear_change();

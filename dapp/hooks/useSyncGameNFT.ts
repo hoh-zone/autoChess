@@ -33,6 +33,8 @@ export const useSyncGameNFT = () => {
                 // todo:待删除
                 role.fields.name = "firemega1_1";
             }
+            role.fields.attack = Number(role.fields.attack);
+            role.fields.life = Number(role.fields.life);
             role.fields.max_life = role.fields.life;
             return role.fields
         }));

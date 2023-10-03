@@ -4,7 +4,7 @@ import { useAtom } from "jotai"
 import { CharacterFields } from "../../types/nft";
 
 import { HStack, Img } from "@chakra-ui/react";
-import { loseA, nameA, enemyNameA, slotCharacter, winA, fightingIndex, enemyFightingIndex, enemyCharacter, enemyCharacterV2, slotCharacterV2} from "../../store/stages";
+import { loseA, nameA, enemyNameA, winA, fightingIndex, enemyFightingIndex, enemyCharacter, enemyCharacterV2, slotCharacterV2} from "../../store/stages";
 import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFieldsV2 } from "../../types/entity";
 

@@ -2,7 +2,7 @@ import { HStack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { StatusBar } from "../control/StatusBar"
 import { useAtom } from "jotai"
-import { enemyCharacterV2, slotCharacter, winA } from "../../store/stages"
+import { enemyCharacterV2, slotCharacterV2, winA } from "../../store/stages"
 import { twMerge } from "tailwind-merge"
 import range from "lodash/range"
 import { FightResultText } from "../effect/FightResultText"
@@ -26,7 +26,7 @@ const positionTable: { [key: string]: string } = {
 
 export const FightScene = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
-    const [chars, setChars] = useAtom(slotCharacter);
+    const [chars, setChars] = useAtom(slotCharacterV2);
     const charIndex = chars.findIndex(Boolean);
     const enemyIndex = enemyChars.findIndex(Boolean);
 

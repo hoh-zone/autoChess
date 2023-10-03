@@ -3,7 +3,7 @@ import { useAtom } from "jotai"
 
 import { CharacterFields } from "../../types/nft";
 import { HStack, Img, Stack } from "@chakra-ui/react";
-import { slotCharacter, enemyCharacter, shopCharacter, stageAtom, enemyCharacterV2, slotCharacterV2 } from "../../store/stages";
+import { shopCharacter, stageAtom, enemyCharacterV2, slotCharacterV2 } from "../../store/stages";
 
 import { get_base_raw_life, get_effect, get_star_num } from "../character/rawDataV2";
 import { CharacterFieldsV2 } from "../../types/entity";
@@ -37,9 +37,9 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
             return char.max_life
         } else {
             if (stage == "fight") {
-                return char.life;
+                return char.life < 0 ? 0 : char.life;
             } else {
-                return char.max_life
+                return char.max_life < 0 ? 0: char.max_life;
             }
         }
     }
