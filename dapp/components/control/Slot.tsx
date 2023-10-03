@@ -1,9 +1,8 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, stageAtom, operationsA, enemyCharacterV2, slotCharacterV2 } from "../../store/stages"
+import {  moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, stageAtom, operationsA, enemyCharacterV2, slotCharacterV2 } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils";
-import { CharacterFields } from "../../types/nft";
 import { upgrade } from "../character/rawDataV2";
 import { FloatCharInfo } from "./FloatCharInfo";
 import { HpBar } from "./HpBar";

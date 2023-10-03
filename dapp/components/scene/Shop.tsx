@@ -34,6 +34,15 @@ export const Shop = () => {
                                 refresh_failed_toast();
                                 return;
                             }
+                            if (chars.length <= 5) {
+                                toast({
+                                    title: 'Refresh limit exceeded',
+                                    status: 'warning',
+                                    duration: 2000,
+                                    isClosable: true,
+                                })
+                                return;
+                            }
                             setMoney(money - 2);
                             setChars(chars.slice(5));
                             operations.push("refresh");

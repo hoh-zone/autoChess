@@ -30,10 +30,9 @@ export const useSyncGameNFT = () => {
             if (role.fields.name == "none") {
                 return null;
             }
-            if (role.fields.name == "fireMega1_1") {
-                // todo:待删除
-                role.fields.name = "firemega1_1";
-            }
+
+            // todo:待删除
+            role.fields.name = role.fields.name.replace("fireMega", "firemega");
             role.fields.attack = Number(role.fields.attack);
             role.fields.life = Number(role.fields.life);
             role.fields.max_life = role.fields.life;

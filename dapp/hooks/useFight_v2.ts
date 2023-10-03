@@ -31,10 +31,10 @@ export const useFightV2 = () => {
     }
 
     const clear_change = () => {
-        // setAttackChange([0, 0, 0, 0, 0, 0]);
-        // setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
-        // setHpChange([0, 0, 0, 0, 0, 0]);
-        // setEnemyHpChange([0, 0, 0, 0, 0, 0]);
+        setAttackChange([0, 0, 0, 0, 0, 0]);
+        setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
+        setHpChange([0, 0, 0, 0, 0, 0]);
+        setEnemyHpChange([0, 0, 0, 0, 0, 0]);
     }
 
     const lose_effect = () => {
@@ -64,7 +64,6 @@ export const useFightV2 = () => {
         }
     }
 
-
     const win_effect = () => {
         confetti({
             angle: randomInRange(55, 125),
@@ -75,19 +74,18 @@ export const useFightV2 = () => {
         });
     };
 
-    
     const call_attack = (char: CharacterFields, enemyChar: CharacterFields, enemyIndex:number, is_opponent: boolean) => {
         let attack:number = char.attack;
         if (enemyChar.life < attack) {
             enemyChar.life = 0;
-            died_check(enemyChars, is_opponent);
         } else {
-            console.log("here2");
             enemyChar.life -= attack;
         }
         if (is_opponent) {
+            hpChange[enemyIndex] = -attack;
             console.log("敌人：", char.name, " 普攻: ", attack , "生命:", char.life, " 攻击", enemyChar.name, "攻击后生命:", enemyChar.life);
         } else {
+            enemyHpChange[enemyIndex] = -attack;
             console.log("我军：", char.name, " 普攻: ", attack , "生命:", char.life, " 攻击", enemyChar.name,  "攻击后生命:", enemyChar.life);
         }
     }
@@ -174,7 +172,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const call_skill = (char: CharacterFields, enemy: CharacterFields, is_opponent:boolean) => {
+    const call_skill = (char: CharacterFields, enemy: CharacterFields, enemyIndex:number, is_opponent:boolean) => {
         let effect = char.effect;
         let value = parseInt(char.effect_value);
         let is_forbid_buff = false;
@@ -226,6 +224,11 @@ export const useFightV2 = () => {
                     return;
                 };
                 ele.life += value;
+                if (is_opponent) {
+                    enemyHpChange[index] = value;
+                } else {
+                    hpChange[index] = value;
+                }
             });
             console.log("全体加血:", value);
             set_target_group(target_group, is_opponent, false);
@@ -240,6 +243,11 @@ export const useFightV2 = () => {
                     return;
                 }
                 ele.attack += value;
+                if (is_opponent) {
+                    enemyAttackChange[index] = value;
+                } else {
+                    attackChange[enemyIndex] = value;   
+                }
             });
             console.log("全体加攻:", value);
             set_target_group(target_group, is_opponent, false);
@@ -256,6 +264,11 @@ export const useFightV2 = () => {
             target_group[next_one]!.max_life += value;
             target_group[next_one]!.life += value;
             console.log("触发后一个角色永久生命值增加:", value);
+            if (is_opponent) {
+                enemyHpChange[next_one] = value;
+            } else {
+                hpChange[next_one] = value;   
+            }
             set_target_group(target_group, is_opponent, false);
         } else if (effect == "reduce_all_tmp_attack") {
             if (is_forbid_debuff) {
@@ -271,6 +284,11 @@ export const useFightV2 = () => {
                 if (ele.attack <= 0) {
                     ele.attack = 1;
                 }
+                if (is_opponent) {
+                    attackChange[index] = -value;
+                } else {
+                    enemyAttackChange[enemyIndex] = -value;   
+                }
             });
             console.log("全体降攻:", value);
             set_target_group(target_group, is_opponent, true);
@@ -283,6 +301,13 @@ export const useFightV2 = () => {
                 return;
             }
             target_group[next_one_index]!.life -= suppter_attack;
+            if (is_opponent) {
+                hpChange[enemyIndex] = -char.attack;
+                hpChange[next_one_index] = -(suppter_attack);
+            } else {
+                enemyHpChange[enemyIndex] = -char.attack;
+                enemyHpChange[next_one_index] = -(suppter_attack);
+            }
             console.log("造成溅射伤害:", suppter_attack);
         } else if (effect == "attack_last_char") {
             target_group = get_target_group(is_opponent, true);
@@ -292,6 +317,11 @@ export const useFightV2 = () => {
                 return;
             }
             target_group[last_one_index]!.life -= value;
+            if (is_opponent) {
+                hpChange[last_one_index] = -(value);
+            } else {
+                enemyHpChange[last_one_index] = -(value);
+            }
             console.log("攻击最后一名角色:", target_group[last_one_index]?.name, value);
         } else if (effect == "reduce_tmp_attack") {
             if (is_forbid_debuff) {
@@ -301,6 +331,11 @@ export const useFightV2 = () => {
             enemy.attack -= value;
             if (enemy.attack <= 0) {
                 enemy.attack = 1;
+            }
+            if (is_opponent) {
+                attackChange[enemyIndex] = -(value);
+            } else {
+                enemyAttackChange[enemyIndex] = -(value);
             }
             console.log("触发单体降攻:", value);
         } else if (effect == "add_all_tmp_magic") {
@@ -317,6 +352,7 @@ export const useFightV2 = () => {
                 if (ele.magic >= ele.max_magic) {
                     ele.magic = ele.max_magic;
                 }
+                // todo:hp buff
             });
             console.log("全体加魔法值:", value);
             set_target_group(target_group, is_opponent, false);
@@ -338,6 +374,11 @@ export const useFightV2 = () => {
                     console.log("对方死亡");
                     target_group[min_hp_index] = null
                 }
+                if (is_opponent) {
+                    hpChange[min_hp_index] = -value;
+                } else {
+                    enemyHpChange[min_hp_index] = -value;
+                }
             }
             set_target_group(target_group, is_opponent, true);
         } else if (effect == "attack_by_life_percent") {
@@ -345,6 +386,11 @@ export const useFightV2 = () => {
             let life = enemy.max_life;
             let extra_attack = Math.round(value / 10 * life);
             enemy.life -= (char.attack + extra_attack);
+            if (is_opponent) {
+                hpChange[enemyIndex] = -(char.attack + extra_attack);
+            } else {
+                enemyHpChange[enemyIndex] = -(char.attack + extra_attack);
+            }
             console.log("造成额外百分比伤害:", char.attack, " + ", extra_attack);
         }
     }
@@ -403,7 +449,7 @@ export const useFightV2 = () => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
         if (char.magic >= (char.max_magic + extra_max_magic_debuff) && char.effect_type === "skill") {
             char.attacking = 2;
-            call_skill(char, enemy, is_opponent);
+            call_skill(char, enemy, enemyIndex, is_opponent);
             char.magic = 0;
             setChars(chars.slice());
             setEnemyChars(enemyChars.slice());
