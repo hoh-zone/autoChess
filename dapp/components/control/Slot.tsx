@@ -11,7 +11,7 @@ import { useToast } from '@chakra-ui/react'
 import confetti from "canvas-confetti";
 import { StatusChange } from "./StatusChange";
 import { CharacterFields } from "../../types/nft";
-import { get_sell_price } from "../character/rawDataV2";
+import { get_buy_price } from "../character/rawDataV2";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
@@ -80,8 +80,8 @@ export const Slot = ({ isOpponent = false, id }: {
             // try to buy
             let char_shop_choosen = shopChars[shopSlotNumber!];
             if (shopSlotNumber !== null && !char && char_shop_choosen) {
-                if (money >= get_sell_price(char_shop_choosen)) {
-                    setMoney(money - get_sell_price(char_shop_choosen));
+                if (money >= get_buy_price(char_shop_choosen)) {
+                    setMoney(money - get_buy_price(char_shop_choosen));
                     chars[id] = shopChars[shopSlotNumber];
                     shopChars[shopSlotNumber] = null;
                     setChars(chars.slice());
@@ -95,8 +95,8 @@ export const Slot = ({ isOpponent = false, id }: {
                 // buy and upgrad chars
             } else if (shopSlotNumber != null && char && char_shop_choosen &&
             canUpgrade(char, char_shop_choosen)) {
-                if (money >= get_sell_price(char_shop_choosen)) {
-                    setMoney(money - get_sell_price(char_shop_choosen));
+                if (money >= get_buy_price(char_shop_choosen)) {
+                    setMoney(money - get_buy_price(char_shop_choosen));
                     let tmp = upgrade(char, char_shop_choosen);
                     chars[id] = tmp;
                     shopChars[shopSlotNumber] = null;

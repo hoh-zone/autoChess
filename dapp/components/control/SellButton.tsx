@@ -14,12 +14,11 @@ export const SellButton = () => {
             isDisabled={slotNumber === null || !chars[slotNumber]}
             onClick={() => {
                 if(slotNumber !== null) {
-                    let name = chars[slotNumber]?.name;
+                    setMoney(money + get_sell_price(chars[slotNumber]));
+                    operations.push("sell:" + slotNumber);
                     chars[slotNumber] = null;
                     setSlotNumber(null);
                     setChars(chars);
-                    setMoney(money + get_sell_price(chars[slotNumber]));
-                    operations.push("sell:" + slotNumber);
                 }
             }}
         >Sell(

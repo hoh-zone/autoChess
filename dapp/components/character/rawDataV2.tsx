@@ -115,7 +115,25 @@ export function get_chars(names:string[]) : CharacterFields[] {
 }
 
 
+
+export function get_buy_price(char:CharacterFields | null): number {
+    if (!char) {
+        return 0;
+    }
+    let level = char.level;
+    if (level < 3) {
+        return 3
+    } else if (level < 6) {
+        return 5   
+    }else if (level < 9) {
+        return 8
+    } else {
+        return 9
+    }
+}
+
 export function get_sell_price(char:CharacterFields | null): number {
+    console.log("sell", char);
     if (!char) {
         return 0;
     }
