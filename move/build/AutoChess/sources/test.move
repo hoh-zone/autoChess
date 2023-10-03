@@ -86,7 +86,7 @@ module auto_chess::test {
             let lineup_str_vec = vector::empty<String>();
             vector::push_back(&mut lineup_str_vec, utf8(b"fighter1:4:6"));
             vector::push_back(&mut lineup_str_vec, utf8(b"cleric1:3:5"));
-            vector::push_back(&mut lineup_str_vec, utf8(b"fireMega1:6:5"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"firemega1:6:5"));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));

@@ -13,8 +13,11 @@ module auto_chess::lineup {
 
     struct Global has key {
         id: UID,
+
         // used for fight
         lineup_pools: Table<String, vector<LineUp>>,
+
+        arena_lineup_pools: Table<String, vector<LineUp>>,
     }
 
     struct LineUp has store, copy, drop {
@@ -27,7 +30,8 @@ module auto_chess::lineup {
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            lineup_pools: table::new<String, vector<LineUp>>(ctx)
+            lineup_pools: table::new<String, vector<LineUp>>(ctx),
+            arena_lineup_pools: table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -36,7 +40,8 @@ module auto_chess::lineup {
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            lineup_pools : table::new<String, vector<LineUp>>(ctx)
+            lineup_pools : table::new<String, vector<LineUp>>(ctx),
+            arena_lineup_pools: table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -57,7 +62,7 @@ module auto_chess::lineup {
     }
 
     public fun generate_random_cards(role_global:&role::Global, power:u64, ctx:&mut TxContext) : LineUp {
-        let max_cards = 25;
+        let max_cards = 30;
         let vec = vector::empty<Role>();
         let p2 = utils::get_cards_level2_prop_by_lineup_power(power);
         let seed = 20;
@@ -75,36 +80,67 @@ module auto_chess::lineup {
         }
     }
 
-    public fun record_player_lineup(win:u8, lose:u8, global:&mut Global, lineup:LineUp) {
+    public fun record_player_lineup(win:u8, lose:u8, global:&mut Global, lineup:LineUp, is_arena: bool) {
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
-        if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
-            let lineup_vec = table::borrow_mut(&mut global.lineup_pools, lineup_pool_tag);
-            if (vector::length(lineup_vec) > 10) {
-                vector::remove(lineup_vec, 0);
-                vector::push_back(lineup_vec, lineup);
+        let pool;
+        if (is_arena) {
+            if (table::contains(&global.arena_lineup_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow_mut(&mut global.arena_lineup_pools, lineup_pool_tag);
+                if (vector::length(lineup_vec) > 10) {
+                    vector::remove(lineup_vec, 0);
+                    vector::push_back(lineup_vec, lineup);
+                } else {
+                    vector::push_back(lineup_vec, lineup);
+                };
             } else {
-                vector::push_back(lineup_vec, lineup);
+                let lineup_vec = vector::empty<LineUp>();
+                vector::push_back(&mut lineup_vec, lineup);
+                table::add(&mut global.arena_lineup_pools, lineup_pool_tag, lineup_vec);
             };
         } else {
-            let lineup_vec = vector::empty<LineUp>();
-            vector::push_back(&mut lineup_vec, lineup);
-            table::add(&mut global.lineup_pools, lineup_pool_tag, lineup_vec);
+            if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow_mut(&mut global.lineup_pools, lineup_pool_tag);
+                if (vector::length(lineup_vec) > 10) {
+                    vector::remove(lineup_vec, 0);
+                    vector::push_back(lineup_vec, lineup);
+                } else {
+                    vector::push_back(lineup_vec, lineup);
+                };
+            } else {
+                let lineup_vec = vector::empty<LineUp>();
+                vector::push_back(&mut lineup_vec, lineup);
+                table::add(&mut global.lineup_pools, lineup_pool_tag, lineup_vec);
+            };
         };
+
     }
 
-    public fun select_random_lineup(win:u8, lose:u8, global:&Global, ctx: &mut TxContext) : LineUp {
+    public fun select_random_lineup(win:u8, lose:u8, global:&Global, is_arena:bool, ctx: &mut TxContext) : LineUp {
         let seed = 10;
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
         let vec;
-        if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
-            let lineup_vec = table::borrow(&global.lineup_pools, lineup_pool_tag);
-            vec = *lineup_vec;
+        if (is_arena) {
+            if (table::contains(&global.arena_lineup_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow(&global.arena_lineup_pools, lineup_pool_tag);
+                vec = *lineup_vec;
+            } else {
+                let tag = utils::u8_to_string(win);
+                string::append(&mut tag, utf8(b"-0"));
+                let lineup_vec = table::borrow(&global.arena_lineup_pools, tag);
+                vec = *lineup_vec;
+            };
         } else {
-            let tag = utils::u8_to_string(win);
-            string::append(&mut tag, utf8(b"-0"));
-            let lineup_vec = table::borrow(&global.lineup_pools, tag);
-            vec = *lineup_vec;
+            if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow(&global.lineup_pools, lineup_pool_tag);
+                vec = *lineup_vec;
+            } else {
+                let tag = utils::u8_to_string(win);
+                string::append(&mut tag, utf8(b"-0"));
+                let lineup_vec = table::borrow(&global.lineup_pools, tag);
+                vec = *lineup_vec;
+            };
         };
+
         let len = vector::length(&vec);
         let random = utils::get_random_num(0, len, seed, ctx);
         let index = random % len;
@@ -128,7 +164,9 @@ module auto_chess::lineup {
                     duplicate_num = duplicate_num - 1;
                 };
                 assert!(!table::contains(&global.lineup_pools, tag), 0x01);
+                assert!(!table::contains(&global.arena_lineup_pools, tag), 0x01);
                 table::add(&mut global.lineup_pools, tag, vec);
+                table::add(&mut global.arena_lineup_pools, tag, vec);
                 lose = lose + 1;
                 if (lose == 3) {
                     lose = 0;

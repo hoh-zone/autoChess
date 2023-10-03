@@ -279,13 +279,13 @@ module auto_chess::chess {
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
-        let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, ctx);
+        let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, chess.arena, ctx);
 
         // fight and record lineup
         if (fight(chess, &mut enemy_lineup, ctx)) {
-            lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup);
+            lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
         } else {
-            lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup);
+            lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
         };
         if (chess.lose <= 2) {
             refresh_cards_pools(role_global, chess, ctx);
@@ -437,7 +437,6 @@ module auto_chess::chess {
                 return
             };
             let reduce_attack = utils::utf8_to_u64(effect_value);
-            let attack = role::get_life(enemy_role);
             safe_reduce_attack(reduce_attack, enemy_role);
             let i = 0;
             while (i < enemy_len) {
@@ -451,7 +450,7 @@ module auto_chess::chess {
             let suppter_attack = base_attack * percent_by_ten / 10;
             safe_attack(base_attack, enemy_role);
             if (vector::length(enemy_roles) == 0) {
-                return;
+                return
             };
             let next_one = vector::borrow_mut(enemy_roles, 0);
             safe_attack(suppter_attack, next_one);
@@ -483,7 +482,7 @@ module auto_chess::chess {
         let min_hp_index = INVALID_INDEX;
         let len = vector::length(roles);
         if (len == 0) {
-            return default_role;
+            return default_role
         };
         let i = 0;
         while(i < len) {
@@ -505,7 +504,7 @@ module auto_chess::chess {
         let char_life = role::get_life(role);
         let char_attack = role::get_attack(role);
         if (char_life == 0) {
-            return;
+            return
         };
         if (char_attack <= reduce_value) {
             role::set_attack(role, 1);

@@ -87,11 +87,11 @@ module auto_chess::role {
         vec_map::insert(&mut global.charactors, utf8(b"shaman2"), Role {name:utf8(b"shaman2"), level: 3, price: 8, attack:  10, life: 15, magic: 0, max_magic: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
         vec_map::insert(&mut global.charactors, utf8(b"shaman2_1"), Role {name:utf8(b"shaman2_1"), level: 6, price: 9, attack:  10, life: 15, magic: 0, max_magic: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
         vec_map::insert(&mut global.charactors, utf8(b"shaman3"), Role {name:utf8(b"shaman3"), level: 9, price: 10, attack:  20, life: 45, magic: 0, max_magic: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"fireMega1"), Role {name:utf8(b"fireMega1"), level: 1, price: 3, attack:  6, life: 5, magic: 0, max_magic: 3, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"fireMega1_1"), Role {name:utf8(b"fireMega1_1"), level: 2, price: 5, attack:  6, life: 5, magic: 0, max_magic: 3, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"fireMega2"), Role {name:utf8(b"fireMega2"), level: 3, price: 8, attack:  12, life: 10, magic: 0, max_magic: 2, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"fireMega2_1"), Role {name:utf8(b"fireMega2_1"), level: 6, price: 9,  attack:  12, life: 10, magic: 0, max_magic: 2, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
-        vec_map::insert(&mut global.charactors, utf8(b"fireMega3"), Role {name:utf8(b"fireMega3"), level: 9, price: 10, attack:  24, life: 25, magic: 0, max_magic: 1, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"firemega1"), Role {name:utf8(b"firemega1"), level: 1, price: 3, attack:  6, life: 5, magic: 0, max_magic: 3, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"firemega1_1"), Role {name:utf8(b"firemega1_1"), level: 2, price: 5, attack:  6, life: 5, magic: 0, max_magic: 3, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"firemega2"), Role {name:utf8(b"firemega2"), level: 3, price: 8, attack:  12, life: 10, magic: 0, max_magic: 2, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"firemega2_1"), Role {name:utf8(b"firemega2_1"), level: 6, price: 9,  attack:  12, life: 10, magic: 0, max_magic: 2, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"firemega3"), Role {name:utf8(b"firemega3"), level: 9, price: 10, attack:  24, life: 25, magic: 0, max_magic: 1, effect_type: utf8(b"ring"), effect: utf8(b"forbid_debuff"), effect_value: utf8(b"")});
     }
 
     public fun init_charactors2(global:&mut Global) {
@@ -172,13 +172,13 @@ module auto_chess::role {
         let max_roles_per_level = vec_map::size(&global.charactors) / 5;
         let index = random % max_roles_per_level;
         if (level == 1) {
-            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 5 * index);
+            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 5 * index);
             *role
         } else if (level == 3) {
-           let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 1 + 5 * index);
+           let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 1 + 5 * index);
             *role
         } else {
-            let (name, role) = vec_map::get_entry_by_idx(&global.charactors, 2 + 5 * index);
+            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 2 + 5 * index);
             *role
         }
     }
@@ -204,6 +204,7 @@ module auto_chess::role {
     }
 
     public fun get_role_by_name(global:&Global, name:String) : Role {
+        print(&name);
         *vec_map::get(&global.charactors, &name)
     }
 
