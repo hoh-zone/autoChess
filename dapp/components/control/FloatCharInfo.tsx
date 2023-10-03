@@ -3,9 +3,10 @@ import { useAtom } from "jotai"
 
 import { CharacterFields } from "../../types/nft";
 import { HStack, Img, Stack } from "@chakra-ui/react";
-import { slotCharacter, enemyCharacter, shopCharacter, stageAtom } from "../../store/stages";
+import { slotCharacter, enemyCharacter, shopCharacter, stageAtom, enemyCharacterV2, slotCharacterV2 } from "../../store/stages";
 
 import { get_base_raw_life, get_effect, get_star_num } from "../character/rawDataV2";
+import { CharacterFieldsV2 } from "../../types/entity";
 
 export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
     id: number,
@@ -13,11 +14,11 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
     isShopSlot?: boolean
     isOpponent?: boolean
 }) => {
-    const [chars] = useAtom(slotCharacter);
-    const [enemy_chars] = useAtom(enemyCharacter);
+    const [chars] = useAtom(slotCharacterV2);
+    const [enemy_chars] = useAtom(enemyCharacterV2);
     const [shopChars] = useAtom(shopCharacter);
     const [stage] = useAtom(stageAtom);
-    let char: CharacterFields | null = null;
+    let char: CharacterFieldsV2 | null = null;
     if (isShopSlot) {
         char = shopChars[id]
     } else {
@@ -28,17 +29,17 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
         }
     }
 
-    const get_base_life = (char:CharacterFields | null) => {
+    const get_base_life = (char:CharacterFieldsV2 | null) => {
         if (!char) {
             return 0
         }
         if (isShopSlot) {
-            return get_base_raw_life(char)
+            return char.max_life
         } else {
             if (stage == "fight") {
                 return char.life;
             } else {
-                return char.base_life
+                return char.max_life
             }
         }
     }
@@ -56,7 +57,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                 </HStack>
                 <p className="text-[10px]">HP:{get_base_life(char)}</p>
                 <p className="text-[10px]">ACK:{char?.attack}</p>
-                <p className="text-[10px]" style={{fontSize:"8px"}}>Feature: {get_effect(char)}</p>
+                <p className="text-[10px]" style={{fontSize:"8px"}}>Feature: {char.effect}</p>
                 {/* <p className="text-[10px]">Feature: All features to be finished</p> */}
             </Stack>
         </>}

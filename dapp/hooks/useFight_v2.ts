@@ -1,18 +1,88 @@
 import { useCallback } from "react"
-import { enemyCharacterV2, enemyFightingIndex, enemyHpChangeA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, slotCharacterV2, stageAtom } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacterV2, enemyFightingIndex, enemyHpChangeA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, slotCharacterV2, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
+import confetti from "canvas-confetti";
 import { CharacterFieldsV2 } from "../types/entity";
+import useQueryChesses from "../components/button/QueryAllChesses";
+import { sleep } from "../utils/sleep";
 export const useFightV2 = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
     const [chars, setChars] = useAtom(slotCharacterV2);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
+    const [stage, setStage] = useAtom(stageAtom);
+    const { query_chess } = useQueryChesses();
     const [operations, setOperations] = useAtom(operationsA);
+    const [hpChange, setHpChange] = useAtom(hpChangeA);
+    const [enemyHpChange, setEnemyHpChange] = useAtom(enemyHpChangeA);
+    const [attackChange, setAttackChange] = useAtom(attackChangeA);
+    const [enemyAttackChange, setEnemyAttackChange] = useAtom(enemyAttackChangeA);
+    const [fightResult, setFightResult] = useAtom(fightResultEffectA);
+    const [_chessId, setChessId] = useAtom(chessId);
+
+    let animationEnd = Date.now() + 4000;
+    let skew = 1;
+
+    
+    function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+    }
+
+    const clear_change = () => {
+        setAttackChange([0, 0, 0, 0, 0, 0]);
+        setEnemyAttackChange([0, 0, 0, 0, 0, 0]);
+        setHpChange([0, 0, 0, 0, 0, 0]);
+        setEnemyHpChange([0, 0, 0, 0, 0, 0]);
+    }
+
+    const lose_effect = () => {
+        const timeLeft = animationEnd - Date.now(),
+            ticks = Math.max(200, 500 * (timeLeft / 4000));
+
+        skew = Math.max(0.8, skew - 0.001);
+
+        confetti({
+            particleCount: 1,
+            startVelocity: 0,
+            ticks: ticks,
+            origin: {
+                x: Math.random(),
+                // since particles fall down, skew start toward the top
+                y: Math.random() * skew - 0.2,
+            },
+            colors: ["#ffffff"],
+            shapes: ["circle"],
+            gravity: randomInRange(0.4, 0.6),
+            scalar: randomInRange(0.4, 1),
+            drift: randomInRange(-0.4, 0.4),
+        });
+
+        if (timeLeft > 0) {
+            requestAnimationFrame(lose_effect);
+        }
+    }
+
+
+    const win_effect = () => {
+        confetti({
+            angle: randomInRange(55, 125),
+            spread: randomInRange(50, 70),
+            particleCount: randomInRange(50, 100),
+            origin: { y: 0.6 },
+            ticks: 3000
+        });
+    };
+
     
     const call_attack = (char: CharacterFieldsV2, enemyChar: CharacterFieldsV2, enemyIndex:number, is_opponent: boolean) => {
         let attack = char.attack;
-        enemyChar.life -= attack;
+        if (enemyChar.life < attack) {
+            enemyChar.life = 0;
+            died_check(enemyChars, is_opponent);
+        } else {
+            enemyChar.life -= attack;
+        }
         if (is_opponent) {
             console.log("敌人：", char.name, " 普攻: ", attack , "生命:", char.life, " 攻击", enemyChar.name, "攻击后生命:", enemyChar.life);
         } else {
@@ -46,23 +116,6 @@ export const useFightV2 = () => {
         } else {
             setChars(group);
         }
-    }
-
-    const has_effect = (is_opponent:boolean, key:string) => {
-        let target_group;
-        if (is_opponent) {
-            target_group = chars;
-        } else {
-            target_group = enemyChars;
-        }
-        for (const character of target_group) {
-            if (character != null && character.life > 0) {
-                if (character.effect === key) {
-                    return true
-                }
-            }
-        }
-        return false;
     }
 
     const find_next_alive_char_index = (is_opponent:boolean) => {
@@ -344,14 +397,25 @@ export const useFightV2 = () => {
         return value;
     }
 
-    const action = (char:CharacterFieldsV2, enemy:CharacterFieldsV2, enemyIndex:number, is_opponent:boolean) => {
+    const action = async (char:CharacterFieldsV2, enemy:CharacterFieldsV2, enemyIndex:number, is_opponent:boolean) => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
         if (char.magic >= (char.max_magic + extra_max_magic_debuff) && char.effect_type === "skill") {
+            char.attacking = 2;
             call_skill(char, enemy, is_opponent);
             char.magic = 0;
+            setChars(chars.slice());
+            setEnemyChars(enemyChars.slice());
+            await sleep(1000);
+            char.attacking = 0;
         } else {
+            char.attacking = 1;
+            setChars(chars.slice());
+            setEnemyChars(enemyChars.slice());
+            await sleep(500);
             call_attack(char, enemy, enemyIndex, is_opponent);
             char.magic = char.magic + 1;
+            await sleep(500);
+            char.attacking = 0;
         }
     }
 
@@ -374,11 +438,18 @@ export const useFightV2 = () => {
         })
         setOperations([]);
         operations.push(chars.toString());
+        clear_change();
+    }
+
+    const get_random_number = () => {
+        let num = 2 + 3 * Math.random();
+        return "Reward: " + (num.toFixed(2)) +" SUI";
     }
 
     return useCallback(async () => {
         console.log("--------开始战斗-------");
         console.log(chars);
+        console.log(enemyChars);
         let loop = 10;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
@@ -393,9 +464,10 @@ export const useFightV2 = () => {
             // 同时攻击
             let max_loop = 20;
             while (char.life > 0 && enemyChar.life > 0) {
-                action(char, enemyChar, enemyCharIndex, false);
-                action(enemyChar, char, charIndex, true);
-    
+                await sleep(500);
+                await action(char, enemyChar, enemyCharIndex, false);
+                await action(enemyChar, char, charIndex, true);
+
                 died_check(chars, false);
                 died_check(enemyChars, true);
                 max_loop -= 1;
@@ -413,9 +485,30 @@ export const useFightV2 = () => {
 
         if (some(chars, Boolean)) {
             console.log("you win");
+            setFightResult("You Win");
+            for (let i = 0; i < 5; ++i) {
+                win_effect();
+                await sleep(200);
+            }
+            await sleep(1000);
+            setFightResult(null);
         } else {
             console.log("you lose");
+            setFightResult("You Lose");
+            animationEnd = Date.now() + 2000;
+            lose_effect();
+            await sleep(2000);
+            setFightResult(null);
         }
+
+
         reset_status();
-    }, []);
+
+         // 更新数据并进入shop
+        // if (_chessId) {
+        //     await query_chess(_chessId);
+        //     setEnemyChars([]);
+        //     setStage("shop");
+        // }
+    }, [enemyChars, setEnemyChars, chars, setChars]);
 }

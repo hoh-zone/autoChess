@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { chessId, enemyCharacterV2, stageAtom, winA, loseA, slotCharacterV2, operationsA } from "../store/stages";
+import { chessId, enemyCharacterV2, stageAtom, winA, loseA, slotCharacterV2, operationsA, enemyNameA } from "../store/stages";
 import useOperateAndMatch from "./button/OperateAndMatchV2";
 import useQueryFight from "./button/QueryFightResult";
 import { useFightV2 } from "../hooks/useFight_v2";
@@ -8,10 +8,13 @@ import { CharacterFields } from "../types/nft";
 import { Button, useToast } from '@chakra-ui/react'
 import { get_chars } from "./character/rawDataV2";
 import { range } from "lodash";
+import { sleep } from "../utils/sleep";
+import { CharacterFieldsV2 } from "../types/entity";
 
 export const FightV2 = () => {
     const { nftObjectId, operate_submit } = useOperateAndMatch();
-    // const { query_fight } = useQueryFight();
+    const { query_fight } = useQueryFight();
+    const [enemyName, setEnemyName] = useAtom(enemyNameA);
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
     const [chars, setChars] = useAtom(slotCharacterV2);
     const [operations, setOperations] = useAtom(operationsA);
@@ -32,14 +35,19 @@ export const FightV2 = () => {
             chars[index] = init_chars[index];
         })
         enemyChars.map((chr, index) => {
+            console.log("set:", index, init_enemys[index]);
             enemyChars[index] = init_enemys[index];
-        })
+            console.log("1: ", enemyChars[index]);
+            console.log("2: ", enemyChars);
+        });
+        console.log("all set:", enemyChars);
     }
     useEffect(() => {
         if (stage === "fight") {
             fight();
         }
     }, [stage]);
+
     return <>
     { stage === "shop" && <Button className="" onClick={async () => {
         if (win >= 10) {
@@ -60,12 +68,23 @@ export const FightV2 = () => {
             })
             return;
         }
-        let success = await operate_submit(operations);
-        setOperations([]);
-        if (!success) {
-            return;
-        }
-        init_chars();
+        // let success = await operate_submit(operations);
+        // setOperations([]);
+        // if (!success) {
+        //     return;
+        // }
+
+        // sync enemy
+        let json = await query_fight(chess_id);
+        let enemys:CharacterFieldsV2[] = json['v2_lineup']['roles'];
+        console.log("json res: ", enemys);
+        enemys.map((ele) => {
+            ele.magic = 0;
+            ele.max_life = ele.life;
+        })
+        let name = json['v2_name'];
+        setEnemyName(name);
+        setEnemyChars(enemys);
         setStage("fight");
     }}> FightV2 </Button>    }
     </>

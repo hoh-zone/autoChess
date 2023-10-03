@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { GameNft } from "../types/nft";
 import { useAtom } from "jotai";
-import { chessId, loseA, moneyA, nameA, shopCharacter, slotCharacter, winA } from "../store/stages";
+import { chessId, loseA, moneyA, nameA, shopCharacter, slotCharacterV2, winA } from "../store/stages";
 
 export const useSyncGameNFT = () => {
     const [_chessId, setChessId] = useAtom(chessId);
@@ -9,7 +9,7 @@ export const useSyncGameNFT = () => {
     const [_win, setWin] = useAtom(winA);
     const [_lose, setLose] = useAtom(loseA);
     const [_name, setName] = useAtom(nameA);
-    const [_slotCharacter, setSlotCharacter] = useAtom(slotCharacter);
+    const [_slotCharacter, setSlotCharacter] = useAtom(slotCharacterV2);
     const [_shopCharacter, setShopCharacter] = useAtom(shopCharacter);
 
     return useCallback((nft: GameNft) => {
@@ -22,15 +22,20 @@ export const useSyncGameNFT = () => {
             if (role.fields.name == "none") {
                 return null;
             }
-            role.fields.base_life = role.fields.life;
+            role.fields.max_life = role.fields.life;
             return role.fields
         }));
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
             if (role.fields.name == "none") {
                 return null;
             }
-            role.fields.base_life = role.fields.life;
+            if (role.fields.name == "fireMega1_1") {
+                // todo:待删除
+                role.fields.name = "firemega1_1";
+            }
+            role.fields.max_life = role.fields.life;
             return role.fields
         }));
+        console.log("pool:",nft.cards_pool.fields.roles);
     }, []);
 }

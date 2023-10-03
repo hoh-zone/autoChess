@@ -1,16 +1,16 @@
 
 import { useAtom } from "jotai"
 
-import { CharacterFields } from "../../types/nft";
-import { slotCharacter, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
-import { HStack, Img } from "@chakra-ui/react";
+import { slotCharacterV2, enemyCharacterV2} from "../../store/stages";
+import { HStack } from "@chakra-ui/react";
+import { CharacterFieldsV2 } from "../../types/entity";
 
 export const HpBar = ({id}: {
     id: number,
 }) => {
-    const [chars] = useAtom(slotCharacter);
-    const [enemy_chars] = useAtom(enemyCharacter);
-    let char: CharacterFields | null = null;
+    const [chars] = useAtom(slotCharacterV2);
+    const [enemy_chars] = useAtom(enemyCharacterV2);
+    let char: CharacterFieldsV2 | null = null;
     let isOpponent = false;
     if (id >= 10) {
         char = enemy_chars[id - 10];
@@ -20,17 +20,17 @@ export const HpBar = ({id}: {
         isOpponent = false
     }
 
-    const get_width_by_life = (char:CharacterFields | null) => {
+    const get_width_by_life = (char:CharacterFieldsV2 | null) => {
         let start = 10;
         let end = 40;
         if (!char) {
             return start;
         }
-        let total = char.base_life
+        let total = char.max_life
         if (total == undefined) {
             return start;
         }
-        let life = char == null ? 0 : char.life;
+        let life = (char == null||char.life<0) ? 0 : char.life;
         return start + (life / total) * end
     }
 

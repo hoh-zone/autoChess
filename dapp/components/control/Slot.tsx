@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom, operationsA } from "../../store/stages"
+import { enemyCharacter, moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, slotCharacter, stageAtom, operationsA, enemyCharacterV2, slotCharacterV2 } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFields } from "../../types/nft";
 import { upgrade } from "../character/rawDataV2";
@@ -11,14 +11,16 @@ import { motion } from "framer-motion";
 import { useToast } from '@chakra-ui/react'
 import confetti from "canvas-confetti";
 import { StatusChange } from "./StatusChange";
+import { CharacterFieldsV2 } from "../../types/entity";
+import { get_sell_price } from "../character/rawDataV2";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
     id: number
 }) => {
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
-    const [chars, setChars] = useAtom(slotCharacter);
-    const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
+    const [chars, setChars] = useAtom(slotCharacterV2);
+    const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot);
     const [shopChars, setShopChars] = useAtom(shopCharacter);
     const [money, setMoney] = useAtom(moneyAtom);
@@ -46,7 +48,7 @@ export const Slot = ({ isOpponent = false, id }: {
         }
     };
 
-    let char: CharacterFields | null = null;
+    let char: CharacterFieldsV2 | null = null;
     if (id >= 10) {
         char = enemyChars[id - 10];
     } else {
@@ -79,8 +81,8 @@ export const Slot = ({ isOpponent = false, id }: {
             // try to buy
             let char_shop_choosen = shopChars[shopSlotNumber!];
             if (shopSlotNumber !== null && !char && char_shop_choosen) {
-                if (money >= char_shop_choosen.price) {
-                    setMoney(money - char_shop_choosen.price);
+                if (money >= get_sell_price(char_shop_choosen)) {
+                    setMoney(money - get_sell_price(char_shop_choosen));
                     chars[id] = shopChars[shopSlotNumber];
                     shopChars[shopSlotNumber] = null;
                     setChars(chars.slice());
@@ -94,8 +96,8 @@ export const Slot = ({ isOpponent = false, id }: {
                 // buy and upgrad chars
             } else if (shopSlotNumber != null && char && char_shop_choosen &&
             canUpgrade(char, char_shop_choosen)) {
-                if (money >= char_shop_choosen.price) {
-                    setMoney(money - char_shop_choosen.price);
+                if (money >= get_sell_price(char_shop_choosen)) {
+                    setMoney(money - get_sell_price(char_shop_choosen));
                     let tmp = upgrade(char, char_shop_choosen);
                     chars[id] = tmp;
                     shopChars[shopSlotNumber] = null;

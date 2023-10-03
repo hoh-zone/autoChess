@@ -1,10 +1,12 @@
+import { CharacterFieldsV2 } from "./entity";
+
 export interface GameNft {
     cards_pool:    CardsPool;
     creator:       string;
     even:          number;
     gold:          string;
     id:            ID;
-    life:          string;
+    life:          number;
     lineup:        CardsPool;
     lose:          number;
     name:          string;
@@ -27,7 +29,7 @@ export interface CardsPoolFields {
 
 export interface Role {
     type:   string;
-    fields: CharacterFields;
+    fields: CharacterFieldsV2;
 }
 
 export interface CharacterFields {

@@ -1,11 +1,11 @@
 import { Button } from "@chakra-ui/react"
 import { useAtom } from "jotai";
-import { moneyA as moneyAtom, operationsA, selectedSlot, slotCharacter } from "../../store/stages";
-import { get_sell_price } from "../character/rawData";
+import { moneyA as moneyAtom, operationsA, selectedSlot, slotCharacter, slotCharacterV2 } from "../../store/stages";
+import { get_sell_price } from "../character/rawDataV2";
 
 export const SellButton = () => {
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
-    const [chars, setChars] = useAtom(slotCharacter);
+    const [chars, setChars] = useAtom(slotCharacterV2);
     const [money, setMoney] = useAtom(moneyAtom);
     const [operations, setOperations] = useAtom(operationsA);
     return (
@@ -18,13 +18,13 @@ export const SellButton = () => {
                     chars[slotNumber] = null;
                     setSlotNumber(null);
                     setChars(chars);
-                    setMoney(money + get_sell_price(name));
+                    setMoney(money + get_sell_price(chars[slotNumber]));
                     operations.push("sell:" + slotNumber);
                 }
             }}
         >Sell(
         {slotNumber != null && chars[slotNumber] != null &&
-            <p>+{get_sell_price(chars[slotNumber]?.name)}</p>
+            <p>+{get_sell_price(chars[slotNumber])}</p>
         }💰)
         </Button>
     )

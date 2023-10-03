@@ -23,7 +23,7 @@ export const enemyNameA = atom<string>("Your Enemy");
 export const enemyCharacter = atom<(CharacterFields | null)[]>([null, null, null, null, null, null]);
 export const enemyFightingIndex = atom<number>(0);
 
-export const shopCharacter = atom<(CharacterFields | null)[]>([null, null, null, null, null, null]);
+export const shopCharacter = atom<(CharacterFieldsV2 | null)[]>([null, null, null, null, null, null]);
 export const chessId = atom<string>("");
 
 // control

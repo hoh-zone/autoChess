@@ -49,11 +49,11 @@ const roles_info: Roles = {
     "shaman2_1": {name: "shaman2_1",level: 6,attack:  10, life: 15, magic: 0, base_attack: 10, max_life: 15, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
     "shaman3": {name: "shaman3",level: 9,attack:  20, life: 45, magic: 0, base_attack: 20, max_life: 45, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
 
-    "fireMega1": {name: "fireMega1",level: 1,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "fireMega1_1": {name: "fireMega1_1",level: 2,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "fireMega2": {name: "fireMega2",level: 3,attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "fireMega2_1": {name: "fireMega2_1",level: 6, attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "fireMega3": {name: "fireMega3",level: 9,attack:  24, life: 25, magic: 0, base_attack: 24, max_life: 25, max_magic: 1, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega1": {name: "firemega1",level: 1,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega1_1": {name: "firemega1_1",level: 2,attack:  6, life: 5, magic: 0, base_attack: 6, max_life: 5, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega2": {name: "firemega2",level: 3,attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega2_1": {name: "firemega2_1",level: 6, attack:  12, life: 10, magic: 0, base_attack: 12, max_life: 10, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega3": {name: "firemega3",level: 9,attack:  24, life: 25, magic: 0, base_attack: 24, max_life: 25, max_magic: 1, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
 
     "slime1": {name: "slime1",level: 1,attack:  6, life: 6, magic: 0, base_attack: 6, max_life: 6, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
     "slime1_1": {name: "slime1_1",level: 2,attack:  6, life: 6, magic: 0, base_attack: 6, max_life: 6, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
@@ -116,7 +116,7 @@ export function get_chars(names:string[]) : CharacterFieldsV2[] {
 }
 
 
-export function get_sell_price(char:CharacterFields | null): number {
+export function get_sell_price(char:CharacterFieldsV2 | null): number {
     if (!char) {
         return 0;
     }
@@ -130,7 +130,7 @@ export function get_sell_price(char:CharacterFields | null): number {
     }
 }
 
-export function get_star_num(char:CharacterFields | null) : number {
+export function get_star_num(char:CharacterFieldsV2 | null) : number {
     if (!char) {
         return 0;
     }
@@ -165,7 +165,7 @@ export function get_effect_value(char:CharacterFields | null) : string {
     }
 }
 
-export function upgrade(char1:CharacterFields, char2:CharacterFields): CharacterFields {
+export function upgrade(char1:CharacterFieldsV2, char2:CharacterFieldsV2): CharacterFieldsV2 {
     console.log(char1);
     console.log(char2);
     // 属性受角色战场永久buff效果影响，合成属性会高于基础值
@@ -203,10 +203,10 @@ export function upgrade(char1:CharacterFields, char2:CharacterFields): Character
     }
     let key = removeSuffix(name1) + level_str
     let clone = JSON.stringify(roles_info[key]);
-    let res:CharacterFields = JSON.parse(clone);
+    let res:CharacterFieldsV2 = JSON.parse(clone);
     res.attack = res.attack + attack_buff;
     res.life = res.life + life_buff;
-    res.base_life = res.life;
+    res.max_life = res.life;
     console.log(res);
     return res;
 }

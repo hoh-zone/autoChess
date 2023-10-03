@@ -4,32 +4,33 @@ import { useAtom } from "jotai"
 import { CharacterFields } from "../../types/nft";
 
 import { HStack, Img } from "@chakra-ui/react";
-import { loseA, nameA, enemyNameA, slotCharacter, winA, fightingIndex, enemyFightingIndex, enemyCharacter} from "../../store/stages";
+import { loseA, nameA, enemyNameA, slotCharacter, winA, fightingIndex, enemyFightingIndex, enemyCharacter, enemyCharacterV2, slotCharacterV2} from "../../store/stages";
 import { removeSuffix } from "../../utils/TextUtils";
+import { CharacterFieldsV2 } from "../../types/entity";
 
 export const StatusBar = ({ isOpponent = false}: {
     isOpponent?: boolean
 }) => {
     const [lose, _setLose] = useAtom(loseA);
     const [win, _setWin] = useAtom(winA);
-    const [chars] = useAtom(slotCharacter);
-    const [enemy_chars] = useAtom(enemyCharacter);
+    const [chars] = useAtom(slotCharacterV2);
+    const [enemy_chars] = useAtom(enemyCharacterV2);
     const [name] = useAtom(nameA);
     const [enemy_name] = useAtom(enemyNameA);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
 
-    const get_width_by_life = (char:CharacterFields | null) => {
+    const get_width_by_life = (char:CharacterFieldsV2 | null) => {
         if (!char) {
             return 0;
         }
         let start = isOpponent? 10: 60;
         let end = isOpponent? 335: 330;
-        let total = char.base_life;
+        let total = char.max_life;
         if (total == undefined) {
             return end;
         }
-        let life = char == null ? 0 : char.life;
+        let life = (char == null || char.life <0 ) ? 0 : char.life;
         return start + (life/total) * end
     }
 
@@ -100,7 +101,7 @@ export const StatusBar = ({ isOpponent = false}: {
             return "left"
         }
     }
-    let char: CharacterFields | null = null;
+    let char: CharacterFieldsV2 | null = null;
     char = isOpponent ? enemy_chars[enemy_fight_index]: chars[fight_index];
     return <div className="text-white" style={{width:'45%'}}>
         {!isOpponent ? 
@@ -131,7 +132,7 @@ export const StatusBar = ({ isOpponent = false}: {
             <div style={{ justifyContent:`${get_bg_direction()}` ,width: '400px', height: '60px', background: `${get_bg1_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bg_direction()}` }}>
                 <div style={{ width:  `${get_width_by_life(char)}px`, height: '60px', background: `${get_bg2_url()}`, backgroundSize: '400px auto', backgroundPosition: `${get_bar_direction()}` }}></div>
                 <HStack style={{justifyContent:`${get_bg_direction()}`}}>
-                    <p>{get_hp(char)}/{get_base_life(char)}</p>
+                    <p>{get_hp(char)}/{char?.max_life}</p>
                     {lose == 0 && <HStack>
                         <Img src="heart.png"/>
                         <Img src="heart.png"/>

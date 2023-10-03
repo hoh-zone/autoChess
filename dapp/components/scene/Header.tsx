@@ -1,7 +1,6 @@
 import { Button, Center, HStack, Spacer, Text } from "@chakra-ui/react"
 import { useAtom } from "jotai"
 import { loseA, moneyA as moneyAtom, nameA, stageAtom, winA } from "../../store/stages"
-import { Fight } from "../Fight";
 import { FightV2 } from "../FightV2";
 
 export const Header = () => {
@@ -21,7 +20,6 @@ export const Header = () => {
         <Text>Win: {win}</Text>
         <Text>Lose: {lose}</Text>
         <Spacer />
-        <Fight />
         <FightV2 />
     </HStack>
 }
