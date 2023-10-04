@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { chessId, enemyCharacterV2, stageAtom, winA, loseA, slotCharacterV2, operationsA, enemyNameA } from "../store/stages";
 import useOperateAndMatch from "./button/OperateAndMatchV2";
 import useQueryFight from "./button/QueryFightResult";
-import { useFightV2 } from "../hooks/useFight_v2";
+import { useFight } from "../hooks/useFight_v2";
 import { useEffect } from "react";
 import { Button, useToast } from '@chakra-ui/react'
 import { get_chars } from "./character/rawDataV2";
@@ -21,7 +21,7 @@ export const FightV2 = () => {
     const [lose, _setLose] = useAtom(loseA);
     const toast = useToast();
 
-    const fight = useFightV2();
+    const fight = useFight();
     const init_chars = () => {
         console.log("初始化角色");
         let chars_names = ["archer3", "shinobi3", "ani1", "ani3"];

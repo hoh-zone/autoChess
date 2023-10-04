@@ -9,19 +9,17 @@ import { FightResultText } from "../effect/FightResultText"
 
 const positionTable: { [key: string]: string } = {
     0: "right-0 top-0",
-    1: "right-[10%] bottom-[10%]",
-    2: "right-[15%] top-[10%]",
-    3: "right-[25%] bottom-[25%]",
-    4: "right-[35%] top-[10%]",
-    5: "right-[45%] bottom-[20%]",
-    6: "right-[55%] bottom-[30%]",
+    1: "right-[15%] bottom-[15%]",
+    2: "right-[30%] top-[15%]",
+    3: "right-[40%] bottom-[25%]",
+    4: "right-[50%] top-[10%]",
+    5: "right-[65%] bottom-[20%]",
     10: "left-0 top-0",
-    11: "left-[10%] bottom-[10%]",
-    12: "left-[15%] top-[10%]",
-    13: "left-[25%] bottom-[25%]",
-    14: "left-[35%] top-[10%]",
-    15: "left-[45%] bottom-[20%]",
-    16: "left-[55%] bottom-[30%]",
+    11: "left-[15%] bottom-[15%]",
+    12: "left-[30%] top-[15%]",
+    13: "left-[40%] bottom-[25%]",
+    14: "left-[50%] top-[10%]",
+    15: "left-[65%] bottom-[20%]",
 }
 
 export const FightScene = () => {
@@ -39,7 +37,7 @@ export const FightScene = () => {
         return "bg" + index + ".mp4";
     }
 
-    return <div className="h-full w-full relative">
+    return <div className="h-[90%] w-full relative">
         <FightResultText />
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
             <source src="bg6.mp4" type="video/mp4" />
@@ -48,7 +46,7 @@ export const FightScene = () => {
             <StatusBar isOpponent={false}></StatusBar>
             <StatusBar isOpponent={true}></StatusBar>
         </HStack>
-        <HStack className="absolute w-full h-[200px] bottom-0">
+        <HStack className="absolute w-full h-[120px] bottom-0">
             <div className="w-1/2 h-full relative" >
                 {range(0, 7).map((id) =>
                 (<div key={id} className={twMerge(

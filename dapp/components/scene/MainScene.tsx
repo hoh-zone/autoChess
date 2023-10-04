@@ -1,4 +1,4 @@
-import { Box, HStack, Stack } from "@chakra-ui/react"
+import { Box, Center, HStack, Stack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { SellButton } from "../control/SellButton"
 import { CharInstruction } from "../CharInstruction"
@@ -9,26 +9,20 @@ export const MainScene = () => {
         </video>
         <HStack className="absolute top-0 p-8 w-full h-3/4 justify-around" align={"center"}>
             {/* left side */}
-            <div className="w-full h-full relative" >
-                <div className="absolute top-[-5%] left-1/4 h-full">
-                    <Stack gap={70} className=" justify-around h-full">
-                        <Slot id={0} />
-                        <Slot id={1} />
-                        <Slot id={2} />
-                    </Stack>
-                </div>
-                <div className="absolute top-[-5%] left-2/3 h-full">
-                    <Stack gap={70} className=" justify-around h-full">
-                        <Slot id={3} />
-                        <Slot id={4} />
-                        <Slot id={5} />
-                    </Stack>
-                </div>
-                <Stack className="absolute">
+            <Center className="w-full h-full relative px-32">
+                <HStack className="w-full justify-around mt-32">
+                    <Slot id={5} />
+                    <Slot id={4} />
+                    <Slot id={3} />
+                    <Slot id={2} />
+                    <Slot id={1} />
+                    <Slot id={0} />
+                </HStack>
+                <Stack className="absolute top-0 left-0">
                     <SellButton />
-                    <CharInstruction/>
+                    <CharInstruction />
                 </Stack>
-            </div>
-        </HStack>
-    </div>
+            </Center>
+        </HStack >
+    </div >
 }

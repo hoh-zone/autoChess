@@ -6,8 +6,8 @@ import confetti from "canvas-confetti";
 import { CharacterFields } from "../types/nft";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
-import { at } from "lodash";
-export const useFightV2 = () => {
+
+export const useFight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
     const [chars, setChars] = useAtom(slotCharacterV2);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
@@ -25,7 +25,6 @@ export const useFightV2 = () => {
     let animationEnd = Date.now() + 4000;
     let skew = 1;
 
-    
     function randomInRange(min: number, max: number) {
         return Math.random() * (max - min) + min;
     }
@@ -74,8 +73,8 @@ export const useFightV2 = () => {
         });
     };
 
-    const call_attack = (char: CharacterFields, enemyChar: CharacterFields, enemyIndex:number, is_opponent: boolean) => {
-        let attack:number = char.attack;
+    const call_attack = (char: CharacterFields, enemyChar: CharacterFields, enemyIndex: number, is_opponent: boolean) => {
+        let attack: number = char.attack;
         if (enemyChar.life < attack) {
             enemyChar.life = 0;
         } else {
@@ -83,14 +82,14 @@ export const useFightV2 = () => {
         }
         if (is_opponent) {
             hpChange[enemyIndex] = -attack;
-            console.log("敌人：", char.name, " 普攻: ", attack , "生命:", char.life, " 攻击", enemyChar.name, "攻击后生命:", enemyChar.life);
+            console.log("敌人：", char.name, " 普攻: ", attack, "生命:", char.life, " 攻击", enemyChar.name, "攻击后生命:", enemyChar.life);
         } else {
             enemyHpChange[enemyIndex] = -attack;
-            console.log("我军：", char.name, " 普攻: ", attack , "生命:", char.life, " 攻击", enemyChar.name,  "攻击后生命:", enemyChar.life);
+            console.log("我军：", char.name, " 普攻: ", attack, "生命:", char.life, " 攻击", enemyChar.name, "攻击后生命:", enemyChar.life);
         }
     }
 
-    const get_target_group = (is_opponent:boolean, is_attack:boolean) => {
+    const get_target_group = (is_opponent: boolean, is_attack: boolean) => {
         if (is_opponent && is_attack) {
             return chars;
         } else if (!is_opponent && is_attack) {
@@ -104,7 +103,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const set_target_group = (group: (CharacterFields | null)[],is_opponent:boolean, is_attack:boolean) => {
+    const set_target_group = (group: (CharacterFields | null)[], is_opponent: boolean, is_attack: boolean) => {
         if (is_opponent && is_attack) {
             setChars(group);
         } else if (!is_opponent && is_attack) {
@@ -118,7 +117,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const find_next_alive_char_index = (is_opponent:boolean) => {
+    const find_next_alive_char_index = (is_opponent: boolean) => {
         if (is_opponent) {
             if (enemy_fight_index == enemyChars.length - 1) {
                 return null;
@@ -148,7 +147,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const find_last_one_index = (is_opponent:boolean) => {
+    const find_last_one_index = (is_opponent: boolean) => {
         if (is_opponent) {
             for (let i = enemyChars.length - 1; i > 0; i--) {
                 let role = enemyChars[i];
@@ -172,7 +171,7 @@ export const useFightV2 = () => {
         }
     }
 
-    const call_skill = (char: CharacterFields, enemy: CharacterFields, enemyIndex:number, is_opponent:boolean) => {
+    const call_skill = (char: CharacterFields, enemy: CharacterFields, enemyIndex: number, is_opponent: boolean) => {
         let effect = char.effect;
         let value = parseInt(char.effect_value);
         let is_forbid_buff = false;
@@ -199,14 +198,14 @@ export const useFightV2 = () => {
         }
 
         if (is_opponent) {
-            console.log("敌人:",char.name, " 释放技能:", char.effect, ":", value);
+            console.log("敌人:", char.name, " 释放技能:", char.effect, ":", value);
         } else {
             console.log("我军:", char.name, " 释放技能:", char.effect, ":", value);
         }
 
         if (effect == "aoe") {
             target_group = get_target_group(is_opponent, true);
-            target_group.map((ele:CharacterFields | null, index:number) => {
+            target_group.map((ele: CharacterFields | null, index: number) => {
                 if (ele == null) {
                     return;
                 }
@@ -219,7 +218,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, false);
-            target_group.map((ele:CharacterFields | null, index:number)=>{
+            target_group.map((ele: CharacterFields | null, index: number) => {
                 if (ele == null || ele.life <= 0) {
                     return;
                 };
@@ -238,7 +237,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, false);
-            target_group.map((ele:CharacterFields | null, index:number)=>{
+            target_group.map((ele: CharacterFields | null, index: number) => {
                 if (ele == null) {
                     return;
                 }
@@ -246,7 +245,7 @@ export const useFightV2 = () => {
                 if (is_opponent) {
                     enemyAttackChange[index] = value;
                 } else {
-                    attackChange[enemyIndex] = value;   
+                    attackChange[enemyIndex] = value;
                 }
             });
             console.log("全体加攻:", value);
@@ -263,14 +262,14 @@ export const useFightV2 = () => {
 
             target_group = get_target_group(is_opponent, false);
             console.log("check1:", target_group[next_one]!.max_life, target_group[next_one]!.life, value);
-            target_group[next_one]!.max_life =  Number(target_group[next_one]!.max_life) + Number(value);
+            target_group[next_one]!.max_life = Number(target_group[next_one]!.max_life) + Number(value);
             target_group[next_one]!.life = Number(target_group[next_one]!.life) + Number(value);
             console.log("触发后一个角色永久生命值增加:", value);
             console.log("check2:", target_group[next_one]!.max_life, target_group[next_one]!.life, value);
             if (is_opponent) {
                 enemyHpChange[next_one] = value;
             } else {
-                hpChange[next_one] = value;   
+                hpChange[next_one] = value;
             }
             set_target_group(target_group, is_opponent, false);
         } else if (effect == "reduce_all_tmp_attack") {
@@ -279,7 +278,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, true);
-            target_group.map((ele:CharacterFields | null, index:number)=>{
+            target_group.map((ele: CharacterFields | null, index: number) => {
                 if (ele == null) {
                     return;
                 }
@@ -290,7 +289,7 @@ export const useFightV2 = () => {
                 if (is_opponent) {
                     attackChange[index] = -value;
                 } else {
-                    enemyAttackChange[enemyIndex] = -value;   
+                    enemyAttackChange[enemyIndex] = -value;
                 }
             });
             console.log("全体降攻:", value);
@@ -347,7 +346,7 @@ export const useFightV2 = () => {
                 return;
             }
             target_group = get_target_group(is_opponent, false);
-            target_group.map((ele:CharacterFields | null, index:number)=>{
+            target_group.map((ele: CharacterFields | null, index: number) => {
                 if (ele == null || index == fight_index) {
                     return;
                 }
@@ -372,7 +371,7 @@ export const useFightV2 = () => {
             });
             console.log("目标：", target_group[min_hp_index]?.name, " 攻击前生命:", target_group[min_hp_index]?.life);
             if (target_group[min_hp_index] != null) {
-                target_group[min_hp_index]!.life = target_group[min_hp_index]!.life - value < 0? 0 : target_group[min_hp_index]!.life - value;
+                target_group[min_hp_index]!.life = target_group[min_hp_index]!.life - value < 0 ? 0 : target_group[min_hp_index]!.life - value;
                 if (target_group[min_hp_index]!.life == 0) {
                     console.log("对方死亡");
                     target_group[min_hp_index] = null
@@ -398,11 +397,11 @@ export const useFightV2 = () => {
         }
     }
 
-    const died_check = (charactors: (CharacterFields | null)[], is_opponent:boolean) => {
+    const died_check = (charactors: (CharacterFields | null)[], is_opponent: boolean) => {
         if (charactors == null) {
             return;
         }
-        charactors.map((ele, index)=>{
+        charactors.map((ele, index) => {
             if (ele == null) {
                 return;
             }
@@ -418,37 +417,37 @@ export const useFightV2 = () => {
         })
     }
 
-    const get_extra_max_magic_debuff = (is_opponent:boolean) => {
+    const get_extra_max_magic_debuff = (is_opponent: boolean) => {
         let value = 0;
         if (is_opponent) {
-            chars.map((ele)=> {
+            chars.map((ele) => {
                 if (ele == null) {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_max_magic") {
                     value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
                 }
-             })
+            })
         } else {
-            enemyChars.map((ele)=> {
+            enemyChars.map((ele) => {
                 if (ele == null) {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_max_magic") {
                     value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
                 }
-             })
+            })
         }
         if (is_opponent && value > 0) {
             console.log("敌人:最大魔法值+", value);
-        } 
-        if (!is_opponent && value > 0){
+        }
+        if (!is_opponent && value > 0) {
             console.log("我军:最大魔法值+", value);
         }
         return value;
     }
 
-    const action = async (char:CharacterFields, enemy:CharacterFields, enemyIndex:number, is_opponent:boolean) => {
+    const action = async (char: CharacterFields, enemy: CharacterFields, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
         console.log(char.name, char.effect_type, char.magic, char.max_magic, char.magic >= char.max_magic);
         if (char.magic >= (Number(char.max_magic) + Number(extra_max_magic_debuff)) && char.effect_type === "skill") {
@@ -495,7 +494,7 @@ export const useFightV2 = () => {
 
     const get_random_number = () => {
         let num = 2 + 3 * Math.random();
-        return "Reward: " + (num.toFixed(2)) +" SUI";
+        return "Reward: " + (num.toFixed(2)) + " SUI";
     }
 
     return useCallback(async () => {
