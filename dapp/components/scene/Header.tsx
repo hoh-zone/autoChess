@@ -10,7 +10,7 @@ export const Header = () => {
     const [name, _setName] = useAtom(nameA);
     const [stage, setStage] = useAtom(stageAtom);
 
-    return <HStack flexBasis={"8%"} className="bg-slate-700 text-white px-8" spacing={8}>
+    return <HStack className="h-[10%] bg-slate-700 text-white px-8" spacing={8}>
         <Button onClick={async () => {
             setStage("init");
         }}

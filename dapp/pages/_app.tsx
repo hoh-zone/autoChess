@@ -71,7 +71,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     >
       <ChakraProvider>
         <Head>
-          <title>Ethos Connect Example App</title>
+          <title>Sui Auto Chess</title>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
         </Head>
         <Component {...pageProps} />

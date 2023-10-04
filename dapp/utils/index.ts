@@ -3,7 +3,7 @@
  */
 export const getVw = (px: number) => {
   // 设计稿满屏宽度，对齐 postcss.config.js
-  const SCREEN_WIDTH = 1500;
+  const SCREEN_WIDTH = 1000;
   return `${px * 100 / SCREEN_WIDTH}vw`;
 };
 
