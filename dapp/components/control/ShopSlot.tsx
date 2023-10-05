@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import { selectedShopSlot, selectedSlot, shopCharacter, slotCharacter } from "../../store/stages"
+import { selectedShopSlot, selectedSlot, shopCharacter } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils"
 import { useEffect, useRef, useState } from "react"
 import { FloatCharInfo } from "./FloatCharInfo"
