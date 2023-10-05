@@ -103,6 +103,9 @@ todo:
 - 增加前端和链端的战斗日志打印和战斗模拟测试功能，方便进行比对测试，战力平衡测试
 - 经济模式玩法强化：历史残局继续赚钱或者10局之后进入挑战模式轮训挑战
 
+- gamebot telegram
+- tw, desui, withinfinity
+
 ## 数据流图  
 ![Flow](https://github.com/ISayHelloworld/autoChess/assets/43593163/31784949-6b5d-48bd-950f-92d0c4787575)
 

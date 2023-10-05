@@ -76,10 +76,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         </Head>
         <Component {...pageProps} />
         <audio ref={audioRef} autoPlay>
-          {/* <source src="./shop.mp3" type="audio/ogg" /> */}
+          <source src="./shop.mp3" type="audio/ogg" />
         </audio>
         <audio ref={audioFightRef} autoPlay>
-          {/* <source src="./fight.mp3" type="audio/ogg" /> */}
+          <source src="./fight.mp3" type="audio/ogg" />
         </audio>
       </ChakraProvider>
     </EthosConnectProvider>
