@@ -171,6 +171,8 @@ module auto_chess::chess {
         object::delete(id);
     }
 
+    
+
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let init_lineup = *&chess.lineup;
@@ -280,11 +282,10 @@ module auto_chess::chess {
 
         if (effect == utf8(b"aoe")) {
             let attack = utils::utf8_to_u64(effect_value);
-            safe_attack(attack, enemy_role);
             let i = 0;
             while (i < enemy_len) {
                 let char = vector::borrow_mut(enemy_roles, i);
-                safe_attack(attack, role);
+                safe_attack(attack, char);
                 i = i + 1;
             };
         } else if (effect == utf8(b"add_all_tmp_hp")) {
@@ -376,8 +377,6 @@ module auto_chess::chess {
             safe_attack(suppter_attack, next_one);
         } else if (effect == utf8(b"attack_last_char")) {
             let effect_attack = utils::utf8_to_u64(effect_value);
-            let attack = role::get_attack(role);
-            safe_attack(attack, enemy_role);
             if (vector::length(enemy_roles) == 0) {
                 safe_attack(effect_attack, enemy_role);
             } else {
@@ -464,9 +463,17 @@ module auto_chess::chess {
 
     fun call_attack(role: &Role, other_role: &mut Role) {
         let attack = role::get_attack(role);
+        let name = role::get_name(other_role);
+        let life = role::get_life(other_role);
         print(&utf8(b"attack"));
         print(&attack);
+        print(&name);
+
+        print(&utf8(b"before ater life"));
+        print(&life);
         safe_attack(attack, other_role);
+        life = role::get_life(other_role);
+        print(&life);
     }
 
     fun action(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
@@ -482,6 +489,54 @@ module auto_chess::chess {
             role::set_magic(role, magic + 1);
         };
     }
+
+
+    public fun test_fight(my_lineup_fight: LineUp, enemy_lineup: LineUp):bool {
+        // backup to avoid base_life to be changed
+        let enemy_lineup_fight = *&enemy_lineup;
+        let my_lineup_permanent = &mut *&my_lineup_fight;
+        let my_roles = *lineup::get_roles(&my_lineup_fight);
+        vector::reverse<role::Role>(&mut my_roles);
+        let my_num = vector::length(&my_roles);
+        let enemy_roles = *lineup::get_roles(&enemy_lineup_fight);
+        vector::reverse<role::Role>(&mut enemy_roles);
+        if (my_num == 0) {
+            return false
+        };
+        let my_first_role = role::init_role();
+        let enemy_first_role = role::init_role();
+        let my_fist_role_index = 0;
+        let enemy_first_role_index = 0;
+        while (some_alive(&my_first_role, &my_roles) && some_alive(&enemy_first_role, &enemy_roles)) {
+            while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
+                my_first_role = vector::pop_back(&mut my_roles);
+                if (vector::length(&my_roles) < 5) {
+                    my_fist_role_index = my_fist_role_index + 1;
+                };
+            };
+            while (vector::length(&enemy_roles) > 0 && (role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init")))) {
+                enemy_first_role = vector::pop_back(&mut enemy_roles);
+                if (vector::length(&enemy_roles) < 5) {
+                    enemy_first_role_index = enemy_first_role_index + 1;
+                };
+            };
+            while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
+                print(&utf8(b"we action:"));
+                action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
+                print(&utf8(b"enemy action:"));
+                action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
+            };
+        };
+
+        if (some_alive(&enemy_first_role, &enemy_roles)) {
+            print(&utf8(b"I lose"));
+            false
+        } else {
+            print(&utf8(b"I win"));
+            true
+        }
+    }
+
 
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext):bool {
         let my_lineup_fight = *&chess.lineup;

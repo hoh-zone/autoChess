@@ -15,10 +15,8 @@ module auto_chess::test {
 
     fun scenario(): Scenario { begin(@account) }
 
-    //sui move test test_operate_and_play --skip-fetch-latest-git-deps
     #[test]
-    fun test_operate_and_play() {
-        print(&1);
+    fun test_virtual_fight() {
         let scenario = scenario();
         let test = &mut scenario;
         let admin = @account;
@@ -29,11 +27,67 @@ module auto_chess::test {
             role::init_for_test(ctx(test));
             lineup::init_for_test(ctx(test));
             next_epoch(test, admin);
+            let roleGlobal = take_shared<role::Global>(test);
+            role::init_charactors1(&mut roleGlobal);
+            role::init_charactors2(&mut roleGlobal);
+            next_epoch(test, admin);
 
-            //TODO: KRISTIE CODE
-            let action_list = vector::empty<String>();
-            vector::push_back(&mut action_list, utf8(b"b1"));
-            
+            let lineupGlobal = take_shared<lineup::Global>(test);
+            lineup::init_lineup_pools(&mut lineupGlobal, &roleGlobal, ctx(test));
+            return_shared(roleGlobal);
+            return_shared(lineupGlobal);
+            next_epoch(test, admin);
+
+            chess::init_for_test(ctx(test));
+            next_epoch(test, admin);
+
+            let roleGlobal = take_shared<role::Global>(test);
+            let chessGlobal = take_shared<chess::Global>(test);
+            let lineupGlobal = take_shared<lineup::Global>(test);
+
+            // priest1:10:3' (namex_y:attack:life)
+            let lineup1_str_vec = vector::empty<String>();
+            vector::push_back(&mut lineup1_str_vec, utf8(b"archer3:24:30"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b""));
+            vector::push_back(&mut lineup1_str_vec, utf8(b""));
+            vector::push_back(&mut lineup1_str_vec, utf8(b""));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"shaman1:5:6"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"tree3:20:35"));
+
+            let lineup2_str_vec = vector::empty<String>();
+            vector::push_back(&mut lineup2_str_vec, utf8(b"mega3:16:51"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"priest2:6:16"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"shinobi2:8:24"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"mega2:8:14"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b""));
+            vector::push_back(&mut lineup2_str_vec, utf8(b""));
+
+
+            let my_lineup = lineup::parse_lineup_str_vec(utf8(b"1"), &roleGlobal, lineup1_str_vec, ctx(test));
+            let enemy_lineup = lineup::parse_lineup_str_vec(utf8(b"2"), &roleGlobal, lineup2_str_vec, ctx(test));
+            let res = chess::test_fight(my_lineup, enemy_lineup);
+
+            return_shared(chessGlobal);
+            return_shared(roleGlobal);
+            return_shared(lineupGlobal);
+        };
+        end(scenario);
+        
+    }
+
+    //sui move test test_operate_and_play --skip-fetch-latest-git-deps
+    // #[test]
+    fun test_operate_and_play() {
+        let scenario = scenario();
+        let test = &mut scenario;
+        let admin = @account;
+
+        next_tx(test, admin);
+        {
+            // init modules
+            role::init_for_test(ctx(test));
+            lineup::init_for_test(ctx(test));
+            next_epoch(test, admin);
 
             let roleGlobal = take_shared<role::Global>(test);
             role::init_charactors1(&mut roleGlobal);
