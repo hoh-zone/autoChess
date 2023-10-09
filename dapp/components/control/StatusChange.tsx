@@ -18,14 +18,14 @@ export const StatusChange = ({id}: {
             setTimeout(() => {
                 enemyHpChange[id - 10] = 0;
                 hp_change = 0;
-            }, 1000);
+            }, 500);
         }
         if (attack_change != 0) {
             console.log("ene ak:", enemyAttackChange);
             setTimeout(() => {
                 enemyAttackChange[id - 10] = 0;
                 attack_change = 0;
-            }, 1000);
+            }, 500);
         }
     } else {
         hp_change = hpChange[id];
@@ -33,13 +33,13 @@ export const StatusChange = ({id}: {
             setTimeout(() => {
                 hpChange[id] = 0;
                 hp_change = 0;
-            }, 1000);
+            }, 500);
         }
         if (attack_change != 0) {
             setTimeout(() => {
                 attackChange[id] = 0;
                 attack_change = 0;
-            }, 1000);
+            }, 500);
         }
     }
 

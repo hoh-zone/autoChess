@@ -117,12 +117,12 @@ export const useFight = () => {
         }
     }
 
-    const find_next_alive_char_index = (is_opponent: boolean) => {
+    const find_next_alive_char_index = (is_opponent:boolean, charIndex:number, enemyIndex:number) => {
         if (is_opponent) {
-            if (enemy_fight_index == enemyChars.length - 1) {
+            if (enemyIndex == enemyChars.length - 1) {
                 return null;
             }
-            for (let i = enemy_fight_index; i < enemyChars.length; i++) {
+            for (let i = enemyIndex + 1; i < enemyChars.length; i++) {
                 let role = enemyChars[i];
                 if (role == null || role == undefined) {
                     continue;
@@ -132,10 +132,10 @@ export const useFight = () => {
                 }
             }
         } else {
-            if (fight_index == chars.length - 1) {
+            if (charIndex == chars.length - 1) {
                 return null;
             }
-            for (let i = fight_index; i < chars.length; i++) {
+            for (let i = charIndex + 1; i < chars.length; i++) {
                 let role = chars[i];
                 if (role == null || role == undefined) {
                     continue;
@@ -171,7 +171,7 @@ export const useFight = () => {
         }
     }
 
-    const call_skill = (char: CharacterFields, enemy: CharacterFields, enemyIndex: number, is_opponent: boolean) => {
+    const call_skill = (char: CharacterFields, enemy: CharacterFields, charIndex:number, enemyIndex:number, is_opponent:boolean) => {
         let effect = char.effect;
         let value = parseInt(char.effect_value);
         let is_forbid_buff = false;
@@ -255,17 +255,15 @@ export const useFight = () => {
                 console.log("触发特效: 加buff失败")
                 return;
             }
-            let next_one = find_next_alive_char_index(is_opponent);
+            let next_one = find_next_alive_char_index(is_opponent, charIndex, enemyIndex);
             if (next_one == null) {
                 return;
             }
 
             target_group = get_target_group(is_opponent, false);
-            console.log("check1:", target_group[next_one]!.max_life, target_group[next_one]!.life, value);
             target_group[next_one]!.max_life = Number(target_group[next_one]!.max_life) + Number(value);
             target_group[next_one]!.life = Number(target_group[next_one]!.life) + Number(value);
-            console.log("触发后一个角色永久生命值增加:", value);
-            console.log("check2:", target_group[next_one]!.max_life, target_group[next_one]!.life, value);
+            console.log("触发后一个角色永久生命值增加:", next_one, value);
             if (is_opponent) {
                 enemyHpChange[next_one] = value;
             } else {
@@ -298,7 +296,7 @@ export const useFight = () => {
             target_group = get_target_group(is_opponent, true);
             let suppter_attack = Math.round(value / 10 * char.attack);
             enemy.life -= char.attack;
-            let next_one_index = find_next_alive_char_index(!is_opponent);
+            let next_one_index = find_next_alive_char_index(!is_opponent, charIndex, enemyIndex);
             if (next_one_index == null) {
                 return;
             }
@@ -447,25 +445,23 @@ export const useFight = () => {
         return value;
     }
 
-    const action = async (char: CharacterFields, enemy: CharacterFields, enemyIndex: number, is_opponent: boolean) => {
+    const action = async (char:CharacterFields, enemy:CharacterFields, charIndex:number, enemyIndex:number, is_opponent:boolean) => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
-        console.log(char.name, char.effect_type, char.magic, char.max_magic, char.magic >= char.max_magic);
         if (char.magic >= (Number(char.max_magic) + Number(extra_max_magic_debuff)) && char.effect_type === "skill") {
             char.attacking = 2;
-            call_skill(char, enemy, enemyIndex, is_opponent);
             char.magic = 0;
             setChars(chars.slice());
             setEnemyChars(enemyChars.slice());
             await sleep(1000);
+            call_skill(char, enemy, charIndex, enemyIndex, is_opponent);
             char.attacking = 0;
         } else {
             char.attacking = 1;
             setChars(chars.slice());
             setEnemyChars(enemyChars.slice());
-            await sleep(500);
+            await sleep(700);
             call_attack(char, enemy, enemyIndex, is_opponent);
             char.magic = char.magic + 1;
-            await sleep(500);
             char.attacking = 0;
         }
     }
@@ -504,7 +500,7 @@ export const useFight = () => {
         let loop = 10;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
-            const charIndex = chars.findIndex(Boolean);
+            let charIndex = chars.findIndex(Boolean);
             setFightingIndex(charIndex);
             let char = chars[charIndex]!;
 
@@ -516,8 +512,8 @@ export const useFight = () => {
             let max_loop = 20;
             while (char.life > 0 && enemyChar.life > 0) {
                 await sleep(500);
-                await action(char, enemyChar, enemyCharIndex, false);
-                await action(enemyChar, char, charIndex, true);
+                await action(char, enemyChar, charIndex, enemyCharIndex, false);
+                await action(enemyChar, char, enemyCharIndex, charIndex, true);
 
                 died_check(chars, false);
                 died_check(enemyChars, true);
