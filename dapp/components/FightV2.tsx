@@ -65,11 +65,11 @@ export const FightV2 = () => {
             })
             return;
         }
-        // let success = await operate_submit(operations);
-        // setOperations([]);
-        // if (!success) {
-        //     return;
-        // }
+        let success = await operate_submit(operations);
+        setOperations([]);
+        if (!success) {
+            return;
+        }
 
         let json = await query_fight(chess_id);
         let enemys:CharacterFields[] = json['v2_lineup']['roles'];

@@ -149,6 +149,13 @@ export function get_sell_price(char:CharacterFields | null): number {
     }
 }
 
+export function get_max_magic(char:CharacterFields | null) : number {
+    if (!char) {
+        return 0;
+    }
+    return roles_info[char.name].max_magic;
+}
+
 export function get_star_num(char:CharacterFields | null) : number {
     if (!char) {
         return 0;

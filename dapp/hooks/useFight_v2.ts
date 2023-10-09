@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 import { CharacterFields } from "../types/nft";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
+import { get_max_magic } from "../components/character/rawDataV2";
 
 export const useFight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
@@ -445,9 +446,19 @@ export const useFight = () => {
         return value;
     }
 
+    const modify_max_magic = (extra_max_magic_debuff: number, is_opponent:boolean, charIndex:number) => {
+        let target_group =  get_target_group(is_opponent, false);
+        if (extra_max_magic_debuff > 0) {
+            target_group[charIndex]!.max_magic = get_max_magic(target_group[charIndex]) + Number(extra_max_magic_debuff);
+        } else if (extra_max_magic_debuff == 0 && target_group[charIndex]!.max_magic > get_max_magic(target_group[charIndex])) {
+            target_group[charIndex]!.max_magic = get_max_magic(target_group[charIndex]);
+        }
+    }
+
     const action = async (char:CharacterFields, enemy:CharacterFields, charIndex:number, enemyIndex:number, is_opponent:boolean) => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
-        if (char.magic >= (Number(char.max_magic) + Number(extra_max_magic_debuff)) && char.effect_type === "skill") {
+        modify_max_magic(extra_max_magic_debuff, is_opponent, charIndex);
+        if (char.magic >= Number(char.max_magic) && char.effect_type === "skill") {
             char.attacking = 2;
             char.magic = 0;
             setChars(chars.slice());
@@ -467,30 +478,9 @@ export const useFight = () => {
     }
 
     const reset_status = () => {
-        // chars.map((chr, index)=> {
-        //     if (chr == null) {
-        //         return;
-        //     }
-        //     chars[index]!.life = chr.max_life;
-        //     chars[index]!.attack = chr.base_attack;
-        //     chars[index]!.magic = 0;
-        // })
-        // enemyChars.map((chr, index)=> {
-        //     if (chr == null) {
-        //         return;
-        //     }
-        //     enemyChars[index]!.life = chr.max_life;
-        //     enemyChars[index]!.attack = chr.base_attack;
-        //     enemyChars[index]!.magic = 0;
-        // })
         setOperations([]);
         operations.push(chars.toString());
         clear_change();
-    }
-
-    const get_random_number = () => {
-        let num = 2 + 3 * Math.random();
-        return "Reward: " + (num.toFixed(2)) + " SUI";
     }
 
     return useCallback(async () => {
