@@ -47,20 +47,20 @@ module auto_chess::test {
 
             // priest1:10:3' (namex_y:attack:life)
             let lineup1_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup1_str_vec, utf8(b"archer3:24:30"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b""));
-            vector::push_back(&mut lineup1_str_vec, utf8(b""));
-            vector::push_back(&mut lineup1_str_vec, utf8(b""));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"shaman1:5:6"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"tree3:20:35"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"fighter2:12:12"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"fighter2:12:12"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"wizard2_1:10:12"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"wizard1:5:6"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"wizard1:5:6"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"fighter1:4:6"));
 
             let lineup2_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup2_str_vec, utf8(b"mega3:16:51"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"priest2:6:16"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"shinobi2:8:24"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"mega2:8:14"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"shinobi3:16:40"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"kunoichi2_1:12:12"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"kunoichi1_1:6:6"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"priest1:3:8"));
             vector::push_back(&mut lineup2_str_vec, utf8(b""));
-            vector::push_back(&mut lineup2_str_vec, utf8(b""));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"slime2:10:20"));
 
 
             let my_lineup = lineup::parse_lineup_str_vec(utf8(b"1"), &roleGlobal, lineup1_str_vec, ctx(test));
