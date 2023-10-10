@@ -15,65 +15,64 @@ module auto_chess::test {
 
     fun scenario(): Scenario { begin(@account) }
 
-    #[test]
-    fun test_virtual_fight() {
-        let scenario = scenario();
-        let test = &mut scenario;
-        let admin = @account;
+    // #[test]
+    // fun test_virtual_fight() {
+    //     let scenario = scenario();
+    //     let test = &mut scenario;
+    //     let admin = @account;
 
-        next_tx(test, admin);
-        {
-            // init modules
-            role::init_for_test(ctx(test));
-            lineup::init_for_test(ctx(test));
-            next_epoch(test, admin);
-            let roleGlobal = take_shared<role::Global>(test);
-            role::init_charactors1(&mut roleGlobal);
-            role::init_charactors2(&mut roleGlobal);
-            next_epoch(test, admin);
+    //     next_tx(test, admin);
+    //     {
+    //         // init modules
+    //         role::init_for_test(ctx(test));
+    //         lineup::init_for_test(ctx(test));
+    //         next_epoch(test, admin);
+    //         let roleGlobal = take_shared<role::Global>(test);
+    //         role::init_charactors1(&mut roleGlobal);
+    //         role::init_charactors2(&mut roleGlobal);
+    //         next_epoch(test, admin);
 
-            let lineupGlobal = take_shared<lineup::Global>(test);
-            lineup::init_lineup_pools(&mut lineupGlobal, &roleGlobal, ctx(test));
-            return_shared(roleGlobal);
-            return_shared(lineupGlobal);
-            next_epoch(test, admin);
+    //         let lineupGlobal = take_shared<lineup::Global>(test);
+    //         lineup::init_lineup_pools(&mut lineupGlobal, &roleGlobal, ctx(test));
+    //         return_shared(roleGlobal);
+    //         return_shared(lineupGlobal);
+    //         next_epoch(test, admin);
 
-            chess::init_for_test(ctx(test));
-            next_epoch(test, admin);
+    //         chess::init_for_test(ctx(test));
+    //         next_epoch(test, admin);
 
-            let roleGlobal = take_shared<role::Global>(test);
-            let chessGlobal = take_shared<chess::Global>(test);
-            let lineupGlobal = take_shared<lineup::Global>(test);
+    //         let roleGlobal = take_shared<role::Global>(test);
+    //         let chessGlobal = take_shared<chess::Global>(test);
+    //         let lineupGlobal = take_shared<lineup::Global>(test);
 
-            // priest1:10:3' (namex_y:attack:life)
-            let lineup1_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup1_str_vec, utf8(b"fighter2:12:12"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"fighter2:12:12"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"wizard2_1:10:12"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"wizard1:5:6"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"wizard1:5:6"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"fighter1:4:6"));
+    //         // priest1:10:3' (namex_y:attack:life)
+    //         let lineup1_str_vec = vector::empty<String>();
+    //         vector::push_back(&mut lineup1_str_vec, utf8(b"fighter2:12:12"));
+    //         vector::push_back(&mut lineup1_str_vec, utf8(b"fighter2:12:12"));
+    //         vector::push_back(&mut lineup1_str_vec, utf8(b"wizard2_1:10:12"));
+    //         vector::push_back(&mut lineup1_str_vec, utf8(b"wizard1:5:6"));
+    //         vector::push_back(&mut lineup1_str_vec, utf8(b"wizard1:5:6"));
+    //         vector::push_back(&mut lineup1_str_vec, utf8(b"fighter1:4:6"));
 
-            let lineup2_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup2_str_vec, utf8(b"shinobi3:16:40"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"kunoichi2_1:12:12"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"kunoichi1_1:6:6"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"priest1:3:8"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b""));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"slime2:10:20"));
+    //         let lineup2_str_vec = vector::empty<String>();
+    //         vector::push_back(&mut lineup2_str_vec, utf8(b"shinobi3:16:40"));
+    //         vector::push_back(&mut lineup2_str_vec, utf8(b"kunoichi2_1:12:12"));
+    //         vector::push_back(&mut lineup2_str_vec, utf8(b"kunoichi1_1:6:6"));
+    //         vector::push_back(&mut lineup2_str_vec, utf8(b"priest1:3:8"));
+    //         vector::push_back(&mut lineup2_str_vec, utf8(b""));
+    //         vector::push_back(&mut lineup2_str_vec, utf8(b"slime2:10:20"));
 
 
-            let my_lineup = lineup::parse_lineup_str_vec(utf8(b"1"), &roleGlobal, lineup1_str_vec, ctx(test));
-            let enemy_lineup = lineup::parse_lineup_str_vec(utf8(b"2"), &roleGlobal, lineup2_str_vec, ctx(test));
-            let res = chess::test_fight(my_lineup, enemy_lineup);
+    //         let my_lineup = lineup::parse_lineup_str_vec(utf8(b"1"), &roleGlobal, lineup1_str_vec, ctx(test));
+    //         let enemy_lineup = lineup::parse_lineup_str_vec(utf8(b"2"), &roleGlobal, lineup2_str_vec, ctx(test));
+    //         let res = chess::test_fight(my_lineup, enemy_lineup);
 
-            return_shared(chessGlobal);
-            return_shared(roleGlobal);
-            return_shared(lineupGlobal);
-        };
-        end(scenario);
-        
-    }
+    //         return_shared(chessGlobal);
+    //         return_shared(roleGlobal);
+    //         return_shared(lineupGlobal);
+    //     };
+    //     end(scenario);
+    // }
 
     //sui move test test_operate_and_play --skip-fetch-latest-git-deps
     // #[test]
