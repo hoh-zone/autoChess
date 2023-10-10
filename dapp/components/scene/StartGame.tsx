@@ -82,7 +82,7 @@ export const StartGame = () => {
                                                         key={nft.id.id}
                                                         className="w-full bg-slate-200"
                                                         fontSize={"x-small"}
-                                                        isDisabled={nft.lose == 3}
+                                                        isDisabled={nft.lose == 3 || nft.win == 10}
                                                         onClick={async () => {
                                                             syncGameNFT(nft);
                                                             setStage("shop");

@@ -388,11 +388,12 @@ export const useFight = () => {
             target_group = get_target_group(is_opponent, true);
             let life = enemy.max_life;
             let extra_attack = Math.round(value / 10 * life);
-            enemy.life -= (char.attack + extra_attack);
+            let final_attack = Number(char.attack) + Number(extra_attack);
+            enemy.life -= (final_attack);
             if (is_opponent) {
-                hpChange[enemyIndex] = -(char.attack + extra_attack);
+                hpChange[enemyIndex] = -(final_attack);
             } else {
-                enemyHpChange[enemyIndex] = -(char.attack + extra_attack);
+                enemyHpChange[enemyIndex] = -(final_attack);
             }
             console.log("造成额外百分比伤害:", char.attack, " + ", extra_attack);
         }

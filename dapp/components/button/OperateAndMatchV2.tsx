@@ -63,7 +63,13 @@ const useOperateAndMatch = () => {
             }
 
             if (response.events != null) {
-                let event_json = response.events[0].parsedJson as any;
+                let event = response.events[0];
+                if (event == null) {
+                    console.log("event 异常", event);
+                    return;
+                }
+                let event_json = event.parsedJson as any;
+                console.log("event json:", event);
                 let res = event_json['res']
                 if (res == 1) {
                     console.log("you win");

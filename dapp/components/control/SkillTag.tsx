@@ -1,12 +1,13 @@
 
 import { useAtom } from "jotai"
-import { skillTagA, enemySkillTagA, enemyCharacterV2, slotCharacterV2} from "../../store/stages";
+import { skillTagA, enemySkillTagA, enemyCharacterV2, slotCharacterV2, stageAtom} from "../../store/stages";
 import { CharacterFields } from "../../types/nft";
 
 export const SkillTag = ({id}: {
     id: number,
 }) => {
     const [skillTag, setSkillTag] = useAtom(skillTagA);
+    const [stage, setStage] = useAtom(stageAtom);
     const [enemySkillTag, setEnemySkillTag] = useAtom(enemySkillTagA);
     const [chars] = useAtom(slotCharacterV2);
     const [enemy_chars] = useAtom(enemyCharacterV2);
@@ -33,7 +34,7 @@ export const SkillTag = ({id}: {
     }
 
     return <div style={{zIndex:1000,position:"relative", justifyContent:"left"}}>
-        {skill !== "" &&  <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -250%)" }} >
+        {(skill !== "" || char?.effect_type==="ring") &&  stage === "fight" &&  <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -250%)" }} >
             <div style={{border:"3px solid black"}}>
                     <div style={{border:"2px solid red"}}>
                         <div className="skill_animation">
