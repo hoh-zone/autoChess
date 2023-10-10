@@ -35,7 +35,7 @@ export const HpBar = ({id}: {
     }
 
     const get_mp_url_by_magic = (char:CharacterFields | null) => {
-        if (char != null && char.max_magic == 0) {
+        if (char != null && char.effect_type === "ring") {
             return "url('fix_inner.png') no-repeat";
         };
         return "url('mp_inner.png') no-repeat";
@@ -44,6 +44,9 @@ export const HpBar = ({id}: {
     const get_width_by_magic = (char:CharacterFields | null) => {
         let start = 10;
         let end = 45;
+        if (char?.effect_type == "ring") {
+            return end;
+        }
         if (stage == "shop") {
             return end;
         }

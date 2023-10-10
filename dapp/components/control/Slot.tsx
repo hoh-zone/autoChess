@@ -12,6 +12,7 @@ import confetti from "canvas-confetti";
 import { StatusChange } from "./StatusChange";
 import { CharacterFields } from "../../types/nft";
 import { get_buy_price } from "../character/rawDataV2";
+import { SkillTag } from "./SkillTag";
 
 export const Slot = ({ isOpponent = false, id }: {
     isOpponent?: boolean
@@ -155,13 +156,13 @@ export const Slot = ({ isOpponent = false, id }: {
                 charType={removeSuffix(char.name)}
                 isOpponent={isOpponent} />
             }
-            
                     {char && <div className="absolute " style={{
                             top: "13%",
                             left: "50%",
                             transform: "translateX(-64%)"
                     }}><HpBar id={id}/>
                     <StatusChange id={id}/>
+                    <SkillTag id={id}/>
         </div>}
         </div>
 

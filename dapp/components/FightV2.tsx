@@ -32,10 +32,7 @@ export const FightV2 = () => {
             chars[index] = init_chars[index];
         })
         enemyChars.map((chr, index) => {
-            console.log("set:", index, init_enemys[index]);
             enemyChars[index] = init_enemys[index];
-            console.log("1: ", enemyChars[index]);
-            console.log("2: ", enemyChars);
         });
         console.log("all set:", enemyChars);
     }
@@ -71,7 +68,7 @@ export const FightV2 = () => {
             return;
         }
 
-        let json = await query_fight(chess_id);
+        let json = await query_fight(chess_id, win, lose);
         let enemys:CharacterFields[] = json['v2_lineup']['roles'];
         console.log("json res: ", enemys);
         enemys.map((ele) => {

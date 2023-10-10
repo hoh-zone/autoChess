@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacterV2, enemyFightingIndex, enemyHpChangeA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, slotCharacterV2, stageAtom } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacterV2, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacterV2, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
@@ -22,6 +22,8 @@ export const useFight = () => {
     const [enemyAttackChange, setEnemyAttackChange] = useAtom(enemyAttackChangeA);
     const [fightResult, setFightResult] = useAtom(fightResultEffectA);
     const [_chessId, setChessId] = useAtom(chessId);
+    const [skillTag, setSkillTag] = useAtom(skillTagA);
+    const [enemySkillTag, setEnemySkillTag] = useAtom(enemySkillTagA);
 
     let animationEnd = Date.now() + 4000;
     let skew = 1;
@@ -448,6 +450,9 @@ export const useFight = () => {
 
     const modify_max_magic = (extra_max_magic_debuff: number, is_opponent:boolean, charIndex:number) => {
         let target_group =  get_target_group(is_opponent, false);
+        if (target_group[charIndex] == null) {
+            return;
+        }
         if (extra_max_magic_debuff > 0) {
             target_group[charIndex]!.max_magic = get_max_magic(target_group[charIndex]) + Number(extra_max_magic_debuff);
         } else if (extra_max_magic_debuff == 0 && target_group[charIndex]!.max_magic > get_max_magic(target_group[charIndex])) {
@@ -459,6 +464,7 @@ export const useFight = () => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
         modify_max_magic(extra_max_magic_debuff, is_opponent, charIndex);
         if (char.magic >= Number(char.max_magic) && char.effect_type === "skill") {
+            skillTag[charIndex] = "1";
             char.attacking = 2;
             char.magic = 0;
             setChars(chars.slice());
@@ -466,6 +472,7 @@ export const useFight = () => {
             await sleep(1000);
             call_skill(char, enemy, charIndex, enemyIndex, is_opponent);
             char.attacking = 0;
+            skillTag[charIndex] = "";
         } else {
             char.attacking = 1;
             setChars(chars.slice());

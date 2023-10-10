@@ -14,6 +14,9 @@ export const enemyHpChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
 export const attackChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
 export const enemyAttackChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
 
+export const skillTagA = atom<string[]>(["", "", "", "", "", ""]);
+export const enemySkillTagA = atom<string[]>(["", "", "", "", "", ""]);
+
 // enemy
 export const enemyWinA = atom<number>(0);
 export const enemyLoseA = atom<number>(0);

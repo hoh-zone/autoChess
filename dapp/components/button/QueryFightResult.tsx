@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { ethos } from 'ethos-connect';
 import { PACKAGE_ID, SENDER } from '../../lib/constants';
+import { sleep } from '../../utils/sleep';
 
 interface HashMap<T> {
     [key: string]: T;
@@ -48,22 +49,34 @@ const useQueryFight = () => {
         }
     }, [wallet]);
 
-    const query_fight = useCallback(async (nft_id:string) => {
+    const query_fight = useCallback(async (nft_id:string, last_win:number, last_lose:number) => {
         try {
             if (!wallet) return;
-            const result = await wallet.client.queryEvents( {
-                query: {
-                  MoveEventType: PACKAGE_ID + '::chess::FightEvent',
+            let max_query = 0
+            while(max_query < 3) {
+                const result = await wallet.client.queryEvents( {
+                    query: {
+                      MoveEventType: PACKAGE_ID + '::chess::FightEvent',
+                    }
+                });
+                for (let i = 0; i < result.data.length; i++) {
+                    let json = result.data[i].parsedJson as any;
+                    let chess_id = json['chess_id'];
+                    if (chess_id == nft_id) {
+                        console.log("fight result", json);
+                        let win = Number(json['v1_win']);
+                        let lose = Number(json['v1_lose']);
+                        if (win <= last_win && lose <= last_lose) {
+                            console.log("查询失败，触发下次查询");
+                            await sleep(500);
+                            break;
+                        }
+                        return json;
+                    }
                 }
-            });
-            for (let i = 0; i < result.data.length; i++) {
-                let json = result.data[i].parsedJson as any;
-                let chess_id = json['chess_id'];
-                if (chess_id == nft_id) {
-                    console.log("fight result", json);
-                    return json;
-                }
+                max_query += 1;
             }
+            
         } catch(error) {
             console.log('err', error);
         }

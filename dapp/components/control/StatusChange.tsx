@@ -43,7 +43,7 @@ export const StatusChange = ({id}: {
         }
     }
 
-    const get_hp_text_color = (change: number) => {
+    const get_text_color = (change: number) => {
         if (change > 0) {
             return "green"
         } else {
@@ -59,12 +59,20 @@ export const StatusChange = ({id}: {
         }
     }
 
+    const get_attack_text = (change: number) => {
+        if (change > 0) {
+            return "AK+" + change;
+        } else {
+            return "AK" + change;
+        }
+    }
+
     return <div style={{zIndex:1000,position:"relative", justifyContent:"left"}}>
         {hp_change != 0 && <div className="text_animation">
-            <p style={{color:`${get_hp_text_color(hp_change)}`}} className="moving-text">{get_hp_text(hp_change)}</p>
+            <p style={{color:`${get_text_color(hp_change)}`}} className="moving-text">{get_hp_text(hp_change)}</p>
         </div>}
         {attack_change != 0 && <div className="text_animation">
-            <p style={{color:`green`}} className="moving-text">AK+{attack_change}</p>
+            <p style={{color:`${get_text_color(attack_change)}`}} className="moving-text">{get_attack_text(attack_change)}</p>
         </div>}
     </div >
 }
