@@ -206,6 +206,9 @@ module auto_chess::chess {
         // fight and record lineup
         if (fight(chess, &mut enemy_lineup, ctx)) {
             lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
+            if (chess.win == 10) {
+                lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup, chess.arena);
+            };
         } else {
             lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
         };
