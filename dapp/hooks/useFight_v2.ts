@@ -225,7 +225,7 @@ export const useFight = () => {
                 if (ele == null || ele.life <= 0) {
                     return;
                 };
-                ele.life += value;
+                ele.life = Number(ele.life) + Number(value);
                 if (is_opponent) {
                     enemyHpChange[index] = value;
                 } else {
@@ -237,14 +237,14 @@ export const useFight = () => {
         } else if (effect == "add_all_tmp_attack") {
             if (is_forbid_buff) {
                 console.log("触发特效: 加buff失败")
-                return;
+                return; 
             }
             target_group = get_target_group(is_opponent, false);
             target_group.map((ele: CharacterFields | null, index: number) => {
                 if (ele == null) {
                     return;
                 }
-                ele.attack += value;
+                ele.attack = Number(ele.attack) + Number(value);
                 if (is_opponent) {
                     enemyAttackChange[index] = value;
                 } else {

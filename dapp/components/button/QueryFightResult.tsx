@@ -61,7 +61,7 @@ const useQueryFight = () => {
                         }
                     }
                 });
-                next = result_tmp['nextCursor'];
+                next = result_tmp['nextCursor']; 
                 has_next = result_tmp['hasNextPage'];
             }
             let res:string[] = [];
