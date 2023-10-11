@@ -16,7 +16,7 @@ export const Instruction = () => {
             <br/>
             <p>|Arena Mode|: you have to pay 1 sui ticket fee to enter, and you can check out to get rewards at anytime, the checkout reward depends on your fighting winning records, so try to win to get earn more sui.</p>
             <br/>
-            <p>|Problem Feedback|: seansheng4486@gmail.com</p>
+            <p>|Problem Feedback|: suiautochess@gmail.com</p>
         </div>
     }>
     <Button>Instruction</Button>
