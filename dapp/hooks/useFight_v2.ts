@@ -348,17 +348,17 @@ export const useFight = () => {
             }
             target_group = get_target_group(is_opponent, false);
             target_group.map((ele: CharacterFields | null, index: number) => {
-                if (ele == null || index == fight_index) {
+                if (ele == null || index == charIndex) {
                     return;
                 }
                 ele.magic += value;
                 if (ele.magic >= ele.max_magic) {
                     ele.magic = ele.max_magic;
                 }
-                // todo:hp buff
             });
-            console.log("全体加魔法值:", value);
+            console.log("全体加魔法值:", value, target_group[3]);
             set_target_group(target_group, is_opponent, false);
+            console.log("全体加魔法值2:", chars[3]);
         } else if (effect == "attack_lowest_hp") {
             target_group = get_target_group(is_opponent, true);
             let min_hp_index = 0;
@@ -495,7 +495,7 @@ export const useFight = () => {
         console.log("--------开始战斗-------");
         console.log(chars);
         console.log(enemyChars);
-        let loop = 10;
+        let loop = 50;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
             let charIndex = chars.findIndex(Boolean);
@@ -507,7 +507,7 @@ export const useFight = () => {
             let enemyChar = enemyChars[enemyCharIndex]!;
 
             // 同时攻击
-            let max_loop = 20;
+            let max_loop = 40;
             while (char.life > 0 && enemyChar.life > 0) {
                 await sleep(500);
                 await action(char, enemyChar, charIndex, enemyCharIndex, false);
@@ -528,7 +528,14 @@ export const useFight = () => {
             }
         }
 
-        if (some(chars, Boolean)) {
+        if (some(enemyChars, Boolean)) {
+            console.log("you lose");
+            setFightResult("You Lose");
+            animationEnd = Date.now() + 2000;
+            lose_effect();
+            await sleep(2000);
+            setFightResult(null);
+        } else {
             console.log("you win");
             setFightResult("You Win");
             for (let i = 0; i < 5; ++i) {
@@ -537,15 +544,7 @@ export const useFight = () => {
             }
             await sleep(1000);
             setFightResult(null);
-        } else {
-            console.log("you lose");
-            setFightResult("You Lose");
-            animationEnd = Date.now() + 2000;
-            lose_effect();
-            await sleep(2000);
-            setFightResult(null);
         }
-
 
         reset_status();
 

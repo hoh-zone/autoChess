@@ -62,13 +62,18 @@ export const FightV2 = () => {
             })
             return;
         }
-        let success = await operate_submit(operations);
-        setOperations([]);
-        if (!success) {
-            return;
-        }
 
-        let json = await query_fight(chess_id, win, lose);
+        let debug = false
+        let json;
+        if (debug) {
+            json = await query_fight(chess_id, win - 1, lose);
+        } else {
+            json = await operate_submit(operations);
+            setOperations([]);
+            if (!json) {
+                return;
+            }
+        }
         let enemys:CharacterFields[] = json['v2_lineup']['roles'];
         console.log("json res: ", enemys);
         enemys.map((ele) => {

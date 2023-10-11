@@ -56,6 +56,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                 </HStack>
                 <p className="text-[10px]">HP:{get_base_life(char)}</p>
                 <p className="text-[10px]">AK:{char?.attack}</p>
+                <p className="text-[10px]">magic: {char?.magic}</p>
                 <p className="text-[10px]" style={{fontSize:"8px"}}>Feature: {char.effect}</p>
                 {/* <p className="text-[10px]">Feature: All features to be finished</p> */}
             </Stack>

@@ -7,7 +7,6 @@ module auto_chess::lineup {
     use sui::object::{Self, UID};
     use std::string::{Self, utf8, String};
     use auto_chess::utils;
-    use std::debug::print;
 
     const ERR_WRONG_ROLES_NUMBER:u64 = 0x01;
 
