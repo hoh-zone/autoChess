@@ -75,12 +75,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
         </Head>
         <Component {...pageProps} />
-        <audio ref={audioRef} autoPlay>
+        {/* <audio ref={audioRef} autoPlay>
           <source src="./shop.mp3" type="audio/ogg" />
         </audio>
         <audio ref={audioFightRef} autoPlay>
           <source src="./fight.mp3" type="audio/ogg" />
-        </audio>
+        </audio> */}
       </ChakraProvider>
     </EthosConnectProvider>
   );
