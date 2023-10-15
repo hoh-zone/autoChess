@@ -139,9 +139,9 @@ module auto_chess::utils {
             level_str = utf8(b"1");
         } else if (level == 2) {
             level_str = utf8(b"1_1");
-        } else if (level == 3) {
+        } else if (level >= 3 && level <= 5) {
             level_str = utf8(b"2");
-        } else if (level == 6) {
+        } else if (level >= 6 && level <= 8) {
             level_str = utf8(b"2_1");
         } else {
             level_str = utf8(b"3");

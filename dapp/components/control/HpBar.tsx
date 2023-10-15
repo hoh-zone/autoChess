@@ -41,6 +41,13 @@ export const HpBar = ({id}: {
         return "url('mp_inner.png') no-repeat";
     }
 
+    const get_level_icon = (char:CharacterFields | null) => {
+        if (char != null) {
+            return "url('level" + char.level + ".png') no-repeat";
+        };
+        return "url('level.png') no-repeat";
+    }
+
     const get_width_by_magic = (char:CharacterFields | null) => {
         let start = 10;
         let end = 45;
@@ -63,10 +70,14 @@ export const HpBar = ({id}: {
         return start + (end - start) * (char.magic) / max;
     }
 
+    
+
     return <HStack style={{zIndex:1000,position:"relative", justifyContent:"left"}}>
             <div style={{ justifyContent:"left" ,width: '50px', height: '30px', background: "url('status_bg.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left" }}>
                 <div style={{ width:  `${get_width_by_magic(char)}px`, height: '30px', background: `${get_mp_url_by_magic(char)}`, backgroundSize: '50px auto', backgroundPosition: "left" }}>
-                    <div style={{ width:  `${get_width_by_life(char)}px`, height: '30px', background: "url('hp_inner.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left"}}></div>
+                    <div style={{ width:  `${get_width_by_life(char)}px`, height: '30px', background: "url('hp_inner.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left"}}>
+                        <div style={{ width: '30px', height: '30px', background: `${get_level_icon(char)}`, backgroundSize: '50px auto', backgroundPosition: "left"}}/>
+                    </div>
                 </div>
             </div>
     </HStack >

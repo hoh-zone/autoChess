@@ -49,19 +49,19 @@ module auto_chess::test {
             // 
             let lineup1_str_vec = vector::empty<String>();
             vector::push_back(&mut lineup1_str_vec, utf8(b""));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"golem2:8:16"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"golem2:8:16"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"ani2:8:16"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"firemega1:6:5"));
-            vector::push_back(&mut lineup1_str_vec, utf8(b"firemega1:6:5"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"golem2-3:8:16"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"golem2-3:8:16"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"ani2-3:8:16"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"firemega1-1:6:5"));
+            vector::push_back(&mut lineup1_str_vec, utf8(b"firemega1-1:6:5"));
 
             let lineup2_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup2_str_vec, utf8(b"priest2:6:16"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"mega2:8:22"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"priest1_1:3:8"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"mega1:4:7"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"mega1:4:7"));
-            vector::push_back(&mut lineup2_str_vec, utf8(b"slime1:6:6"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"priest2-3:6:16"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"mega2-3:8:22"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"priest1_1-2:3:8"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"mega1-1:4:7"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"mega1-1:4:7"));
+            vector::push_back(&mut lineup2_str_vec, utf8(b"slime1-1:6:6"));
 
             let my_lineup = lineup::parse_lineup_str_vec(utf8(b"1"), &roleGlobal, lineup1_str_vec, ctx(test));
             let enemy_lineup = lineup::parse_lineup_str_vec(utf8(b"2"), &roleGlobal, lineup2_str_vec, ctx(test));
@@ -138,8 +138,8 @@ module auto_chess::test {
 
             let left_gold = 2;
             let lineup_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup_str_vec, utf8(b"priest1:3:8"));
-            vector::push_back(&mut lineup_str_vec, utf8(b"tree1:5:7"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"priest1-1:3:8"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"tree1-1:5:7"));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
@@ -152,8 +152,8 @@ module auto_chess::test {
 
             // // second round
             // let str_vec = vector::empty<String>();
-            // vector::push_back(&mut str_vec, utf8(b"mega1"));
-            // vector::push_back(&mut str_vec, utf8(b"mega1_1"));
+            // vector::push_back(&mut str_vec, utf8(b"mega1-1"));
+            // vector::push_back(&mut str_vec, utf8(b"mega1_1-2"));
             // print(&utf8(b"operate my chess"));
             // chess::operate_and_match(&mut chessGlobal, &roleGlobal, &lineupGlobal, 1, str_vec, &mut chess_nft, ctx(test));
 

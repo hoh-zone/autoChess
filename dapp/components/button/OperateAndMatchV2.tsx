@@ -18,7 +18,7 @@ const useOperateAndMatch = () => {
             if (cha == null || cha == undefined) {
                 vec.push("");
             } else {
-                vec.push(cha.name + ":" + cha.attack + ":" + cha.max_life);
+                vec.push(cha.name + "-" +cha.level + ":" + cha.attack + ":" + cha.max_life);
             }
         }
 

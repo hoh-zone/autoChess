@@ -31,10 +31,8 @@ module auto_chess::chess {
     const ERR_NOT_ENOUGH_GOLD:u64 = 0x07;
     const ERR_INVALID_CHARACTOR:u64 = 0x08;
     const ERR_CHARACTOR_IS_NONE:u64 = 0x09;
-    const ERR_UPGRADE_FAILED:u64 = 0x10;
-    const ERR_SAME_INDEX_UPGRADE:u64 = 0x11;
-    const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x12;
-    const ERR_WRONG_LEFT_GOLD:u64 = 0x13;
+    const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x10;
+    const ERR_WRONG_LEFT_GOLD:u64 = 0x11;
     const INVALID_INDEX:u64 = 10000;
 
     struct Global has key {

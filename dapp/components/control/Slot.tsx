@@ -104,10 +104,8 @@ export const Slot = ({ isOpponent = false, id }: {
                     setChars(chars.slice());
                     setShopSlotNumber(null);
                     setSlotNumber(null);
-                    if (tmp.level === 3 || tmp.level === 9) {
-                        end = Date.now() + 1 * 1000;
-                        level_up_effect();
-                    }
+                    end = Date.now() + 1 * 1000;
+                    level_up_effect();
                     operations.push("buy_upgrade:" + shopSlotNumber + "-" + id);
                 } else {
                     show_failed_toast()
@@ -124,10 +122,8 @@ export const Slot = ({ isOpponent = false, id }: {
                     setChars(chars.slice());
                     setSlotNumber(null);
                     setShopSlotNumber(null);
-                    if (temp?.level === 3 || temp?.level === 9) {
-                        end = Date.now() + 1 * 1000;
-                        level_up_effect();
-                    }
+                    end = Date.now() + 1 * 1000;
+                    level_up_effect();
                     operations.push("upgrade:" + slotNumber + "-" + id);
                 } else {
                     chars[slotNumber] = temp;
@@ -184,11 +180,5 @@ const canUpgrade = (char1: any, char2: any) => {
         level2 = level1;
         level1 = tmp;
     }
-    if (level1 == 1) {
-        return level2 == 1 || level2 == 2
-    } else if (level1 == 3) {
-        return level2 == 3 || level2 == 6
-    } else {
-        return false;
-    }
+    return level1 < 9 && level2 < 9;
 }

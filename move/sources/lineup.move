@@ -215,7 +215,7 @@ module auto_chess::lineup {
         assert!(len == 6, ERR_WRONG_ROLES_NUMBER);
         vector::reverse<String>(&mut str_vec);
         while (len > 0) {
-            // priest1:10:3' (namex_y:life:attack)
+            // priest1:10:3:1' (namex_y-level:life:attack)
             let role_info = vector::pop_back(&mut str_vec);
             if (string::length(&role_info) == 0) {
                 vector::push_back(&mut vec, role::empty());
@@ -223,7 +223,10 @@ module auto_chess::lineup {
                 continue
             };
             let index = string::index_of(&role_info, &utf8(b":"));
-            let role_name = string::sub_string(&role_info, 0, index);
+            let role_name_with_level = string::sub_string(&role_info, 0, index);
+            let level_index = string::index_of(&role_name_with_level, &utf8(b"-"));
+            let role_name = string::sub_string(&role_name_with_level, 0, level_index);
+            let level = utils::utf8_to_u64(string::sub_string(&role_name_with_level, level_index + 1, string::length(&role_name_with_level)));
             let property = string::sub_string(&role_info, index + 1, string::length(&role_info));
             let second_index = string::index_of(&property, &utf8(b":"));
             let attack = utils::utf8_to_u64(string::sub_string(&property, 0, second_index));
@@ -231,6 +234,7 @@ module auto_chess::lineup {
             let role = role::get_role_by_name(role_global, role_name);
             role::set_life(&mut role, life);
             role::set_attack(&mut role, attack);
+            role::set_level(&mut role, (level as u8));
             vector::push_back(&mut vec, role);
             len = len - 1;
         };
