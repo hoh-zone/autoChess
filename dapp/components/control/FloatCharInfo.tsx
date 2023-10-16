@@ -51,12 +51,11 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                     {Array.from({ length: get_star_num(char) }, (_, index) => (
                         <Img style={{ width: '20px' }} src="star.png" />
                     ))}
-                    {(char?.level == 2 || char?.level == 6) && <Img style={{ width: '20px' }} src="star_half.png" />}
+                    {(char?.level == 2 || (char?.level >= 6 && char?.level <= 8)) && <Img style={{ width: '20px' }} src="star_half.png" />}
                     {/* <p className="text-[10px]">{capitalizeFirstChar(removeSuffix(char?.name))}</p> */}
                 </HStack>
                 <p className="text-[10px]">HP:{get_base_life(char)}</p>
                 <p className="text-[10px]">AK:{char?.attack}</p>
-                <p className="text-[10px]">magic: {char?.magic}</p>
                 <p className="text-[10px]" style={{fontSize:"8px"}}>Feature: {char.effect}</p>
                 {/* <p className="text-[10px]">Feature: All features to be finished</p> */}
             </Stack>

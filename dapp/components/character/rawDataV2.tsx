@@ -56,8 +56,8 @@ const roles_info: Roles = {
 
     "slime1": {name: "slime1",level: 1,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
     "slime1_1": {name: "slime1_1",level: 2,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
-    "slime2": {name: "slime2",level: 3,attack:  10, life: 20, magic: 0, base_attack: 10, max_life: 20, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
-    "slime2_1": {name: "slime2_1",level: 6,attack:  10, life: 20, magic: 0, base_attack: 10, max_life: 20, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
+    "slime2": {name: "slime2",level: 3, attack:  10, life: 30, magic: 0, base_attack: 10, max_life: 30, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
+    "slime2_1": {name: "slime2_1",level: 6,attack:  10, life: 30, magic: 0, base_attack: 10, max_life: 30, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
     "slime3": {name: "slime3",level: 9,attack:  20, life: 65, magic: 0, base_attack: 20, max_life: 65, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "10"},
     
     "ani1": {name: "ani1",level: 1,attack:  4, life: 12, magic: 0, base_attack: 4, max_life: 12, max_magic: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
@@ -190,20 +190,24 @@ export function upgrade(char1:CharacterFields, char2:CharacterFields): Character
 
     let life_buff = Math.max(life_buff1, life_buff2);
     let attack_buff = Math.max(attack_buff1, attack_buff2);
-
-    let level = level1 > level2 ? level1 : level2;
     let level_str = "";
-    if (level == 1) {
+    let new_level = Number(level1) + Number(level2);
+    if (new_level > 9) {
+        new_level = 9;
+    }
+    if (new_level == 1) {
+        level_str = "1";
+    } else if (new_level == 2) {
         level_str = "1_1";
-    } else if (level == 2) {
+    } else if (new_level >= 3 && new_level <= 5) {
         level_str = "2";
-    } else if (level == 3) {
+    } else if (new_level >= 6 && new_level <= 8) {
         level_str = "2_1";
-    } else if (level == 6) {
+    } else if (new_level >= 9) {
         level_str = "3";
     }
-    let new_level = Number(level1) + Number(level2);
     let key = removeSuffix(name1) + level_str
+    console.log("key:", key);
     let clone = JSON.stringify(roles_info[key]);
     let res:CharacterFields = JSON.parse(clone);
     res.attack = res.attack + attack_buff;
