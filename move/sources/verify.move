@@ -80,6 +80,7 @@ module auto_chess::verify {
                 let from_role = role::init_role();
                 {
                     from_role = *vector::borrow<role::Role>(init_roles, from_index);
+                    print(&from_index);
                     assert!(role::get_name(&from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 };
                 let to_role = vector::borrow_mut<role::Role>(init_roles, to_index);

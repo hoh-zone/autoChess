@@ -15,7 +15,7 @@ module auto_chess::test {
 
     fun scenario(): Scenario { begin(@account) }
 
-    #[test]
+    // #[test]
     fun test_virtual_fight() {
         let scenario = scenario();
         let test = &mut scenario;
@@ -75,7 +75,7 @@ module auto_chess::test {
     }
 
     //sui move test test_operate_and_play --skip-fetch-latest-git-deps
-    // #[test]
+    #[test]
     fun test_operate_and_play() {
         let scenario = scenario();
         let test = &mut scenario;
@@ -111,18 +111,22 @@ module auto_chess::test {
             let lineupGlobal = take_shared<lineup::Global>(test);
             
             print_my_cards_pool(&chess_nft);
+            // fighter1,cler1,firemega1,ani1,tank1, mega1, tank2
 
             let operations = vector::empty<String>();
 
             // buy operation
+            vector::push_back(&mut operations, utf8(b"buy:4-0"));
             vector::push_back(&mut operations, utf8(b"refresh"));
-            vector::push_back(&mut operations, utf8(b"buy:3-0"));
-            vector::push_back(&mut operations, utf8(b"buy:4-1"));
+            vector::push_back(&mut operations, utf8(b"buy_upgrade:1-0"));
+            vector::push_back(&mut operations, utf8(b"refresh"));
+            vector::push_back(&mut operations, utf8(b"refresh"));
+            vector::push_back(&mut operations, utf8(b"refresh"));
+            vector::push_back(&mut operations, utf8(b"buy_upgrade:1-0"));
+            // vector::push_back(&mut operations, utf8(b"buy:4-1"));
             // vector::push_back(&mut operations, utf8(b"buy:1-1"));
             // vector::push_back(&mut operations, utf8(b"buy:2-2"));
             // vector::push_back(&mut operations, utf8(b"refresh"));
-            // vector::push_back(&mut operations, utf8(b"upgrade:0-1"));
-
             // swap operation
             // vector::push_back(&mut operations, utf8(b"swap:0-1"));
             // vector::push_back(&mut operations, utf8(b"swap:1-3"));
@@ -138,8 +142,8 @@ module auto_chess::test {
 
             let left_gold = 2;
             let lineup_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup_str_vec, utf8(b"priest1-1:3:8"));
-            vector::push_back(&mut lineup_str_vec, utf8(b"tree1-1:5:7"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"tank2-3:6:24"));
+            vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
