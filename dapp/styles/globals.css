@@ -9,6 +9,20 @@ body {
   font-family: PixcelFont;
   overflow: hidden;
   font-size: 1vw;
+  width: 100vw;
+  height: 100vh;
+  background-color: gray;
+}
+
+.chakra-ui-light {
+  background-color: black;
+}
+
+#__next {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 div {
@@ -293,6 +307,14 @@ a {
   transform: rotateX(69deg);
 }
 
+.slot-container {
+  position: relative;
+}
+
+.slot-container:hover .float-container {
+  display: block;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -315,8 +337,27 @@ a {
 }
 
 .float-container {
+  position: absolute;
+  width: 120px;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: none;
+  margin-bottom: 40px;
+}
+
+.shop-slot-container .buy-button {
+  display: none;
   position: relative;
-  display: inline-block;
+  top: 10px;
+}
+
+.shop-slot-container .float-container {
+  margin-bottom: 20px;
+}
+
+.shop-slot-container:hover .float-container, .shop-slot-container:hover .buy-button {
+  display: block;
 }
 
 .slotContainer:hover .float-container .float {
@@ -329,7 +370,7 @@ a {
   border-radius: 8%;
   position: relative;
   top: 50%;
-  left: 70px;
+  /* left: 70px; */
   /* transform: translate(93%, -41%); */
   background-color: rgba(71, 66, 66, 0.5);
   color: #fff;

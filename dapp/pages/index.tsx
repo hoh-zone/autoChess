@@ -69,12 +69,6 @@ const Home: NextPage = () => {
   }, [canvasRef]);
   return (
     <>
-      {!wallet && <div className="max-w-7xl mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8 flex-6">
-        <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-          Connect
-        </SignInButton>
-      </div>
-      }
       <canvas ref={canvasRef} className="absolute h-[100vh] w-[100vw] z-50 pointer-events-none" />
       <Stack className="w-[100vw] aspect-video max-h-[100vh] bg-slate-600" gap={0}>
         {stage === "init" && <StartGame />}
