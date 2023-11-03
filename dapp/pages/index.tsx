@@ -14,7 +14,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <div className="w-[100vw] aspect-video max-h-[100vh] bg-slate-600 relative">
+      <div className="w-[100vw] aspect-video max-h-[100vh] bg-black relative">
         {stage === "init" && <StartGame />}
         {(stage === "shop" || stage == "fight") && <Header />}
         {stage === "fight" && <FightScene />}
