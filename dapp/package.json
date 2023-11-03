@@ -16,6 +16,7 @@
     "@mysten/bcs": "^0.7.3",
     "@mysten/sui.js": "^0.41.0",
     "@types/canvas-confetti": "^1.6.1",
+    "axios": "^1.6.0",
     "canvas-confetti": "^1.6.0",
     "ethos-connect": "^0.0.185",
     "framer-motion": "^10.16.4",
