@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react"
 import { FloatCharInfo } from "./FloatCharInfo"
 import { motion } from "framer-motion"
 import { sleep } from "../../utils/sleep"
+import { Button } from "@chakra-ui/react"
 
 export const ShopSlot = ({ id }: {
     id: number
@@ -29,6 +30,7 @@ export const ShopSlot = ({ id }: {
     return <motion.div
         whileHover={{ scale: 1.1 }} className={
             twMerge(
+                "shop-slot-container",
                 "w-24 h-24 relative rounded-xl",
                 "border-4 border-transparent z-20 hover:border-slate-300",
                 selected ? "border-slate-800" : ""
@@ -47,6 +49,9 @@ export const ShopSlot = ({ id }: {
             />
             }
         </div>
+        {/* <Button className={twMerge("buy-button")}>
+            Buy
+        </Button> */}
         {<FloatCharInfo isShopSlot={true} isShowInfo={true} id={id} />}
     </motion.div>
 }

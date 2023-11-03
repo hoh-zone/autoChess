@@ -46,7 +46,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
     return <div className="float-container pointer-events-none" >
         {/* 触发范围 */}
         {char && <>
-            <Stack className={isShowInfo ? "fix_float" : "float"} >
+            <Stack className={"fix_float"} >
                 <HStack>
                     {Array.from({ length: get_star_num(char) }, (_, index) => (
                         <Img style={{ width: '20px' }} src="star.png" />

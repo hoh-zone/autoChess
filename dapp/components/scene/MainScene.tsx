@@ -2,6 +2,7 @@ import { Box, Center, HStack, Stack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { SellButton } from "../control/SellButton"
 import { CharInstruction } from "../CharInstruction"
+
 export const MainScene = () => {
     return <div className="h-[75%] w-full relative">
         <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
