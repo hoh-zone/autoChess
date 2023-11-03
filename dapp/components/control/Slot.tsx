@@ -69,9 +69,11 @@ export const Slot = ({ isOpponent = false, id }: {
     }
 
     return <motion.div
+        draggable="true"
         whileHover={{ scale: 1.1 }}
         className={
             twMerge(
+                "slot-container",
                 "w-24 h-24 relative rounded-xl slotContainer",
                 "border-4 border-transparent z-10",
                 (char == null && stage != "shop") ? "pointer-events-none" : "hover:border-slate-300",

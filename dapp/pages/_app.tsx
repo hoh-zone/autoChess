@@ -1,7 +1,5 @@
 import { Chain, EthosConnectProvider } from "ethos-connect";
 import ExampleIcon from "../icons/ExampleIcon";
-
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { NETWORK } from "../lib/constants";
 import Head from "next/head";
@@ -9,6 +7,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 import { stageAtom } from "../store/stages";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
