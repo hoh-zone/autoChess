@@ -21,8 +21,12 @@ body {
   --swiper-navigation-color: white;
 }
 
-.swiper-button-prev,
-.swiper-button-next {
+.instruction-styled-modal .swiper-slide-shadow.swiper-slide-shadow-cards {
+  background: transparent;
+}
+
+.instruction-styled-modal .swiper-button-prev,
+.instruction-styled-modal .swiper-button-next {
   font-weight: bolder;
 }
 
