@@ -168,8 +168,8 @@ a {
   --attack-position: -2700px;
   --attack2-step: 33;
   --attack2-position: -9900px;
-  --move-step: 4;
-  --move-position: -1200px;
+  --move-step: 5;
+  --move-position: -1500px;
 }
 
 .fighter {
@@ -272,32 +272,32 @@ a {
 }
 
 .attack1 {
-  animation: attackAnim 1s steps(var(--attack-step)) 1;
+  animation: attackAnim 1s steps(calc(var(--attack-step) - 1)) 1;
 }
 
 @keyframes attackAnim {
   to {
-    background-position: var(--attack-position);
+    background-position: 100%;
   }
 }
 
 .attack2 {
-  animation: attackAnim2 1.5s steps(var(--attack2-step)) 1;
+  animation: attackAnim2 1.5s steps(calc(var(--attack2-step) - 1)) 1;
 }
 
 @keyframes attackAnim2 {
   to {
-    background-position: var(--attack2-position);
+    background-position: 100%;
   }
 }
 
 .move {
-  animation: moveAnim 0.5s steps(var(--move-step)) infinite;
+  animation: moveAnim 0.5s steps(calc(var(--move-step) - 1)) infinite;
 }
 
 @keyframes moveAnim {
   to {
-    background-position: var(--move-position);
+    background-position: 100%;
   }
 }
 
