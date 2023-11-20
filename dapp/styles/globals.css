@@ -128,8 +128,8 @@ a {
 }
 
 .ani {
-  --attack-step: 15;
-  --attack-position: -4500px;
+  --attack-step: 11;
+  --attack-position: -3300px;
   --attack2-step: 9;
   --attack2-position: -2700px;
   --move-step: 6;
@@ -164,8 +164,8 @@ a {
 }
 
 .kunoichi {
-  --attack-step: 9;
-  --attack-position: -2700px;
+  --attack-step: 7;
+  --attack-position: -2100px;
   --attack2-step: 33;
   --attack2-position: -9900px;
   --move-step: 5;
