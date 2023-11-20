@@ -1,5 +1,5 @@
 import { Button, Center, HStack, Input, Modal, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Spinner, Stack, useToast, VStack } from "@chakra-ui/react"
-import { operationsA, slotCharacterV2, stageAtom } from "../../store/stages"
+import { operationsA, slotCharacterV2, stageAtom,assetsAtom } from "../../store/stages"
 import { useAtom } from "jotai"
 import useMintChess from "../button/MintChess"
 import { Character } from "../character/character"
@@ -13,8 +13,6 @@ import PopupWindow from "../dialog/CustomPopWindow"
 import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
 import { getVw } from "../../utils"
-import useLoadAssets from "../../hooks/useLoadAssets"
-import LoadingMask from "../LoadingMask"
 
 export const StartGame = () => {
   const [chars, setChars] = useAtom(slotCharacterV2)
@@ -27,7 +25,7 @@ export const StartGame = () => {
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
   const [operations, setOperations] = useAtom(operationsA)
-  const { data: assets, isLoading: assetsLoading } = useLoadAssets({ bg: "bg7.mp4" })
+  const [assets, setAssets] = useAtom(assetsAtom)
 
   const fetch = async () => {
     setIsLoading(true)
@@ -51,15 +49,13 @@ export const StartGame = () => {
     setIsOpen(false)
   }
   const toast = useToast()
-  return assetsLoading ? (
-    <LoadingMask />
-  ) : (
+  return (
     <>
       <Center className="h-full w-full relative block">
         <>
           {/* todo video 可以改成高度大些的动态图片啥的 */}
           <video style={{ objectFit: "cover" }} className="w-full h-auto" autoPlay loop muted>
-            <source src={assets.bg} type="video/mp4" />
+            <source src={assets?.bg7} type="video/mp4" />
           </video>
           {wallet ? (
             <div className="absolute text-white top-12 z-50">

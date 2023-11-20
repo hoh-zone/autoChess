@@ -8,6 +8,7 @@ const useLoadAssets = (assets: any) => {
 
   useEffect(() => {
     setIsLoading(true)
+    let tempData: { [key: string]: string } = {}
     Promise.all(
       Object.entries(assets).map((asset: any) =>
         axios
@@ -23,13 +24,11 @@ const useLoadAssets = (assets: any) => {
             responseType: "blob"
           })
           .then((res) => {
-            setData({
-              ...(data || {}),
-              [asset[0]]: URL.createObjectURL(res.data)
-            })
+            tempData[asset[0]] = URL.createObjectURL(res.data)
           })
       )
     ).finally(() => {
+      setData(tempData)
       setTimeout(() => setIsLoading(false), 500)
     })
   }, [JSON.stringify(assets)])
