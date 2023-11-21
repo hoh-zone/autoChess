@@ -116,13 +116,8 @@ module auto_chess::test {
             let operations = vector::empty<String>();
 
             // buy operation
-            vector::push_back(&mut operations, utf8(b"buy:4-0"));
+            vector::push_back(&mut operations, utf8(b"buy:0-0"));
             vector::push_back(&mut operations, utf8(b"refresh"));
-            vector::push_back(&mut operations, utf8(b"buy_upgrade:1-0"));
-            vector::push_back(&mut operations, utf8(b"refresh"));
-            vector::push_back(&mut operations, utf8(b"refresh"));
-            vector::push_back(&mut operations, utf8(b"refresh"));
-            vector::push_back(&mut operations, utf8(b"buy_upgrade:1-0"));
             // vector::push_back(&mut operations, utf8(b"buy:4-1"));
             // vector::push_back(&mut operations, utf8(b"buy:1-1"));
             // vector::push_back(&mut operations, utf8(b"buy:2-2"));
@@ -140,9 +135,9 @@ module auto_chess::test {
             // upgrade operation
             // vector::push_back(&mut operations, utf8(b"upgrad:3-1"));
 
-            let left_gold = 2;
+            let left_gold = 5;
             let lineup_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup_str_vec, utf8(b"tank2-3:6:24"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"fighter1-1:4:9"));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
