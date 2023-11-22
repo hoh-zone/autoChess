@@ -7,6 +7,7 @@ module auto_chess::lineup {
     use sui::object::{Self, UID};
     use std::string::{Self, utf8, String};
     use auto_chess::utils;
+    friend auto_chess::challenge;
 
     const ERR_WRONG_ROLES_NUMBER:u64 = 0x01;
 
@@ -81,7 +82,6 @@ module auto_chess::lineup {
 
     public fun record_player_lineup(win:u8, lose:u8, global:&mut Global, lineup:LineUp, is_arena: bool) {
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
-        let pool;
         if (is_arena) {
             if (table::contains(&global.arena_lineup_pools, lineup_pool_tag)) {
                 let lineup_vec = table::borrow_mut(&mut global.arena_lineup_pools, lineup_pool_tag);
@@ -176,7 +176,7 @@ module auto_chess::lineup {
         };
     }
 
-    public fun generate_lineup_by_power(roleGlobal:&role::Global, power:u64, seed:u8, ctx: &mut TxContext) : LineUp {
+    public(friend) fun generate_lineup_by_power(roleGlobal:&role::Global, power:u64, seed:u8, ctx: &mut TxContext) : LineUp {
         let max_role_num = utils::get_role_num_by_lineup_power(power);
         let roles = vector::empty<Role>();
         let p2 = utils::get_lineup_level2_prop_by_lineup_power(power);
@@ -256,5 +256,9 @@ module auto_chess::lineup {
 
     public fun get_name(lineup:&LineUp): String {
         *&lineup.name
+    }
+
+    public fun get_creator(lineup:&LineUp): address {
+        *&lineup.creator
     }
 }

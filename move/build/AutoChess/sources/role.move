@@ -362,6 +362,8 @@ module auto_chess::role {
                 i = i + 1;
                 continue
             };
+            print(&role1.name);
+            print(&role2.name);
             assert!(role1.name == role2.name, ERR_DIFFERENT_NAME);
             assert!(role1.life == role2.life, ERR_DIFFERENT_LIFE);
             assert!(role1.attack == role2.attack, ERR_DIFFERENT_ATTACK);

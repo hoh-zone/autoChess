@@ -12,6 +12,7 @@ module auto_chess::chess {
     use sui::event;
     use auto_chess::role::{Self, Role};
     use auto_chess::utils;
+    use auto_chess::challenge;
 
     use sui::sui::SUI;
     use auto_chess::verify;
@@ -51,6 +52,8 @@ module auto_chess::chess {
         refresh_price: u8,
         win: u8,
         lose: u8,
+        challenge_win:u8,
+        challenge_lose:u8,
         even: u8,
         creator: address,
         arena: bool
@@ -109,6 +112,8 @@ module auto_chess::chess {
             refresh_price: REFRESH_PRICE,
             win: 0,
             lose: 0,
+            challenge_win:0,
+            challenge_lose:0,
             even: 0,
             creator: sender,
             arena: true
@@ -142,6 +147,8 @@ module auto_chess::chess {
             refresh_price: REFRESH_PRICE,
             win: 0,
             lose: 0,
+            challenge_win:0,
+            challenge_lose:0,
             even: 0,
             creator: sender,
             arena: false
@@ -161,15 +168,14 @@ module auto_chess::chess {
             lose: chess.lose,
             reward: reward_amount,
         });
-        let Chess {id, name, lineup, cards_pool, gold, refresh_price, win, lose, even, creator, arena} = chess;
-       
+        let Chess {id, name, lineup, cards_pool, gold, refresh_price, win, lose, challenge_win, challenge_lose, even, creator, arena} = chess;
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
         object::delete(id);
     }
 
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, ctx:&mut TxContext) {
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let init_lineup = *&chess.lineup;
         let init_roles = lineup::get_mut_roles(&mut init_lineup);
@@ -179,7 +185,7 @@ module auto_chess::chess {
         let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
         chess.gold = INIT_GOLD;
         chess.lineup = expected_lineup;
-        match(role_global, lineup_global, chess, ctx);
+        match(role_global, lineup_global, challengeGlobal, chess, ctx);
         global.total_match = global.total_match + 1;
         print(&utf8(b"match finish"));
     }
@@ -192,21 +198,38 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    fun match(role_global:&role::Global, lineup_global:&mut lineup::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    fun match(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, ctx: &mut TxContext) {
         print(&utf8(b"start match chess"));
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
-        let enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, chess.arena, ctx);
+        let enemy_lineup;
+        let chanllenge_on = false;
+        if (chess.win >= 10) {
+            assert!(chess.challenge_lose == 0, ERR_YOU_ARE_DEAD);
+            chanllenge_on = true;
+            enemy_lineup = challenge::get_linup_by_rank(challengeGlobal, (20 - chess.challenge_win));
+        } else {
+            enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, chess.arena, ctx);
+        };
 
         // fight and record lineup
         if (fight(chess, &mut enemy_lineup, ctx)) {
-            lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
-            if (chess.win == 10) {
-                lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup, chess.arena);
+            if (chanllenge_on) {
+                chess.challenge_win = chess.challenge_win + 1;
+                challenge::rank_forward(challengeGlobal, chess.lineup, 20 - chess.challenge_win);
+            } else {
+                lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
+                if (chess.win == 10) {
+                    lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup, chess.arena);
+                };
             };
         } else {
-            lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
+            if (!chanllenge_on) {
+                lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
+            } else {
+                chess.challenge_lose = chess.challenge_lose + 1;
+            }
         };
         if (chess.lose <= 2) {
             refresh_cards_pools(role_global, chess, ctx);

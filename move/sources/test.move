@@ -12,6 +12,7 @@ module auto_chess::test {
     use auto_chess::role;
     use auto_chess::lineup;
     use auto_chess::utils;
+    use auto_chess::challenge;
 
     fun scenario(): Scenario { begin(@account) }
 
@@ -86,6 +87,7 @@ module auto_chess::test {
             // init modules
             role::init_for_test(ctx(test));
             lineup::init_for_test(ctx(test));
+            challenge::init_for_test(ctx(test));
             next_epoch(test, admin);
 
             let roleGlobal = take_shared<role::Global>(test);
@@ -95,9 +97,16 @@ module auto_chess::test {
 
             let lineupGlobal = take_shared<lineup::Global>(test);
             lineup::init_lineup_pools(&mut lineupGlobal, &roleGlobal, ctx(test));
+            next_epoch(test, admin);
+            
+            let challengeGlobal = take_shared<challenge::Global>(test);
+            challenge::init_rank_20(&mut challengeGlobal, &mut roleGlobal, ctx(test));
+            print(&challenge::query_rank_20(&challengeGlobal));
+            next_epoch(test, admin);
+
             return_shared(roleGlobal);
             return_shared(lineupGlobal);
-            next_epoch(test, admin);
+            return_shared(challengeGlobal);
 
             chess::init_for_test(ctx(test));
             next_epoch(test, admin);
@@ -110,7 +119,7 @@ module auto_chess::test {
             let chess_nft = take_from_sender<chess::Chess>(test);
             let lineupGlobal = take_shared<lineup::Global>(test);
             
-            print_my_cards_pool(&chess_nft);
+            // print_my_cards_pool(&chess_nft);
             // fighter1,cler1,firemega1,ani1,tank1, mega1, tank2
 
             let operations = vector::empty<String>();
@@ -143,10 +152,9 @@ module auto_chess::test {
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
-            print(&utf8(b"operate my chess"));
-
-            chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, &mut chess_nft, operations, left_gold, lineup_str_vec, ctx(test));
-            print_my_lineup(&chess_nft);
+            // print(&utf8(b"operate my chess"));
+            // chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, &mut chess_nft, operations, left_gold, lineup_str_vec, ctx(test));
+            // print_my_lineup(&chess_nft);
             next_epoch(test, admin);
 
             // // second round
