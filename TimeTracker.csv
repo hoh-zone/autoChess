@@ -16,4 +16,5 @@ Hikari,2023/11/3,2,"优化钱包按钮显示，钱包链接按钮移动至start 
 Hikari,2023/11/3,2,"新增资源加载hook，修复start scene加载背景视频闪烁",3a7504183d155e70f0ed409fd714d5b4d066fa9c
 Hikari,2023/11/3,2,"游戏指引添加swiper，样式调整",9abe2dd8db4a75ffe8ccb4869ea6f1e5c2e0d1ae
 Hikari,2023/11/13,1,"解决游戏角色抖动问题",2dbcda070dbcac8fdc4ee98a4ca09e32ea96d64c
-Hikari,2023/11/13,2,"创建资源清单，资源加载hook优化，loading组件提到index",e9e096e333d96cb5abcc4d1401a21321fdf440ab
+Hikari,2023/11/20,2,"创建资源清单，资源加载hook优化，loading组件提到index",e9e096e333d96cb5abcc4d1401a21321fdf440ab
+Hikari,2023/11/24,2,"开始游戏改为弹窗形式，图片资源&场景视频使用资源清单blob地址",b45665510f97bd47e4a53e82e25ec302de6224d4
