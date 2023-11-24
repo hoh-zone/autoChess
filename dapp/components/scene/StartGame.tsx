@@ -1,4 +1,4 @@
-import { Button, Center, HStack, Input, Modal, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Spinner, Stack, useToast, VStack } from "@chakra-ui/react"
+import { Button, Center, HStack, Input, Stack, useToast, VStack } from "@chakra-ui/react"
 import { operationsA, slotCharacterV2, stageAtom,assetsAtom } from "../../store/stages"
 import { useAtom } from "jotai"
 import useMintChess from "../button/MintChess"
@@ -8,11 +8,10 @@ import { useEffect, useState } from "react"
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
 import { ethos, SignInButton } from "ethos-connect"
 import { Rank } from "../Rank"
-import useCheckout from "../button/CheckoutChess"
-import PopupWindow from "../dialog/CustomPopWindow"
 import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
 import { getVw } from "../../utils"
+import ContinueGame from "../ContinueGame"
 
 export const StartGame = () => {
   const [chars, setChars] = useAtom(slotCharacterV2)
@@ -20,7 +19,6 @@ export const StartGame = () => {
   const { nftObjectId, mint } = useMintChess()
   const [inputValue, setInputValue] = useState("")
   const { nfts, query_chesses } = useQueryChesses()
-  const { checkout } = useCheckout()
   const syncGameNFT = useSyncGameNFT()
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
@@ -38,17 +36,9 @@ export const StartGame = () => {
     if (status !== "connected") return
     fetch()
   }, [status, query_chesses])
-  const [isOpen, setIsOpen] = useState(false)
-  const [checkout_id, setCheckout_id] = useState("")
-  const openModal = (id: string) => {
-    setCheckout_id(id)
-    setIsOpen(true)
-  }
-
-  const closeModal = () => {
-    setIsOpen(false)
-  }
+ 
   const toast = useToast()
+
   return (
     <>
       <Center className="h-full w-full relative block">
@@ -66,43 +56,8 @@ export const StartGame = () => {
                     <br />
                     Chess
                   </motion.p>
-                  <Popover>
-                    <PopoverTrigger>
-                      <Button isLoading={isLoading}>Continue Game</Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverBody p={0}>
-                        {nfts.map((nft, index) => (
-                          <Center className="w-full border-slate-400 mb-1" key={nft.id.id}>
-                            <HStack className="w-full">
-                              <Button
-                                key={nft.id.id}
-                                className="w-full bg-slate-200"
-                                fontSize={"x-small"}
-                                isDisabled={nft.lose == 3 || nft.win == 10}
-                                onClick={async () => {
-                                  syncGameNFT(nft)
-                                  setStage("shop")
-                                  setOperations([])
-                                  // todo: operations.push(chars.toString());
-                                }}
-                              >
-                                {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
-                              </Button>
-                              {nft.arena && (
-                                <Button className="bg-slate-200" style={{ fontSize: getVw(10) }} onClick={() => openModal(nft.id.id)}>
-                                  Check Out
-                                </Button>
-                              )}
-                              <PopupWindow isOpen={isOpen} ok={() => checkout({ chess_id: checkout_id })} cancel={closeModal} content_str="You can checkout to get sui rewards, the amuont depends on your winning records, are you sure to checkout now?" />
-                            </HStack>
-                          </Center>
-                        ))}
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
+                 
+                  <ContinueGame isLoading={isLoading} />
                 </div>
 
                 <Input type="text" className="custom-input" width={getVw(300)} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
