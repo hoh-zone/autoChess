@@ -56,13 +56,12 @@ module auto_chess::challenge {
 
     public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
         let i = 0;
-        // todo: power increase linear
-        let init_power = 20;
+        let init_power = 40;
         let seed:u8 = 1;
         while (i < 20) {
             let lineup = lineup::generate_lineup_by_power(roleGlobal, init_power, seed, ctx);
             vector::push_back(&mut global.rank_20, lineup);
-            init_power = init_power + 1;
+            init_power = init_power + 2;
             seed = seed + 1;
             i = i + 1;
             print(&1);

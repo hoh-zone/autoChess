@@ -181,9 +181,14 @@ module auto_chess::chess {
         let init_roles = lineup::get_mut_roles(&mut init_lineup);
         let cards_pool = chess.cards_pool;
         let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
-        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, ctx);
+        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), ctx);
         let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
-        chess.gold = INIT_GOLD;
+        if (chess.challenge_win + chess.challenge_lose >= 20) {
+            // prevent from unlimited strength upon its lineup
+            chess.gold = 0;
+        } else {
+            chess.gold = INIT_GOLD;
+        };
         chess.lineup = expected_lineup;
         match(role_global, lineup_global, challengeGlobal, chess, ctx);
         global.total_match = global.total_match + 1;
@@ -206,9 +211,9 @@ module auto_chess::chess {
         let enemy_lineup;
         let chanllenge_on = false;
         if (chess.win >= 10) {
-            assert!(chess.challenge_lose == 0, ERR_YOU_ARE_DEAD);
+            assert!(chess.challenge_lose <= 2, ERR_YOU_ARE_DEAD);
             chanllenge_on = true;
-            enemy_lineup = challenge::get_linup_by_rank(challengeGlobal, (20 - chess.challenge_win));
+            enemy_lineup = challenge::get_linup_by_rank(challengeGlobal, (19 - chess.challenge_win));
         } else {
             enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, chess.arena, ctx);
         };
@@ -234,7 +239,6 @@ module auto_chess::chess {
         if (chess.lose <= 2) {
             refresh_cards_pools(role_global, chess, ctx);
         };
-        chess.gold = INIT_GOLD;
     }
 
     fun refresh_cards_pools(role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
@@ -363,7 +367,6 @@ module auto_chess::chess {
             if (role_index == 5) {
                 return
             };
-            // todo: reverse check
             let back_char = vector::borrow_mut(roles, role_index + 1);
             let life = role::get_life(back_char);
             role::set_life(back_char, life + add_hp);
@@ -464,7 +467,6 @@ module auto_chess::chess {
     }
 
     fun safe_add_hp(add_value:u64, role: &mut Role) {
-        // todo:check max life?
         let char_life = role::get_life(role);
         if (char_life == 0) {
             return

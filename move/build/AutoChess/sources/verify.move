@@ -19,8 +19,7 @@ module auto_chess::verify {
     const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x12;
     const ERR_WRONG_LEFT_GOLD:u64 = 0x13;
 
-    public fun verify_operation(role_global:&role::Global, init_roles:&mut vector<Role>, cards_pool_roles: &mut vector<Role>, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, name:String, ctx:&mut TxContext) {
-        let gold = 10;
+    public fun verify_operation(role_global:&role::Global, init_roles:&mut vector<Role>, cards_pool_roles: &mut vector<Role>, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, name:String, gold:u8, ctx:&mut TxContext) {
         let refresh_time = 0;
         vector::reverse(&mut operations);
         while(vector::length(&operations) > 0) {

@@ -151,7 +151,6 @@ module auto_chess::lineup {
         let lose = 0;
         while (win < 10) {
             while (true) {
-                // todo: add win lose linup here
                 let duplicate_num = 2;
                 let seed:u8 = 1;
                 let tag = utils::get_pool_tag(win, lose);
