@@ -1,35 +1,39 @@
 module auto_chess::challenge {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
-    use sui::transfer::{Self, public_transfer};
+    use sui::transfer::{Self};
     use std::string::{utf8, String, Self};
     use auto_chess::lineup::{Self, LineUp};
     use sui::balance::{Self, Balance};
-    use sui::pay;
+    use sui::coin::{Self};
+    use sui::clock::{Self, Clock};
     use std::vector;
     use std::ascii;
     use sui::address;
-    use sui::coin;
     use std::debug::print;
-    use sui::event;
-    use sui::table::{Self, Table};
     use auto_chess::role;
     use sui::sui::SUI;
     friend auto_chess::chess;
 
-    const ERR_EXCEED_LIMIT_NUMBER:u64 = 0x01;
+    const ERR_CHALLENGE_NOT_END:u64 = 0x01;
+    const ERR_NO_PERMISSION:u64 = 0x02;
+    const DAY_IN_MS: u64 = 86_400_000;
 
     struct Global has key {
         id: UID,
         balance_SUI: Balance<SUI>,
-        rank_20: vector<LineUp>
+        rank_20: vector<LineUp>,
+        reward_20: vector<u64>,
+        publish_time: u64
     }
 
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
             balance_SUI: balance::zero(),
-            rank_20: vector::empty<LineUp>()
+            rank_20: vector::empty<LineUp>(),
+            reward_20: vector::empty<u64>(),
+            publish_time: 0
         };
         transfer::share_object(global);
     }
@@ -39,7 +43,9 @@ module auto_chess::challenge {
         let global = Global {
             id: object::new(ctx),
             balance_SUI: balance::zero(),
-            rank_20: vector::empty<LineUp>()
+            rank_20: vector::empty<LineUp>(),
+            reward_20: vector::empty<u64>(),
+            publish_time: 0
         };
         transfer::share_object(global);
     }
@@ -54,10 +60,11 @@ module auto_chess::challenge {
         vector::pop_back(&mut global.rank_20);
     }
 
-    public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
+    public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, clock:&Clock, ctx: &mut TxContext) {
         let i = 0;
         let init_power = 40;
         let seed:u8 = 1;
+        global.publish_time = clock::timestamp_ms(clock);
         while (i < 20) {
             let lineup = lineup::generate_lineup_by_power(roleGlobal, init_power, seed, ctx);
             vector::push_back(&mut global.rank_20, lineup);
@@ -86,5 +93,53 @@ module auto_chess::challenge {
             i = i + 1;
         };
         utf8(vec_out)
+    }
+
+    public entry fun claim_rank_reward(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
+        assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
+        let sender = tx_context::sender(ctx);
+        let i = 0;
+        while (i < 20) {
+            let tmp_lineup = vector::borrow(&global.rank_20, i);
+            if (lineup::get_creator(tmp_lineup) == sender) {
+                let amount = *vector::borrow(&global.reward_20, i);
+                let balance = balance::split(&mut global.balance_SUI, amount);
+                let sui = coin::from_balance(balance, ctx); 
+                transfer::public_transfer(sui, sender);
+                break
+            };
+        };
+    }
+
+    public entry fun query_left_challenge_time(global: &Global, clock:&Clock):u64 {
+        let now = clock::timestamp_ms(clock);
+        let one_week = DAY_IN_MS * 7;
+        if ((now - global.publish_time) >= one_week) {
+            0
+        } else {
+            one_week - (now - global.publish_time)
+        }
+    }
+
+    public(friend) fun get_reward_amount_by_rank(total_amount:u64, rank: u64) : u64 {
+        // todo:dynamic calculate
+        total_amount / 20
+    }
+
+    public fun withdraw_left_amount(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
+        let value = balance::value(&global.balance_SUI);
+        let balance = balance::split(&mut global.balance_SUI, value);
+        let sui = coin::from_balance(balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
+    public(friend) fun push_reward_amount(global:&mut Global, amount:u64) {
+        vector::push_back(&mut global.reward_20, amount)
+    }
+
+    public fun top_up_challenge_pool(global:&mut Global, balance:Balance<SUI>) {
+        balance::join(&mut global.balance_SUI, balance);
     }
 }

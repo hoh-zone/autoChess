@@ -7,6 +7,8 @@ module auto_chess::utils {
     use sui::bcs;
     use std::debug::print;
 
+    const AMOUNT_DECIMAL:u64 = 1_000_000_000;
+
     public fun u8_to_string(num: u8) : String {
         let vec = vector::empty<u8>();
         vector::push_back(&mut vec, num + 48);
@@ -130,6 +132,10 @@ module auto_chess::utils {
         } else {
             return name
         }
+    }
+
+    public fun check_ticket_price(value: u64) : bool {
+        ((value == 1 * AMOUNT_DECIMAL) || (value == 1 * AMOUNT_DECIMAL) || (value == 1 * AMOUNT_DECIMAL) || (value == 1 * AMOUNT_DECIMAL) || (value == 1 * AMOUNT_DECIMAL))
     }
 
     public fun get_name_by_level(base_name:String, level:u8) : String {

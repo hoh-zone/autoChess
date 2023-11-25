@@ -2,12 +2,13 @@ module auto_chess::chess {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self, public_transfer};
-    use std::string::{utf8, String, Self};
+    use std::string::{utf8, String};
     use auto_chess::lineup::{Self, LineUp};
     use sui::balance::{Self, Balance};
     use sui::pay;
     use sui::coin::{Self, Coin};
     use std::vector;
+    use sui::clock::{Clock};
     use std::debug::print;
     use sui::event;
     use auto_chess::role::{Self, Role};
@@ -16,24 +17,16 @@ module auto_chess::chess {
 
     use sui::sui::SUI;
     use auto_chess::verify;
-  
-    const INIT_LIFE:u64 = 3;
+
     const INIT_GOLD:u64 = 10;
     const REFRESH_PRICE:u8 = 2;
-    const ARENA_CHESS_PRICE:u64 = 1;
-    const CARDS_IN_ONE_REFRESH:u64 = 5;
-    const AMOUNT_DECIMAL:u64 = 1_000_000_000;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
     const ERR_EXCEED_NUM_LIMIT:u64 = 0x02;
     const ERR_PAYMENT_NOT_ENOUGH:u64 = 0x03;
     const ERR_NOT_ARENA_CHESS:u64 = 0x04;
-    const ERR_POOL_NOT_ENOUGH:u64 = 0x05;
     const ERR_NOT_PERMISSION:u64 = 0x06;
-    const ERR_NOT_ENOUGH_GOLD:u64 = 0x07;
-    const ERR_INVALID_CHARACTOR:u64 = 0x08;
-    const ERR_CHARACTOR_IS_NONE:u64 = 0x09;
-    const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x10;
-    const ERR_WRONG_LEFT_GOLD:u64 = 0x11;
+    const ERR_ONLY_ARENA_MODE_ALLOWED:u64 = 0x12;
+    const ERR_CHALLENGE_NOT_END:u64 = 0x013;
     const INVALID_INDEX:u64 = 10000;
 
     struct Global has key {
@@ -120,9 +113,10 @@ module auto_chess::chess {
         };
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
-        assert!(coin::value(&merged_coin) >= ARENA_CHESS_PRICE * AMOUNT_DECIMAL, ERR_PAYMENT_NOT_ENOUGH);
+        let pay_value = coin::value(&merged_coin);
+        assert!(utils::check_ticket_price(pay_value), ERR_PAYMENT_NOT_ENOUGH);
         let balance = coin::into_balance<SUI>(
-            coin::split<SUI>(&mut merged_coin, ARENA_CHESS_PRICE * AMOUNT_DECIMAL, ctx)
+            coin::split<SUI>(&mut merged_coin, pay_value, ctx)
         );
         balance::join(&mut global.balance_SUI, balance);
         if (coin::value(&merged_coin) > 0) {
@@ -159,7 +153,7 @@ module auto_chess::chess {
 
     public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
-        let reward_amount = estimate_reward(global, chess.win, chess.lose);
+        let reward_amount = estimate_reward(global, chess.win);
         event::emit(ArenaCheckOut {
             chess_id: object::id_address(&chess),
             owner: chess.creator,
@@ -168,7 +162,7 @@ module auto_chess::chess {
             lose: chess.lose,
             reward: reward_amount,
         });
-        let Chess {id, name, lineup, cards_pool, gold, refresh_price, win, lose, challenge_win, challenge_lose, even, creator, arena} = chess;
+        let Chess {id, name, lineup, cards_pool, gold, refresh_price:_, win, lose, challenge_win, challenge_lose, even, creator, arena} = chess;
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
@@ -211,6 +205,7 @@ module auto_chess::chess {
         let enemy_lineup;
         let chanllenge_on = false;
         if (chess.win >= 10) {
+            assert!(chess.arena, ERR_ONLY_ARENA_MODE_ALLOWED);
             assert!(chess.challenge_lose <= 2, ERR_YOU_ARE_DEAD);
             chanllenge_on = true;
             enemy_lineup = challenge::get_linup_by_rank(challengeGlobal, (19 - chess.challenge_win));
@@ -230,10 +225,10 @@ module auto_chess::chess {
                 };
             };
         } else {
-            if (!chanllenge_on) {
-                lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
-            } else {
+            if (chanllenge_on) {
                 chess.challenge_lose = chess.challenge_lose + 1;
+            } else {
+                lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
             }
         };
         if (chess.lose <= 2) {
@@ -349,7 +344,6 @@ module auto_chess::chess {
                 return
             };
             let add_magic = (utils::utf8_to_u64(effect_value) as u8);
-            let magic = role::get_magic(role);
             let i = 0;
             while (i < my_len) {
                 let char = vector::borrow_mut(my_roles, i);
@@ -491,10 +485,7 @@ module auto_chess::chess {
 
     fun call_attack(role: &Role, other_role: &mut Role) {
         let attack = role::get_attack(role);
-        let name = role::get_name(other_role);
-        let life = role::get_life(other_role);
         safe_attack(attack, other_role);
-        life = role::get_life(other_role);
     }
 
     fun action(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
@@ -636,7 +627,7 @@ module auto_chess::chess {
         balance::value(&global.balance_SUI)
     }
 
-    fun estimate_reward(global: &Global, win:u8, lose:u8) : u64 {
+    fun estimate_reward(global: &Global, win:u8) : u64 {
         let base_price = (win as u64) * 300_000_000;
         let max_reward = get_total_shui_amount(global) * 9 / 10;
         if (base_price > max_reward) {
@@ -650,5 +641,20 @@ module auto_chess::chess {
         let sui_balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
+    public fun lock_reward(global: &mut Global, challengeGlobal: &mut challenge::Global, clock:&Clock, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
+        let total = balance::value(&global.balance_SUI);
+        let split_value = total / 10;
+        let balance = balance::split(&mut global.balance_SUI, split_value);
+        challenge::top_up_challenge_pool(challengeGlobal, balance);
+        let i = 0;
+        while (i < 20) {
+            let amount = challenge::get_reward_amount_by_rank(split_value, i);
+            challenge::push_reward_amount(challengeGlobal, amount);
+            i = i + 1;
+        };
     }
 }

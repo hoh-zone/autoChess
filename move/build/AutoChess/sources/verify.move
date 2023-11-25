@@ -1,14 +1,12 @@
 module auto_chess::verify {
-    use sui::tx_context::{Self, TxContext};
+    use sui::tx_context::{TxContext};
     use std::string::{utf8, String, Self};
     use std::vector;
     use std::debug::print;
-    use auto_chess::lineup::{Self, LineUp}; 
+    use auto_chess::lineup; 
     use auto_chess::role::{Self, Role};
     use auto_chess::utils;
-    use sui::sui::SUI;
 
-    const INIT_GOLD:u64 = 10;
     const REFRESH_PRICE:u8 = 2;
     const CARDS_IN_ONE_REFRESH:u64 = 5;
     const ERR_NOT_ENOUGH_GOLD:u64 = 0x07;
@@ -76,7 +74,7 @@ module auto_chess::verify {
                 let sub_str = string::sub_string(&operate, 7 + 1, string::length(&operate));
                 let (from_index, to_index) = utils::get_left_right_number(sub_str);
                 assert!(from_index != to_index, ERR_SAME_INDEX_UPGRADE);
-                let from_role = role::init_role();
+                let from_role;
                 {
                     from_role = *vector::borrow<role::Role>(init_roles, from_index);
                     print(&from_index);

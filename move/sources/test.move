@@ -2,6 +2,7 @@
 #[test_only]
 module auto_chess::test {
     use std::string::{utf8, String};
+    use sui::clock::{Self, Clock};
     use sui::test_scenario::{
         Scenario, next_tx, begin, end, ctx, take_shared, return_shared, take_from_sender,return_to_sender,
         next_epoch
@@ -81,6 +82,7 @@ module auto_chess::test {
         let scenario = scenario();
         let test = &mut scenario;
         let admin = @account;
+        let clock = clock::create_for_testing(ctx(test));
 
         next_tx(test, admin);
         {
@@ -100,7 +102,7 @@ module auto_chess::test {
             next_epoch(test, admin);
             
             let challengeGlobal = take_shared<challenge::Global>(test);
-            challenge::init_rank_20(&mut challengeGlobal, &mut roleGlobal, ctx(test));
+            challenge::init_rank_20(&mut challengeGlobal, &roleGlobal, &clock, ctx(test));
             print(&challenge::query_rank_20(&challengeGlobal));
             next_epoch(test, admin);
 
@@ -172,15 +174,18 @@ module auto_chess::test {
             return_shared(chessGlobal);
             return_shared(roleGlobal);
             return_shared(lineupGlobal);
+            clock::destroy_for_testing(clock);
         };
         end(scenario);
     }
 
+    #[test_only]
     fun print_my_lineup (chess: &chess::Chess) {
         print(&utf8(b"my lineup:"));
         print(chess::get_lineup(chess));
     }
 
+    #[test_only]
     fun print_my_cards_pool (chess: &chess::Chess) {
         print(&utf8(b"my card pools:"));
         print(chess::get_cards_pool(chess));
