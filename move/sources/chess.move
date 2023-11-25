@@ -49,6 +49,7 @@ module auto_chess::chess {
         challenge_lose:u8,
         even: u8,
         creator: address,
+        price: u64,
         arena: bool
     }
 
@@ -60,7 +61,7 @@ module auto_chess::chess {
         v1_lose: u8,
         v2_name: String,
         v2_lineup:lineup::LineUp,
-        res: u8 // even:0, win:1, lose:2
+        res: u8 // even:0, win:1
     }
 
     struct ArenaCheckOut has copy, drop {
@@ -96,6 +97,10 @@ module auto_chess::chess {
     public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         print(&utf8(b"mint new arena chess"));
         let sender = tx_context::sender(ctx);
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        let pay_value = coin::value(&merged_coin);
+        assert!(utils::check_ticket_price(pay_value), ERR_PAYMENT_NOT_ENOUGH);
         let game = Chess {
             id: object::new(ctx),
             name:name,
@@ -109,12 +114,9 @@ module auto_chess::chess {
             challenge_lose:0,
             even: 0,
             creator: sender,
+            price: pay_value,
             arena: true
         };
-        let merged_coin = vector::pop_back(&mut coins);
-        pay::join_vec(&mut merged_coin, coins);
-        let pay_value = coin::value(&merged_coin);
-        assert!(utils::check_ticket_price(pay_value), ERR_PAYMENT_NOT_ENOUGH);
         let balance = coin::into_balance<SUI>(
             coin::split<SUI>(&mut merged_coin, pay_value, ctx)
         );
@@ -127,7 +129,6 @@ module auto_chess::chess {
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
     }
-
 
     public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
@@ -145,6 +146,7 @@ module auto_chess::chess {
             challenge_lose:0,
             even: 0,
             creator: sender,
+            price: 0,
             arena: false
         };
         global.total_chesses = global.total_chesses + 1;
@@ -162,21 +164,23 @@ module auto_chess::chess {
             lose: chess.lose,
             reward: reward_amount,
         });
-        let Chess {id, name, lineup, cards_pool, gold, refresh_price:_, win, lose, challenge_win, challenge_lose, even, creator, arena} = chess;
+        let Chess {id, name, lineup, cards_pool, gold, refresh_price:_, win, lose, challenge_win, challenge_lose, even, creator, price:_, arena} = chess;
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
         object::delete(id);
     }
 
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, ctx:&mut TxContext) {
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
+        challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
+        lineup_str_vec: vector<String>, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let init_lineup = *&chess.lineup;
         let init_roles = lineup::get_mut_roles(&mut init_lineup);
         let cards_pool = chess.cards_pool;
         let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
-        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), ctx);
-        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, ctx);
+        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.price, ctx);
+        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.price, ctx);
         if (chess.challenge_win + chess.challenge_lose >= 20) {
             // prevent from unlimited strength upon its lineup
             chess.gold = 0;
@@ -651,8 +655,9 @@ module auto_chess::chess {
         let balance = balance::split(&mut global.balance_SUI, split_value);
         challenge::top_up_challenge_pool(challengeGlobal, balance);
         let i = 0;
+        let total_scores = challenge::get_total_virtual_scores(challengeGlobal);
         while (i < 20) {
-            let amount = challenge::get_reward_amount_by_rank(split_value, i);
+            let amount = challenge::get_reward_amount_by_rank(challengeGlobal, split_value, total_scores, i);
             challenge::push_reward_amount(challengeGlobal, amount);
             i = i + 1;
         };

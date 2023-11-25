@@ -17,7 +17,9 @@ module auto_chess::verify {
     const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x12;
     const ERR_WRONG_LEFT_GOLD:u64 = 0x13;
 
-    public fun verify_operation(role_global:&role::Global, init_roles:&mut vector<Role>, cards_pool_roles: &mut vector<Role>, operations: vector<String>, left_gold:u8, lineup_str_vec: vector<String>, name:String, gold:u8, ctx:&mut TxContext) {
+    public fun verify_operation(role_global:&role::Global, init_roles:&mut vector<Role>, cards_pool_roles: &mut vector<Role>, operations: vector<String>,
+        left_gold:u8, lineup_str_vec: vector<String>, name:String, gold:u8, ticket_price:u64, 
+        ctx:&mut TxContext) {
         let refresh_time = 0;
         vector::reverse(&mut operations);
         while(vector::length(&operations) > 0) {
@@ -95,7 +97,7 @@ module auto_chess::verify {
                 print(&utf8(b"invalid operation"));
             }
         };
-        let expected_lineup = lineup::parse_lineup_str_vec(name, role_global, lineup_str_vec, ctx);
+        let expected_lineup = lineup::parse_lineup_str_vec(name, role_global, lineup_str_vec, ticket_price, ctx);
         let expected_roles = lineup::get_roles(&expected_lineup);
         assert!(role::check_roles_equal(init_roles, expected_roles), ERR_CHECK_ROLES_NOT_EQUAL);
         assert!(gold == left_gold, ERR_WRONG_LEFT_GOLD);

@@ -95,6 +95,7 @@ module auto_chess::challenge {
         utf8(vec_out)
     }
 
+    // todo:record clamied
     public entry fun claim_rank_reward(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
         assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
         let sender = tx_context::sender(ctx);
@@ -121,9 +122,29 @@ module auto_chess::challenge {
         }
     }
 
-    public(friend) fun get_reward_amount_by_rank(total_amount:u64, rank: u64) : u64 {
-        // todo:dynamic calculate
-        total_amount / 20
+    fun get_score_by_rank(rank:u64) : u64 {
+        20 - rank / 2
+    }
+
+    public(friend) fun get_reward_amount_by_rank(global: &Global, total_amount:u64, total_scores:u64, rank: u64) : u64 {
+        let tmp_lineup = vector::borrow(&global.rank_20, rank);
+        let price = lineup::get_price(tmp_lineup);
+        let prop = price * get_score_by_rank(rank) / total_scores;
+        total_amount * prop - 1_000_000_000
+    }
+
+    public(friend) fun get_total_virtual_scores(global: &Global) : u64 {
+        let rank = 0;
+        let init_prop = 20;
+        let total_socres = 0;
+        while(rank < 20) {
+            let tmp_lineup = vector::borrow(&global.rank_20, rank);
+            let price = lineup::get_price(tmp_lineup);
+            let prop = get_score_by_rank(rank);
+            total_socres = (price * prop) + total_socres;
+            rank = rank + 1;
+        };
+        total_socres
     }
 
     public fun withdraw_left_amount(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {

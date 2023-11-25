@@ -24,7 +24,8 @@ module auto_chess::lineup {
         creator: address,
         name:String,
         role_num: u64,
-        roles: vector<Role>
+        roles: vector<Role>,
+        price: u64
     }
 
     fun init(ctx: &mut TxContext) {
@@ -57,7 +58,8 @@ module auto_chess::lineup {
             creator: tx_context::sender(ctx),
             name:utf8(b""),
             role_num: 0,
-            roles: vec
+            roles: vec,
+            price: 0
         }
     }
 
@@ -76,7 +78,8 @@ module auto_chess::lineup {
             creator: tx_context::sender(ctx),
             name:utf8(b"random cards pool"),
             role_num: vector::length(&vec),
-            roles: vec
+            roles: vec,
+            price: 0
         }
     }
 
@@ -189,7 +192,8 @@ module auto_chess::lineup {
             creator:tx_context::sender(ctx),
             name: utf8(b"I'm a super robot"),
             role_num:max_role_num,
-            roles: roles
+            roles: roles,
+            price: 0
         }
     }
 
@@ -208,7 +212,7 @@ module auto_chess::lineup {
         (all_attacks, all_life)
     }
 
-    public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, ctx:&mut TxContext) : LineUp {
+    public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, price:u64, ctx:&mut TxContext) : LineUp {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
         assert!(len == 6, ERR_WRONG_ROLES_NUMBER);
@@ -241,7 +245,8 @@ module auto_chess::lineup {
             creator:tx_context::sender(ctx),
             name: name,
             role_num:len,
-            roles: vec
+            roles: vec,
+            price: price
         }
     }
 
@@ -259,5 +264,9 @@ module auto_chess::lineup {
 
     public fun get_creator(lineup:&LineUp): address {
         *&lineup.creator
+    }
+
+    public fun get_price(lineup:&LineUp): u64 {
+        *&lineup.price
     }
 }
