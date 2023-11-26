@@ -15,7 +15,8 @@ export const SellButton = () => {
             onClick={() => {
                 if(slotNumber !== null) {
                     setMoney(money + get_sell_price(chars[slotNumber]));
-                    operations.push("sell:" + slotNumber);
+                    operations.push("sell");
+                    operations.push(slotNumber.toString());
                     chars[slotNumber] = null;
                     setSlotNumber(null);
                     setChars(chars);
