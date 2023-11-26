@@ -168,17 +168,17 @@ module auto_chess::role {
         }
     }
 
-    fun random_select_role_by_level(global: &Global, level:u64, random: u64, _ctx:&mut TxContext):Role {
+    fun random_select_role_by_level(global: &Global, level:u64, random: u64, _ctx:&mut TxContext) :Role {
         let max_roles_per_level = vec_map::size(&global.charactors) / 5;
         let index = random % max_roles_per_level;
-        if (level == 1) {
-            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 5 * index);
+        if (level == 3) {
+            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 2 + 5 * index);
             *role
-        } else if (level == 3) {
-           let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 1 + 5 * index);
+        } else if (level == 9) {
+            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 4 + 5 * index);
             *role
         } else {
-            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 2 + 5 * index);
+            let (_name, role) = vec_map::get_entry_by_idx(&global.charactors, 5 * index);
             *role
         }
     }

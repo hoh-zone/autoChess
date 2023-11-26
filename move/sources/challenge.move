@@ -71,7 +71,6 @@ module auto_chess::challenge {
             init_power = init_power + 2;
             seed = seed + 1;
             i = i + 1;
-            print(&1);
         };
     }
 

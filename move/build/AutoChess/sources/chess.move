@@ -58,6 +58,8 @@ module auto_chess::chess {
         v1_name: String,
         v1_win: u8,
         v1_lose: u8,
+        v1_challenge_win: u8,
+        v1_challenge_lose: u8,
         v2_name: String,
         v2_lineup:lineup::LineUp,
         res: u8 // even:0, win:1
@@ -232,11 +234,12 @@ module auto_chess::chess {
         };
 
         // fight and record lineup
-        if (fight(chess, &mut enemy_lineup, ctx)) {
+        if (fight(chess, &mut enemy_lineup, chanllenge_on, ctx)) {
             if (chanllenge_on) {
                 chess.challenge_win = chess.challenge_win + 1;
                 challenge::rank_forward(challengeGlobal, chess.lineup, 20 - chess.challenge_win);
             } else {
+                chess.win = chess.win + 1;
                 lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
                 if (chess.win == 10) {
                     lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup, chess.arena);
@@ -246,6 +249,7 @@ module auto_chess::chess {
             if (chanllenge_on) {
                 chess.challenge_lose = chess.challenge_lose + 1;
             } else {
+                chess.lose = chess.lose + 1;
                 lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
             }
         };
@@ -308,7 +312,7 @@ module auto_chess::chess {
         }
     }
 
-    public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext) :bool {
+    public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, is_challenge:bool, ctx:&mut TxContext) :bool {
         let my_lineup_fight = *&chess.lineup;
 
         // backup to avoid base_life to be changed
@@ -345,35 +349,41 @@ module auto_chess::chess {
             };
         };
 
+        let win = chess.win;
+        let lose = chess.lose;
+        let challenge_win = chess.challenge_win;
+        let challenge_lose = chess.challenge_lose;
+        let res;
         if (fight::some_alive(&enemy_first_role, &enemy_roles)) {
             print(&utf8(b"I lose"));
-            chess.lose = chess.lose + 1;
-            event::emit(FightEvent {
-                chess_id: object::id_address(chess),
-                v1: tx_context::sender(ctx),
-                v1_name: chess.name,
-                v1_win: chess.win,
-                v1_lose: chess.lose,
-                v2_name: lineup::get_name(enemy_lineup),
-                v2_lineup:*enemy_lineup,
-                res: 2
-            });
-            false
+            if (is_challenge) {
+                challenge_win = challenge_win + 1;
+            } else {
+                win = win + 1;
+            };
+            res = false
         } else {
             print(&utf8(b"I win, my left lineup:"));
-            chess.win = chess.win + 1;
-            event::emit(FightEvent {
-                chess_id: object::id_address(chess),
-                v1: tx_context::sender(ctx),
-                v1_name: chess.name,
-                v1_win: chess.win,
-                v1_lose: chess.lose, 
-                v2_name: lineup::get_name(enemy_lineup),
-                v2_lineup:*enemy_lineup,
-                res: 1
-            });
-            true
-        }
+            if (is_challenge) {
+                challenge_lose = challenge_lose + 1;
+            } else {
+                lose = lose + 1;
+            };
+            res = true;
+        };
+        event::emit(FightEvent {
+            chess_id: object::id_address(chess),
+            v1: tx_context::sender(ctx),
+            v1_name: chess.name,
+            v1_win: win,
+            v1_lose: lose,
+            v1_challenge_win: challenge_win,
+            v1_challenge_lose: challenge_lose,
+            v2_name: lineup::get_name(enemy_lineup),
+            v2_lineup:*enemy_lineup,
+            res: 2
+        });
+        res
     }
 
     public fun get_total_shui_amount(global: &Global) : u64 {

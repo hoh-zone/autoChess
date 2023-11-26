@@ -4,7 +4,6 @@ module auto_chess::verify {
     use std::vector;
     use auto_chess::lineup; 
     use auto_chess::role::{Self, Role};
-    use std::debug::print;
     use auto_chess::utils;
 
     const REFRESH_PRICE:u8 = 2;
