@@ -3,7 +3,7 @@ module.exports = {
     tailwindcss: {},
     autoprefixer: {},
     'postcss-px-to-viewport': {
-      viewportHeight: 1000,  // 设计稿的宽度
+      viewportHeight: 600,  // 设计稿的宽度
       unitPrecision: 3,    // 转换后的小数点位数
       viewportUnit: 'vh',  // 转换的单位
       selectorBlackList: ['.ignore'],  // 需要忽略的选择器

@@ -1,4 +1,4 @@
-import { Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Center, HStack } from "@chakra-ui/react"
+import { Text, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Center, HStack, Stack } from "@chakra-ui/react"
 import useQueryChesses from "./button/QueryAllChesses"
 import PopupWindow from "./dialog/CustomPopWindow"
 import { getVh } from "../utils"
@@ -50,14 +50,16 @@ const ContinueGame = (props: { isLoading: boolean }) => {
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent className="rounded-[8px] !bg-transparent">
-          <ModalBody className="max-h-[50vh] overflow-y-auto !p-[10px] bg-slate-500 rounded-[8px]">
-            {nfts.map((nft, index) => (
-              <Center className="w-full border-slate-400 mb-1" key={nft.id.id}>
+        <ModalContent className="rounded-[8px]" bg={"gray.500"} overflowY={"auto"} maxH={"50vh"}>
+          <ModalBody className="!p-[10px] rounded-[8px]" >
+            {nfts.length == 0 && <Text>no records</Text>}
+            {nfts.length > 0 && <Stack gap={4}>
+              {nfts.map((nft, index) => (
                 <HStack className="w-full">
                   <Button
                     key={nft.id.id}
-                    className="w-full bg-slate-200"
+                    height={"unset"}
+                    className="w-full bg-slate-200 py-4 h-fit"
                     fontSize={"x-small"}
                     isDisabled={nft.lose == 3 || nft.challenge_lose == 3}
                     onClick={async () => {
@@ -67,7 +69,18 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                       // todo: operations.push(chars.toString());
                     }}
                   >
-                    {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
+                    <Stack gap={2} >
+                      <p className="text-slate-800">
+                        Name: {nft.name} {nft.arena ? "(Arena)" : ""}
+                      </p>
+                      <p className="text-slate-800">
+                        Mode: {(!nft.arena ? "free" : "arena")}
+                      </p>
+                      <p className="text-slate-800">
+                        {nft.win} win, {nft.lose} lose
+                      </p>
+                    </Stack>
+                    {/* {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose} */}
                   </Button>
                   {nft.arena && (
                     <Button className="bg-slate-200" style={{ fontSize: getVh(10) }} onClick={() => openModal(nft.id.id)}>
@@ -78,11 +91,12 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                     isOpen={isOpen$2}
                     ok={() => checkout({ chess_id: checkout_id })}
                     cancel={closeModal}
-                    content_str="You can checkout to get sui rewards, the amuont depends on your winning records, are you sure to checkout now?"
+                    content_str="You can checkout to get sui rewards, the amount depends on your winning records, are you sure to checkout now?"
                   />
                 </HStack>
-              </Center>
-            ))}
+              ))}
+            </Stack>}
+
           </ModalBody>
         </ModalContent>
       </Modal>

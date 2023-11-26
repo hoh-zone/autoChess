@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react"
-import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react"
+import { Button, Modal, ModalOverlay, ModalContent, ModalBody, useDisclosure } from "@chakra-ui/react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, EffectCards } from "swiper/modules"
 

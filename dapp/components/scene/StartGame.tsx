@@ -1,7 +1,6 @@
-import { Button, Center, HStack, Input, Stack, useToast, VStack } from "@chakra-ui/react"
-import { operationsA, slotCharacter, stageAtom,assetsAtom } from "../../store/stages"
+import { Center, HStack, Input, Stack, VStack } from "@chakra-ui/react"
+import { assetsAtom } from "../../store/stages"
 import { useAtom } from "jotai"
-import useMintChess from "../button/MintChess"
 import { Character } from "../character/character"
 import useQueryChesses from "../button/QueryAllChesses"
 import { useEffect, useState } from "react"
@@ -12,17 +11,14 @@ import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
 import { getVh } from "../../utils"
 import ContinueGame from "../ContinueGame"
+import StartGameButtons from "../StartGameButtons"
 
 export const StartGame = () => {
-  const [chars, setChars] = useAtom(slotCharacter)
-  const [stage, setStage] = useAtom(stageAtom)
-  const { nftObjectId, mint } = useMintChess()
   const [inputValue, setInputValue] = useState("")
   const { nfts, query_chesses } = useQueryChesses()
   const syncGameNFT = useSyncGameNFT()
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
-  const [operations, setOperations] = useAtom(operationsA)
   const [assets, setAssets] = useAtom(assetsAtom)
 
   const fetch = async () => {
@@ -36,8 +32,6 @@ export const StartGame = () => {
     if (status !== "connected") return
     fetch()
   }, [status, query_chesses])
- 
-  const toast = useToast()
 
   return (
     <>
@@ -56,65 +50,12 @@ export const StartGame = () => {
                     <br />
                     Chess
                   </motion.p>
-                 
+
                   <ContinueGame isLoading={isLoading} />
                 </div>
 
                 <Input type="text" className="custom-input" width={getVh(300)} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
-                <Button
-                  onClick={async () => {
-                    if (inputValue == "") {
-                      toast({
-                        title: "Please enter your name",
-                        status: "warning",
-                        duration: 2000,
-                        isClosable: true
-                      })
-                      return
-                    }
-                    await mint({ username: inputValue, is_arena: false })
-                    setTimeout(async function () {
-                      const nfts = await fetch()
-                      nfts &&
-                        nfts.map((nft, index) => {
-                          if (nft.name == inputValue) {
-                            syncGameNFT(nft)
-                            setStage("shop")
-                            setOperations([])
-                            operations.push(chars.toString())
-                          }
-                        })
-                    }, 2000)
-                  }}
-                >
-                  Start New Chess
-                </Button>
-                <Button
-                  onClick={async () => {
-                    if (inputValue == "") {
-                      toast({
-                        title: "Please enter your name",
-                        status: "warning",
-                        duration: 2000,
-                        isClosable: true
-                      })
-                      return
-                    }
-                    await mint({ username: inputValue, is_arena: true })
-                    const nfts = await fetch()
-                    nfts &&
-                      nfts.map((nft, index) => {
-                        if (nft.name == inputValue) {
-                          syncGameNFT(nft)
-                          setStage("shop")
-                          setOperations([])
-                          operations.push(chars.toString())
-                        }
-                      })
-                  }}
-                >
-                  Start New Arena (To Earn)
-                </Button>
+                <StartGameButtons name={inputValue} />
               </Stack>
             </div>
           ) : (

@@ -3,7 +3,7 @@
  */
 export const getVh = (px: number) => {
   // 设计稿满屏宽度，对齐 postcss.config.js
-  const SCREEN_HEIGHT = 1000;
+  const SCREEN_HEIGHT = 600;
   return `${px * 100 / SCREEN_HEIGHT}vh`;
 };
 
