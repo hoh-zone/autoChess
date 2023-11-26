@@ -1,7 +1,7 @@
 import { Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Center, HStack } from "@chakra-ui/react"
 import useQueryChesses from "./button/QueryAllChesses"
 import PopupWindow from "./dialog/CustomPopWindow"
-import { getVw } from "../utils"
+import { getVh } from "../utils"
 import { useEffect, useState } from "react"
 import { useSyncGameNFT } from "../hooks/useSyncGameNFT"
 import { useAtom } from "jotai"
@@ -70,7 +70,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                     {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose}
                   </Button>
                   {nft.arena && (
-                    <Button className="bg-slate-200" style={{ fontSize: getVw(10) }} onClick={() => openModal(nft.id.id)}>
+                    <Button className="bg-slate-200" style={{ fontSize: getVh(10) }} onClick={() => openModal(nft.id.id)}>
                       Check Out
                     </Button>
                   )}

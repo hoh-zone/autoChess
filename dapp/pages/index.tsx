@@ -11,6 +11,8 @@ import { FightScene } from "../components/scene/FightScene"
 import assetsManifest from "../public/assetsManifest"
 import useLoadAssets from "../hooks/useLoadAssets"
 import LoadingMask from "../components/LoadingMask"
+import { twMerge } from "tailwind-merge"
+import useScreenSize from "../hooks/useScreenSize"
 
 const Home: NextPage = () => {
   const [stage, setStage] = useAtom(stageAtom)
@@ -19,9 +21,14 @@ const Home: NextPage = () => {
   useEffect(() => {
     setAssets(assets)
   }, [assets])
+
+  const windowSize = useScreenSize();
   return (
     <>
-      <div className="w-[100vw] aspect-video max-h-[100vh] bg-black relative">
+      <div className={twMerge(
+        "aspect-video bg-black relative",
+        windowSize.width / windowSize.height > 16 / 9 ? "max-w-[100vw] h-[100vh]" : "w-[100vw] max-h-[100vh]",
+      )}>
         {assetsLoading ? (
           <LoadingMask />
         ) : (

@@ -10,7 +10,7 @@ import { ethos, SignInButton } from "ethos-connect"
 import { Rank } from "../Rank"
 import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
-import { getVw } from "../../utils"
+import { getVh } from "../../utils"
 import ContinueGame from "../ContinueGame"
 
 export const StartGame = () => {
@@ -51,7 +51,7 @@ export const StartGame = () => {
             <div className="absolute text-white top-12 z-50">
               <Stack className="items-center text-center" gap={4}>
                 <div className="mb-12">
-                  <motion.p initial={{ opacity: 0, scale: 0, y: "-3.3vw" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: getVw(30), fontSize: getVw(100) }}>
+                  <motion.p initial={{ opacity: 0, scale: 0, y: "-3.3vw" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: getVh(30), fontSize: getVh(100) }}>
                     Auto
                     <br />
                     Chess
@@ -60,7 +60,7 @@ export const StartGame = () => {
                   <ContinueGame isLoading={isLoading} />
                 </div>
 
-                <Input type="text" className="custom-input" width={getVw(300)} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
+                <Input type="text" className="custom-input" width={getVh(300)} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
                 <Button
                   onClick={async () => {
                     if (inputValue == "") {

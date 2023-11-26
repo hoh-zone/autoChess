@@ -46,7 +46,7 @@ const assetsManifest = {
   bg3: "bg3.mp4",
   bg4: "bg4.mp4",
   bg5: "bg5.mp4",
-  bg6: "bg6.mp4",
+  bg10: "bg10.mp4",
   bg7: "bg7.mp4",
   bg8: "bg8.mp4",
   "cleric-attack-1": "cleric-attack-1.png",
