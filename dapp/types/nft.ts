@@ -6,10 +6,12 @@ export interface GameNft {
     id:            ID;
     life:          number;
     lineup:        CardsPool;
+    win:           number;
     lose:          number;
+    challenge_win: number;
+    challenge_lose:number;
     name:          string;
     refresh_price: string;
-    win:           number;
     arena:         boolean;
 }
 

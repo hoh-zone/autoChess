@@ -18,6 +18,7 @@ const useMintChess = () => {
         try {
             const transactionBlock = new TransactionBlock();
             if (is_arena) {
+                // 动态改成1,5,10，100, 500
                 let price = 1;
                 let coins = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price * 1_000_000_000)]);
                 let coin_vec = transactionBlock.makeMoveVec({objects:[coins]});

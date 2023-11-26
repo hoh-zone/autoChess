@@ -1,7 +1,7 @@
 
 import { useAtom } from "jotai"
 import { HStack, Img } from "@chakra-ui/react";
-import { loseA, nameA, enemyNameA, winA, fightingIndex, enemyFightingIndex, enemyCharacterV2, slotCharacterV2} from "../../store/stages";
+import { loseA, nameA, enemyNameA, winA, fightingIndex, enemyFightingIndex, enemyCharacter, slotCharacter} from "../../store/stages";
 import { removeSuffix } from "../../utils/TextUtils";
 import { CharacterFields } from "../../types/nft";
 
@@ -10,8 +10,8 @@ export const StatusBar = ({ isOpponent = false}: {
 }) => {
     const [lose, _setLose] = useAtom(loseA);
     const [win, _setWin] = useAtom(winA);
-    const [chars] = useAtom(slotCharacterV2);
-    const [enemy_chars] = useAtom(enemyCharacterV2);
+    const [chars] = useAtom(slotCharacter);
+    const [enemy_chars] = useAtom(enemyCharacter);
     const [name] = useAtom(nameA);
     const [enemy_name] = useAtom(enemyNameA);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);

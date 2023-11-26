@@ -24,6 +24,7 @@ const useQueryFight = () => {
             });
             result.data.map((fight) => {
                 let json = fight.parsedJson as any;
+                console.log(json);
                 if (json['v1_name'] != "") {
                     let name = json['v1_name']; 
                     if (!rank_score_map.hasOwnProperty(name)) {
@@ -71,6 +72,7 @@ const useQueryFight = () => {
                 res.push(key + ":" + rank_map[key]);
             });
             setRanks(res);
+            console.log("rank", res);
         } catch(error) {
             console.log('err', error);
         }

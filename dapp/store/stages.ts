@@ -7,6 +7,8 @@ export const currentNftId = atom<string>("");
 export const moneyA = atom<number>(50);
 export const winA = atom<number>(99);
 export const loseA = atom<number>(99);
+export const challengeWinA = atom<number>(99);
+export const challengeLoseA = atom<number>(99);
 export const nameA = atom<string>("Default name");
 export const fightingIndex = atom<number>(0);
 export const hpChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
@@ -16,6 +18,10 @@ export const enemyAttackChangeA = atom<number[]>([0, 0, 0, 0, 0, 0]);
 
 export const skillTagA = atom<string[]>(["", "", "", "", "", ""]);
 export const enemySkillTagA = atom<string[]>(["", "", "", "", "", ""]);
+
+//charactors
+export const slotCharacter = atom<(CharacterFields | null)[]>([null, null, null, null, null, null]);
+export const enemyCharacter = atom<(CharacterFields | null)[]>([null, null, null, null, null, null]);
 
 // enemy
 export const enemyWinA = atom<number>(0);
@@ -35,10 +41,3 @@ export const operationsA = atom<string[]>([]);
 
 // effects
 export const fightResultEffectA = atom<null | string>(null);
-
-
-
-
-// v2 charactors
-export const slotCharacterV2 = atom<(CharacterFields | null)[]>([null, null, null, null, null, null]);
-export const enemyCharacterV2 = atom<(CharacterFields | null)[]>([null, null, null, null, null, null]);

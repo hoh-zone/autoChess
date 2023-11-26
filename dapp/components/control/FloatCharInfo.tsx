@@ -2,9 +2,9 @@
 import { useAtom } from "jotai"
 
 import { HStack, Img, Stack } from "@chakra-ui/react";
-import { shopCharacter, stageAtom, enemyCharacterV2, slotCharacterV2 } from "../../store/stages";
+import { shopCharacter, stageAtom, enemyCharacter, slotCharacter } from "../../store/stages";
 
-import { get_star_num } from "../character/rawDataV2";
+import { get_star_num } from "../character/rawData";
 import { CharacterFields } from "../../types/nft";
 
 export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
@@ -13,8 +13,8 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
     isShopSlot?: boolean
     isOpponent?: boolean
 }) => {
-    const [chars] = useAtom(slotCharacterV2);
-    const [enemy_chars] = useAtom(enemyCharacterV2);
+    const [chars] = useAtom(slotCharacter);
+    const [enemy_chars] = useAtom(enemyCharacter);
     const [shopChars] = useAtom(shopCharacter);
     const [stage] = useAtom(stageAtom);
     let char: CharacterFields | null = null;

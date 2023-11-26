@@ -1,12 +1,14 @@
 import { Button, Center, HStack, Spacer, Text } from "@chakra-ui/react"
 import { useAtom } from "jotai"
-import { loseA, moneyA as moneyAtom, nameA, stageAtom, winA } from "../../store/stages"
-import { FightV2 } from "../FightV2";
+import { loseA, moneyA as moneyAtom, nameA, stageAtom, winA, challengeWinA, challengeLoseA} from "../../store/stages"
+import { Fight } from "../Fight";
 
 export const Header = () => {
     const [money] = useAtom(moneyAtom);
     const [win, _setWin] = useAtom(winA);
     const [lose, _setLose] = useAtom(loseA);
+    const [challengeWin, _setChallengeWin] = useAtom(challengeWinA);
+    const [challengeLose, _setChallengeLose] = useAtom(challengeLoseA);
     const [name, _setName] = useAtom(nameA);
     const [stage, setStage] = useAtom(stageAtom);
 
@@ -19,7 +21,9 @@ export const Header = () => {
         <Text>Money: {money}</Text>
         <Text>Win: {win}</Text>
         <Text>Lose: {lose}</Text>
+        {win >= 10 && <Text>ChallengeWin: {challengeWin}</Text> }
+        {win >= 10 && <Text>ChallengeLose: {challengeLose}</Text>}
         <Spacer />
-        <FightV2 />
+        <Fight />
     </HStack>
 }

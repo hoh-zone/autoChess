@@ -1,14 +1,14 @@
 
 import { useAtom } from "jotai"
 
-import { slotCharacterV2, enemyCharacterV2, stageAtom} from "../../store/stages";
+import { slotCharacter, enemyCharacter, stageAtom} from "../../store/stages";
 import { HStack } from "@chakra-ui/react";
 import { CharacterFields } from "../../types/nft";
 export const HpBar = ({id}: {
     id: number,
 }) => {
-    const [chars] = useAtom(slotCharacterV2);
-    const [enemy_chars] = useAtom(enemyCharacterV2);
+    const [chars] = useAtom(slotCharacter);
+    const [enemy_chars] = useAtom(enemyCharacter);
     const [stage] = useAtom(stageAtom);
     let char: CharacterFields | null = null;
     let isOpponent = false;

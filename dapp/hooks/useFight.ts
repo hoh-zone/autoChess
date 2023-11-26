@@ -1,16 +1,16 @@
 import { useCallback } from "react"
-import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacterV2, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacterV2, stageAtom } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
 import { CharacterFields } from "../types/nft";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
-import { get_max_magic } from "../components/character/rawDataV2";
+import { get_max_magic } from "../components/character/rawData";
 
 export const useFight = () => {
-    const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
-    const [chars, setChars] = useAtom(slotCharacterV2);
+    const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
+    const [chars, setChars] = useAtom(slotCharacter);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
     const [stage, setStage] = useAtom(stageAtom);

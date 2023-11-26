@@ -1,24 +1,26 @@
 import { useAtom } from "jotai";
-import { chessId, enemyCharacterV2, stageAtom, winA, loseA, slotCharacterV2, operationsA, enemyNameA } from "../store/stages";
-import useOperateAndMatch from "./button/OperateAndMatchV2";
+import { chessId, enemyCharacter, stageAtom, winA, loseA, slotCharacter, operationsA, enemyNameA, challengeWinA, challengeLoseA } from "../store/stages";
+import useOperateAndMatch from "./button/OperateAndMatch";
 import useQueryFight from "./button/QueryFightResult";
-import { useFight } from "../hooks/useFight_v2";
+import { useFight } from "../hooks/useFight";
 import { useEffect } from "react";
 import { Button, useToast } from '@chakra-ui/react'
-import { get_chars } from "./character/rawDataV2";
+import { get_chars } from "./character/rawData";
 import { CharacterFields } from "../types/nft";
 
-export const FightV2 = () => {
+export const Fight = () => {
     const { nftObjectId, operate_submit } = useOperateAndMatch();
     const { query_fight } = useQueryFight();
     const [enemyName, setEnemyName] = useAtom(enemyNameA);
-    const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
-    const [chars, setChars] = useAtom(slotCharacterV2);
+    const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
+    const [chars, setChars] = useAtom(slotCharacter);
     const [operations, setOperations] = useAtom(operationsA);
     const [stage, setStage] = useAtom(stageAtom);
     const [chess_id] = useAtom(chessId);
     const [win, _setWin] = useAtom(winA);
     const [lose, _setLose] = useAtom(loseA);
+    const [challengeWin, _setChallengeWin] = useAtom(challengeWinA);
+    const [challengeLose, _setChallengeLose] = useAtom(challengeLoseA);
     const toast = useToast();
 
     const fight = useFight();
@@ -44,16 +46,7 @@ export const FightV2 = () => {
 
     return <>
     { stage === "shop" && <Button className="" onClick={async () => {
-        if (win >= 10) {
-            toast({
-                title: 'The game ends with 10 wins',
-                status: 'warning',
-                duration: 2000,
-                isClosable: true,
-            })
-            return;
-        };
-        if (lose >= 3) {
+        if (lose >= 3 || challengeLose >= 3) {
             toast({
                 title: 'The game ends with 3 loses',
                 status: 'warning',
@@ -86,6 +79,6 @@ export const FightV2 = () => {
         setEnemyName(name);
         setEnemyChars(enemys);
         setStage("fight");
-    }}> FightV2 </Button>    }
+    }}> Fight </Button>    }
     </>
 }

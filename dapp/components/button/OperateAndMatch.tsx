@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { ethos, TransactionBlock} from 'ethos-connect';
-import { chessId, moneyA as moneyAtom, slotCharacterV2} from "../../store/stages";
-import { CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
+import { chessId, moneyA as moneyAtom, slotCharacter} from "../../store/stages";
+import { CHALLENGE_GLOBAL, CHESS_GLOBAL, LINEUP_GLOBAL, PACKAGE_ID, ROLE_GLOBAL } from '../../lib/constants';
 import { useAtom } from 'jotai';
 
 const useOperateAndMatch = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
     const [money] = useAtom(moneyAtom);
-    const [chars] = useAtom(slotCharacterV2);
+    const [chars] = useAtom(slotCharacter);
     const [chess_id] = useAtom(chessId);
 
     const get_chars_strvec = () => {
@@ -38,6 +38,7 @@ const useOperateAndMatch = () => {
                     tx.pure(`${CHESS_GLOBAL}`),
                     tx.pure(`${ROLE_GLOBAL}`),
                     tx.pure(`${LINEUP_GLOBAL}`),
+                    tx.pure(`${CHALLENGE_GLOBAL}`),
                     tx.pure(chess_id),
                     tx.pure(operations),
                     tx.pure(left_gold),

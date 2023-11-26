@@ -1,9 +1,9 @@
 import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
-import {  moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, stageAtom, operationsA, enemyCharacterV2, slotCharacterV2 } from "../../store/stages"
+import {  moneyA as moneyAtom, selectedShopSlot, selectedSlot, shopCharacter, stageAtom, operationsA, enemyCharacter, slotCharacter } from "../../store/stages"
 import { removeSuffix } from "../../utils/TextUtils";
-import { upgrade } from "../character/rawDataV2";
+import { upgrade } from "../character/rawData";
 import { FloatCharInfo } from "./FloatCharInfo";
 import { HpBar } from "./HpBar";
 import { motion } from "framer-motion";
@@ -11,7 +11,7 @@ import { useToast } from '@chakra-ui/react'
 import confetti from "canvas-confetti";
 import { StatusChange } from "./StatusChange";
 import { CharacterFields } from "../../types/nft";
-import { get_buy_price } from "../character/rawDataV2";
+import { get_buy_price } from "../character/rawData";
 import { SkillTag } from "./SkillTag";
 
 export const Slot = ({ isOpponent = false, id }: {
@@ -19,8 +19,8 @@ export const Slot = ({ isOpponent = false, id }: {
     id: number
 }) => {
     const [slotNumber, setSlotNumber] = useAtom(selectedSlot);
-    const [chars, setChars] = useAtom(slotCharacterV2);
-    const [enemyChars, setEnemyChars] = useAtom(enemyCharacterV2);
+    const [chars, setChars] = useAtom(slotCharacter);
+    const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
     const [shopSlotNumber, setShopSlotNumber] = useAtom(selectedShopSlot);
     const [shopChars, setShopChars] = useAtom(shopCharacter);
     const [money, setMoney] = useAtom(moneyAtom);
@@ -91,7 +91,8 @@ export const Slot = ({ isOpponent = false, id }: {
                     setShopChars(shopChars);
                     setShopSlotNumber(null);
                     setSlotNumber(null);
-                    operations.push("buy:" + shopSlotNumber + "-" + id);
+                    operations.push("buy");
+                    operations.push(shopSlotNumber + "-" + id);
                 } else {
                     show_failed_toast()
                 }
@@ -108,7 +109,8 @@ export const Slot = ({ isOpponent = false, id }: {
                     setSlotNumber(null);
                     end = Date.now() + 1 * 1000;
                     level_up_effect();
-                    operations.push("buy_upgrade:" + shopSlotNumber + "-" + id);
+                    operations.push("buy_upgrade");
+                    operations.push(shopSlotNumber + "-" + id);
                 } else {
                     show_failed_toast()
                 }
@@ -126,13 +128,15 @@ export const Slot = ({ isOpponent = false, id }: {
                     setShopSlotNumber(null);
                     end = Date.now() + 1 * 1000;
                     level_up_effect();
-                    operations.push("upgrade:" + slotNumber + "-" + id);
+                    operations.push("upgrade");
+                    operations.push(slotNumber + "-" + id);
                 } else {
                     chars[slotNumber] = temp;
                     setChars(chars);
                     setSlotNumber(null);
                     setShopSlotNumber(null);
-                    operations.push("swap:" + slotNumber + "-" + id);
+                    operations.push("swap");
+                    operations.push(slotNumber + "-" + id);
                 }
             } else {
                 if (slotNumber == null) {

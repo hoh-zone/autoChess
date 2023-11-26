@@ -1,5 +1,5 @@
 import { Button, Center, HStack, Input, Modal, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Spinner, Stack, useToast, VStack } from "@chakra-ui/react"
-import { operationsA, slotCharacterV2, stageAtom } from "../../store/stages"
+import { operationsA, slotCharacter, stageAtom } from "../../store/stages"
 import { useAtom } from "jotai"
 import useMintChess from "../button/MintChess"
 import { Character } from "../character/character"
@@ -17,7 +17,7 @@ import useLoadAssets from "../../hooks/useLoadAssets"
 import LoadingMask from "../LoadingMask"
 
 export const StartGame = () => {
-  const [chars, setChars] = useAtom(slotCharacterV2)
+  const [chars, setChars] = useAtom(slotCharacter)
   const [stage, setStage] = useAtom(stageAtom)
   const { nftObjectId, mint } = useMintChess()
   const [inputValue, setInputValue] = useState("")
@@ -85,7 +85,7 @@ export const StartGame = () => {
                                 key={nft.id.id}
                                 className="w-full bg-slate-200"
                                 fontSize={"x-small"}
-                                isDisabled={nft.lose == 3 || nft.win == 10}
+                                isDisabled={nft.lose == 3 || nft.challenge_lose == 3}
                                 onClick={async () => {
                                   syncGameNFT(nft)
                                   setStage("shop")

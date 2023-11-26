@@ -1,6 +1,6 @@
 
 import { useAtom } from "jotai"
-import { skillTagA, enemySkillTagA, enemyCharacterV2, slotCharacterV2, stageAtom} from "../../store/stages";
+import { skillTagA, enemySkillTagA, enemyCharacter, slotCharacter, stageAtom} from "../../store/stages";
 import { CharacterFields } from "../../types/nft";
 
 export const SkillTag = ({id}: {
@@ -9,8 +9,8 @@ export const SkillTag = ({id}: {
     const [skillTag, setSkillTag] = useAtom(skillTagA);
     const [stage, setStage] = useAtom(stageAtom);
     const [enemySkillTag, setEnemySkillTag] = useAtom(enemySkillTagA);
-    const [chars] = useAtom(slotCharacterV2);
-    const [enemy_chars] = useAtom(enemyCharacterV2);
+    const [chars] = useAtom(slotCharacter);
+    const [enemy_chars] = useAtom(enemyCharacter);
     let isOpponent = id > 10;
     let char: CharacterFields | null = null;
     char = isOpponent ? enemy_chars[id - 10]: chars[id];
