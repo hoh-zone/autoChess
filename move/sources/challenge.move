@@ -50,8 +50,8 @@ module auto_chess::challenge {
         transfer::share_object(global);
     }
 
-    public(friend) fun get_linup_by_rank(global: &Global, rank:u8): LineUp {
-        *vector::borrow(&global.rank_20, (rank as u64))
+    public(friend) fun get_lineup_by_rank(global: &Global, rank:u8): &LineUp {
+        vector::borrow(&global.rank_20, (rank as u64))
     }
 
     public(friend) fun rank_forward(global: &mut Global, lineup:LineUp, rank:u8) {
@@ -95,23 +95,6 @@ module auto_chess::challenge {
         utf8(vec_out)
     }
 
-    // todo:record clamied
-    public entry fun claim_rank_reward(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
-        assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
-        let sender = tx_context::sender(ctx);
-        let i = 0;
-        while (i < 20) {
-            let tmp_lineup = vector::borrow(&global.rank_20, i);
-            if (lineup::get_creator(tmp_lineup) == sender) {
-                let amount = *vector::borrow(&global.reward_20, i);
-                let balance = balance::split(&mut global.balance_SUI, amount);
-                let sui = coin::from_balance(balance, ctx); 
-                transfer::public_transfer(sui, sender);
-                break
-            };
-        };
-    }
-
     public entry fun query_left_challenge_time(global: &Global, clock:&Clock):u64 {
         let now = clock::timestamp_ms(clock);
         let one_week = DAY_IN_MS * 7;
@@ -122,14 +105,14 @@ module auto_chess::challenge {
         }
     }
 
-    fun get_score_by_rank(rank:u64) : u64 {
+    fun get_base_weight_by_rank(rank:u64) : u64 {
         20 - rank / 2
     }
 
     public(friend) fun get_reward_amount_by_rank(global: &Global, total_amount:u64, total_scores:u64, rank: u64) : u64 {
         let tmp_lineup = vector::borrow(&global.rank_20, rank);
         let price = lineup::get_price(tmp_lineup);
-        let prop = price * get_score_by_rank(rank) / total_scores;
+        let prop = price * get_base_weight_by_rank(rank) / total_scores;
         total_amount * prop - 1_000_000_000
     }
 
@@ -140,7 +123,7 @@ module auto_chess::challenge {
         while(rank < 20) {
             let tmp_lineup = vector::borrow(&global.rank_20, rank);
             let price = lineup::get_price(tmp_lineup);
-            let prop = get_score_by_rank(rank);
+            let prop = get_base_weight_by_rank(rank);
             total_socres = (price * prop) + total_socres;
             rank = rank + 1;
         };
@@ -162,5 +145,13 @@ module auto_chess::challenge {
 
     public fun top_up_challenge_pool(global:&mut Global, balance:Balance<SUI>) {
         balance::join(&mut global.balance_SUI, balance);
+    }
+
+    public(friend) fun send_reward_by_rank(global:&mut Global, rank:u8, ctx:&mut TxContext) {
+        let receiver = tx_context::sender(ctx);
+        let amount = *vector::borrow(&global.reward_20, (rank as u64));
+        let balance = balance::split(&mut global.balance_SUI, amount);
+        let sui = coin::from_balance(balance, ctx); 
+        transfer::public_transfer(sui, receiver);
     }
 }

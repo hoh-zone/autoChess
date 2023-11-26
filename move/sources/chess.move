@@ -14,12 +14,12 @@ module auto_chess::chess {
     use auto_chess::role::{Self, Role};
     use auto_chess::utils;
     use auto_chess::challenge;
+    use auto_chess::fight;
 
     use sui::sui::SUI;
     use auto_chess::verify;
 
     const INIT_GOLD:u64 = 10;
-    const REFRESH_PRICE:u8 = 2;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
     const ERR_EXCEED_NUM_LIMIT:u64 = 0x02;
     const ERR_PAYMENT_NOT_ENOUGH:u64 = 0x03;
@@ -27,7 +27,7 @@ module auto_chess::chess {
     const ERR_NOT_PERMISSION:u64 = 0x06;
     const ERR_ONLY_ARENA_MODE_ALLOWED:u64 = 0x12;
     const ERR_CHALLENGE_NOT_END:u64 = 0x013;
-    const INVALID_INDEX:u64 = 10000;
+    const ERR_ARENA_FEE_HAS_CHECKED_OUT:u64 = 0x014;
 
     struct Global has key {
         id: UID,
@@ -42,7 +42,6 @@ module auto_chess::chess {
         lineup: LineUp,
         cards_pool: LineUp,
         gold: u64,
-        refresh_price: u8,
         win: u8,
         lose: u8,
         challenge_win:u8,
@@ -50,7 +49,8 @@ module auto_chess::chess {
         even: u8,
         creator: address,
         price: u64,
-        arena: bool
+        arena: bool,
+        arena_checked: bool
     }
 
     struct FightEvent has copy, drop {
@@ -62,15 +62,6 @@ module auto_chess::chess {
         v2_name: String,
         v2_lineup:lineup::LineUp,
         res: u8 // even:0, win:1
-    }
-
-    struct ArenaCheckOut has copy, drop {
-        chess_id: address,
-        owner: address,
-        name: String,
-        win: u8,
-        lose: u8,
-        reward: u64,
     }
 
     fun init(ctx: &mut TxContext) {
@@ -95,7 +86,6 @@ module auto_chess::chess {
     }
 
     public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
-        print(&utf8(b"mint new arena chess"));
         let sender = tx_context::sender(ctx);
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
@@ -107,7 +97,6 @@ module auto_chess::chess {
             lineup: lineup::empty(ctx),
             cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
             gold: INIT_GOLD,
-            refresh_price: REFRESH_PRICE,
             win: 0,
             lose: 0,
             challenge_win:0,
@@ -115,7 +104,8 @@ module auto_chess::chess {
             even: 0,
             creator: sender,
             price: pay_value,
-            arena: true
+            arena: true,
+            arena_checked: false
         };
         let balance = coin::into_balance<SUI>(
             coin::split<SUI>(&mut merged_coin, pay_value, ctx)
@@ -139,7 +129,6 @@ module auto_chess::chess {
             lineup: lineup::empty(ctx),
             cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
             gold: INIT_GOLD,
-            refresh_price: REFRESH_PRICE,
             win: 0,
             lose: 0,
             challenge_win:0,
@@ -147,27 +136,34 @@ module auto_chess::chess {
             even: 0,
             creator: sender,
             price: 0,
-            arena: false
+            arena: false,
+            arena_checked: true
         };
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
     }
 
-    public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
+    public entry fun check_out_arena_fee(global: &mut Global, chess: &mut Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
-        let reward_amount = estimate_reward(global, chess.win);
-        event::emit(ArenaCheckOut {
-            chess_id: object::id_address(&chess),
-            owner: chess.creator,
-            name: chess.name,
-            win: chess.win,
-            lose: chess.lose,
-            reward: reward_amount,
-        });
-        let Chess {id, name, lineup, cards_pool, gold, refresh_price:_, win, lose, challenge_win, challenge_lose, even, creator, price:_, arena} = chess;
+        assert!(!chess.arena_checked, ERR_ARENA_FEE_HAS_CHECKED_OUT);
+        chess.arena_checked = true;
+        let total_amount = get_total_shui_amount(global);
+        let reward_amount = utils::estimate_reward(total_amount, chess.price, chess.win);
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
+    public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
+        assert!(chess.arena, ERR_NOT_ARENA_CHESS);
+        let total_amount = get_total_shui_amount(global);
+        let reward_amount = utils::estimate_reward(total_amount, chess.price, chess.win);
+        let Chess {id, name, lineup, cards_pool, gold, win, lose, challenge_win, challenge_lose, even, creator, price:_, arena, arena_checked: arena_checked} = chess;
+        if (!arena_checked) {
+            let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
+            let sui = coin::from_balance(sui_balance, ctx);
+            transfer::public_transfer(sui, tx_context::sender(ctx));
+        };
         object::delete(id);
     }
 
@@ -212,7 +208,7 @@ module auto_chess::chess {
             assert!(chess.arena, ERR_ONLY_ARENA_MODE_ALLOWED);
             assert!(chess.challenge_lose <= 2, ERR_YOU_ARE_DEAD);
             chanllenge_on = true;
-            enemy_lineup = challenge::get_linup_by_rank(challengeGlobal, (19 - chess.challenge_win));
+            enemy_lineup = *challenge::get_lineup_by_rank(challengeGlobal, (19 - chess.challenge_win));
         } else {
             enemy_lineup = lineup::select_random_lineup(chess.win, chess.lose, lineup_global, chess.arena, ctx);
         };
@@ -259,258 +255,8 @@ module auto_chess::chess {
         return false
     }
 
-    fun get_extra_max_magic_debuff(roles: &vector<Role>): u8 {
-        let value:u8 = 0;
-        let len = vector::length(roles);
-        let i = 0;
-        while (i < len) {
-            let role = vector::borrow(roles, i);
-            if (role::get_effect(role)== utf8(b"add_all_tmp_max_magic")) {
-                let tmp = (utils::utf8_to_u64(role::get_effect_value(role)) as u8);
-                if (tmp > value) {
-                    value = tmp;
-                }
-            };
-            i = i + 1;
-        };
-        value
-    }
-
-
-    fun call_skill(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
-        let effect = role::get_effect(role);
-        let effect_value = role::get_effect_value(role);
-
-        print(&utf8(b"skill"));
-        print(&effect);
-
-        let is_forbid_buff = false;
-        let is_forbid_debuff = false;
-
-        let i = 0;
-        let enemy_len = vector::length(enemy_roles);
-        let my_len = vector::length(my_roles);
-        while (i < enemy_len) {
-            let role = vector::borrow(enemy_roles, i);
-            let effect = role::get_effect(role);
-            if (effect == utf8(b"forbid_buff")) {
-                is_forbid_buff = true;
-            };
-            if (effect == utf8(b"forbid_debuff")) {
-                is_forbid_debuff = true;
-            };
-            if (is_forbid_buff && is_forbid_debuff) {
-                break
-            };
-            i = i + 1;
-        };
-
-        if (effect == utf8(b"aoe")) {
-            let attack = utils::utf8_to_u64(effect_value);
-            let i = 0;
-            safe_attack(attack, enemy_role);
-            while (i < enemy_len) {
-                let char = vector::borrow_mut(enemy_roles, i);
-                safe_attack(attack, char);
-                i = i + 1;
-            };
-        } else if (effect == utf8(b"add_all_tmp_hp")) {
-            if (is_forbid_buff) {
-                print(&utf8(b"buff forbiden"));
-                return
-            };
-            let add_hp = utils::utf8_to_u64(effect_value);
-            let life = role::get_life(role);
-            role::set_life(role, life + add_hp);
-            let i = 0;
-            while (i < my_len) {
-                let char = vector::borrow_mut(my_roles, i);
-                safe_add_hp(add_hp, char);
-                i = i + 1;
-            };
-        } else if (effect == utf8(b"add_all_tmp_attack")) {
-            if (is_forbid_buff) {
-                print(&utf8(b"buff forbiden"));
-                return
-            };
-            let add_attack = utils::utf8_to_u64(effect_value);
-            let attack = role::get_life(role);
-            role::set_attack(role, attack + add_attack);
-            let i = 0;
-            while (i < my_len) {
-                let char = vector::borrow_mut(my_roles, i);
-                safe_add_attack(add_attack, char);
-                i = i + 1;
-            };
-        } else if (effect == utf8(b"add_all_tmp_magic")) {
-            if (is_forbid_buff) {
-                print(&utf8(b"buff forbiden"));
-                return
-            };
-            let add_magic = (utils::utf8_to_u64(effect_value) as u8);
-            let i = 0;
-            while (i < my_len) {
-                let char = vector::borrow_mut(my_roles, i);
-                let magic = role::get_magic(char);
-                role::set_magic(char, magic + add_magic);
-                i = i + 1;
-            };
-        } else if (effect == utf8(b"all_max_hp_to_back1")) {
-            if (is_forbid_buff) {
-                print(&utf8(b"buff forbiden"));
-                return
-            };
-            let add_hp = utils::utf8_to_u64(effect_value);
-            let roles = lineup::get_mut_roles(my_lineup_permanent);
-            if (role_index == 5) {
-                return
-            };
-            let back_char = vector::borrow_mut(roles, role_index + 1);
-            let life = role::get_life(back_char);
-            role::set_life(back_char, life + add_hp);
-        } else if (effect == utf8(b"reduce_tmp_attack")) {
-            if (is_forbid_debuff) {
-                print(&utf8(b"debuff forbiden"));
-                return
-            };
-            let reduce_attack = utils::utf8_to_u64(effect_value);
-            safe_reduce_attack(reduce_attack, enemy_role);
-        } else if (effect == utf8(b"reduce_all_tmp_attack")) {
-            if (is_forbid_debuff) {
-                print(&utf8(b"debuff forbiden"));
-                return
-            };
-            let reduce_attack = utils::utf8_to_u64(effect_value);
-            safe_reduce_attack(reduce_attack, enemy_role);
-            let i = 0;
-            while (i < enemy_len) {
-                let char = vector::borrow_mut(enemy_roles, i);
-                safe_reduce_attack(reduce_attack, char);
-                i = i + 1;
-            };
-        } else if (effect == utf8(b"attack_sputter_to_second_by_percent")) {
-            let percent_by_ten = utils::utf8_to_u64(effect_value);
-            let base_attack = role::get_attack(role);
-            let suppter_attack = base_attack * percent_by_ten / 10;
-            safe_attack(base_attack, enemy_role);
-            if (vector::length(enemy_roles) == 0) {
-                return
-            };
-            let next_one = vector::borrow_mut(enemy_roles, 0);
-            safe_attack(suppter_attack, next_one);
-        } else if (effect == utf8(b"attack_last_char")) {
-            let effect_attack = utils::utf8_to_u64(effect_value);
-            if (vector::length(enemy_roles) == 0) {
-                safe_attack(effect_attack, enemy_role);
-            } else {
-                let last_one = vector::borrow_mut(enemy_roles, enemy_len - 1);
-                safe_attack(effect_attack, last_one);
-            }
-        } else if (effect == utf8(b"attack_lowest_hp")) {
-            let attack = utils::utf8_to_u64(effect_value);
-            let role = find_lowest_life_one(enemy_role, enemy_roles);
-            safe_attack(attack, role);
-        } else if (effect == utf8(b"attack_by_life_percent")) {
-            let value = utils::utf8_to_u64(effect_value);
-            let enemy_life = role::get_life(enemy_role);
-            let base_attack = role::get_attack(role);
-            let extra_attack = enemy_life * value / 10;
-            safe_attack(base_attack + extra_attack, role);
-        } 
-    }
-
-    fun find_lowest_life_one(default_role: &mut Role, roles: &mut vector<Role>) : &mut Role {
-        let min_hp = INVALID_INDEX;
-        let min_hp_index = INVALID_INDEX;
-        let len = vector::length(roles);
-        if (len == 0) {
-            return default_role
-        };
-        let i = 0;
-        while(i < len) {
-            let role = vector::borrow(roles, i);
-            let life = role::get_life(role);
-            if (life > 0 && life < min_hp) {
-                min_hp = life;
-                min_hp_index = i;
-            };
-            i = i + 1;
-        };
-        if (min_hp_index != INVALID_INDEX) {
-            return vector::borrow_mut(roles, min_hp_index)
-        };
-        return default_role
-    }
-
-    fun safe_reduce_attack(reduce_value:u64, role: &mut Role) {
-        let char_life = role::get_life(role);
-        let char_attack = role::get_attack(role);
-        if (char_life == 0) {
-            return
-        };
-        if (char_attack <= reduce_value) {
-            role::set_attack(role, 1);
-        } else {
-            role::set_attack(role, char_attack - reduce_value);
-        }
-    }
-
-    fun safe_add_attack(add_value:u64, role: &mut Role) {
-        let char_life = role::get_life(role);
-        let char_attack = role::get_attack(role);
-        if (char_life == 0) {
-            return
-        };
-        role::set_attack(role, char_attack + add_value);
-    }
-
-    fun safe_add_hp(add_value:u64, role: &mut Role) {
-        let char_life = role::get_life(role);
-        if (char_life == 0) {
-            return
-        };
-        role::set_life(role, char_life + add_value);
-    }
-
-    fun safe_attack(attack:u64, other_role:&mut Role) {
-        let other_life = role::get_life(other_role);
-        if (other_life <= attack) {
-            role::set_life(other_role, 0);
-            print(&role::get_name(other_role));
-            print(&utf8(b"is dead"));
-        } else {
-            role::set_life(other_role, other_life - attack);
-        };
-        print(&role::get_name(other_role));
-        print(&utf8(b"before after life:"));
-        print(&other_life);
-        print(&role::get_life(other_role));
-    }
-
-    fun call_attack(role: &Role, other_role: &mut Role) {
-        let attack = role::get_attack(role);
-        safe_attack(attack, other_role);
-    }
-
-    fun action(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
-        let extra_max_magic_debuff = get_extra_max_magic_debuff(enemy_roles);
-        let max_magic = role::get_max_magic(role);
-        let magic = role::get_magic(role);
-        if (magic >= (max_magic + extra_max_magic_debuff) && role::get_effect_type(role) == utf8(b"skill")) {
-            print(&utf8(b"skill:"));
-            print(&role::get_effect(role));
-            call_skill(role_index, role, enemy_role_index, enemy_role, my_roles, enemy_roles, my_lineup_permanent);
-            role::set_magic(role, 0);
-        } else {
-            print(&utf8(b"attack:"));
-            print(&role::get_attack(role));
-            call_attack(role, enemy_role);
-            role::set_magic(role, magic + 1);
-        };
-    }
-
     #[test_only]
-    public fun test_fight(my_lineup_fight: LineUp, enemy_lineup: LineUp):bool {
+    public fun test_fight(my_lineup_fight: LineUp, enemy_lineup: LineUp) :bool {
         // backup to avoid base_life to be changed
         let enemy_lineup_fight = *&enemy_lineup;
         let my_lineup_permanent = &mut *&my_lineup_fight;
@@ -542,10 +288,10 @@ module auto_chess::chess {
             while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
                 print(&utf8(b"we action:"));
                 print(&role::get_name(&my_first_role));
-                action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
+                fight::action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
                 print(&utf8(b"enemy action:"));
                 print(&role::get_name(&enemy_first_role));
-                action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
+                fight::action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
             };
         };
 
@@ -591,8 +337,8 @@ module auto_chess::chess {
                 };
             };
             while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
-                action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
-                action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
+                fight::action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
+                fight::action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
             };
         };
 
@@ -631,15 +377,6 @@ module auto_chess::chess {
         balance::value(&global.balance_SUI)
     }
 
-    fun estimate_reward(global: &Global, win:u8) : u64 {
-        let base_price = (win as u64) * 300_000_000;
-        let max_reward = get_total_shui_amount(global) * 9 / 10;
-        if (base_price > max_reward) {
-            base_price = max_reward;
-        };
-        base_price
-    }
-
     public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
         let sui_balance = balance::split(&mut global.balance_SUI, amount);
@@ -660,6 +397,19 @@ module auto_chess::chess {
             let amount = challenge::get_reward_amount_by_rank(challengeGlobal, split_value, total_scores, i);
             challenge::push_reward_amount(challengeGlobal, amount);
             i = i + 1;
+        };
+    }
+
+    public entry fun claim_rank_reward(challengeGlobal: &mut challenge::Global, chess:Chess, clock:&Clock, rank:u8, ctx: &mut TxContext) {
+        assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
+        let sender = tx_context::sender(ctx);
+        let tmp_lineup = challenge::get_lineup_by_rank(challengeGlobal, rank);
+        if (lineup::get_creator(tmp_lineup) == sender) {
+            let Chess {id, name, lineup, cards_pool, gold, win, lose, challenge_win, challenge_lose, even, creator, price:_, arena, arena_checked: arena_checked} = chess;
+            challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
+            object::delete(id);
+        } else {
+            public_transfer(chess, sender);
         };
     }
 }
