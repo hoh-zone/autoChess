@@ -105,7 +105,6 @@ const useQueryFight = () => {
                 }
                 max_query += 1;
             }
-            
         } catch(error) {
             console.log('err', error);
         }
