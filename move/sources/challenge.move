@@ -118,7 +118,6 @@ module auto_chess::challenge {
 
     public(friend) fun get_total_virtual_scores(global: &Global) : u64 {
         let rank = 0;
-        let init_prop = 20;
         let total_socres = 0;
         while(rank < 20) {
             let tmp_lineup = vector::borrow(&global.rank_20, rank);
@@ -130,6 +129,7 @@ module auto_chess::challenge {
         total_socres
     }
 
+    #[lint_allow(self_transfer)]
     public fun withdraw_left_amount(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
         assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
@@ -147,6 +147,7 @@ module auto_chess::challenge {
         balance::join(&mut global.balance_SUI, balance);
     }
 
+    #[lint_allow(self_transfer)]
     public(friend) fun send_reward_by_rank(global:&mut Global, rank:u8, ctx:&mut TxContext) {
         let receiver = tx_context::sender(ctx);
         let amount = *vector::borrow(&global.reward_20, (rank as u64));

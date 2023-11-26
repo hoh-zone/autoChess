@@ -4,7 +4,7 @@ module auto_chess::fight {
     use auto_chess::utils;
     use std::debug::print;
     use std::vector;
-    use std::string::{utf8, String};
+    use std::string::{utf8};
     friend auto_chess::chess;
 
     const INVALID_INDEX:u64 = 10000;
@@ -54,7 +54,7 @@ module auto_chess::fight {
         role::set_life(role, char_life + add_value);
     }
 
-    public(friend) fun call_skill(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
+    public(friend) fun call_skill(role_index:u64, role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
         let effect = role::get_effect(role);
         let effect_value = role::get_effect_value(role);
 
@@ -224,14 +224,14 @@ module auto_chess::fight {
         safe_attack(attack, other_role);
     }
 
-    public(friend) fun action(role_index:u64, role: &mut Role, enemy_role_index:u64, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
+    public(friend) fun action(role_index:u64, role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(enemy_roles);
         let max_magic = role::get_max_magic(role);
         let magic = role::get_magic(role);
         if (magic >= (max_magic + extra_max_magic_debuff) && role::get_effect_type(role) == utf8(b"skill")) {
             print(&utf8(b"skill:"));
             print(&role::get_effect(role));
-            call_skill(role_index, role, enemy_role_index, enemy_role, my_roles, enemy_roles, my_lineup_permanent);
+            call_skill(role_index, role, enemy_role, my_roles, enemy_roles, my_lineup_permanent);
             role::set_magic(role, 0);
         } else {
             print(&utf8(b"attack:"));
@@ -256,5 +256,20 @@ module auto_chess::fight {
             i = i + 1;
         };
         value
+    }
+
+    public(friend) fun some_alive(first_role: &Role, roles: &vector<Role>) : bool {
+        let i = 0;
+        if (role::get_name(first_role) != utf8(b"init") && role::get_life(first_role) > 0) {
+            return true
+        };
+        while (i < vector::length(roles)) {
+            let role = vector::borrow(roles, i);
+            if (role::get_name(role) != utf8(b"none") && role::get_life(role) > 0) {
+                return true
+            };
+            i = i + 1;
+        };
+        return false
     }
 }

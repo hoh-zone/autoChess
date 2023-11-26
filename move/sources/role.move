@@ -1,6 +1,6 @@
 module auto_chess::role {
     use std::string::{utf8, String};
-    use sui::tx_context::{Self, TxContext};
+    use sui::tx_context::{TxContext};
     use std::debug::print;
     use sui::object::{UID, Self};
     use sui::transfer::{Self};

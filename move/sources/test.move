@@ -17,7 +17,7 @@ module auto_chess::test {
 
     fun scenario(): Scenario { begin(@account) }
 
-    // #[test]
+    #[test]
     fun test_virtual_fight() {
         let scenario = scenario();
         let test = &mut scenario;

@@ -10,6 +10,7 @@ module auto_chess::lineup {
     friend auto_chess::challenge;
 
     const ERR_WRONG_ROLES_NUMBER:u64 = 0x01;
+    const ERR_TAG_NOT_IN_TABLE:u64 = 0x02;
 
     struct Global has key {
         id: UID,
@@ -154,18 +155,14 @@ module auto_chess::lineup {
         let lose = 0;
         while (win < 10) {
             while (true) {
-                let duplicate_num = 2;
                 let seed:u8 = 1;
                 let tag = utils::get_pool_tag(win, lose);
                 let power = utils::get_lineup_power_by_tag(win, lose);
                 let vec = vector::empty<LineUp>();
-                while (duplicate_num > 0) {
-                    let lineup = generate_lineup_by_power(roleGlobal, power, seed, ctx);
-                    vector::push_back(&mut vec, lineup);
-                    duplicate_num = duplicate_num - 1;
-                };
-                assert!(!table::contains(&global.lineup_pools, tag), 0x01);
-                assert!(!table::contains(&global.arena_lineup_pools, tag), 0x01);
+                let lineup = generate_lineup_by_power(roleGlobal, power, seed, ctx);
+                vector::push_back(&mut vec, lineup);
+                assert!(!table::contains(&global.lineup_pools, tag), ERR_TAG_NOT_IN_TABLE);
+                assert!(!table::contains(&global.arena_lineup_pools, tag), ERR_TAG_NOT_IN_TABLE);
                 table::add(&mut global.lineup_pools, tag, vec);
                 table::add(&mut global.arena_lineup_pools, tag, vec);
                 lose = lose + 1;

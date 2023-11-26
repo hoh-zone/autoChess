@@ -28,7 +28,7 @@ module auto_chess::verify {
                 print(&utf8(b"buy_upgrade operation"));
                 let sub_str = string::sub_string(&operate, 11 + 1, string::length(&operate));
                 let (from_index, to_index) = utils::get_left_right_number(sub_str);
-                let from_role = role::init_role();
+                let from_role;
                 let price;
                 {
                     from_role = *vector::borrow<role::Role>(cards_pool_roles, from_index + CARDS_IN_ONE_REFRESH * refresh_time);

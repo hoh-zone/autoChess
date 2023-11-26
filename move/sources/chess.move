@@ -11,7 +11,7 @@ module auto_chess::chess {
     use sui::clock::{Clock};
     use std::debug::print;
     use sui::event;
-    use auto_chess::role::{Self, Role};
+    use auto_chess::role::{Self};
     use auto_chess::utils;
     use auto_chess::challenge;
     use auto_chess::fight;
@@ -46,7 +46,6 @@ module auto_chess::chess {
         lose: u8,
         challenge_win:u8,
         challenge_lose:u8,
-        even: u8,
         creator: address,
         price: u64,
         arena: bool,
@@ -85,6 +84,7 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
+    #[lint_allow(self_transfer)]
     public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
         let merged_coin = vector::pop_back(&mut coins);
@@ -101,7 +101,6 @@ module auto_chess::chess {
             lose: 0,
             challenge_win:0,
             challenge_lose:0,
-            even: 0,
             creator: sender,
             price: pay_value,
             arena: true,
@@ -120,6 +119,7 @@ module auto_chess::chess {
         public_transfer(game, sender);
     }
 
+    #[lint_allow(self_transfer)]
     public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
@@ -133,7 +133,6 @@ module auto_chess::chess {
             lose: 0,
             challenge_win:0,
             challenge_lose:0,
-            even: 0,
             creator: sender,
             price: 0,
             arena: false,
@@ -143,6 +142,7 @@ module auto_chess::chess {
         public_transfer(game, sender);
     }
 
+    #[lint_allow(self_transfer)]
     public entry fun check_out_arena_fee(global: &mut Global, chess: &mut Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         assert!(!chess.arena_checked, ERR_ARENA_FEE_HAS_CHECKED_OUT);
@@ -154,11 +154,12 @@ module auto_chess::chess {
         transfer::public_transfer(sui, tx_context::sender(ctx));
     }
 
+    #[lint_allow(self_transfer)]
     public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         let total_amount = get_total_shui_amount(global);
         let reward_amount = utils::estimate_reward(total_amount, chess.price, chess.win);
-        let Chess {id, name, lineup, cards_pool, gold, win, lose, challenge_win, challenge_lose, even, creator, price:_, arena, arena_checked: arena_checked} = chess;
+        let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, price:_, arena:_, arena_checked: arena_checked} = chess;
         if (!arena_checked) {
             let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
             let sui = coin::from_balance(sui_balance, ctx);
@@ -240,21 +241,6 @@ module auto_chess::chess {
         chess.cards_pool = lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(chess.win,chess.lose), ctx);
     }
 
-    fun some_alive(first_role: &Role, roles: &vector<Role>) : bool {
-        let i = 0;
-        if (role::get_name(first_role) != utf8(b"init") && role::get_life(first_role) > 0) {
-            return true
-        };
-        while (i < vector::length(roles)) {
-            let role = vector::borrow(roles, i);
-            if (role::get_name(role) != utf8(b"none") && role::get_life(role) > 0) {
-                return true
-            };
-            i = i + 1;
-        };
-        return false
-    }
-
     #[test_only]
     public fun test_fight(my_lineup_fight: LineUp, enemy_lineup: LineUp) :bool {
         // backup to avoid base_life to be changed
@@ -272,7 +258,7 @@ module auto_chess::chess {
         let enemy_first_role = role::init_role();
         let my_fist_role_index = 0;
         let enemy_first_role_index = 0;
-        while (some_alive(&my_first_role, &my_roles) && some_alive(&enemy_first_role, &enemy_roles)) {
+        while (fight::some_alive(&my_first_role, &my_roles) && fight::some_alive(&enemy_first_role, &enemy_roles)) {
             while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
                 my_first_role = vector::pop_back(&mut my_roles);
                 if (vector::length(&my_roles) < 5) {
@@ -288,14 +274,14 @@ module auto_chess::chess {
             while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
                 print(&utf8(b"we action:"));
                 print(&role::get_name(&my_first_role));
-                fight::action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
+                fight::action(my_fist_role_index, &mut my_first_role, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
                 print(&utf8(b"enemy action:"));
                 print(&role::get_name(&enemy_first_role));
-                fight::action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
+                fight::action(enemy_first_role_index, &mut enemy_first_role, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
             };
         };
 
-        if (some_alive(&enemy_first_role, &enemy_roles)) {
+        if (fight::some_alive(&enemy_first_role, &enemy_roles)) {
             print(&utf8(b"I lose"));
             false
         } else {
@@ -305,7 +291,7 @@ module auto_chess::chess {
         }
     }
 
-    public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext):bool {
+    public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, ctx:&mut TxContext) :bool {
         let my_lineup_fight = *&chess.lineup;
 
         // backup to avoid base_life to be changed
@@ -323,7 +309,7 @@ module auto_chess::chess {
         let enemy_first_role = role::init_role();
         let my_fist_role_index = 0;
         let enemy_first_role_index = 0;
-        while (some_alive(&my_first_role, &my_roles) && some_alive(&enemy_first_role, &enemy_roles)) {
+        while (fight::some_alive(&my_first_role, &my_roles) && fight::some_alive(&enemy_first_role, &enemy_roles)) {
             while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
                 my_first_role = vector::pop_back(&mut my_roles);
                 if (vector::length(&my_roles) < 5) {
@@ -337,12 +323,12 @@ module auto_chess::chess {
                 };
             };
             while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
-                fight::action(my_fist_role_index, &mut my_first_role, enemy_first_role_index, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
-                fight::action(enemy_first_role_index, &mut enemy_first_role, my_fist_role_index, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
+                fight::action(my_fist_role_index, &mut my_first_role, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
+                fight::action(enemy_first_role_index, &mut enemy_first_role, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
             };
         };
 
-        if (some_alive(&enemy_first_role, &enemy_roles)) {
+        if (fight::some_alive(&enemy_first_role, &enemy_roles)) {
             print(&utf8(b"I lose"));
             chess.lose = chess.lose + 1;
             event::emit(FightEvent {
@@ -377,6 +363,7 @@ module auto_chess::chess {
         balance::value(&global.balance_SUI)
     }
 
+    #[lint_allow(self_transfer)]
     public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
         let sui_balance = balance::split(&mut global.balance_SUI, amount);
@@ -400,12 +387,13 @@ module auto_chess::chess {
         };
     }
 
+    #[lint_allow(self_transfer)]
     public entry fun claim_rank_reward(challengeGlobal: &mut challenge::Global, chess:Chess, clock:&Clock, rank:u8, ctx: &mut TxContext) {
         assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
         let sender = tx_context::sender(ctx);
         let tmp_lineup = challenge::get_lineup_by_rank(challengeGlobal, rank);
         if (lineup::get_creator(tmp_lineup) == sender) {
-            let Chess {id, name, lineup, cards_pool, gold, win, lose, challenge_win, challenge_lose, even, creator, price:_, arena, arena_checked: arena_checked} = chess;
+            let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, price:_, arena:_, arena_checked:_} = chess;
             challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
             object::delete(id);
         } else {
