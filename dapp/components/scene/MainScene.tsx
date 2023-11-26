@@ -2,12 +2,16 @@ import { Box, Center, HStack, Stack } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { SellButton } from "../control/SellButton"
 import CharInstruction from "../CharInstruction"
+import { useAtom } from "jotai"
+import { assetsAtom } from "../../store/stages"
 
 export const MainScene = () => {
+  const [assets, setAssets] = useAtom(assetsAtom)
+
   return (
     <div className="h-[75%] w-full relative">
       <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
-        <source src="bg4.mp4" type="video/mp4" />
+        <source src={assets?.bg4} type="video/mp4" />
       </video>
       <HStack className="absolute top-0 p-8 w-full h-3/4 justify-around" align={"center"}>
         {/* left side */}
