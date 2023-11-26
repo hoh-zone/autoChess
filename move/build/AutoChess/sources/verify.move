@@ -1,10 +1,10 @@
 module auto_chess::verify {
     use sui::tx_context::{TxContext};
-    use std::string::{utf8, String, Self};
+    use std::string::{utf8, String};
     use std::vector;
-    use std::debug::print;
     use auto_chess::lineup; 
     use auto_chess::role::{Self, Role};
+    use std::debug::print;
     use auto_chess::utils;
 
     const REFRESH_PRICE:u8 = 2;
@@ -24,9 +24,8 @@ module auto_chess::verify {
         vector::reverse(&mut operations);
         while(vector::length(&operations) > 0) {
             let operate = vector::pop_back(&mut operations);
-            if (string::index_of(&operate, &utf8(b"buy_upgrade")) == 0) {
-                print(&utf8(b"buy_upgrade operation"));
-                let sub_str = string::sub_string(&operate, 11 + 1, string::length(&operate));
+            if (operate == utf8(b"buy_upgrade")) {
+                let sub_str = vector::pop_back(&mut operations);
                 let (from_index, to_index) = utils::get_left_right_number(sub_str);
                 let from_role;
                 let price;
@@ -43,9 +42,8 @@ module auto_chess::verify {
                 role::set_name(from_role_mut, utf8(b"none"));
                 assert!(gold >= price, ERR_NOT_ENOUGH_GOLD);
                 gold = gold - price;
-            } else if (string::index_of(&operate, &utf8(b"buy")) == 0) {
-                print(&utf8(b"buy operation"));
-                let sub_str = string::sub_string(&operate, 3 + 1, string::length(&operate));
+            } else if (operate == utf8(b"buy")) {
+                let sub_str = vector::pop_back(&mut operations);
                 let (from_index, to_index) = utils::get_left_right_number(sub_str);
                 let from_role = vector::borrow_mut<role::Role>(cards_pool_roles, from_index + CARDS_IN_ONE_REFRESH * refresh_time);
                 assert!(role::get_name(from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
@@ -58,28 +56,24 @@ module auto_chess::verify {
                 let price = role::get_price(&copy_role);
                 assert!(gold >= price, ERR_NOT_ENOUGH_GOLD);
                 gold = gold - price;
-            } else if (string::index_of(&operate, &utf8(b"swap")) == 0) {
-                print(&utf8(b"swap operation"));
-                let sub_str = string::sub_string(&operate, 4 + 1, string::length(&operate));
+            } else if (operate == utf8(b"swap")) {
+                let sub_str = vector::pop_back(&mut operations);
                 let (from_index, to_index) = utils::get_left_right_number(sub_str);
                 vector::swap(init_roles, from_index, to_index);
-            } else if (string::index_of(&operate, &utf8(b"sell")) == 0) {
-                print(&utf8(b"sell operation"));
-                let sub_str = string::sub_string(&operate, 4 + 1, string::length(&operate));
+            } else if (operate == utf8(b"sell")) {
+                let sub_str = vector::pop_back(&mut operations);
                 let from_index = utils::utf8_to_u64(sub_str);
                 let from_role = vector::borrow_mut<role::Role>(init_roles, from_index);
                 assert!(role::get_name(from_role) != utf8(b"none"), ERR_INVALID_CHARACTOR);
                 role::set_name(from_role, utf8(b"none"));
                 gold = gold + role::get_sell_price(from_role);
-            } else if (string::index_of(&operate, &utf8(b"upgrade")) == 0) {
-                print(&utf8(b"upgrade operation"));
-                let sub_str = string::sub_string(&operate, 7 + 1, string::length(&operate));
+            } else if (operate == utf8(b"upgrade")) {
+                let sub_str = vector::pop_back(&mut operations);
                 let (from_index, to_index) = utils::get_left_right_number(sub_str);
                 assert!(from_index != to_index, ERR_SAME_INDEX_UPGRADE);
                 let from_role;
                 {
                     from_role = *vector::borrow<role::Role>(init_roles, from_index);
-                    print(&from_index);
                     assert!(role::get_name(&from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 };
                 let to_role = vector::borrow_mut<role::Role>(init_roles, to_index);
@@ -88,13 +82,10 @@ module auto_chess::verify {
                 assert!(res, ERR_UPGRADE_FAILED);
                 let from_role_mut = vector::borrow_mut<role::Role>(init_roles, from_index);
                 role::set_name(from_role_mut, utf8(b"none"));
-            } else if (string::index_of(&operate, &utf8(b"refresh")) == 0) {
-                print(&utf8(b"refresh operation"));
+            } else if (operate == utf8(b"refresh")) {
                 assert!(gold >= REFRESH_PRICE, ERR_NOT_ENOUGH_GOLD);
                 gold = gold - REFRESH_PRICE;
                 refresh_time = refresh_time + 1;
-            } else {
-                print(&utf8(b"invalid operation"));
             }
         };
         let expected_lineup = lineup::parse_lineup_str_vec(name, role_global, lineup_str_vec, ticket_price, ctx);

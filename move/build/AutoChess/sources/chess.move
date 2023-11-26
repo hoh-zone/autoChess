@@ -84,6 +84,45 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
+    
+    #[lint_allow(self_transfer)]
+    public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        let sui_balance = balance::split(&mut global.balance_SUI, amount);
+        let sui = coin::from_balance(sui_balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
+    public fun lock_reward(global: &mut Global, challengeGlobal: &mut challenge::Global, clock:&Clock, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
+        let total = balance::value(&global.balance_SUI);
+        let split_value = total / 10;
+        let balance = balance::split(&mut global.balance_SUI, split_value);
+        challenge::top_up_challenge_pool(challengeGlobal, balance);
+        let i = 0;
+        let total_scores = challenge::get_total_virtual_scores(challengeGlobal);
+        while (i < 20) {
+            let amount = challenge::get_reward_amount_by_rank(challengeGlobal, split_value, total_scores, i);
+            challenge::push_reward_amount(challengeGlobal, amount);
+            i = i + 1;
+        };
+    }
+
+    #[lint_allow(self_transfer)]
+    public entry fun claim_rank_reward(challengeGlobal: &mut challenge::Global, chess:Chess, clock:&Clock, rank:u8, ctx: &mut TxContext) {
+        assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
+        let sender = tx_context::sender(ctx);
+        let tmp_lineup = challenge::get_lineup_by_rank(challengeGlobal, rank);
+        if (lineup::get_creator(tmp_lineup) == sender) {
+            let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, price:_, arena:_, arena_checked:_} = chess;
+            challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
+            object::delete(id);
+        } else {
+            public_transfer(chess, sender);
+        };
+    }
+
     #[lint_allow(self_transfer)]
     public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
@@ -166,28 +205,6 @@ module auto_chess::chess {
             transfer::public_transfer(sui, tx_context::sender(ctx));
         };
         object::delete(id);
-    }
-
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
-        challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
-        lineup_str_vec: vector<String>, ctx:&mut TxContext) {
-        assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
-        let init_lineup = *&chess.lineup;
-        let init_roles = lineup::get_mut_roles(&mut init_lineup);
-        let cards_pool = chess.cards_pool;
-        let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
-        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.price, ctx);
-        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.price, ctx);
-        if (chess.challenge_win + chess.challenge_lose >= 20) {
-            // prevent from unlimited strength upon its lineup
-            chess.gold = 0;
-        } else {
-            chess.gold = INIT_GOLD;
-        };
-        chess.lineup = expected_lineup;
-        match(role_global, lineup_global, challengeGlobal, chess, ctx);
-        global.total_match = global.total_match + 1;
-        print(&utf8(b"match finish"));
     }
 
     public fun get_lineup(chess:&Chess): &LineUp {
@@ -363,41 +380,25 @@ module auto_chess::chess {
         balance::value(&global.balance_SUI)
     }
 
-    #[lint_allow(self_transfer)]
-    public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
-        let sui_balance = balance::split(&mut global.balance_SUI, amount);
-        let sui = coin::from_balance(sui_balance, ctx);
-        transfer::public_transfer(sui, tx_context::sender(ctx));
-    }
-
-    public fun lock_reward(global: &mut Global, challengeGlobal: &mut challenge::Global, clock:&Clock, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
-        assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
-        let total = balance::value(&global.balance_SUI);
-        let split_value = total / 10;
-        let balance = balance::split(&mut global.balance_SUI, split_value);
-        challenge::top_up_challenge_pool(challengeGlobal, balance);
-        let i = 0;
-        let total_scores = challenge::get_total_virtual_scores(challengeGlobal);
-        while (i < 20) {
-            let amount = challenge::get_reward_amount_by_rank(challengeGlobal, split_value, total_scores, i);
-            challenge::push_reward_amount(challengeGlobal, amount);
-            i = i + 1;
-        };
-    }
-
-    #[lint_allow(self_transfer)]
-    public entry fun claim_rank_reward(challengeGlobal: &mut challenge::Global, chess:Chess, clock:&Clock, rank:u8, ctx: &mut TxContext) {
-        assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
-        let sender = tx_context::sender(ctx);
-        let tmp_lineup = challenge::get_lineup_by_rank(challengeGlobal, rank);
-        if (lineup::get_creator(tmp_lineup) == sender) {
-            let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, price:_, arena:_, arena_checked:_} = chess;
-            challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
-            object::delete(id);
+    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
+        challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
+        lineup_str_vec: vector<String>, ctx:&mut TxContext) {
+        assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
+        let init_lineup = *&chess.lineup;
+        let init_roles = lineup::get_mut_roles(&mut init_lineup);
+        let cards_pool = chess.cards_pool;
+        let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
+        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.price, ctx);
+        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.price, ctx);
+        if (chess.challenge_win + chess.challenge_lose >= 20) {
+            // prevent from unlimited strength upon its lineup
+            chess.gold = 0;
         } else {
-            public_transfer(chess, sender);
+            chess.gold = INIT_GOLD;
         };
+        chess.lineup = expected_lineup; 
+        match(role_global, lineup_global, challengeGlobal, chess, ctx);
+        global.total_match = global.total_match + 1;
+        print(&utf8(b"match finish"));
     }
 }
