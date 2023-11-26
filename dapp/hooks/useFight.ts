@@ -120,7 +120,7 @@ export const useFight = () => {
         }
     }
 
-    const find_next_alive_char_index = (is_opponent:boolean, charIndex:number, enemyIndex:number) => {
+    const find_next_alive_char_index = (is_opponent: boolean, charIndex: number, enemyIndex: number) => {
         if (is_opponent) {
             if (enemyIndex == enemyChars.length - 1) {
                 return null;
@@ -174,7 +174,7 @@ export const useFight = () => {
         }
     }
 
-    const call_skill = (char: CharacterFields, enemy: CharacterFields, charIndex:number, enemyIndex:number, is_opponent:boolean) => {
+    const call_skill = (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let effect = char.effect;
         let value = parseInt(char.effect_value);
         let is_forbid_buff = false;
@@ -237,7 +237,7 @@ export const useFight = () => {
         } else if (effect == "add_all_tmp_attack") {
             if (is_forbid_buff) {
                 console.log("触发特效: 加buff失败")
-                return; 
+                return;
             }
             target_group = get_target_group(is_opponent, false);
             target_group.map((ele: CharacterFields | null, index: number) => {
@@ -372,7 +372,7 @@ export const useFight = () => {
             });
             console.log("目标：", target_group[min_hp_index]?.name, " 攻击前生命:", target_group[min_hp_index]?.life);
             if (target_group[min_hp_index] != null) {
-                target_group[min_hp_index]!.life = target_group[min_hp_index]!.life - value < 0 ? 0 : target_group[min_hp_index]!.life - value;
+                target_group[min_hp_index]!.life = (target_group[min_hp_index]!.life - value) < 0 ? 0 : target_group[min_hp_index]!.life - value;
                 if (target_group[min_hp_index]!.life == 0) {
                     console.log("对方死亡");
                     target_group[min_hp_index] = null
@@ -449,8 +449,8 @@ export const useFight = () => {
         return value;
     }
 
-    const modify_max_magic = (extra_max_magic_debuff: number, is_opponent:boolean, charIndex:number) => {
-        let target_group =  get_target_group(is_opponent, false);
+    const modify_max_magic = (extra_max_magic_debuff: number, is_opponent: boolean, charIndex: number) => {
+        let target_group = get_target_group(is_opponent, false);
         if (target_group[charIndex] == null) {
             return;
         }
@@ -461,7 +461,7 @@ export const useFight = () => {
         }
     }
 
-    const action = async (char:CharacterFields, enemy:CharacterFields, charIndex:number, enemyIndex:number, is_opponent:boolean) => {
+    const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
         modify_max_magic(extra_max_magic_debuff, is_opponent, charIndex);
         if (char.magic >= Number(char.max_magic) && char.effect_type === "skill") {

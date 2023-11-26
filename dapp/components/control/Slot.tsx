@@ -69,7 +69,6 @@ export const Slot = ({ isOpponent = false, id }: {
     }
 
     return <motion.div
-        draggable="true"
         whileHover={{ scale: 1.1 }}
         className={
             twMerge(
