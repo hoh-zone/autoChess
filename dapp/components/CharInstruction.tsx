@@ -11,15 +11,15 @@ const CharInstruction = () => {
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" isCentered={true}>
         <ModalOverlay />
-        <ModalContent className="w-[60vw] !max-w-[60vw] !bg-transparent !shadow-none instruction-styled-modal">
+        <ModalContent className="w-[60vw] h-[60vh] !max-w-[60vw] !bg-transparent !shadow-none instruction-styled-modal">
           <ModalBody className="!overflow-hidden">
-            <div className="w-full h-full">
-              <Swiper modules={[Navigation, EffectCards]} navigation effect="cards">
+            <div className="w-full h-full relative">
+              <Swiper modules={[Navigation, EffectCards]} navigation effect="cards" className="w-full h-full relative">
                 <SwiperSlide className="!shadow-none">
                   {({ isActive }) => (
                     <>
-                      <div className="px-[60px]">
-                        <div className={` rounded-[8px] text-white px-[20px] py-[20px] ${isActive ? "bg-slate-500" : "bg-slate-600"}`}>
+                      <div className="w-full h-full relative px-[60px]">
+                        <div className={`w-full h-full relative overflow-y-auto rounded-[8px] text-white px-[20px] py-[20px] ${isActive ? "bg-slate-500" : "bg-slate-600"}`}>
                           <p className="text-[length:var(--chakra-fontSizes-md)]">|How to play|: Every chess, you will have 10 coins to buy your charactors, different charactors own its specific feature, try to use it to gain advantage.</p>
                           <br />
                           <p className="text-[length:var(--chakra-fontSizes-md)]">|Level up|: charactors can compose to level up, 3 one-star can be combined into a two-star character, 3 two-stars can be combined into a three-star character.</p>
@@ -37,8 +37,8 @@ const CharInstruction = () => {
                 <SwiperSlide className="!shadow-none">
                   {({ isActive }) => (
                     <>
-                      <div className="px-[60px]">
-                        <div className={` rounded-[8px] text-white px-[20px] py-[20px] ${isActive ? "bg-slate-500" : "bg-slate-600"}`}>
+                      <div className="w-full h-full relative px-[60px]">
+                        <div className={`w-full h-full relative overflow-y-auto rounded-[8px] text-white px-[20px] py-[20px] ${isActive ? "bg-slate-500" : "bg-slate-600"}`}>
                           <p className="text-[length:var(--chakra-fontSizes-md)]">|How to play|: Every chess, you will have 10 coins to buy your charactors, different charactors own its specific feature, try to use it to gain advantage.</p>
                           <br />
                           <p className="text-[length:var(--chakra-fontSizes-md)]">|Level up|: charactors can compose to level up, 3 one-star can be combined into a two-star character, 3 two-stars can be combined into a three-star character.</p>

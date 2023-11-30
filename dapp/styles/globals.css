@@ -392,7 +392,7 @@ a {
 .fix_float {
   z-index: 300;
   padding: 5px;
-  border-radius: 8%;
+  border-radius: 6px;
   position: relative;
   top: 50%;
   /* left: 70px; */
