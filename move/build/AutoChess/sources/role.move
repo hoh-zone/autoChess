@@ -196,11 +196,7 @@ module auto_chess::role {
 
     public(friend) fun create_random_role_for_cards(global: &Global, seed:u8, p2:u64, ctx: &mut TxContext) : Role {
         let random = utils::get_random_num(0, 1000, seed, ctx);
-        if (random < p2) {
-            random_select_role_by_level(global, 3, random, ctx)
-        } else {
-            random_select_role_by_level(global, 1, random, ctx)
-        }
+        random_select_role_by_level(global, 1, random, ctx)
     }
 
     public fun get_role_by_name(global:&Global, name:String) : Role {

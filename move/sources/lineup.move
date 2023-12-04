@@ -26,7 +26,8 @@ module auto_chess::lineup {
         name:String,
         role_num: u64,
         roles: vector<Role>,
-        price: u64
+        price: u64,
+        hash: vector<u8>
     }
 
     fun init(ctx: &mut TxContext) {
@@ -51,6 +52,7 @@ module auto_chess::lineup {
     public fun empty(ctx: &mut TxContext) : LineUp {
         let vec = vector::empty<Role>();
         let i = 0;
+        let seed = 12;
         while (i < 6) {
             vector::push_back(&mut vec, role::empty());
             i = i + 1;
@@ -60,7 +62,8 @@ module auto_chess::lineup {
             name:utf8(b""),
             role_num: 0,
             roles: vec,
-            price: 0
+            price: 0,
+            hash: utils::seed(ctx, seed)
         }
     }
 
@@ -80,7 +83,8 @@ module auto_chess::lineup {
             name:utf8(b"random cards pool"),
             role_num: vector::length(&vec),
             roles: vec,
-            price: 0
+            price: 0,
+            hash: utils::seed(ctx, seed)
         }
     }
 
@@ -190,7 +194,8 @@ module auto_chess::lineup {
             name: utf8(b"I'm a super robot"),
             role_num:max_role_num,
             roles: roles,
-            price: 0
+            price: 0,
+            hash: utils::seed(ctx, seed)
         }
     }
 
@@ -243,7 +248,8 @@ module auto_chess::lineup {
             name: name,
             role_num:len,
             roles: vec,
-            price: price
+            price: price,
+            hash: utils::seed(ctx, 123)
         }
     }
 
@@ -265,5 +271,13 @@ module auto_chess::lineup {
 
     public fun get_price(lineup:&LineUp): u64 {
         *&lineup.price
+    }
+
+    public fun get_hash(lineup:&LineUp): vector<u8> {
+        lineup.hash
+    }
+
+    public fun set_hash(lineup:&mut LineUp, hash:vector<u8>) {
+        lineup.hash = hash;
     }
 }

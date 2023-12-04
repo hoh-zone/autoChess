@@ -126,7 +126,7 @@ module auto_chess::test {
             // buy operation
             vector::push_back(&mut operations, utf8(b"buy"));
             vector::push_back(&mut operations, utf8(b"0-0"));
-            vector::push_back(&mut operations, utf8(b"refresh"));
+            // vector::push_back(&mut operations, utf8(b"refresh"));
             // vector::push_back(&mut operations, utf8(b"buy:4-1"));
             // vector::push_back(&mut operations, utf8(b"buy:1-1"));
             // vector::push_back(&mut operations, utf8(b"buy:2-2"));
@@ -144,9 +144,9 @@ module auto_chess::test {
             // upgrade operation
             // vector::push_back(&mut operations, utf8(b"upgrad:3-1"));
 
-            let left_gold = 5;
+            let left_gold = 7;
             let lineup_str_vec = vector::empty<String>();
-            vector::push_back(&mut lineup_str_vec, utf8(b"kunoichi1-1:6:9"));
+            vector::push_back(&mut lineup_str_vec, utf8(b"tank1-1:3:12"));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
@@ -156,7 +156,6 @@ module auto_chess::test {
             chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, &mut challengeGlobal, &mut chess_nft, operations, left_gold, lineup_str_vec, ctx(test));
             print_my_lineup(&chess_nft);
             next_epoch(test, admin);
-
             return_to_sender(test, chess_nft);
             return_shared(chessGlobal);
             return_shared(roleGlobal);

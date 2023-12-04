@@ -54,10 +54,38 @@ module auto_chess::challenge {
         vector::borrow(&global.rank_20, (rank as u64))
     }
 
-    public(friend) fun rank_forward(global: &mut Global, lineup:LineUp, rank:u8) {
-        // 1 -> 20; 2 -> 19;
-        vector::insert(&mut global.rank_20, lineup, (rank as u64));
-        vector::pop_back(&mut global.rank_20);
+    public(friend) fun rank_forward(global: &mut Global, lineup:LineUp) {
+        let rank = find_rank(global, &lineup);
+        if (rank == 20) {
+            vector::pop_back(&mut global.rank_20);
+            vector::insert(&mut global.rank_20, lineup, 19);
+        } else if (rank == 1) {
+            // do nothing
+        } else {
+            // 15(rank = 15) -> 14(index = 13)
+            vector::insert(&mut global.rank_20, lineup, rank - 2);
+            vector::pop_back(&mut global.rank_20);
+        };
+    }
+
+    fun check_lineup_equal(lineup1:&LineUp, lineup2:&LineUp) : bool {
+        ((lineup::get_hash(lineup1) == lineup::get_hash(lineup2)) &&
+        (lineup::get_name(lineup1) == lineup::get_name(lineup2)) && 
+        (lineup::get_creator(lineup1) == lineup::get_creator(lineup2)))
+    }
+
+    // 1-20
+    fun find_rank(global: &Global, lineup:&LineUp) :u64 {
+        let len = 20;
+        let i = 0;
+        while (i < len) {
+            let temp_lineup = vector::borrow(&global.rank_20, i);
+            if (check_lineup_equal(temp_lineup, lineup)) {
+                return i + 1;
+            };
+            i = i + 1;
+        };
+        20
     }
 
     public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, clock:&Clock, ctx: &mut TxContext) {
@@ -88,6 +116,8 @@ module auto_chess::challenge {
             vector::append(&mut vec_out, *string::bytes(&addr_str));
             vector::push_back(&mut vec_out, byte_comma);
             vector::append(&mut vec_out, *string::bytes(&name));
+            vector::push_back(&mut vec_out, byte_comma);
+            vector::append(&mut vec_out, numbers_to_ascii_vector(i + 1));
             vector::push_back(&mut vec_out, byte_semi);
             i = i + 1;
         };
@@ -153,5 +183,17 @@ module auto_chess::challenge {
         let balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(balance, ctx); 
         transfer::public_transfer(sui, receiver);
+    }
+    
+    fun numbers_to_ascii_vector(val: u64): vector<u8> {
+        let vec = vector<u8>[];
+        loop {
+            let b = val % 10;
+            vector::push_back(&mut vec, (48 + b as u8));
+            val = val / 10;
+            if (val <= 0) break;
+        };
+        vector::reverse(&mut vec);
+        vec
     }
 }
