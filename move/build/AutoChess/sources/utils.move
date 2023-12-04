@@ -59,7 +59,7 @@ module auto_chess::utils {
         print(&str1);
     }
 
-    fun seed(ctx: &mut TxContext, seed_u:u8): vector<u8> {
+    public fun seed(ctx: &mut TxContext, seed_u:u8): vector<u8> {
         let ctx_bytes = bcs::to_bytes(ctx);
         let seed_vec = vector::empty();
         vector::push_back(&mut seed_vec, seed_u);

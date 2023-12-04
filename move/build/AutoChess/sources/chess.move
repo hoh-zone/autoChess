@@ -237,7 +237,7 @@ module auto_chess::chess {
         if (fight(chess, &mut enemy_lineup, chanllenge_on, ctx)) {
             if (chanllenge_on) {
                 chess.challenge_win = chess.challenge_win + 1;
-                challenge::rank_forward(challengeGlobal, chess.lineup, 20 - chess.challenge_win);
+                challenge::rank_forward(challengeGlobal, chess.lineup);
             } else {
                 chess.win = chess.win + 1;
                 lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
@@ -406,7 +406,9 @@ module auto_chess::chess {
         } else {
             chess.gold = INIT_GOLD;
         };
+        let tmp_hash = lineup::get_hash(&mut chess.lineup);
         chess.lineup = expected_lineup; 
+        lineup::set_hash(&mut chess.lineup, tmp_hash);
         match(role_global, lineup_global, challengeGlobal, chess, ctx);
         global.total_match = global.total_match + 1;
         print(&utf8(b"match finish"));
