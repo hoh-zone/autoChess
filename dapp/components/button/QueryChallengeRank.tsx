@@ -26,7 +26,7 @@ const useQueryChallengeRank = () => {
                 transactionBlock: transactionBlock,
                 sender: SENDER
             });
-            // console.log('result:', bytesArrayToString(new Uint8Array(result.results[0].returnValues[0][0].slice(1))));
+            console.log('result:', bytesArrayToString(new Uint8Array(result.results[0].returnValues[0][0])));
         } catch(error) {
             console.log('err', error);
         }
