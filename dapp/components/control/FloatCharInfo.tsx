@@ -64,7 +64,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
             </HStack>
             <Divider borderWidth={1} />
             <Text fontSize={"2xs"}>
-              {char.effect_type === "skill" ? "Active skill" : "Passive skill"}{": "}{SKILL_DESCRIPTION[char.effect].replace("$value", char.effect_value)}
+              {char.effect_type === "skill" ? "Active skill" : "Passive skill"}{": "}{SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value)}
             </Text>
           </Stack>
         </>
