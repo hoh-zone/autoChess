@@ -116,6 +116,8 @@ module auto_chess::challenge {
             vector::append(&mut vec_out, *string::bytes(&addr_str));
             vector::push_back(&mut vec_out, byte_comma);
             vector::append(&mut vec_out, *string::bytes(&name));
+            vector::push_back(&mut vec_out, byte_comma);
+            vector::append(&mut vec_out, numbers_to_ascii_vector(i + 1));
             vector::push_back(&mut vec_out, byte_semi);
             i = i + 1;
         };
@@ -181,5 +183,17 @@ module auto_chess::challenge {
         let balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(balance, ctx); 
         transfer::public_transfer(sui, receiver);
+    }
+    
+    fun numbers_to_ascii_vector(val: u64): vector<u8> {
+        let vec = vector<u8>[];
+        loop {
+            let b = val % 10;
+            vector::push_back(&mut vec, (48 + b as u8));
+            val = val / 10;
+            if (val <= 0) break;
+        };
+        vector::reverse(&mut vec);
+        vec
     }
 }
