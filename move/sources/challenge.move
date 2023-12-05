@@ -19,6 +19,7 @@ module auto_chess::challenge {
     const ERR_NO_PERMISSION:u64 = 0x02;
     const DAY_IN_MS: u64 = 86_400_000;
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
+    const ERR_ALREADY_INIT: u64 = 0x04;
 
     struct Global has key {
         id: UID,
@@ -97,6 +98,7 @@ module auto_chess::challenge {
         let init_power = 40;
         let seed:u8 = 1;
         global.publish_time = clock::timestamp_ms(clock);
+        assert!(vector::length(&global.rank_20) == 0, ERR_ALREADY_INIT);
         while (i < 20) {
             let lineup = lineup::generate_lineup_by_power(roleGlobal, init_power, seed, ctx);
             vector::push_back(&mut global.rank_20, lineup);
