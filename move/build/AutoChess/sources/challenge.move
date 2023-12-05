@@ -18,13 +18,15 @@ module auto_chess::challenge {
     const ERR_CHALLENGE_NOT_END:u64 = 0x01;
     const ERR_NO_PERMISSION:u64 = 0x02;
     const DAY_IN_MS: u64 = 86_400_000;
+    const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
 
     struct Global has key {
         id: UID,
         balance_SUI: Balance<SUI>,
         rank_20: vector<LineUp>,
         reward_20: vector<u64>,
-        publish_time: u64
+        publish_time: u64,
+        lock:bool
     }
 
     fun init(ctx: &mut TxContext) {
@@ -33,7 +35,8 @@ module auto_chess::challenge {
             balance_SUI: balance::zero(),
             rank_20: vector::empty<LineUp>(),
             reward_20: vector::empty<u64>(),
-            publish_time: 0
+            publish_time: 0,
+            lock: false
         };
         transfer::share_object(global);
     }
@@ -45,7 +48,8 @@ module auto_chess::challenge {
             balance_SUI: balance::zero(),
             rank_20: vector::empty<LineUp>(),
             reward_20: vector::empty<u64>(),
-            publish_time: 0
+            publish_time: 0,
+            lock: false
         };
         transfer::share_object(global);
     }
@@ -55,6 +59,7 @@ module auto_chess::challenge {
     }
 
     public(friend) fun rank_forward(global: &mut Global, lineup:LineUp) {
+        assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
         let rank = find_rank(global, &lineup);
         if (rank == 20) {
             vector::pop_back(&mut global.rank_20);
@@ -145,6 +150,7 @@ module auto_chess::challenge {
         total_amount * prop - 1_000_000_000
     }
 
+    // todo:增加一个virtual的打印查询，检查一下lock的逻辑，降低一点难度，AI太强了。
     public(friend) fun get_total_virtual_scores(global: &Global) : u64 {
         let rank = 0;
         let total_socres = 0;
@@ -169,6 +175,7 @@ module auto_chess::challenge {
     }
 
     public(friend) fun push_reward_amount(global:&mut Global, amount:u64) {
+        assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
         vector::push_back(&mut global.reward_20, amount)
     }
 
@@ -195,5 +202,9 @@ module auto_chess::challenge {
         };
         vector::reverse(&mut vec);
         vec
+    }
+
+    public(friend) fun lock(global:&mut Global) {
+        global.lock = true
     }
 }
