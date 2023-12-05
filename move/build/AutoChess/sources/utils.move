@@ -96,7 +96,7 @@ module auto_chess::utils {
         if (power <= 16) {
             0
         } else {
-            3 * power
+            2 * power
         }
     }
 

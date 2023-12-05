@@ -68,8 +68,7 @@ module auto_chess::challenge {
             // do nothing
         } else {
             // 15(rank = 15) -> 14(index = 13)
-            vector::insert(&mut global.rank_20, lineup, rank - 2);
-            vector::pop_back(&mut global.rank_20);
+            vector::swap(&mut global.rank_20, rank - 1, rank - 2);
         };
     }
 
@@ -118,11 +117,14 @@ module auto_chess::challenge {
             let addr = lineup::get_creator(lineup);
             let addr_str = address::to_string(addr);
             let name = lineup::get_name(lineup);
+            let score = get_virtual_scores_by_rank(global, i + 1);
             vector::append(&mut vec_out, *string::bytes(&addr_str));
             vector::push_back(&mut vec_out, byte_comma);
             vector::append(&mut vec_out, *string::bytes(&name));
             vector::push_back(&mut vec_out, byte_comma);
             vector::append(&mut vec_out, numbers_to_ascii_vector(i + 1));
+            vector::push_back(&mut vec_out, byte_comma);
+            vector::append(&mut vec_out, numbers_to_ascii_vector(score));
             vector::push_back(&mut vec_out, byte_semi);
             i = i + 1;
         };
@@ -162,6 +164,13 @@ module auto_chess::challenge {
             rank = rank + 1;
         };
         total_socres
+    }
+
+    public(friend) fun get_virtual_scores_by_rank(global: &Global, rank: u64) : u64 {
+        let tmp_lineup = vector::borrow(&global.rank_20, rank - 1);
+        let price = lineup::get_price(tmp_lineup);
+        let prop = get_base_weight_by_rank(rank - 1);
+        (price * prop)
     }
 
     #[lint_allow(self_transfer)]
@@ -204,7 +213,7 @@ module auto_chess::challenge {
         vec
     }
 
-    public(friend) fun lock(global:&mut Global) {
+    public(friend) fun lock_pool(global:&mut Global) {
         global.lock = true
     }
 }
