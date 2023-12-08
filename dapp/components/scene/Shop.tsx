@@ -19,7 +19,7 @@ export const Shop = () => {
         })
     }
 
-    return <Box className=" h-[15%] bg-indigo-200">
+    return <Box className="absolute bottom-0 w-full h-[15%] bg-indigo-200">
         <HStack className="justify-around relative top-[-20px] " gap={0}>
             <ShopSlot id={0} />
             <ShopSlot id={1} />

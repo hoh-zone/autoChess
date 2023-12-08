@@ -42,7 +42,7 @@ export const StartGame = () => {
             <source src={assets?.bg7} type="video/mp4" />
           </video>
           {wallet ? (
-            <div className="absolute text-white top-12 z-50">
+            <div className="absolute text-white z-50">
               <Stack className="items-center text-center" gap={4}>
                 <div className="mb-12">
                   <motion.p initial={{ opacity: 0, scale: 0, y: "-3.3vw" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: getVh(30), fontSize: getVh(100) }}>
@@ -69,7 +69,7 @@ export const StartGame = () => {
           <div className="absolute top-0 left-0 m-4">
             <Instruction />
           </div>
-          <VStack className="w-full absolute bottom-[5%]" gap={0}>
+          <VStack className="w-full absolute" gap={0}>
             <HStack className="w-full flex justify-around">
               <Character charType="archer" isOpponent={false} />
               <Character charType="shaman" isOpponent={false} />

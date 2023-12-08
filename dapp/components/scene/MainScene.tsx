@@ -9,7 +9,7 @@ export const MainScene = () => {
   const [assets, setAssets] = useAtom(assetsAtom)
 
   return (
-    <div className="h-[75%] w-full relative">
+    <div className="h-full w-full relative">
       <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
         <source src={assets?.bg4} type="video/mp4" />
       </video>
@@ -24,7 +24,7 @@ export const MainScene = () => {
             <Slot id={1} />
             <Slot id={0} />
           </HStack>
-          <Stack className="absolute top-0 left-0">
+          <Stack className="absolute top-[12%] left-0">
             <SellButton />
             <CharInstruction />
           </Stack>

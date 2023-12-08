@@ -7,19 +7,38 @@ import { twMerge } from "tailwind-merge"
 import range from "lodash/range"
 import { FightResultText } from "../effect/FightResultText"
 
+const positionTables = {
+  bg10: {
+    0: "right-0 top-0",
+    1: "right-[15%] bottom-[15%]",
+    2: "right-[30%] top-[15%]",
+    3: "right-[40%] bottom-[25%]",
+    4: "right-[50%] top-[10%]",
+    5: "right-[65%] bottom-[20%]",
+    10: "left-0 top-0",
+    11: "left-[15%] bottom-[15%]",
+    12: "left-[30%] top-[15%]",
+    13: "left-[40%] bottom-[25%]",
+    14: "left-[50%] top-[10%]",
+    15: "left-[65%] bottom-[20%]"
+  }
+}
+
 const positionTable: { [key: string]: string } = {
-  0: "right-0 top-0",
-  1: "right-[15%] bottom-[15%]",
-  2: "right-[30%] top-[15%]",
-  3: "right-[40%] bottom-[25%]",
-  4: "right-[50%] top-[10%]",
-  5: "right-[65%] bottom-[20%]",
-  10: "left-0 top-0",
-  11: "left-[15%] bottom-[15%]",
-  12: "left-[30%] top-[15%]",
-  13: "left-[40%] bottom-[25%]",
-  14: "left-[50%] top-[10%]",
-  15: "left-[65%] bottom-[20%]"
+  0: "right-[27%] bottom-[14%]",
+  1: "right-[50%] bottom-[14%]",
+  2: "right-[68%] bottom-[18%]",
+  3: "right-[18%] bottom-[5%]",
+  4: "right-[35%] bottom-[5%]",
+  5: "right-[65%] bottom-[5%]",
+  10: "left-[18%] bottom-[5%]",
+  11: "left-[28%] bottom-[14%]",
+  12: "left-[40%] bottom-[5%]",
+  13: "left-[50%] bottom-[12%]",
+  14: "left-[64%] bottom-[5%]",
+  15: "left-[72%] bottom-[18%]",
+  currentCharPosition: "right-[4%] bottom-[14%]",
+  currentEnemyPosition: "left-[4%] bottom-[14%]"
 }
 
 export const FightScene = () => {
@@ -39,19 +58,19 @@ export const FightScene = () => {
   }
 
   return (
-    <div className="h-[90%] w-full relative">
+    <div className="h-full w-full relative">
       <FightResultText />
       <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
         <source src={assets?.bg10} type="video/mp4" />
       </video>
-      <HStack className="absolute top-0 p-8 w-full justify-around">
+      <HStack className="absolute top-[10%] p-8 w-full justify-around">
         <StatusBar isOpponent={false}></StatusBar>
         <StatusBar isOpponent={true}></StatusBar>
       </HStack>
-      <HStack className="absolute w-full h-[120px] bottom-0">
+      <HStack className="absolute w-full h-full bottom-0">
         <div className="w-1/2 h-full relative">
           {range(0, 7).map((id) => (
-            <div key={id} className={twMerge("absolute transition-all duration-500", charIndex === id ? "right-0 top-0" : positionTable[id] ?? "right-[20%] top-[20%]")}>
+            <div key={id} className={twMerge("absolute transition-all duration-500", charIndex === id ? positionTable.currentCharPosition : positionTable[id])}>
               <Slot id={id} />
             </div>
           ))}
@@ -59,7 +78,7 @@ export const FightScene = () => {
 
         <div className="w-1/2 h-full relative">
           {range(10, 17).map((id) => (
-            <div key={id} className={twMerge("absolute transition-all", enemyIndex + 10 === id ? "left-0 top-0" : positionTable[id] ?? "left-[20%] top-[20%]")}>
+            <div key={id} className={twMerge("absolute transition-all", enemyIndex + 10 === id ? positionTable.currentEnemyPosition : positionTable[id])}>
               <Slot id={id} isOpponent={true} />
             </div>
           ))}
