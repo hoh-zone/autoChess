@@ -40,5 +40,6 @@ export const operationsA = atom<string[]>([])
 
 // effects
 export const fightResultEffectA = atom<null | string>(null)
+export const fightResultModalVisibleAtom = atom<boolean>(false)
 
 export const assetsAtom = atom<{ [key: string]: string } | null>({})

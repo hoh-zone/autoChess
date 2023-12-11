@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom,fightResultModalVisibleAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
@@ -24,6 +24,7 @@ export const useFight = () => {
     const [_chessId, setChessId] = useAtom(chessId);
     const [skillTag, setSkillTag] = useAtom(skillTagA);
     const [enemySkillTag, setEnemySkillTag] = useAtom(enemySkillTagA);
+    const [fightResultModalVisible, setFightResultModalVisible] = useAtom(fightResultModalVisibleAtom)
 
     let animationEnd = Date.now() + 4000;
     let skew = 1;
@@ -59,6 +60,7 @@ export const useFight = () => {
             gravity: randomInRange(0.4, 0.6),
             scalar: randomInRange(0.4, 1),
             drift: randomInRange(-0.4, 0.4),
+            zIndex: 9999999
         });
 
         if (timeLeft > 0) {
@@ -72,7 +74,8 @@ export const useFight = () => {
             spread: randomInRange(50, 70),
             particleCount: randomInRange(50, 100),
             origin: { y: 0.6 },
-            ticks: 3000
+            ticks: 3000,
+            zIndex: 9999999
         });
     };
 
@@ -529,21 +532,15 @@ export const useFight = () => {
         }
 
         if (some(enemyChars, Boolean)) {
-            console.log("you lose");
-            setFightResult("You Lose");
+            setFightResult("you lose");
             animationEnd = Date.now() + 2000;
             lose_effect();
             await sleep(2000);
-            setFightResult(null);
         } else {
-            console.log("you win");
-            setFightResult("You Win");
+            setFightResult("you win");
             for (let i = 0; i < 5; ++i) {
                 win_effect();
-                await sleep(200);
             }
-            await sleep(1000);
-            setFightResult(null);
         }
 
         reset_status();
@@ -552,7 +549,7 @@ export const useFight = () => {
         if (_chessId) {
             await query_chess(_chessId);
             setEnemyChars([]);
-            setStage("shop");
+            setFightResultModalVisible(true);
         }
     }, [enemyChars, setEnemyChars, chars, setChars]);
 }

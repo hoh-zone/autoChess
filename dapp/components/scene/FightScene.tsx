@@ -1,8 +1,8 @@
-import { HStack } from "@chakra-ui/react"
+import { Button, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { StatusBar } from "../control/StatusBar"
 import { useAtom } from "jotai"
-import { assetsAtom, enemyCharacter, slotCharacter, winA } from "../../store/stages"
+import { assetsAtom, enemyCharacter, slotCharacter, winA, fightResultModalVisibleAtom, stageAtom, fightResultEffectA } from "../../store/stages"
 import { twMerge } from "tailwind-merge"
 import range from "lodash/range"
 import { FightResultText } from "../effect/FightResultText"
@@ -47,6 +47,9 @@ export const FightScene = () => {
   const charIndex = chars.findIndex(Boolean)
   const enemyIndex = enemyChars.findIndex(Boolean)
   const [assets, setAssets] = useAtom(assetsAtom)
+  const [fightResultModalVisible, setFightResultModalVisible] = useAtom(fightResultModalVisibleAtom)
+  const [fightResult, setFightResult] = useAtom(fightResultEffectA);
+  const [stage, setStage] = useAtom(stageAtom);
 
   const [win] = useAtom(winA)
   const get_video_bg = () => {
@@ -57,9 +60,14 @@ export const FightScene = () => {
     return "bg" + index + ".mp4"
   }
 
+  const onClose = () => {
+    setFightResultModalVisible(false)
+    setStage("shop");
+    setFightResult(null);
+  }
+
   return (
     <div className="h-full w-full relative">
-      <FightResultText />
       <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
         <source src={assets?.bg10} type="video/mp4" />
       </video>
@@ -84,6 +92,23 @@ export const FightScene = () => {
           ))}
         </div>
       </HStack>
+
+      <Modal isOpen={fightResultModalVisible} onClose={onClose} isCentered size="xl">
+        <ModalOverlay />
+        <ModalContent className="!bg-slate-500 !rounded-[8px] !w-[240px] !max-w-[240px]">
+          <ModalBody className="w-[240px] !max-w-[240px]">
+            <div className="mx-[10px] my-[20px]">
+              <FightResultText />
+            </div>
+          </ModalBody>
+
+          <ModalFooter className="flex !justify-center">
+            <Button colorScheme='blue' onClick={onClose}>
+              OK
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   )
 }
