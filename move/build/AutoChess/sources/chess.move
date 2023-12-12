@@ -109,6 +109,7 @@ module auto_chess::chess {
             challenge::push_reward_amount(challengeGlobal, amount);
             i = i + 1;
         };
+        challenge::lock_pool(challengeGlobal);
     }
 
     #[lint_allow(self_transfer)]
