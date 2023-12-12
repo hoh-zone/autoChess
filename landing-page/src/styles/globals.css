@@ -1,0 +1,305 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+h1 {
+  background: -webkit-linear-gradient(#1c78ba, hsl(211.85deg 100% 9.21%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: calc(1em + 6vw);
+  filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));  
+}
+
+h2 {
+  background: -webkit-linear-gradient(#181e58de, hsl(211.85deg 100% 9.21%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: calc(1em + 6vw);
+  filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));  
+}
+
+a {
+  text-decoration: underline;
+  cursor: pointer;
+  color: black;
+  font-weight: 500;
+  font-size: 1.2em;
+  border-radius: 100px;
+  /* background-color: yellow; */
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.2px);
+  -webkit-backdrop-filter: blur(3.2px);
+  border: 1px solid rgba(255, 255, 255, 0.27);
+}
+
+.glass2 {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.2px);
+  -webkit-backdrop-filter: blur(3.2px);
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+
+button {
+  color: white  ;
+  font-weight: 600;
+  font-size: 2em;
+  padding: 0.5em 1em;
+  background: linear-gradient(155deg, rgb(21 94 149 / 80%) 0%, rgb(7 48 84 / 80%) 100%);
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  backdrop-filter: blur(3.2px);
+  -webkit-backdrop-filter: blur(3.2px);
+}
+
+button:hover {
+  color: black;
+  background: rgba(255,255,255,0.13);
+} 
+
+.animBasic {
+  background-position-x: left;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.orcBarbare {
+  --attack-step: 12;
+  --attack-position: -1368px;
+  --move-step: 5;
+  --move-position: -570px;
+}
+
+.orcArcher {
+  --attack-step: 18;
+  --attack-position: -2664px;
+  --move-step: 6;
+  --move-position: -888px;
+}
+
+.humanKnight {
+  --attack-step: 11;
+  --attack-position: -1056px;
+  --move-step: 8;
+  --move-position: -480px;
+}
+
+.kunoichi {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 33;
+  --attack2-position: -9900px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.ani {
+  --attack-step: 11;
+  --attack-position: -3300px;
+  --attack2-step: 9;
+  --attack2-position: -2700px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.assa {
+  --attack-step: 17;
+  --attack-position: -5100px;
+  --attack2-step: 17;
+  --attack2-position: -5100px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.cleric {
+  --attack-step: 9;
+  --attack-position: -2700px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.archer {
+  --attack-step: 15;
+  --attack-position: -4500px;
+  --attack2-step: 29;
+  --attack2-position: -8700px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.kunoichi {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 33;
+  --attack2-position: -9900px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.fighter {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --attack2-step: 15;
+  --attack2-position: -4500px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.golem {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 7;
+  --attack2-position: -2100px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.mega {
+  --attack-step: 10;
+  --attack-position: -3000px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.priest {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --attack2-step: 10;
+  --attack2-position: -3000px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shaman {
+  --attack-step: 20;
+  --attack-position: -6000px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shinobi {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --attack2-step: 20;
+  --attack2-position: -6000px;
+  --move-step: 8;
+  --move-position: -2400px;
+}
+
+.firemega {
+  --attack-step: 24;
+  --attack-position: -7200px;
+  --attack2-step: 71;
+  --attack2-position: -21300px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.slime {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --attack2-step: 26;
+  --attack2-position: -7800px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tank {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --attack2-step: 11;
+  --attack2-position: -3300px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tree {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --attack2-step: 24;
+  --attack2-position: -7200px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.wizard {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 16;
+  --attack2-position: -4800px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.attack1 {
+  animation: attackAnim 1s steps(calc(var(--attack-step) - 1)) infinite;
+}
+
+@keyframes attackAnim {
+  to {
+    background-position: 100%;
+  }
+}
+
+.attack2 {
+  animation: attackAnim2 1.5s steps(calc(var(--attack2-step) - 1)) infinite;
+}
+
+@keyframes attackAnim2 {
+  to {
+    background-position: 100%;
+  }
+}
+
+.move {
+  animation: moveAnim 0.5s steps(calc(var(--move-step) - 1)) infinite;
+}
+
+@keyframes moveAnim {
+  to {
+    background-position: 100%;
+  }
+}
+
+.opponentCharacter {
+  transform: rotateY(180deg);
+}
