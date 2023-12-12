@@ -4,7 +4,7 @@ import { walletAddressEllipsis } from "@/utils/walletAddressEllipsis"
 import Image from "next/image"
 
 export const LeaderboardItem = ({ items, rank, address, reward }: { reward: number, address: string, rank: number, items: string[] }) => {
-    return <HStack className="w-full flex py-8" justifyContent={"space-around"} bg={rank % 2 == 0 ? "#0000000b" : "#00000000"}>
+    return <HStack className="w-full flex py-8  text-black" justifyContent={"space-around"} bg={rank % 2 == 0 ? "#0000000b" : "#00000000"}>
         <Text className="text-2xl mr-8">
             #{rank}
         </Text>
