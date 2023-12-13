@@ -13,8 +13,8 @@ function bytesArrayToString(input: Uint8Array): String {
     return decoder.decode(bytes);
 }
 
-const useQueryChesses = () => {
-    const query_chesses = useCallback(async () => {
+const useQueryRanks = () => {
+    const query_rank20 = useCallback(async () => {
         const provider = new JsonRpcProvider(testnetConnection);
         const tx = new TransactionBlock();
         const moveModule = "challenge";
@@ -30,9 +30,9 @@ const useQueryChesses = () => {
         if (!result || !result.results || !result.results[0] || !result.results[0].returnValues) return "";
         let ranks = result.results[0].returnValues[0][0];
         ranks = ranks.slice(2);
-        console.log('result:', bytesArrayToString(new Uint8Array(ranks)));
+        console.log('ranks:', bytesArrayToString(new Uint8Array(ranks)));
     }, []);
-    return { query_chesses };
+    return { query_rank20 };
 }
 
-export default useQueryChesses;
+export default useQueryRanks;

@@ -1,18 +1,17 @@
 import { Box, Center, Stack } from "@chakra-ui/react"
 import { LeaderboardItem } from "./LeaderboardItem"
 import { useEffect, useState } from "react"
-import QueryRank from "@/pages/api/useQueryChesses"
-import useQueryChesses from "@/pages/api/useQueryChesses"
+import useQueryRanks from "@/pages/api/useQueryRanks"
 
 
 export const Leaderboard = () => {
-    const { query_chesses } = useQueryChesses()
+    const { query_rank20 } = useQueryRanks()
     useEffect(() => {
         fetch();
     }, [])
 
     const fetch = async () => {
-        const result = await query_chesses();
+        const result = await query_rank20();
         return result
       }
 
