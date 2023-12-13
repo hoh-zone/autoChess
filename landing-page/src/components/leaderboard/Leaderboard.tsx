@@ -1,7 +1,21 @@
 import { Box, Center, Stack } from "@chakra-ui/react"
 import { LeaderboardItem } from "./LeaderboardItem"
+import { useEffect, useState } from "react"
+import QueryRank from "@/pages/api/useQueryChesses"
+import useQueryChesses from "@/pages/api/useQueryChesses"
+
 
 export const Leaderboard = () => {
+    const { query_chesses } = useQueryChesses()
+    useEffect(() => {
+        fetch();
+    }, [])
+
+    const fetch = async () => {
+        const result = await query_chesses();
+        return result
+      }
+
     return <Box
         id="leaderboard"
         px={128} py={64}

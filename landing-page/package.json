@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mysten/sui.js": "^0.34.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
