@@ -10,9 +10,7 @@ import {
 export interface LineUp {
     walletAddr: string;
     name: string;
-    rank: number,
-    roles: string[],
-    score: number
+    rank: number
 }
 
 function bytesArrayToString(input: Uint8Array): String {
@@ -28,13 +26,9 @@ function splitRankStr(data: String): LineUp[] {
       let lineUp : LineUp = {
         walletAddr: temp[0],
         name: temp[1],
-        rank: parseInt(temp[2]),
-        roles: [temp[3], temp[4],temp[5],temp[6],temp[7],temp[8]],
-        score: parseInt(temp[9]),
+        rank: parseInt(temp[2])
       }
-      if (lineUp.walletAddr) {
-        res.push(lineUp);
-      }
+      res.push(lineUp);
     })
     return res;
   }

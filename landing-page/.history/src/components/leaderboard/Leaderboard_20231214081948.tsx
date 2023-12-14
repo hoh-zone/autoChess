@@ -1,12 +1,10 @@
 import { Box, Center, Stack } from "@chakra-ui/react"
 import { LeaderboardItem } from "./LeaderboardItem"
-import { useEffect } from "react"
-import React, { useState } from 'react';
+import { useEffect, useState } from "react"
 import useQueryRanks, { LineUp } from "@/pages/api/useQueryRanks"
 
 
-export const Leaderboard : React.FC = () => {
-    const [data, setData] = useState<LineUp[]>([]);
+export const Leaderboard = () => {
     const { query_rank20 } = useQueryRanks()
     let array :LineUp[] = [];
     useEffect(() => {
@@ -16,7 +14,8 @@ export const Leaderboard : React.FC = () => {
     const fetch = async () => {
         let res = await query_rank20();
         if (Array.isArray(res)) {
-            setData(res);
+            console.log("get", res.length);
+            array = res;
         }
       }
 
@@ -30,15 +29,14 @@ export const Leaderboard : React.FC = () => {
                 Leaderboard
             </Center>
         </Box>
-        
+
         <Stack
             className="mt-16 glass2"
             gap={0}>
-            {Array.from(data).map((item, i) => {
+            {array.map((item, index) => {
                 return <LeaderboardItem
-                    reward={item.score}
-                    name = {item.name}
-                    address={item.walletAddr} key={i} rank={item.rank} items={[
+                    reward={20}
+                    address={"0x12341235452354123"} key={index} rank={index + 1} items={[
                         "tank",
                         "tree",
                         "fighter",
@@ -48,8 +46,7 @@ export const Leaderboard : React.FC = () => {
                         "shinobi",
                         "priest",
                     ]} />
-                })
-            }
+            })}
         </Stack>
     </Box>
 }

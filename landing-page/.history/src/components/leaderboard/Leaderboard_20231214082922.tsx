@@ -36,9 +36,8 @@ export const Leaderboard : React.FC = () => {
             gap={0}>
             {Array.from(data).map((item, i) => {
                 return <LeaderboardItem
-                    reward={item.score}
-                    name = {item.name}
-                    address={item.walletAddr} key={i} rank={item.rank} items={[
+                    reward={20}
+                    address={"0x12341235452354123"} key={i} rank={i + 1} items={[
                         "tank",
                         "tree",
                         "fighter",
