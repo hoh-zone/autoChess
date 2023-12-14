@@ -545,7 +545,7 @@ export const useFight = () => {
 
         reset_status();
 
-        // 更新数据并进入shop
+        // 显示战斗结果弹窗
         if (_chessId) {
             await query_chess(_chessId);
             setEnemyChars([]);
