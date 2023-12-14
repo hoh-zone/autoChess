@@ -39,7 +39,6 @@ module auto_chess::verify {
                 assert!(res, ERR_UPGRADE_FAILED);
                 let from_role_mut = vector::borrow_mut<role::Role>(cards_pool_roles, from_index);
                 role::set_name(from_role_mut, utf8(b"none"));
-                assert!(gold >= price, ERR_NOT_ENOUGH_GOLD);
                 gold = gold - price;
             } else if (operate == utf8(b"buy")) {
                 let sub_str = vector::pop_back(&mut operations);
@@ -53,7 +52,6 @@ module auto_chess::verify {
                 vector::remove(init_roles, to_index);
                 vector::insert(init_roles, copy_role, to_index);
                 let price = role::get_price(&copy_role);
-                assert!(gold >= price, ERR_NOT_ENOUGH_GOLD);
                 gold = gold - price;
             } else if (operate == utf8(b"swap")) {
                 let sub_str = vector::pop_back(&mut operations);
@@ -82,7 +80,6 @@ module auto_chess::verify {
                 let from_role_mut = vector::borrow_mut<role::Role>(init_roles, from_index);
                 role::set_name(from_role_mut, utf8(b"none"));
             } else if (operate == utf8(b"refresh")) {
-                assert!(gold >= REFRESH_PRICE, ERR_NOT_ENOUGH_GOLD);
                 gold = gold - REFRESH_PRICE;
                 refresh_time = refresh_time + 1;
             }

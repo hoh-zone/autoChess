@@ -9,7 +9,6 @@ module auto_chess::chess {
     use sui::coin::{Self, Coin};
     use std::vector;
     use sui::clock::{Clock};
-    use std::debug::print;
     use sui::event;
     use auto_chess::role::{Self};
     use auto_chess::utils;
@@ -86,7 +85,6 @@ module auto_chess::chess {
         transfer::share_object(global);
     }
 
-    
     #[lint_allow(self_transfer)]
     public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
@@ -137,7 +135,7 @@ module auto_chess::chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
+            cards_pool: lineup::generate_random_cards(role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -163,13 +161,12 @@ module auto_chess::chess {
 
     #[lint_allow(self_transfer)]
     public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
-        print(&utf8(b"mint new chess"));
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            cards_pool: lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(0,0), ctx),
+            cards_pool: lineup::generate_random_cards(role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -210,16 +207,17 @@ module auto_chess::chess {
         object::delete(id);
     }
 
+    #[test_only]
     public fun get_lineup(chess:&Chess): &LineUp {
         &chess.lineup
     }
 
+    #[test_only]
     public fun get_cards_pool(chess:&Chess): &LineUp {
         &chess.cards_pool
     }
 
     fun match(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, ctx: &mut TxContext) {
-        print(&utf8(b"start match chess"));
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
@@ -260,57 +258,7 @@ module auto_chess::chess {
     }
 
     fun refresh_cards_pools(role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
-        chess.cards_pool = lineup::generate_random_cards(role_global, utils::get_lineup_power_by_tag(chess.win,chess.lose), ctx);
-    }
-
-    #[test_only]
-    public fun test_fight(my_lineup_fight: LineUp, enemy_lineup: LineUp) :bool {
-        // backup to avoid base_life to be changed
-        let enemy_lineup_fight = *&enemy_lineup;
-        let my_lineup_permanent = &mut *&my_lineup_fight;
-        let my_roles = *lineup::get_roles(&my_lineup_fight);
-        vector::reverse<role::Role>(&mut my_roles);
-        let my_num = vector::length(&my_roles);
-        let enemy_roles = *lineup::get_roles(&enemy_lineup_fight);
-        vector::reverse<role::Role>(&mut enemy_roles);
-        if (my_num == 0) {
-            return false
-        };
-        let my_first_role = role::init_role();
-        let enemy_first_role = role::init_role();
-        let my_fist_role_index = 0;
-        let enemy_first_role_index = 0;
-        while (fight::some_alive(&my_first_role, &my_roles) && fight::some_alive(&enemy_first_role, &enemy_roles)) {
-            while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
-                my_first_role = vector::pop_back(&mut my_roles);
-                if (vector::length(&my_roles) < 5) {
-                    my_fist_role_index = my_fist_role_index + 1;
-                };
-            };
-            while (vector::length(&enemy_roles) > 0 && (role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init")))) {
-                enemy_first_role = vector::pop_back(&mut enemy_roles);
-                if (vector::length(&enemy_roles) < 5) {
-                    enemy_first_role_index = enemy_first_role_index + 1;
-                };
-            };
-            while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
-                print(&utf8(b"we action:"));
-                print(&role::get_name(&my_first_role));
-                fight::action(my_fist_role_index, &mut my_first_role, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
-                print(&utf8(b"enemy action:"));
-                print(&role::get_name(&enemy_first_role));
-                fight::action(enemy_first_role_index, &mut enemy_first_role, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
-            };
-        };
-
-        if (fight::some_alive(&enemy_first_role, &enemy_roles)) {
-            print(&utf8(b"I lose"));
-            false
-        } else {
-            print(&enemy_roles);
-            print(&utf8(b"I win"));
-            true
-        }
+        chess.cards_pool = lineup::generate_random_cards(role_global, ctx);
     }
 
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, is_challenge:bool, ctx:&mut TxContext) :bool {
@@ -356,7 +304,6 @@ module auto_chess::chess {
         let challenge_lose = chess.challenge_lose;
         let res;
         if (fight::some_alive(&enemy_first_role, &enemy_roles)) {
-            print(&utf8(b"I lose"));
             if (is_challenge) {
                 challenge_win = challenge_win + 1;
             } else {
@@ -364,7 +311,6 @@ module auto_chess::chess {
             };
             res = false
         } else {
-            print(&utf8(b"I win, my left lineup:"));
             if (is_challenge) {
                 challenge_lose = challenge_lose + 1;
             } else {
@@ -407,11 +353,10 @@ module auto_chess::chess {
         } else {
             chess.gold = INIT_GOLD;
         };
-        let tmp_hash = lineup::get_hash(&mut chess.lineup);
+        let tmp_hash = lineup::get_hash(&chess.lineup);
         chess.lineup = expected_lineup; 
         lineup::set_hash(&mut chess.lineup, tmp_hash);
         match(role_global, lineup_global, challengeGlobal, chess, ctx);
         global.total_match = global.total_match + 1;
-        print(&utf8(b"match finish"));
     }
 }
