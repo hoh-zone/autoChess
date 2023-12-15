@@ -38,16 +38,7 @@ export const Leaderboard : React.FC = () => {
                 return <LeaderboardItem
                     reward={item.score}
                     name = {item.name}
-                    address={item.walletAddr} key={i} rank={item.rank} items={[
-                        "tank",
-                        "tree",
-                        "fighter",
-                        "golem",
-                        "kunoichi",
-                        "wizard",
-                        "shinobi",
-                        "priest",
-                    ]} />
+                    address={item.walletAddr} key={i} rank={item.rank} items={item.roles} />
                 })
             }
         </Stack>

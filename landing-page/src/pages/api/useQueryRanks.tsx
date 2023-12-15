@@ -20,16 +20,31 @@ function bytesArrayToString(input: Uint8Array): String {
     const decoder: TextDecoder = new TextDecoder('utf-8');
     return decoder.decode(bytes);
 }
+
+function get_name(data:string):string {
+  if (data == "I'm a super robot") {
+    return "AI";
+  }
+  return data;
+}
+
+function get_addr(data:string):string {
+  if (data == "be379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18") {
+    return " ";
+  }
+  return data;
+}
+
 function splitRankStr(data: String): LineUp[] {
     let array = data.split(";");
     let res:LineUp[] = []
     array.forEach((item) => {
       let temp = item.split(",");
       let lineUp : LineUp = {
-        walletAddr: temp[0],
-        name: temp[1],
+        walletAddr: get_addr(temp[0]),
+        name: get_name(temp[1]),
         rank: parseInt(temp[2]),
-        roles: [temp[3], temp[4],temp[5],temp[6],temp[7],temp[8]],
+        roles: [temp[3], temp[4], temp[5], temp[6], temp[7], temp[8]],
         score: parseInt(temp[9]),
       }
       if (lineUp.walletAddr) {
