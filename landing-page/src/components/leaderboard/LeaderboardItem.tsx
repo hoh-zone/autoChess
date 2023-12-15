@@ -3,8 +3,6 @@ import { Character } from "../character/character"
 import { walletAddressEllipsis } from "@/utils/walletAddressEllipsis"
 import Image from "next/image"
 
-
-
 function get_role_name(data:string):string {
     if (data) {
       return data.replace(/\d+/g, '').slice(0, -1);
@@ -31,9 +29,7 @@ export const LeaderboardItem = ({ items, rank, address, reward, name}: { reward:
             {walletAddressEllipsis(address)}
         </Link>
         <HStack gap={0} maxW={"60%"} >
-            
             {
-                
                 items.map((item, i) => 
                     <VStack  key={i} >
                         <Text>Lv{get_role_level(item)}</Text>

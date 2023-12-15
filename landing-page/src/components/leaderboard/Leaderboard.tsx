@@ -1,4 +1,4 @@
-import { Box, Center, Stack } from "@chakra-ui/react"
+import { Box, Center, Stack, Text } from "@chakra-ui/react"
 import { LeaderboardItem } from "./LeaderboardItem"
 import { useEffect } from "react"
 import React, { useState } from 'react';
@@ -7,18 +7,24 @@ import useQueryRanks, { LineUp } from "@/pages/api/useQueryRanks"
 
 export const Leaderboard : React.FC = () => {
     const [data, setData] = useState<LineUp[]>([]);
-    const { query_rank20 } = useQueryRanks()
-    let array :LineUp[] = [];
+    const [poolValue, setPoolValue] = useState<number>(0);
+    const { query_rank20, query_total_pools_value } = useQueryRanks()
     useEffect(() => {
         fetch();
     }, [])
 
     const fetch = async () => {
-        let res = await query_rank20();
-        if (Array.isArray(res)) {
-            setData(res);
+        const results = await Promise.all([
+            query_rank20(),
+            query_total_pools_value()
+        ]);
+        if (results[1]) {
+            setPoolValue(results[1]);
         }
-      }
+        if (Array.isArray(results[0])) {
+            setData(results[0]);
+        }
+    }
 
     return <Box
         id="leaderboard"
@@ -34,6 +40,7 @@ export const Leaderboard : React.FC = () => {
         <Stack
             className="mt-16 glass2"
             gap={0}>
+                <Text>Total Pool: {poolValue / 100_000_000} SUI</Text>
             {Array.from(data).map((item, i) => {
                 return <LeaderboardItem
                     reward={item.score}

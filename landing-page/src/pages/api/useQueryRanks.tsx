@@ -53,8 +53,29 @@ function splitRankStr(data: String): LineUp[] {
     })
     return res;
   }
-
+function bytesToU64(bytes: Uint8Array): number {
+  const dataView = new DataView(bytes.buffer);
+  const intValue = dataView.getInt32(0, true);
+  return intValue;
+}
 const useQueryRanks = () => {
+  const query_total_pools_value = useCallback(async () => {
+    const provider = new JsonRpcProvider(testnetConnection);
+    const tx = new TransactionBlock();
+    const moveModule = "challenge";
+    const method = "get_pool_value";
+    tx.moveCall({
+        target: `${PACKAGE_ID}::${moveModule}::${method}`,
+        arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))]
+    });
+    const result = await provider.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: SENDER
+    });
+    if (!result || !result.results || !result.results[0] || !result.results[0].returnValues) return "";
+    let res = result.results[0].returnValues[0][0];
+    return bytesToU64(new Uint8Array(res));
+}, []);
     const query_rank20 = useCallback(async () => {
         const provider = new JsonRpcProvider(testnetConnection);
         const tx = new TransactionBlock();
@@ -76,7 +97,7 @@ const useQueryRanks = () => {
         console.log('result:', resultArr);
         return resultArr;
     }, []);
-    return { query_rank20 };
+    return { query_rank20, query_total_pools_value };
 }
 
 export default useQueryRanks;
