@@ -166,7 +166,6 @@ module auto_chess::challenge {
         total_amount * prop - 1_000_000_000
     }
 
-    // todo:增加一个virtual的打印查询，检查一下lock的逻辑，降低一点难度，AI太强了。
     public(friend) fun get_total_virtual_scores(global: &Global) : u64 {
         let rank = 0;
         let total_socres = 0;
@@ -204,6 +203,10 @@ module auto_chess::challenge {
 
     public fun top_up_challenge_pool(global:&mut Global, balance:Balance<SUI>) {
         balance::join(&mut global.balance_SUI, balance);
+    }
+
+    public fun get_pool_value(global:&Global) : u64 {
+        balance::value(&global.balance_SUI)
     }
 
     #[lint_allow(self_transfer)]
