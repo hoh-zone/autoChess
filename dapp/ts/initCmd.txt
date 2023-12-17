@@ -1,9 +1,0 @@
-tsc x.ts
-node init_charactors (x2)
-node init_lineup
-node init_challenge
-
-
-
-node withDraw
-node withDrawChallenge

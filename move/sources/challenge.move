@@ -10,7 +10,6 @@ module auto_chess::challenge {
     use std::vector;
     use std::ascii;
     use sui::address;
-    use std::debug::print;
     use auto_chess::role;
     use sui::sui::SUI;
     friend auto_chess::chess;
@@ -86,7 +85,7 @@ module auto_chess::challenge {
         while (i < len) {
             let temp_lineup = vector::borrow(&global.rank_20, i);
             if (check_lineup_equal(temp_lineup, lineup)) {
-                return i + 1;
+                return i + 1
             };
             i = i + 1;
         };
@@ -111,6 +110,7 @@ module auto_chess::challenge {
     public entry fun query_rank_20(global:&Global): String {
         let byte_comma = ascii::byte(ascii::char(44));
         let byte_semi = ascii::byte(ascii::char(59));
+        let sub_line = ascii::byte(ascii::char(95));
         let len = vector::length(&global.rank_20);
         let i = 0;
         let vec_out:vector<u8> = vector::empty<u8>();
@@ -119,6 +119,7 @@ module auto_chess::challenge {
             let addr = lineup::get_creator(lineup);
             let addr_str = address::to_string(addr);
             let name = lineup::get_name(lineup);
+            let roles = lineup::get_roles(lineup);
             let score = get_virtual_scores_by_rank(global, i + 1);
             vector::append(&mut vec_out, *string::bytes(&addr_str));
             vector::push_back(&mut vec_out, byte_comma);
@@ -126,6 +127,17 @@ module auto_chess::challenge {
             vector::push_back(&mut vec_out, byte_comma);
             vector::append(&mut vec_out, numbers_to_ascii_vector(i + 1));
             vector::push_back(&mut vec_out, byte_comma);
+            let j = 0;
+            while (j < 6) {
+                let role = vector::borrow(roles, j);
+                let roleName = role::get_name(role);
+                let level = (role::get_level(role) as u64);
+                vector::append(&mut vec_out, *string::bytes(&roleName));
+                vector::push_back(&mut vec_out, sub_line);
+                vector::append(&mut vec_out, numbers_to_ascii_vector(level));
+                vector::push_back(&mut vec_out, byte_comma);
+                j = j + 1;
+            };
             vector::append(&mut vec_out, numbers_to_ascii_vector(score));
             vector::push_back(&mut vec_out, byte_semi);
             i = i + 1;
@@ -154,7 +166,6 @@ module auto_chess::challenge {
         total_amount * prop - 1_000_000_000
     }
 
-    // todo:增加一个virtual的打印查询，检查一下lock的逻辑，降低一点难度，AI太强了。
     public(friend) fun get_total_virtual_scores(global: &Global) : u64 {
         let rank = 0;
         let total_socres = 0;
@@ -192,6 +203,10 @@ module auto_chess::challenge {
 
     public fun top_up_challenge_pool(global:&mut Global, balance:Balance<SUI>) {
         balance::join(&mut global.balance_SUI, balance);
+    }
+
+    public fun get_pool_value(global:&Global) : u64 {
+        balance::value(&global.balance_SUI)
     }
 
     #[lint_allow(self_transfer)]

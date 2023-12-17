@@ -1,7 +1,31 @@
-import { Box, Center, Stack } from "@chakra-ui/react"
+import { Box, Center, Stack, Text } from "@chakra-ui/react"
 import { LeaderboardItem } from "./LeaderboardItem"
+import { useEffect } from "react"
+import React, { useState } from 'react';
+import useQueryRanks, { LineUp } from "@/pages/api/useQueryRanks"
 
-export const Leaderboard = () => {
+
+export const Leaderboard : React.FC = () => {
+    const [data, setData] = useState<LineUp[]>([]);
+    const [poolValue, setPoolValue] = useState<number>(0);
+    const { query_rank20, query_total_pools_value } = useQueryRanks()
+    useEffect(() => {
+        fetch();
+    }, [])
+
+    const fetch = async () => {
+        const results = await Promise.all([
+            query_rank20(),
+            query_total_pools_value()
+        ]);
+        if (results[1]) {
+            setPoolValue(results[1]);
+        }
+        if (Array.isArray(results[0])) {
+            setData(results[0]);
+        }
+    }
+
     return <Box
         id="leaderboard"
         px={128} py={64}
@@ -12,24 +36,18 @@ export const Leaderboard = () => {
                 Leaderboard
             </Center>
         </Box>
-
+        
         <Stack
             className="mt-16 glass2"
             gap={0}>
-            {Array.from({ length: 20 }, (_, i) => i + 1).map((item, i) => {
+                <Text>Total Pool: {poolValue / 100_000_000} SUI</Text>
+            {Array.from(data).map((item, i) => {
                 return <LeaderboardItem
-                    reward={20}
-                    address={"0x12341235452354123"} key={i} rank={i + 1} items={[
-                        "tank",
-                        "tree",
-                        "fighter",
-                        "golem",
-                        "kunoichi",
-                        "wizard",
-                        "shinobi",
-                        "priest",
-                    ]} />
-            })}
+                    reward={item.score}
+                    name = {item.name}
+                    address={item.walletAddr} key={i} rank={item.rank} items={item.roles} />
+                })
+            }
         </Stack>
     </Box>
 }
