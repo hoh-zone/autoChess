@@ -41,6 +41,7 @@ const assetsManifest = {
   avatar_tank: "avatar_tank.png",
   avatar_tree: "avatar_tree.png",
   avatar_wizard: "avatar_wizard.png",
+  bg_shop : "bg_shop.mp4",
   bg1: "bg1.mp4",
   bg2: "bg2.mp4",
   bg3: "bg3.mp4",

@@ -11,7 +11,7 @@ export const MainScene = () => {
   return (
     <div className="h-full w-full relative">
       <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
-        <source src={assets?.bg4} type="video/mp4" />
+        <source src={assets?.bg_shop} type="video/mp4" />
       </video>
       <HStack className="absolute top-0 p-8 w-full h-3/4 justify-around" align={"center"}>
         {/* left side */}
