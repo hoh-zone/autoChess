@@ -13,10 +13,10 @@ export const MainScene = () => {
       <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
         <source src={assets?.bg_shop} type="video/mp4" />
       </video>
-      <HStack className="absolute top-0 p-8 w-full h-3/4 justify-around" align={"center"}>
+      <HStack className="absolute bottom-[-30px] p-8 w-full h-3/4 justify-around" align={"center"}>
         {/* left side */}
         <Center className="w-full h-full relative px-32">
-          <HStack className="w-full justify-around mt-32">
+          <HStack className="w-[85%] justify-around mt-32">
             <Slot id={5} />
             <Slot id={4} />
             <Slot id={3} />

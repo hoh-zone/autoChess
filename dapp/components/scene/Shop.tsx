@@ -1,4 +1,4 @@
-import { Box, Button, HStack, useToast } from "@chakra-ui/react"
+import { Box, Button, Center, HStack, useToast } from "@chakra-ui/react"
 import { ShopSlot } from "../control/ShopSlot"
 import { useAtom } from "jotai"
 import { moneyA as moneyAtom, operationsA, shopCharacter, stageAtom } from "../../store/stages"
@@ -19,37 +19,39 @@ export const Shop = () => {
         })
     }
 
-    return <Box className="absolute bottom-0 w-full h-[15%]">
-        <HStack className="justify-around relative top-[-20px] " gap={0}>
-            <ShopSlot id={0} />
-            <ShopSlot id={1} />
-            <ShopSlot id={2} />
-            <ShopSlot id={3} />
-            <ShopSlot id={4} />
-            <HStack className="relative top-[20px]">
-                <Button className=""
-                    onClick={
-                        () => {
-                            if (money < 2) {
-                                refresh_failed_toast();
-                                return;
-                            }
-                            if (chars.length <= 5) {
-                                toast({
-                                    title: 'Refresh limit exceeded',
-                                    status: 'warning',
-                                    duration: 2000,
-                                    isClosable: true,
-                                })
-                                return;
-                            }
-                            setMoney(money - 2);
-                            setChars(chars.slice(5));
-                            operations.push("refresh");
+    return <Box className="absolute bottom-[25%] w-full h-[15%]">
+        <Center className="relative top-[-30px]">
+            <Button className=""
+                onClick={
+                    () => {
+                        if (money < 2) {
+                            refresh_failed_toast();
+                            return;
                         }
-                    }>Refresh(-2💰)
-                </Button>
+                        if (chars.length <= 5) {
+                            toast({
+                                title: 'Refresh limit exceeded',
+                                status: 'warning',
+                                duration: 2000,
+                                isClosable: true,
+                            })
+                            return;
+                        }
+                        setMoney(money - 2);
+                        setChars(chars.slice(5));
+                        operations.push("refresh");
+                    }
+                }>Refresh(-2💰)
+            </Button>
+        </Center>
+        <Center>
+            <HStack className="justify-around relative top-[-20px] w-[60%]" gap={0}>
+                <ShopSlot id={0} />
+                <ShopSlot id={1} />
+                <ShopSlot id={2} />
+                <ShopSlot id={3} />
+                <ShopSlot id={4} />
             </HStack>
-        </HStack>
+        </Center>
     </Box>
 }
