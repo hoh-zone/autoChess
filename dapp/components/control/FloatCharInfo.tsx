@@ -59,8 +59,8 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                 {(char?.level == 2 || (char?.level >= 6 && char?.level <= 8)) && <Img style={{ width: "20px" }} src={assets?.star_half} />}
                 {/* <p className="text-[10px]">{capitalizeFirstChar(removeSuffix(char?.name))}</p> */}
               </HStack>
-              <Text>HP:{get_base_life(char)}</Text>
-              <Text>ACK:{char?.attack}</Text>
+              <Text className="text-[8px]">HP:{get_base_life(char)}</Text>
+              <Text className="text-[8px]">ACK:{char?.attack}</Text>
             </HStack>
             <Divider borderWidth={1} />
             <Text fontSize={"2xs"}>

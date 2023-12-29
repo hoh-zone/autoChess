@@ -16,7 +16,7 @@ export const MainScene = () => {
       <HStack className="absolute bottom-[-30px] p-8 w-full h-3/4 justify-around" align={"center"}>
         {/* left side */}
         <Center className="w-full h-full relative px-32">
-          <HStack className="w-[85%] justify-around mt-32">
+          <HStack className="w-[85%] justify-around mt-[120px] z-[99]">
             <Slot id={5} />
             <Slot id={4} />
             <Slot id={3} />

@@ -1,6 +1,5 @@
 import type { NextPage } from "next"
-import { useEffect, useRef } from "react"
-import { Stack } from "@chakra-ui/react"
+import { useEffect } from "react"
 import { Header } from "../components/scene/Header"
 import { MainScene } from "../components/scene/MainScene"
 import { Shop } from "../components/scene/Shop"
@@ -11,8 +10,7 @@ import { FightScene } from "../components/scene/FightScene"
 import assetsManifest from "../public/assetsManifest"
 import useLoadAssets from "../hooks/useLoadAssets"
 import LoadingMask from "../components/LoadingMask"
-import { twMerge } from "tailwind-merge"
-import useScreenSize from "../hooks/useScreenSize"
+import { useScale } from "../hooks/useScreenSize"
 
 const Home: NextPage = () => {
   const [stage, setStage] = useAtom(stageAtom)
@@ -22,13 +20,16 @@ const Home: NextPage = () => {
     setAssets(assets)
   }, [assets])
 
-  const windowSize = useScreenSize();
+  const scale = useScale()
+
   return (
     <>
-      <div className={twMerge(
-        "aspect-video bg-black relative",
-        windowSize.width / windowSize.height > 16 / 9 ? "max-w-[100vw] h-[100vh]" : "w-[100vw] max-h-[100vh]",
-      )}>
+      <div
+        style={{
+          transform: `scale(${scale})`
+        }}
+        className="aspect-video bg-black relative w-[1000px] h-[562.5px] origin-center"
+      >
         {assetsLoading ? (
           <LoadingMask />
         ) : (

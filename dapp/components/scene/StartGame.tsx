@@ -9,7 +9,6 @@ import { ethos, SignInButton } from "ethos-connect"
 import { Rank } from "../Rank"
 import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
-import { getVh } from "../../utils"
 import ContinueGame from "../ContinueGame"
 import StartGameButtons from "../StartGameButtons"
 
@@ -45,7 +44,7 @@ export const StartGame = () => {
             <div className="absolute text-white z-50">
               <Stack className="items-center text-center" gap={4}>
                 <div className="mb-12">
-                  <motion.p initial={{ opacity: 0, scale: 0, y: "-3.3vw" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: getVh(30), fontSize: getVh(100) }}>
+                  <motion.p initial={{ opacity: 0, scale: 0, y: "30px" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: "30px", fontSize: "100px" }}>
                     Auto
                     <br />
                     Chess
@@ -54,7 +53,7 @@ export const StartGame = () => {
                   <ContinueGame isLoading={isLoading} />
                 </div>
 
-                <Input type="text" className="custom-input" width={getVh(300)} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
+                <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
                 <StartGameButtons name={inputValue} />
               </Stack>
             </div>
@@ -75,13 +74,13 @@ export const StartGame = () => {
               <Character charType="shaman" isOpponent={false} />
               <Character charType="slime" isOpponent={true} />
             </HStack>
-            <HStack className="w-full flex justify-around pl-24">
+            <HStack className="w-full flex justify-around">
               <Character charType="assa" isOpponent={false} />
               <Character charType="tank" isOpponent={false} />
               <Character charType="shaman" isOpponent={true} />
               <Character charType="tree" isOpponent={true} />
             </HStack>
-            <HStack className="w-full flex justify-around pr-12">
+            <HStack className="w-full flex justify-around">
               <Character charType="firemega" isOpponent={false} />
               <Character charType="golem" isOpponent={false} />
               <Character charType="mega" isOpponent={true} />

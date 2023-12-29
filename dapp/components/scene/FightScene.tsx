@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge"
 import range from "lodash/range"
 import { FightResultText } from "../effect/FightResultText"
 import { useMemo } from "react"
+import { useScale } from "../../hooks/useScreenSize"
 
 export const FightScene = () => {
   const [enemyChars, setEnemyChars] = useAtom(enemyCharacter)
@@ -15,21 +16,22 @@ export const FightScene = () => {
   const enemyIndex = enemyChars.findIndex(Boolean)
   const [assets, setAssets] = useAtom(assetsAtom)
   const [fightResultModalVisible, setFightResultModalVisible] = useAtom(fightResultModalVisibleAtom)
-  const [fightResult, setFightResult] = useAtom(fightResultEffectA);
-  const [stage, setStage] = useAtom(stageAtom);
-  const [win, _setWin] = useAtom(winA);
-  const [lose, _setLose] = useAtom(loseA);
+  const [fightResult, setFightResult] = useAtom(fightResultEffectA)
+  const [stage, setStage] = useAtom(stageAtom)
+  const [win, _setWin] = useAtom(winA)
+  const [lose, _setLose] = useAtom(loseA)
+  const scale = useScale()
 
   const videoBg = useMemo(() => {
-    return "bg" + ((Math.floor((win + lose) / 3)) % 3 || 1)
+    return "bg" + (Math.floor((win + lose) / 3) % 3 || 1)
   }, [])
   // @ts-ignore
-  const positionTable:any = positionTables[videoBg] || positionTables.bg1
+  const positionTable: any = positionTables[videoBg] || positionTables.bg1
 
   const onClose = () => {
     setFightResultModalVisible(false)
-    setStage("shop");
-    setFightResult(null);
+    setStage("shop")
+    setFightResult(null)
   }
 
   return (
@@ -61,15 +63,15 @@ export const FightScene = () => {
 
       <Modal isOpen={fightResultModalVisible} onClose={onClose} isCentered size="xl">
         <ModalOverlay />
-        <ModalContent className="!bg-slate-500 !rounded-[8px] !w-[240px] !max-w-[240px]">
-          <ModalBody className="w-[240px] !max-w-[240px]">
+        <ModalContent className="!bg-slate-500 !rounded-[8px] !w-[440px] !max-w-[440px]">
+          <ModalBody className="w-[440px] !max-w-[440px]">
             <div className="mx-[10px] my-[20px]">
               <FightResultText />
             </div>
           </ModalBody>
 
           <ModalFooter className="flex !justify-center">
-            <Button colorScheme='blue' onClick={onClose}>
+            <Button colorScheme="blue" onClick={onClose}>
               OK
             </Button>
           </ModalFooter>
@@ -78,7 +80,6 @@ export const FightScene = () => {
     </div>
   )
 }
-
 
 const positionTables = {
   bg1: {
@@ -128,5 +129,5 @@ const positionTables = {
     15: "left-[72%] bottom-[18%]",
     currentCharPosition: "right-[4%] bottom-[14%]",
     currentEnemyPosition: "left-[4%] bottom-[14%]"
-  },
+  }
 }

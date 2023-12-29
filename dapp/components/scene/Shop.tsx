@@ -19,7 +19,7 @@ export const Shop = () => {
         })
     }
 
-    return <Box className="absolute bottom-[25%] w-full h-[15%]">
+    return <Box className="absolute bottom-[30%] w-full h-[15%]">
         <Center className="relative top-[-30px]">
             <Button className=""
                 onClick={
