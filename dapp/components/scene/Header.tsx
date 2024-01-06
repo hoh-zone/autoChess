@@ -12,7 +12,7 @@ export const Header = () => {
     const [name, _setName] = useAtom(nameA);
     const [stage, setStage] = useAtom(stageAtom);
 
-    return <HStack className="w-full h-[10%] bg-slate-700 text-white px-8 absolute z-[100]" spacing={8}>
+    return <HStack className="w-full h-[10%] bg-slate-700/50 text-white px-8 absolute z-[100]" spacing={8}>
         <Button onClick={async () => {
             setStage("init");
         }}
@@ -20,7 +20,7 @@ export const Header = () => {
         <Text>Name: {name}</Text>
         <Text>Money: {money}</Text>
         <Text>Win: {win}</Text>
-        <Text>Lose: {lose}</Text>
+        <Text>Lose: {lose}/3</Text>
         {win >= 10 && <Text>ChallengeWin: {challengeWin}</Text> }
         {win >= 10 && <Text>ChallengeLose: {challengeLose}</Text>}
         <Spacer />

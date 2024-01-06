@@ -1,49 +1,8 @@
-import { Box, Button, Center, HStack, useToast } from "@chakra-ui/react"
+import { Box, Center, HStack } from "@chakra-ui/react"
 import { ShopSlot } from "../control/ShopSlot"
-import { useAtom } from "jotai"
-import { moneyA as moneyAtom, operationsA, shopCharacter, stageAtom } from "../../store/stages"
 
 export const Shop = () => {
-    const [stage, setStage] = useAtom(stageAtom);
-    const [money, setMoney] = useAtom(moneyAtom);
-    const [chars, setChars] = useAtom(shopCharacter);
-    const [operations, setOperations] = useAtom(operationsA);
-    const toast = useToast()
-
-    function refresh_failed_toast() {
-        toast({
-            title: 'Money is not enough',
-            status: 'warning',
-            duration: 2000,
-            isClosable: true,
-        })
-    }
-
     return <Box className="absolute bottom-[30%] w-full h-[15%]">
-        <Center className="relative top-[-30px]">
-            <Button className=""
-                onClick={
-                    () => {
-                        if (money < 2) {
-                            refresh_failed_toast();
-                            return;
-                        }
-                        if (chars.length <= 5) {
-                            toast({
-                                title: 'Refresh limit exceeded',
-                                status: 'warning',
-                                duration: 2000,
-                                isClosable: true,
-                            })
-                            return;
-                        }
-                        setMoney(money - 2);
-                        setChars(chars.slice(5));
-                        operations.push("refresh");
-                    }
-                }>Refresh(-2💰)
-            </Button>
-        </Center>
         <Center>
             <HStack className="justify-around relative top-[-20px] w-[60%]" gap={0}>
                 <ShopSlot id={0} />

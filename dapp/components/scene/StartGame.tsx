@@ -1,4 +1,4 @@
-import { Center, HStack, Input, Stack, VStack } from "@chakra-ui/react"
+import { Box, Center, HStack, Input, Spacer, Stack, VStack } from "@chakra-ui/react"
 import { assetsAtom } from "../../store/stages"
 import { useAtom } from "jotai"
 import { Character } from "../character/character"
@@ -68,19 +68,20 @@ export const StartGame = () => {
           <div className="absolute top-0 left-0 m-4">
             <Instruction />
           </div>
-          <VStack className="w-full absolute" gap={0}>
-            <HStack className="w-full flex justify-around">
+          <Spacer />
+          <VStack className="w-4/5 absolute bottom-0" gap={0}>
+            <HStack className="w-full flex justify-around h-24">
               <Character charType="archer" isOpponent={false} />
               <Character charType="shaman" isOpponent={false} />
               <Character charType="slime" isOpponent={true} />
             </HStack>
-            <HStack className="w-full flex justify-around">
+            <HStack className="w-full flex justify-around h-24">
               <Character charType="assa" isOpponent={false} />
               <Character charType="tank" isOpponent={false} />
               <Character charType="shaman" isOpponent={true} />
               <Character charType="tree" isOpponent={true} />
             </HStack>
-            <HStack className="w-full flex justify-around">
+            <HStack className="w-full flex justify-around h-24">
               <Character charType="firemega" isOpponent={false} />
               <Character charType="golem" isOpponent={false} />
               <Character charType="mega" isOpponent={true} />

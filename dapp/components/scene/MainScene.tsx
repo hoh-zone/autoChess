@@ -4,6 +4,7 @@ import { SellButton } from "../control/SellButton"
 import CharInstruction from "../CharInstruction"
 import { useAtom } from "jotai"
 import { assetsAtom } from "../../store/stages"
+import { RefreshButton } from "../control/RefreshButton"
 
 export const MainScene = () => {
   const [assets, setAssets] = useAtom(assetsAtom)
@@ -13,8 +14,12 @@ export const MainScene = () => {
       <video style={{ objectFit: "cover" }} className="w-full h-full" autoPlay loop muted>
         <source src={assets?.bg_shop} type="video/mp4" />
       </video>
+      <Stack className="absolute top-[25%] left-10 z-10">
+        <CharInstruction />
+        <RefreshButton />
+        <SellButton />
+      </Stack>
       <HStack className="absolute bottom-[-30px] p-8 w-full h-3/4 justify-around" align={"center"}>
-        {/* left side */}
         <Center className="w-full h-full relative px-32">
           <HStack className="w-[85%] justify-around mt-[120px] z-[99]">
             <Slot id={5} />
@@ -24,10 +29,6 @@ export const MainScene = () => {
             <Slot id={1} />
             <Slot id={0} />
           </HStack>
-          <Stack className="absolute top-[12%] left-0">
-            <SellButton />
-            <CharInstruction />
-          </Stack>
         </Center>
       </HStack>
     </div>

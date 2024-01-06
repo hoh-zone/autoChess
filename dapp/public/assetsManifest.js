@@ -1,4 +1,7 @@
 const assetsManifest = {
+  "tutorial_level_up": "tutorial-level-up.mp4",
+  "tutorial_buy": "tutorial-buy.mp4",
+  "tutorial_fight": "tutorial-fight.mp4",
   "PressStart2P-Regular": "PressStart2P-Regular.ttf",
   album: "album.png",
   "ani-attack-1": "ani-attack-1.png",
