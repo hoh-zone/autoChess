@@ -6,16 +6,11 @@ export const ETHOS_COIN_TYPE = `${ETHOS_EXAMPLE_CONTRACT}::ethos_example_coin::E
 
 // auto_chess_vars
 export const SENDER = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
-export const PACKAGE_ID =  "0x779de068d3390df407bfba9b62ac6603cfc9e7fdec6e1e08db517243dc1573a5"
-export const ROLE_GLOBAL =  "0x6758d8ed77a521aaa966b035ff20af457a0ddad482535b0acdc6ec082e15ce28"
-export const LINEUP_GLOBAL =  "0xfb04bd82ac14884bef9050d95cf26ed8d7f8662c5d467d9d6893e483a617a992"
-export const CHESS_GLOBAL =  "0xa0312e3f0f7b3719292b49ff69310de0a33cc73a73eaf3eb6ca4e25ee26539a6"
-export const CHALLENGE_GLOBAL = "0x9671de523a9ee4ec843a17a5bc5f505a8e76d561e43ac12e747a1c7621b554f2"
-
-
-
-
-
+export const PACKAGE_ID =  "0x4ac91ed67c310ab3757a84347cf8c7d87ea1e85b4c689516bc901ebe09f36052"
+export const ROLE_GLOBAL =  "0xd129b7e31cfb15b6e3daac5751f62172cdf63e4e46b6f32aac24f3bf79b33c5b"
+export const LINEUP_GLOBAL =  "0xf3c3d587978cdf2105ec1807bd4d8ed551cb3aac4d27523b523987525287bb60"
+export const CHESS_GLOBAL =  "0xc096340e50cf8ef540b58e68f95754dce624ec38a545161124aa8d9c676f2f8f"
+export const CHALLENGE_GLOBAL = "0xdc5fa8ad6cc089fc9fde21019101d18b3e23c5ec9997190d141df27413e67658"
 
 
 
