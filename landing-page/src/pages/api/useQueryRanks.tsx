@@ -1,11 +1,14 @@
 import { useCallback } from 'react'
-import { CHALLENGE_GLOBAL, PACKAGE_ID, SENDER } from '../../constants';
+import { CHALLENGE_GLOBAL, ISMAINNET, PACKAGE_ID, SENDER } from '../../constants';
 import {
     JsonRpcProvider,
     TransactionBlock,
     testnetConnection,
+    mainnetConnection,
     normalizeSuiObjectId,
 } from '@mysten/sui.js';
+import { config } from 'process';
+import { CONFIG_FILES } from 'next/dist/shared/lib/constants';
 
 export interface LineUp {
     walletAddr: string;
@@ -64,7 +67,12 @@ function bytesToU64(bytes: Uint8Array): number {
 }
 const useQueryRanks = () => {
   const query_total_pools_value = useCallback(async () => {
-    const provider = new JsonRpcProvider(testnetConnection);
+    let provider;
+    if (ISMAINNET) {
+      provider = new JsonRpcProvider(mainnetConnection)
+    } else {
+      provider = new JsonRpcProvider(testnetConnection)
+    }
     const tx = new TransactionBlock();
     const moveModule = "challenge";
     const method = "get_pool_value";
@@ -81,7 +89,12 @@ const useQueryRanks = () => {
     return bytesToU64(new Uint8Array(res));
 }, []);
     const query_rank20 = useCallback(async () => {
-        const provider = new JsonRpcProvider(testnetConnection);
+        let provider;
+        if (ISMAINNET) {
+          provider = new JsonRpcProvider(mainnetConnection)
+        } else {
+          provider = new JsonRpcProvider(testnetConnection)
+        }
         const tx = new TransactionBlock();
         const moveModule = "challenge";
         const method = "query_rank_20";
