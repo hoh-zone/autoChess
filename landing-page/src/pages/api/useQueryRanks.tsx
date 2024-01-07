@@ -28,11 +28,14 @@ function get_name(data:string):string {
   return data;
 }
 
-function get_addr(data:string):string {
-  if (data == "be379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18") {
-    return " ";
+function get_addr(data:string, name:string):string {
+  if (data == "be379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18" && name == "AI") {
+    return "...";
   }
-  return data;
+  if (data) {
+    return '0x' + data;
+  }
+  return data
 }
 
 function splitRankStr(data: String): LineUp[] {
@@ -40,9 +43,10 @@ function splitRankStr(data: String): LineUp[] {
     let res:LineUp[] = []
     array.forEach((item) => {
       let temp = item.split(",");
+      let name = get_name(temp[1]);
       let lineUp : LineUp = {
-        walletAddr: get_addr(temp[0]),
-        name: get_name(temp[1]),
+        walletAddr: get_addr(temp[0], name),
+        name: name,
         rank: parseInt(temp[2]),
         roles: [temp[3], temp[4], temp[5], temp[6], temp[7], temp[8]],
         score: parseInt(temp[9]),
@@ -94,7 +98,7 @@ const useQueryRanks = () => {
         source = source.slice(2);
         let resultStr = bytesArrayToString(new Uint8Array(source));
         let resultArr = splitRankStr(resultStr);
-        console.log('result:', resultArr);
+        console.log('resultsss:', resultStr);
         return resultArr;
     }, []);
     return { query_rank20, query_total_pools_value };

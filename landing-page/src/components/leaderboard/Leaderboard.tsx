@@ -22,6 +22,7 @@ export const Leaderboard : React.FC = () => {
             setPoolValue(results[1]);
         }
         if (Array.isArray(results[0])) {
+            console.log(results[0])
             setData(results[0]);
         }
     }

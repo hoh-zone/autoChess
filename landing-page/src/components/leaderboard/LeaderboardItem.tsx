@@ -5,7 +5,9 @@ import Image from "next/image"
 
 function get_role_name(data:string):string {
     if (data) {
-      return data.replace(/\d+/g, '').slice(0, -1);
+        let name =  data.replace(/\d+/g, '').slice(0, -1);
+        name = name.replace("_", "");
+      return name;
     }
     return "";
 }
