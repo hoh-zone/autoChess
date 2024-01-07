@@ -102,14 +102,12 @@ module auto_chess::utils {
 
     // 0-1000 represents prop
     public fun get_lineup_level2_prop_by_lineup_power(power:u64): u64 {
-        // todo:降低难度 40
-        20 * power
+        35 * power
     }
 
     // 0-1000 represents prop
     public fun get_cards_level2_prop_by_lineup_power(power:u64): u64 {
-        // todo:降低难度 25 
-        12 * power
+        25 * power
     }
 
     public fun get_pool_tag(win:u8, lose:u8) : String {

@@ -60,16 +60,17 @@ module auto_chess::challenge {
 
     public(friend) fun rank_forward(global: &mut Global, lineup:LineUp) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
-        let rank = find_rank(global, &lineup);
-        if (rank == 21) {
+        let old_rank = find_rank(global, &lineup);
+        if (old_rank == 21) {
             vector::pop_back(&mut global.rank_20);
             vector::insert(&mut global.rank_20, lineup, 19);
-        } else if (rank == 1) {
+        } else if (old_rank == 1) {
             // do nothing
         } else {
             // 15(rank = 15) -> 14(index = 13)
-            vector::remove(&mut global.rank_20, rank - 1);
-            vector::insert(&mut global.rank_20, lineup, rank - 2);
+            let old_index = old_rank - 1;
+            vector::remove(&mut global.rank_20, old_index);
+            vector::insert(&mut global.rank_20, lineup, old_index - 1);
         };
     }
 
