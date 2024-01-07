@@ -61,14 +61,15 @@ module auto_chess::challenge {
     public(friend) fun rank_forward(global: &mut Global, lineup:LineUp) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
         let rank = find_rank(global, &lineup);
-        if (rank == 20) {
+        if (rank == 21) {
             vector::pop_back(&mut global.rank_20);
             vector::insert(&mut global.rank_20, lineup, 19);
         } else if (rank == 1) {
             // do nothing
         } else {
             // 15(rank = 15) -> 14(index = 13)
-            vector::swap(&mut global.rank_20, rank - 1, rank - 2);
+            vector::remove(&mut global.rank_20, rank - 1);
+            vector::insert(&mut global.rank_20, lineup, rank - 2);
         };
     }
 
@@ -78,8 +79,8 @@ module auto_chess::challenge {
         (lineup::get_creator(lineup1) == lineup::get_creator(lineup2)))
     }
 
-    // 1-20
-    fun find_rank(global: &Global, lineup:&LineUp) :u64 {
+    // 1-20  if not find 21
+    public entry fun find_rank(global: &Global, lineup:&LineUp) :u64 {
         let len = 20;
         let i = 0;
         while (i < len) {
@@ -89,7 +90,7 @@ module auto_chess::challenge {
             };
             i = i + 1;
         };
-        20
+        21
     }
 
     public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, clock:&Clock, ctx: &mut TxContext) {
