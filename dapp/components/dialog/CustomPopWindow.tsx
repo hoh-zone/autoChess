@@ -1,4 +1,4 @@
-import { HStack } from '@chakra-ui/react';
+import { Button, HStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
 interface ModalProps {
@@ -8,7 +8,7 @@ interface ModalProps {
   cancel: () => void;
 }
 
-const PopupWindow: React.FC<ModalProps> = ({ isOpen, ok, cancel, content_str}) => {
+const PopupWindow: React.FC<ModalProps> = ({ isOpen, ok, cancel, content_str }) => {
   if (!isOpen) {
     return null;
   }
@@ -21,10 +21,10 @@ const PopupWindow: React.FC<ModalProps> = ({ isOpen, ok, cancel, content_str}) =
   return (
     <div className="modal">
       <div className="modal-content">
-        <p style={{color:'gray'}}>{content_str}</p>
+        <p style={{ color: 'gray' }}>{content_str}</p>
         <HStack>
-          <button style={{color:'gray'}} onClick={ok_close}>Yes</button>
-          <button style={{color:'gray'}} onClick={cancel}>Cancel</button>
+          <Button onClick={ok_close}>Yes</Button>
+          <Button onClick={cancel}>Cancel</Button>
         </HStack>
       </div>
     </div>
