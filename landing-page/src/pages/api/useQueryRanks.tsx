@@ -52,7 +52,7 @@ function splitRankStr(data: String): LineUp[] {
         name: name,
         rank: parseInt(temp[2]),
         roles: [temp[3], temp[4], temp[5], temp[6], temp[7], temp[8]],
-        score: parseInt(temp[9]),
+        score: parseInt(temp[9]) / 100_000_000,
       }
       if (lineUp.walletAddr) {
         res.push(lineUp);

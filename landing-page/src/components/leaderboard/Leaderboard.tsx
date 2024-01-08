@@ -38,10 +38,9 @@ export const Leaderboard : React.FC = () => {
             </Center>
         </Box>
         
-        <Stack
-            className="mt-16 glass2"
-            gap={0}>
-                <Text>Total Pool: {poolValue / 100_000_000} SUI</Text>
+        <Stack className="mt-16 glass2" gap={0}>
+            {/* todo:先不显示，要存点钱进去的 */}
+            {/* <Text>Total Pool: {poolValue / 100_000_000} SUI</Text> */}
             {Array.from(data).map((item, i) => {
                 return <LeaderboardItem
                     reward={item.score}
