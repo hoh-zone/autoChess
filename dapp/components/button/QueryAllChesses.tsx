@@ -31,6 +31,7 @@ const useQueryChesses = () => {
 
     const query_chesses = useCallback(async () => {
         if (!wallet) return;
+
         const result = await wallet.client.getOwnedObjects({
             owner: wallet.address,
             options: {
@@ -43,6 +44,7 @@ const useQueryChesses = () => {
                 }
             }
         });
+        console.log(result);
         return record_nfts(result);
     }, [wallet]);
     return { nfts, query_chess: update_chess, query_chesses };
