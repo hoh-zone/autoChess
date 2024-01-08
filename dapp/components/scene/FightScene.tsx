@@ -1,4 +1,4 @@
-import { Button, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import { Button, HStack, Modal, ModalBody, Text, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Link, Icon } from "@chakra-ui/react"
 import { Slot } from "../control/Slot"
 import { StatusBar } from "../control/StatusBar"
 import { useAtom } from "jotai"
@@ -68,6 +68,8 @@ export const FightScene = () => {
             <div className="mx-[10px] my-[20px]">
               <FightResultText />
             </div>
+            <Text color={"gray.300"}>Win more than 10 turns to fight with Leaderboard and earn more rewards.</Text>
+            <Text display={"inline"} fontSize={"2xl"}>👉</Text><Link color={"blue.300"} href="https://home.autochess.app/#leaderboard" isExternal> Check Leaderboard</Link>
           </ModalBody>
 
           <ModalFooter className="flex !justify-center">
