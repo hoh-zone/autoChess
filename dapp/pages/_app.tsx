@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ['Ethos Wallet'],
-    network: NETWORK,
+    network: "https://fullnode.mainnet.sui.io",
     chain: Chain.SUI_MAINNET
   };
   const audioRef = useRef<HTMLAudioElement>(null);
