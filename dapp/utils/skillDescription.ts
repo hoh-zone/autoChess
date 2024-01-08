@@ -1,5 +1,5 @@
 export const SKILL_DESCRIPTION: Record<string, string> = {
-    "attack_lowest_hp": "Attack the enemy with the lowest HP, inflict $value points of HP damage.",
+    "attack_lowest_hp": "Attack the enemy who has the lowest HP, inflict $value points of HP damage.",
     "add_all_tmp_attack": "Add $value points of attack to all friendly units.",
     "reduce_all_tmp_attack": "Reduce $value points of attack from all enemy units.",
     "add_all_tmp_magic": "Add $value points of magic to all friendly units.",
