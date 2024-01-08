@@ -107,7 +107,10 @@ const assetsManifest = {
   vercel: "vercel.svg",
   "wizard-attack-1": "wizard-attack-1.png",
   "wizard-attack-2": "wizard-attack-2.png",
-  "wizard-idle": "wizard-idle.png"
+  "wizard-idle": "wizard-idle.png",
+  forbid_buff: "forbid_buff.png",
+  forbid_debuff: "forbid_debuff.png",
+  add_all_tmp_max_magic: "add_all_tmp_max_magic.png"
 }
 
 export default assetsManifest
