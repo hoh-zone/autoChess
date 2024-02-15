@@ -1,3 +1,4 @@
+// player's lineup, it contains some roles.
 module auto_chess::lineup {
     use sui::tx_context::{Self, TxContext};
     use std::vector::{Self};

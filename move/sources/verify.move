@@ -1,3 +1,4 @@
+// verify the oprations, it seems this part consumes much gas, i don't know why.
 module auto_chess::verify {
     use sui::tx_context::{TxContext};
     use std::string::{utf8, String};
@@ -16,6 +17,9 @@ module auto_chess::verify {
     const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x12;
     const ERR_WRONG_LEFT_GOLD:u64 = 0x13;
 
+    // buy upgrade means players drag(buy) a role from shop, and put it in the same role in his lineup, "buy and upgrade your role"
+    // swap means swap the postion of your 2 roles
+    // refresh means refresh your cards in shop
     public fun verify_operation(role_global:&role::Global, init_roles:&mut vector<Role>, cards_pool_roles: &mut vector<Role>, operations: vector<String>,
         left_gold:u8, lineup_str_vec: vector<String>, name:String, gold:u8, ticket_price:u64, 
         ctx:&mut TxContext) {

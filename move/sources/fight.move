@@ -1,3 +1,4 @@
+// fight logic in every match.
 module auto_chess::fight {
     use auto_chess::role::{Self, Role};
     use auto_chess::lineup::{Self, LineUp};

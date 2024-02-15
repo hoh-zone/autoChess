@@ -59,6 +59,7 @@ module auto_chess::utils {
         print(&str1);
     }
 
+    // use context to generate the random seed
     public fun seed(ctx: &mut TxContext, seed_u:u8): vector<u8> {
         let ctx_bytes = bcs::to_bytes(ctx);
         let seed_vec = vector::empty();

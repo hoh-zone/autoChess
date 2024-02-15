@@ -1,3 +1,4 @@
+// we design 16 roles, everyone's attribute is coded in frontend and chain.
 module auto_chess::role {
     use std::string::{utf8, String};
     use sui::tx_context::{TxContext};
