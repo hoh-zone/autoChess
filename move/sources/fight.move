@@ -112,7 +112,7 @@ module auto_chess::fight {
                 return
             };
             let add_attack = utils::utf8_to_u64(effect_value);
-            let attack = role::get_life(role);
+            let attack = role::get_attack(role);
             role::set_attack(role, attack + add_attack);
             let i = 0;
             while (i < my_len) {

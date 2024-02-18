@@ -1,3 +1,11 @@
+// every game is a chess nft, it functions as a game save, you can lose at most 3 times, you can check out any time
+// to exchange some reward, the reward depends on your ticket price and the times of winning.
+// every match will be recoreded in the chain, so we can randomly pk with different players.
+
+// normal mode is free, but you can't checkout to win sui. In arena mode, you have to pay to buy a ticket to start your game,
+// and so you can check out to win some sui.
+// in every match, what roles you can see in your shop is determined, you can cost gold to refresh to see new ones, it's a fixed vector
+// it's not dynamic generation in frontend when you click "refresh" button.
 module auto_chess::chess {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
@@ -337,6 +345,12 @@ module auto_chess::chess {
         balance::value(&global.balance_SUI)
     }
 
+    // players operate and start a match
+    // param chess is the chess before the operations, in this function, it will be changed by players' operations, so it's mut
+    // param operations is a string fron frontend, which records the operations(buy role, sell role, exchange position, upgrade role ...) in order
+    // param lineup_str_vec is the new lineup after operations
+    // so what we do is verity or check, whether the operations is valid, whether the left money amount is right
+    // whether the new lineup is orinated from the old chess + operations
     public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
         challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
         lineup_str_vec: vector<String>, ctx:&mut TxContext) {

@@ -1,3 +1,6 @@
+// this module is used for the challenge mode, every player who has won more than 10 chesses can attend the challenge mode to win more sui
+// every season we extract partial sui from our reward pool for the first 20 players in the challenge mode.
+// you can review your rank in web : https://home.autochess.app/
 module auto_chess::challenge {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
@@ -58,6 +61,7 @@ module auto_chess::challenge {
         vector::borrow(&global.rank_20, (rank as u64))
     }
 
+    // when you win, your rank go forward, someone in front of you go back
     public(friend) fun rank_forward(global: &mut Global, lineup:LineUp) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
         let old_rank = find_rank(global, &lineup);
@@ -80,7 +84,7 @@ module auto_chess::challenge {
         (lineup::get_creator(lineup1) == lineup::get_creator(lineup2)))
     }
 
-    // 1-20  if not find 21
+    // find your rank, return 1-20  if not in the first 20, return 21
     public fun find_rank(global: &Global, lineup:&LineUp) :u64 {
         let len = 20;
         let i = 0;
@@ -168,6 +172,7 @@ module auto_chess::challenge {
         total_amount * prop - 1_000_000_000
     }
 
+    // use scores to evaluate the performance of each players in the challenge. So we can decide the amount of reward of each player.
     public(friend) fun get_total_virtual_scores(global: &Global) : u64 {
         let rank = 0;
         let total_socres = 0;
@@ -203,6 +208,7 @@ module auto_chess::challenge {
         vector::push_back(&mut global.reward_20, amount)
     }
 
+    // top up some money for challenge
     public fun top_up_challenge_pool(global:&mut Global, balance:Balance<SUI>) {
         balance::join(&mut global.balance_SUI, balance);
     }
@@ -232,6 +238,7 @@ module auto_chess::challenge {
         vec
     }
 
+    // we have to lock the challenge rank in each season, so we have time to prepare reward for each player.
     public(friend) fun lock_pool(global:&mut Global) {
         global.lock = true
     }
