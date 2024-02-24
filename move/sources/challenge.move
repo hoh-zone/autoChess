@@ -7,6 +7,7 @@ module auto_chess::challenge {
     use sui::transfer::{Self};
     use std::string::{utf8, String, Self};
     use auto_chess::lineup::{Self, LineUp};
+    use auto_chess::utils;
     use sui::balance::{Self, Balance};
     use sui::coin::{Self};
     use sui::clock::{Self, Clock};
@@ -64,21 +65,21 @@ module auto_chess::challenge {
     // when you win, your rank go forward, someone in front of you go back
     public(friend) fun rank_forward(global: &mut Global, lineup:LineUp) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
-        let old_rank = find_rank(global, &lineup);
-        if (old_rank == 21) {
+        let previous_rank = find_rank(global, &lineup);
+        if (previous_rank == 21) {
             vector::pop_back(&mut global.rank_20);
             vector::insert(&mut global.rank_20, lineup, 19);
-        } else if (old_rank == 1) {
+        } else if (previous_rank == 1) {
             // do nothing
         } else {
             // 15(rank = 15) -> 14(index = 13)
-            let old_index = old_rank - 1;
+            let old_index = previous_rank - 1;
             vector::remove(&mut global.rank_20, old_index);
             vector::insert(&mut global.rank_20, lineup, old_index - 1);
         };
     }
 
-    fun check_lineup_equal(lineup1:&LineUp, lineup2:&LineUp) : bool {
+    fun check_lineup_equality(lineup1:&LineUp, lineup2:&LineUp) : bool {
         ((lineup::get_hash(lineup1) == lineup::get_hash(lineup2)) &&
         (lineup::get_name(lineup1) == lineup::get_name(lineup2)) && 
         (lineup::get_creator(lineup1) == lineup::get_creator(lineup2)))
@@ -90,7 +91,7 @@ module auto_chess::challenge {
         let i = 0;
         while (i < len) {
             let temp_lineup = vector::borrow(&global.rank_20, i);
-            if (check_lineup_equal(temp_lineup, lineup)) {
+            if (check_lineup_equality(temp_lineup, lineup)) {
                 return i + 1
             };
             i = i + 1;
@@ -100,20 +101,20 @@ module auto_chess::challenge {
 
     public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, clock:&Clock, ctx: &mut TxContext) {
         let i = 0;
-        let init_power = 40;
+        let init_power = 80;
         let seed:u8 = 1;
         global.publish_time = clock::timestamp_ms(clock);
         assert!(vector::length(&global.rank_20) == 0, ERR_ALREADY_INIT);
         while (i < 20) {
             let lineup = lineup::generate_lineup_by_power(roleGlobal, init_power, seed, ctx);
             vector::push_back(&mut global.rank_20, lineup);
-            init_power = init_power + 2;
+            init_power = init_power - 2;
             seed = seed + 1;
             i = i + 1;
         };
     }
 
-    public entry fun query_rank_20(global:&Global): String {
+    public entry fun generate_rank_20_description(global:&Global): String {
         let byte_comma = ascii::byte(ascii::char(44));
         let byte_semi = ascii::byte(ascii::char(59));
         let sub_line = ascii::byte(ascii::char(95));
@@ -126,25 +127,25 @@ module auto_chess::challenge {
             let addr_str = address::to_string(addr);
             let name = lineup::get_name(lineup);
             let roles = lineup::get_roles(lineup);
-            let score = get_virtual_scores_by_rank(global, i + 1);
+            let score = calculate_score(global, i + 1);
             vector::append(&mut vec_out, *string::bytes(&addr_str));
             vector::push_back(&mut vec_out, byte_comma);
             vector::append(&mut vec_out, *string::bytes(&name));
             vector::push_back(&mut vec_out, byte_comma);
-            vector::append(&mut vec_out, numbers_to_ascii_vector(i + 1));
+            vector::append(&mut vec_out, utils::numbers_to_ascii_vector(i + 1));
             vector::push_back(&mut vec_out, byte_comma);
             let j = 0;
             while (j < 6) {
                 let role = vector::borrow(roles, j);
-                let roleName = role::get_name(role);
+                let roleName = role::get_class(role);
                 let level = (role::get_level(role) as u64);
                 vector::append(&mut vec_out, *string::bytes(&roleName));
                 vector::push_back(&mut vec_out, sub_line);
-                vector::append(&mut vec_out, numbers_to_ascii_vector(level));
+                vector::append(&mut vec_out, utils::numbers_to_ascii_vector(level));
                 vector::push_back(&mut vec_out, byte_comma);
                 j = j + 1;
             };
-            vector::append(&mut vec_out, numbers_to_ascii_vector(score));
+            vector::append(&mut vec_out, utils::numbers_to_ascii_vector(score));
             vector::push_back(&mut vec_out, byte_semi);
             i = i + 1;
         };
@@ -167,30 +168,30 @@ module auto_chess::challenge {
 
     public(friend) fun get_reward_amount_by_rank(global: &Global, total_amount:u64, total_scores:u64, rank: u64) : u64 {
         let tmp_lineup = vector::borrow(&global.rank_20, rank);
-        let price = lineup::get_price(tmp_lineup);
-        let prop = price * get_base_weight_by_rank(rank) / total_scores;
+        let gold_cost = lineup::get_gold_cost(tmp_lineup);
+        let prop = gold_cost * get_base_weight_by_rank(rank) / total_scores;
         total_amount * prop - 1_000_000_000
     }
 
     // use scores to evaluate the performance of each players in the challenge. So we can decide the amount of reward of each player.
-    public(friend) fun get_total_virtual_scores(global: &Global) : u64 {
+    public(friend) fun calculate_scores(global: &Global) : u64 {
         let rank = 0;
         let total_socres = 0;
         while(rank < 20) {
             let tmp_lineup = vector::borrow(&global.rank_20, rank);
-            let price = lineup::get_price(tmp_lineup);
+            let gold_cost = lineup::get_gold_cost(tmp_lineup);
             let prop = get_base_weight_by_rank(rank);
-            total_socres = (price * prop) + total_socres;
+            total_socres = (gold_cost * prop) + total_socres;
             rank = rank + 1;
         };
         total_socres
     }
 
-    public(friend) fun get_virtual_scores_by_rank(global: &Global, rank: u64) : u64 {
+    public(friend) fun calculate_score(global: &Global, rank: u64) : u64 {
         let tmp_lineup = vector::borrow(&global.rank_20, rank - 1);
-        let price = lineup::get_price(tmp_lineup);
+        let gold_cost = lineup::get_gold_cost(tmp_lineup);
         let prop = get_base_weight_by_rank(rank - 1);
-        (price * prop)
+        (gold_cost * prop)
     }
 
     #[lint_allow(self_transfer)]
@@ -213,7 +214,7 @@ module auto_chess::challenge {
         balance::join(&mut global.balance_SUI, balance);
     }
 
-    public fun get_pool_value(global:&Global) : u64 {
+    public fun get_rewards_balance(global:&Global) : u64 {
         balance::value(&global.balance_SUI)
     }
 
@@ -224,18 +225,6 @@ module auto_chess::challenge {
         let balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(balance, ctx); 
         transfer::public_transfer(sui, receiver);
-    }
-    
-    fun numbers_to_ascii_vector(val: u64): vector<u8> {
-        let vec = vector<u8>[];
-        loop {
-            let b = val % 10;
-            vector::push_back(&mut vec, (48 + b as u8));
-            val = val / 10;
-            if (val <= 0) break;
-        };
-        vector::reverse(&mut vec);
-        vec
     }
 
     // we have to lock the challenge rank in each season, so we have time to prepare reward for each player.

@@ -46,7 +46,7 @@ module auto_chess::test {
             let chessGlobal = take_shared<chess::Global>(test);
             let lineupGlobal = take_shared<lineup::Global>(test);
 
-            // priest1:10:3' (namex_y:attack:life)
+            // priest1:10:3' (namex_y:attack:hp)
             // 
             let lineup1_str_vec = vector::empty<String>();
             vector::push_back(&mut lineup1_str_vec, utf8(b""));
@@ -101,7 +101,7 @@ module auto_chess::test {
             
             let challengeGlobal = take_shared<challenge::Global>(test);
             challenge::init_rank_20(&mut challengeGlobal, &roleGlobal, &clock, ctx(test));
-            print(&challenge::query_rank_20(&challengeGlobal));
+            print(&challenge::generate_rank_20_description(&challengeGlobal));
             next_epoch(test, admin);
 
             return_shared(roleGlobal);

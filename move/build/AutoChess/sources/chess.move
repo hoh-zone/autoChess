@@ -1,5 +1,5 @@
 // every game is a chess nft, it functions as a game save, you can lose at most 3 times, you can check out any time
-// to exchange some reward, the reward depends on your ticket price and the times of winning.
+// to exchange some reward, the reward depends on your ticket gold_cost and the times of winning.
 // every match will be recoreded in the chain, so we can randomly pk with different players.
 
 // normal mode is free, but you can't checkout to win sui. In arena mode, you have to pay to buy a ticket to start your game,
@@ -54,7 +54,7 @@ module auto_chess::chess {
         challenge_win:u8,
         challenge_lose:u8,
         creator: address,
-        price: u64,
+        gold_cost: u64,
         arena: bool,
         arena_checked: bool
     }
@@ -109,7 +109,7 @@ module auto_chess::chess {
         let balance = balance::split(&mut global.balance_SUI, split_value);
         challenge::top_up_challenge_pool(challengeGlobal, balance);
         let i = 0;
-        let total_scores = challenge::get_total_virtual_scores(challengeGlobal);
+        let total_scores = challenge::calculate_scores(challengeGlobal);
         while (i < 20) {
             let amount = challenge::get_reward_amount_by_rank(challengeGlobal, split_value, total_scores, i);
             challenge::push_reward_amount(challengeGlobal, amount);
@@ -124,7 +124,7 @@ module auto_chess::chess {
         let sender = tx_context::sender(ctx);
         let tmp_lineup = challenge::get_lineup_by_rank(challengeGlobal, rank);
         if (lineup::get_creator(tmp_lineup) == sender) {
-            let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, price:_, arena:_, arena_checked:_} = chess;
+            let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked:_} = chess;
             challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
             object::delete(id);
         } else {
@@ -138,7 +138,7 @@ module auto_chess::chess {
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
         let pay_value = coin::value(&merged_coin);
-        assert!(utils::check_ticket_price(pay_value), ERR_PAYMENT_NOT_ENOUGH);
+        assert!(utils::check_ticket_gold_cost(pay_value), ERR_PAYMENT_NOT_ENOUGH);
         let game = Chess {
             id: object::new(ctx),
             name:name,
@@ -150,7 +150,7 @@ module auto_chess::chess {
             challenge_win:0,
             challenge_lose:0,
             creator: sender,
-            price: pay_value,
+            gold_cost: pay_value,
             arena: true,
             arena_checked: false
         };
@@ -181,7 +181,7 @@ module auto_chess::chess {
             challenge_win:0,
             challenge_lose:0,
             creator: sender,
-            price: 0,
+            gold_cost: 0,
             arena: false,
             arena_checked: true
         };
@@ -195,7 +195,7 @@ module auto_chess::chess {
         assert!(!chess.arena_checked, ERR_ARENA_FEE_HAS_CHECKED_OUT);
         chess.arena_checked = true;
         let total_amount = get_total_shui_amount(global);
-        let reward_amount = utils::estimate_reward(total_amount, chess.price, chess.win);
+        let reward_amount = utils::estimate_reward(total_amount, chess.gold_cost, chess.win);
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
@@ -205,8 +205,8 @@ module auto_chess::chess {
     public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         let total_amount = get_total_shui_amount(global);
-        let reward_amount = utils::estimate_reward(total_amount, chess.price, chess.win);
-        let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, price:_, arena:_, arena_checked: arena_checked} = chess;
+        let reward_amount = utils::estimate_reward(total_amount, chess.gold_cost, chess.win);
+        let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked: arena_checked} = chess;
         if (!arena_checked) {
             let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
             let sui = coin::from_balance(sui_balance, ctx);
@@ -272,7 +272,7 @@ module auto_chess::chess {
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, is_challenge:bool, ctx:&mut TxContext) :bool {
         let my_lineup_fight = *&chess.lineup;
 
-        // backup to avoid base_life to be changed
+        // backup to avoid base_hp to be changed
         let enemy_lineup_fight = *enemy_lineup;
         let my_lineup_permanent = &mut chess.lineup;
         let my_roles = *lineup::get_roles(&my_lineup_fight);
@@ -288,19 +288,19 @@ module auto_chess::chess {
         let my_fist_role_index = 0;
         let enemy_first_role_index = 0;
         while (fight::some_alive(&my_first_role, &my_roles) && fight::some_alive(&enemy_first_role, &enemy_roles)) {
-            while (vector::length(&my_roles) > 0 && (role::get_life(&my_first_role) == 0 || (role::get_name(&my_first_role) == utf8(b"none") || role::get_name(&my_first_role) == utf8(b"init")))) {
+            while (vector::length(&my_roles) > 0 && (role::get_hp(&my_first_role) == 0 || (role::get_class(&my_first_role) == utf8(b"none") || role::get_class(&my_first_role) == utf8(b"init")))) {
                 my_first_role = vector::pop_back(&mut my_roles);
                 if (vector::length(&my_roles) < 5) {
                     my_fist_role_index = my_fist_role_index + 1;
                 };
             };
-            while (vector::length(&enemy_roles) > 0 && (role::get_life(&enemy_first_role) == 0 || (role::get_name(&enemy_first_role) == utf8(b"none") || role::get_name(&enemy_first_role) == utf8(b"init")))) {
+            while (vector::length(&enemy_roles) > 0 && (role::get_hp(&enemy_first_role) == 0 || (role::get_class(&enemy_first_role) == utf8(b"none") || role::get_class(&enemy_first_role) == utf8(b"init")))) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
                 if (vector::length(&enemy_roles) < 5) {
                     enemy_first_role_index = enemy_first_role_index + 1;
                 };
             };
-            while(role::get_life(&my_first_role) > 0 && role::get_life(&enemy_first_role) > 0) {
+            while(role::get_hp(&my_first_role) > 0 && role::get_hp(&enemy_first_role) > 0) {
                 fight::action(my_fist_role_index, &mut my_first_role, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
                 fight::action(enemy_first_role_index, &mut enemy_first_role, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
             };
@@ -359,8 +359,8 @@ module auto_chess::chess {
         let init_roles = lineup::get_mut_roles(&mut init_lineup);
         let cards_pool = chess.cards_pool;
         let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
-        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.price, ctx);
-        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.price, ctx);
+        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.gold_cost, ctx);
         if (chess.challenge_win + chess.challenge_lose >= 20) {
             // prevent from unlimited strength upon its lineup
             chess.gold = 0;

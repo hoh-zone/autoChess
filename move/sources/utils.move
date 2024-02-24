@@ -118,6 +118,18 @@ module auto_chess::utils {
         tag
     }
 
+    public fun numbers_to_ascii_vector(val: u64): vector<u8> {
+        let vec = vector<u8>[];
+        loop {
+            let b = val % 10;
+            vector::push_back(&mut vec, (48 + b as u8));
+            val = val / 10;
+            if (val <= 0) break;
+        };
+        vector::reverse(&mut vec);
+        vec
+    }
+
     public fun removeSuffix(name:String) : String {
         // ani1 -> ani
         if (string::index_of(&name, &utf8(b"3")) < string::length(&name)) {
@@ -135,12 +147,12 @@ module auto_chess::utils {
         }
     }
 
-    public fun check_ticket_price(value: u64) : bool {
+    public fun check_ticket_gold_cost(value: u64) : bool {
         ((value == 1 * AMOUNT_DECIMAL) || (value == 5 * AMOUNT_DECIMAL) || (value == 10 * AMOUNT_DECIMAL) || (value == 100 * AMOUNT_DECIMAL) || (value == 500 * AMOUNT_DECIMAL))
     }
 
-    public fun get_name_by_level(base_name:String, level:u8) : String {
-        let name = *&base_name;
+    public fun get_class_by_level(base_class:String, level:u8) : String {
+        let class = *&base_class;
         let level_str;
         if (level == 1) {
             level_str = utf8(b"1");
@@ -153,16 +165,16 @@ module auto_chess::utils {
         } else {
             level_str = utf8(b"3");
         };
-        string::append(&mut name, level_str);
-        name
+        string::append(&mut class, level_str);
+        class
     }
 
-    public fun estimate_reward(total_amount:u64, price:u64, win:u8) : u64 {
-        let base_price = (win as u64) * price * 3 / 10;
+    public fun estimate_reward(total_amount:u64, gold_cost:u64, win:u8) : u64 {
+        let base_gold_cost = (win as u64) * gold_cost * 3 / 10;
         let max_reward = total_amount * 9 / 10;
-        if (base_price > max_reward) {
-            base_price = max_reward;
+        if (base_gold_cost > max_reward) {
+            base_gold_cost = max_reward;
         };
-        base_price
+        base_gold_cost
     }
 }

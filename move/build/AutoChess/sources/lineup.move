@@ -17,9 +17,9 @@ module auto_chess::lineup {
         id: UID,
 
         // used for fight
-        lineup_pools: Table<String, vector<LineUp>>,
+        standard_mood_pools: Table<String, vector<LineUp>>,
 
-        arena_lineup_pools: Table<String, vector<LineUp>>,
+        arena_mood_pools: Table<String, vector<LineUp>>,
     }
 
     struct LineUp has store, copy, drop {
@@ -27,15 +27,15 @@ module auto_chess::lineup {
         name:String,
         role_num: u64,
         roles: vector<Role>,
-        price: u64,
+        gold_cost: u64,
         hash: vector<u8>
     }
 
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            lineup_pools: table::new<String, vector<LineUp>>(ctx),
-            arena_lineup_pools: table::new<String, vector<LineUp>>(ctx)
+            standard_mood_pools: table::new<String, vector<LineUp>>(ctx),
+            arena_mood_pools: table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -44,8 +44,8 @@ module auto_chess::lineup {
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            lineup_pools : table::new<String, vector<LineUp>>(ctx),
-            arena_lineup_pools: table::new<String, vector<LineUp>>(ctx)
+            standard_mood_pools : table::new<String, vector<LineUp>>(ctx),
+            arena_mood_pools: table::new<String, vector<LineUp>>(ctx)
         };
         transfer::share_object(global);
     }
@@ -63,7 +63,7 @@ module auto_chess::lineup {
             name:utf8(b""),
             role_num: 0,
             roles: vec,
-            price: 0,
+            gold_cost: 0,
             hash: utils::seed(ctx, seed)
         }
     }
@@ -83,7 +83,7 @@ module auto_chess::lineup {
             name:utf8(b"random cards pool"),
             role_num: vector::length(&vec),
             roles: vec,
-            price: 0,
+            gold_cost: 0,
             hash: utils::seed(ctx, seed)
         }
     }
@@ -91,8 +91,8 @@ module auto_chess::lineup {
     public fun record_player_lineup(win:u8, lose:u8, global:&mut Global, lineup:LineUp, is_arena: bool) {
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
         if (is_arena) {
-            if (table::contains(&global.arena_lineup_pools, lineup_pool_tag)) {
-                let lineup_vec = table::borrow_mut(&mut global.arena_lineup_pools, lineup_pool_tag);
+            if (table::contains(&global.arena_mood_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow_mut(&mut global.arena_mood_pools, lineup_pool_tag);
                 if (vector::length(lineup_vec) > 10) {
                     vector::remove(lineup_vec, 0);
                     vector::push_back(lineup_vec, lineup);
@@ -102,11 +102,11 @@ module auto_chess::lineup {
             } else {
                 let lineup_vec = vector::empty<LineUp>();
                 vector::push_back(&mut lineup_vec, lineup);
-                table::add(&mut global.arena_lineup_pools, lineup_pool_tag, lineup_vec);
+                table::add(&mut global.arena_mood_pools, lineup_pool_tag, lineup_vec);
             };
         } else {
-            if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
-                let lineup_vec = table::borrow_mut(&mut global.lineup_pools, lineup_pool_tag);
+            if (table::contains(&global.standard_mood_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow_mut(&mut global.standard_mood_pools, lineup_pool_tag);
                 if (vector::length(lineup_vec) > 10) {
                     vector::remove(lineup_vec, 0);
                     vector::push_back(lineup_vec, lineup);
@@ -116,7 +116,7 @@ module auto_chess::lineup {
             } else {
                 let lineup_vec = vector::empty<LineUp>();
                 vector::push_back(&mut lineup_vec, lineup);
-                table::add(&mut global.lineup_pools, lineup_pool_tag, lineup_vec);
+                table::add(&mut global.standard_mood_pools, lineup_pool_tag, lineup_vec);
             };
         };
 
@@ -127,23 +127,23 @@ module auto_chess::lineup {
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
         let vec;
         if (is_arena) {
-            if (table::contains(&global.arena_lineup_pools, lineup_pool_tag)) {
-                let lineup_vec = table::borrow(&global.arena_lineup_pools, lineup_pool_tag);
+            if (table::contains(&global.arena_mood_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow(&global.arena_mood_pools, lineup_pool_tag);
                 vec = *lineup_vec;
             } else {
                 let tag = utils::u8_to_string(win);
                 string::append(&mut tag, utf8(b"-0"));
-                let lineup_vec = table::borrow(&global.arena_lineup_pools, tag);
+                let lineup_vec = table::borrow(&global.arena_mood_pools, tag);
                 vec = *lineup_vec;
             };
         } else {
-            if (table::contains(&global.lineup_pools, lineup_pool_tag)) {
-                let lineup_vec = table::borrow(&global.lineup_pools, lineup_pool_tag);
+            if (table::contains(&global.standard_mood_pools, lineup_pool_tag)) {
+                let lineup_vec = table::borrow(&global.standard_mood_pools, lineup_pool_tag);
                 vec = *lineup_vec;
             } else {
                 let tag = utils::u8_to_string(win);
                 string::append(&mut tag, utf8(b"-0"));
-                let lineup_vec = table::borrow(&global.lineup_pools, tag);
+                let lineup_vec = table::borrow(&global.standard_mood_pools, tag);
                 vec = *lineup_vec;
             };
         };
@@ -165,10 +165,10 @@ module auto_chess::lineup {
                 let vec = vector::empty<LineUp>();
                 let lineup = generate_lineup_by_power(roleGlobal, power, seed, ctx);
                 vector::push_back(&mut vec, lineup);
-                assert!(!table::contains(&global.lineup_pools, tag), ERR_TAG_NOT_IN_TABLE);
-                assert!(!table::contains(&global.arena_lineup_pools, tag), ERR_TAG_NOT_IN_TABLE);
-                table::add(&mut global.lineup_pools, tag, vec);
-                table::add(&mut global.arena_lineup_pools, tag, vec);
+                assert!(!table::contains(&global.standard_mood_pools, tag), ERR_TAG_NOT_IN_TABLE);
+                assert!(!table::contains(&global.arena_mood_pools, tag), ERR_TAG_NOT_IN_TABLE);
+                table::add(&mut global.standard_mood_pools, tag, vec);
+                table::add(&mut global.arena_mood_pools, tag, vec);
                 lose = lose + 1;
                 if (lose == 3) {
                     lose = 0;
@@ -185,7 +185,7 @@ module auto_chess::lineup {
         let p2 = utils::get_lineup_level2_prop_by_lineup_power(power);
         let p3 = utils::get_lineup_level3_prop_by_lineup_power(power);
         while (max_role_num > 0) {
-            let role = role::create_random_role_for_lineup(roleGlobal, seed, p2, p3, ctx);
+            let role = role::get_random_role_by_power(roleGlobal, seed, p2, p3, ctx);
             vector::push_back(&mut roles, role);
             max_role_num = max_role_num - 1;
         };
@@ -194,33 +194,33 @@ module auto_chess::lineup {
             name: utf8(b"I'm a super robot"),
             role_num:max_role_num,
             roles: roles,
-            price: 0,
+            gold_cost: 0,
             hash: utils::seed(ctx, seed)
         }
     }
 
-    public fun get_fight_info(lineup:&LineUp):(u64, u64) {
+    public fun get_attack_hp_sum(lineup:&LineUp):(u64, u64) {
         let vec = lineup.roles;
         let (i, len) = (0u64, vector::length(&vec));
-        let all_attacks = 0;
-        let all_life = 0;
+        let attack_sum = 0;
+        let hp_sum = 0;
         while (i < len) {
             // drop fragments
             let role:&Role = vector::borrow(&vec, i);
-            all_attacks = all_attacks + role::get_attack(role);
-            all_life = all_life + role::get_life(role);
+            attack_sum = attack_sum + role::get_attack(role);
+            hp_sum = hp_sum + role::get_hp(role);
             i = i + 1;
         };
-        (all_attacks, all_life)
+        (attack_sum, hp_sum)
     }
 
-    public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, price:u64, ctx:&mut TxContext) : LineUp {
+    public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, gold_cost:u64, ctx:&mut TxContext) : LineUp {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
         assert!(len == 6, ERR_WRONG_ROLES_NUMBER);
         vector::reverse<String>(&mut str_vec);
         while (len > 0) {
-            // priest1:10:3:1' (namex_y-level:life:attack)
+            // priest1:10:3:1' (namex_y-level:hp:attack)
             let role_info = vector::pop_back(&mut str_vec);
             if (string::length(&role_info) == 0) {
                 vector::push_back(&mut vec, role::empty());
@@ -228,16 +228,16 @@ module auto_chess::lineup {
                 continue
             };
             let index = string::index_of(&role_info, &utf8(b":"));
-            let role_name_with_level = string::sub_string(&role_info, 0, index);
-            let level_index = string::index_of(&role_name_with_level, &utf8(b"-"));
-            let role_name = string::sub_string(&role_name_with_level, 0, level_index);
-            let level = utils::utf8_to_u64(string::sub_string(&role_name_with_level, level_index + 1, string::length(&role_name_with_level)));
+            let role_class_with_level = string::sub_string(&role_info, 0, index);
+            let level_index = string::index_of(&role_class_with_level, &utf8(b"-"));
+            let role_class = string::sub_string(&role_class_with_level, 0, level_index);
+            let level = utils::utf8_to_u64(string::sub_string(&role_class_with_level, level_index + 1, string::length(&role_class_with_level)));
             let property = string::sub_string(&role_info, index + 1, string::length(&role_info));
             let second_index = string::index_of(&property, &utf8(b":"));
             let attack = utils::utf8_to_u64(string::sub_string(&property, 0, second_index));
-            let life = utils::utf8_to_u64(string::sub_string(&property, second_index + 1, string::length(&property)));
-            let role = role::get_role_by_name(role_global, role_name);
-            role::set_life(&mut role, life);
+            let hp = utils::utf8_to_u64(string::sub_string(&property, second_index + 1, string::length(&property)));
+            let role = role::get_role_by_class(role_global, role_class);
+            role::set_hp(&mut role, hp);
             role::set_attack(&mut role, attack);
             role::set_level(&mut role, (level as u8));
             vector::push_back(&mut vec, role);
@@ -248,7 +248,7 @@ module auto_chess::lineup {
             name: name,
             role_num:len,
             roles: vec,
-            price: price,
+            gold_cost: gold_cost,
             hash: utils::seed(ctx, 123)
         }
     }
@@ -269,8 +269,8 @@ module auto_chess::lineup {
         *&lineup.creator
     }
 
-    public fun get_price(lineup:&LineUp): u64 {
-        *&lineup.price
+    public fun get_gold_cost(lineup:&LineUp): u64 {
+        *&lineup.gold_cost
     }
 
     public fun get_hash(lineup:&LineUp): vector<u8> {
