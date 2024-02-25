@@ -24,6 +24,10 @@ module auto_chess::challenge {
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
     const ERR_ALREADY_INIT: u64 = 0x04;
 
+    // challenge admin, keeps the uptodate data with time stamp, updated every season (14-30 days)
+    // rank_20 is the first 20 players identified by the lineup (when is it generated: mannually initiallized in ts script)
+    // reward_20 is the rewarding SUI for the top 20 players in rank20 (where is the generation: in chess::lock_reward)
+    // balance_SUI records the balance of SUI in the rewards pool
     struct Global has key {
         id: UID,
         balance_SUI: Balance<SUI>,
@@ -62,10 +66,11 @@ module auto_chess::challenge {
         vector::borrow(&global.rank_20, (rank as u64))
     }
 
-    // when you win, your rank go forward, someone in front of you go back
+    // when the player wins, swap the ranking of the player with the previous one who was 1 rank ahead
     public(friend) fun rank_forward(global: &mut Global, lineup:LineUp) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
         let previous_rank = find_rank(global, &lineup);
+        // if the player was not in the top 20, it is now 20th
         if (previous_rank == 21) {
             vector::pop_back(&mut global.rank_20);
             vector::insert(&mut global.rank_20, lineup, 19);
@@ -99,6 +104,7 @@ module auto_chess::challenge {
         21
     }
 
+    // Initiate the initial robot top 20 lineups with the set and increasing power and seed when rank goes up
     public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, clock:&Clock, ctx: &mut TxContext) {
         let i = 0;
         let init_power = 80;
@@ -114,6 +120,11 @@ module auto_chess::challenge {
         };
     }
 
+    // Return the string description of the top 20 ranking.
+    // The format is: 
+    // playerAdd,playName,1,role1Name_level,role2Name_level...role6Name_level,score;
+    // playerAdd,playName,2,role1Name_level,role2Name_level...role6Name_level,score;
+    //    
     public entry fun generate_rank_20_description(global:&Global): String {
         let byte_comma = ascii::byte(ascii::char(44));
         let byte_semi = ascii::byte(ascii::char(59));
@@ -152,6 +163,8 @@ module auto_chess::challenge {
         utf8(vec_out)
     }
 
+    // Return the time left in the current round of challenge, each round last for 7 days starting from the 
+    // published time
     public entry fun query_left_challenge_time(global: &Global, clock:&Clock):u64 {
         let now = clock::timestamp_ms(clock);
         let one_week = DAY_IN_MS * 7;
@@ -173,7 +186,11 @@ module auto_chess::challenge {
         total_amount * prop - 1_000_000_000
     }
 
-    // use scores to evaluate the performance of each players in the challenge. So we can decide the amount of reward of each player.
+    // Score reveals the evaluation of player's performance, 
+    // It is used to calculate the rewards of each player
+    // total_score = sum(for(i=0; i<20; i++){ith_lineup_price*(20-rank/2)})
+    // raward = lineup_price*(20-rank/2)*total_amount/total_score-1
+    // rewards_subtotal/scores is the ratio
     public(friend) fun calculate_scores(global: &Global) : u64 {
         let rank = 0;
         let total_socres = 0;
@@ -187,6 +204,7 @@ module auto_chess::challenge {
         total_socres
     }
 
+    // score = lineup_price*(20-rank/2)
     public(friend) fun calculate_score(global: &Global, rank: u64) : u64 {
         let tmp_lineup = vector::borrow(&global.rank_20, rank - 1);
         let gold_cost = lineup::get_gold_cost(tmp_lineup);
@@ -194,6 +212,7 @@ module auto_chess::challenge {
         (gold_cost * prop)
     }
 
+    // Transfer the left Sui in the rewards pool tho the chess shop account only when challenge timeout
     #[lint_allow(self_transfer)]
     public fun withdraw_left_amount(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
@@ -209,7 +228,7 @@ module auto_chess::challenge {
         vector::push_back(&mut global.reward_20, amount)
     }
 
-    // top up some money for challenge
+    // Send some SUI (balance:Balance<SUI>)from the chess shop account to the challenge rewards pool
     public fun top_up_challenge_pool(global:&mut Global, balance:Balance<SUI>) {
         balance::join(&mut global.balance_SUI, balance);
     }
@@ -218,6 +237,7 @@ module auto_chess::challenge {
         balance::value(&global.balance_SUI)
     }
 
+    // Transfer the rewarding SUI to the player
     #[lint_allow(self_transfer)]
     public(friend) fun send_reward_by_rank(global:&mut Global, rank:u8, ctx:&mut TxContext) {
         let receiver = tx_context::sender(ctx);

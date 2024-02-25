@@ -153,7 +153,7 @@ module auto_chess::test {
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             vector::push_back(&mut lineup_str_vec, utf8(b""));
             print(&utf8(b"operate my chess"));
-            chess::operate_and_match(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, &mut challengeGlobal, &mut chess_nft, operations, left_gold, lineup_str_vec, ctx(test));
+            chess::operate_and_battle(&mut chessGlobal, &roleGlobal, &mut lineupGlobal, &mut challengeGlobal, &mut chess_nft, operations, left_gold, lineup_str_vec, ctx(test));
             print_my_lineup(&chess_nft);
             next_epoch(test, admin);
             return_to_sender(test, chess_nft);

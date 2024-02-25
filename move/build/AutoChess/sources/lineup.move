@@ -13,6 +13,8 @@ module auto_chess::lineup {
     const ERR_WRONG_ROLES_NUMBER:u64 = 0x01;
     const ERR_TAG_NOT_IN_TABLE:u64 = 0x02;
 
+    // lineup_pools save at most 10 newest lineups for each win-loss tag in the standard mode
+    // arena_lineup_pools at most 10 newest lineups for each win-loss tag in the arena mode
     struct Global has key {
         id: UID,
 
@@ -22,6 +24,10 @@ module auto_chess::lineup {
         arena_mood_pools: Table<String, vector<LineUp>>,
     }
 
+    // One lineup has up to 6 roles
+    // address is the player's address
+    // name is the chosen name of the player
+    // price is the ticket paid
     struct LineUp has store, copy, drop {
         creator: address,
         name:String,
@@ -68,6 +74,7 @@ module auto_chess::lineup {
         }
     }
 
+    // Return a lineup with 30 relatively low level charactors
     public fun generate_random_cards(role_global:&role::Global, ctx:&mut TxContext) : LineUp {
         let max_cards = 30;
         let vec = vector::empty<Role>();
@@ -88,7 +95,10 @@ module auto_chess::lineup {
         }
     }
 
+    // put a play's lineup in the pool, there are at most 10 lineups in a win-lost slot
+    // It is recorded as the resources to be selected as system generated rivals for the players
     public fun record_player_lineup(win:u8, lose:u8, global:&mut Global, lineup:LineUp, is_arena: bool) {
+        // if win:3; lose:5 get pool tag 3_5
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
         if (is_arena) {
             if (table::contains(&global.arena_mood_pools, lineup_pool_tag)) {
@@ -122,6 +132,9 @@ module auto_chess::lineup {
 
     }
 
+    // Returns a random lineup in the global pool with the same win-loss tag, standard mode or arena mode depending on the flag passed
+    // If the table contains no lineup with the win-loss tag,it returns a random lineup from win-0 slot
+    // The next function init_lineup_pools constructs both pools 
     public fun select_random_lineup(win:u8, lose:u8, global:&Global, is_arena:bool, ctx: &mut TxContext) : LineUp {
         let seed = 10;
         let lineup_pool_tag = utils::get_pool_tag(win, lose);
@@ -154,6 +167,8 @@ module auto_chess::lineup {
         *vector::borrow(&vec, index)
     }
 
+    // Generate a system (robot) lineup for all the possible live win-lose and there is only one lineup in each 
+    // win-lose slot
     public fun init_lineup_pools(global: &mut Global, roleGlobal: &role::Global, ctx: &mut TxContext) {
         let win = 0;
         let lose = 0;
@@ -179,7 +194,11 @@ module auto_chess::lineup {
         };
     }
 
+    // Generate a system (robot) lineup according to the power(win vs lose index), the more win weights, the 
+    // stronger the lineup is
+    // The higher the power is the more powerful the lineup is supposed to be
     public(friend) fun generate_lineup_by_power(roleGlobal:&role::Global, power:u64, seed:u8, ctx: &mut TxContext) : LineUp {
+        // between 3 and 6 (when power >= 6)
         let max_role_num = utils::get_role_num_by_lineup_power(power);
         let roles = vector::empty<Role>();
         let p2 = utils::get_lineup_level2_prop_by_lineup_power(power);
@@ -199,6 +218,7 @@ module auto_chess::lineup {
         }
     }
 
+    // return the attack sum and hp sum of all the charactors in the lineup
     public fun get_attack_hp_sum(lineup:&LineUp):(u64, u64) {
         let vec = lineup.roles;
         let (i, len) = (0u64, vector::length(&vec));
@@ -214,13 +234,17 @@ module auto_chess::lineup {
         (attack_sum, hp_sum)
     }
 
+    // Each vector has 6 entries and each entry is a string.
+    // parse the string in the format:
+    // Return the lineup described by the string
     public fun parse_lineup_str_vec(name:String, role_global:&role::Global, str_vec:vector<String>, gold_cost:u64, ctx:&mut TxContext) : LineUp {
         let len = vector::length(&str_vec);
         let vec = vector::empty<Role>();
         assert!(len == 6, ERR_WRONG_ROLES_NUMBER);
         vector::reverse<String>(&mut str_vec);
         while (len > 0) {
-            // priest1:10:3:1' (namex_y-level:hp:attack)
+            // role description example: priest1_1-6:3:1'
+            // role description format: name-level:life:attack
             let role_info = vector::pop_back(&mut str_vec);
             if (string::length(&role_info) == 0) {
                 vector::push_back(&mut vec, role::empty());

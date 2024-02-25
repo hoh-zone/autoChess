@@ -1,11 +1,9 @@
-// every game is a chess nft, it functions as a game save, you can lose at most 3 times, you can check out any time
-// to exchange some reward, the reward depends on your ticket gold_cost and the times of winning.
-// every match will be recoreded in the chain, so we can randomly pk with different players.
-
-// normal mode is free, but you can't checkout to win sui. In arena mode, you have to pay to buy a ticket to start your game,
-// and so you can check out to win some sui.
-// in every match, what roles you can see in your shop is determined, you can cost gold to refresh to see new ones, it's a fixed vector
-// it's not dynamic generation in frontend when you click "refresh" button.
+// every game is a chess nft, it functions as a game saver, you can lose at most 3 times, you can check out any time
+// to exchange some reward, the reward depends on your ticket price and the times of winning.
+// every match will be recoreded in the chain, so we can randomly pk with other players's lineup with similar level.
+// standard mode is free, but you can't win sui. In arena mode, players have to buy a ticket to start the game and check out to win some sui.
+// before each battle, roles present in hero pool is determined, it costs gold to refresh to see the next five heros in the hero pool with 30 heros generated at the end of last battle
+// There is no dynamic generation on frontend when you click "refresh" button.
 module auto_chess::chess {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
@@ -39,10 +37,38 @@ module auto_chess::chess {
     struct Global has key {
         id: UID,
         total_chesses: u64,
-        total_match:u64,
+        total_battle:u64,
         balance_SUI: Balance<SUI>,
     }
 
+    // Each chess is the round(s) of game with 3-20 something battles in line
+    // name is the chosen name by the player
+    // lineup is the current lineup
+    // cards_pool contains 30 roles, it is generated when the chess nft is minted and sent to player and updated in the end of each battle.
+    // some heroes in the cards_pool(hero pool) could be removed and set to 'none' in the operations before each battle but
+    // refreshed after the battle for the operation in the next battle
+    // gold is the given points for the operations before each battle, set to be 10
+    // creator is the player's address
+    // price is the ticket paid for the challenge/arena mode (?) one or both (?) it is 0 in standard mode
+    // arena_checked is set to be false when a arena chess is minted and true when the chess is burned and rewards paid
+    /*
+    todo: Suggestion:
+    struct Chess has key, store {
+        id:UID,
+        name:String,
+        lineup: LineUp,
+        creator: address,
+        win: u8,
+        lose: u8,
+        type: CHESSTYPE
+    }
+    CHESSTYPE{
+        standard, challenge, arena
+    }
+    if arena, add dynamic field price
+    gold is a constant, it is not needed to be kept in the nft
+    cards_pool: LineUp, is re-generated before each battle's operation and no need to be recorded in chess
+    */
     struct Chess has key, store {
         id:UID,
         name:String,
@@ -59,6 +85,7 @@ module auto_chess::chess {
         arena_checked: bool
     }
 
+    // one round of battle event
     struct FightEvent has copy, drop {
         chess_id: address,
         v1: address,
@@ -69,14 +96,15 @@ module auto_chess::chess {
         v1_challenge_lose: u8,
         v2_name: String,
         v2_lineup:lineup::LineUp,
-        res: u8 // even:0, win:1
+        // even:0, win:1 why not bool : reserve for even situation
+        res: u8
     }
 
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
             total_chesses: 0,
-            total_match: 0,
+            total_battle: 0,
             balance_SUI: balance::zero(),
         };
         transfer::share_object(global);
@@ -87,12 +115,14 @@ module auto_chess::chess {
         let global = Global {
             id: object::new(ctx),
             total_chesses: 0,
-            total_match: 0,
+            total_battle: 0,
             balance_SUI: balance::zero(),
         };
         transfer::share_object(global);
     }
 
+    // Withdraw a the 'amount' of SUI from the chess shop balance and transfer to the local account
+    // who publishes the package
     #[lint_allow(self_transfer)]
     public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
@@ -101,23 +131,30 @@ module auto_chess::chess {
         transfer::public_transfer(sui, tx_context::sender(ctx));
     }
 
+    // The function sends 1/10 of the SUI in the chess game shop to the challenge rewards pool when the challenge period is about to due.
+    // Then it calculates the rewards for the top 20 respectively.
+    // Finally it locks the challenge rewards pool
     public fun lock_reward(global: &mut Global, challengeGlobal: &mut challenge::Global, clock:&Clock, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
         assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
-        let total = balance::value(&global.balance_SUI);
-        let split_value = total / 10;
-        let balance = balance::split(&mut global.balance_SUI, split_value);
+        let challenge_mode_rewards = balance::value(&global.balance_SUI) / 10;
+        let balance = balance::split(&mut global.balance_SUI, challenge_mode_rewards);
         challenge::top_up_challenge_pool(challengeGlobal, balance);
         let i = 0;
         let total_scores = challenge::calculate_scores(challengeGlobal);
+
+        // Calculate and generate the  reward_20 vector in the challenge admin
         while (i < 20) {
-            let amount = challenge::get_reward_amount_by_rank(challengeGlobal, split_value, total_scores, i);
+            let amount = challenge::get_reward_amount_by_rank(challengeGlobal, challenge_mode_rewards, total_scores, i);
             challenge::push_reward_amount(challengeGlobal, amount);
             i = i + 1;
         };
         challenge::lock_pool(challengeGlobal);
     }
 
+
+    // For the player in the challenge mode when challenge period due
+    // Sends the rewards to the player and burns the chess nft
     #[lint_allow(self_transfer)]
     public entry fun claim_rank_reward(challengeGlobal: &mut challenge::Global, chess:Chess, clock:&Clock, rank:u8, ctx: &mut TxContext) {
         assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
@@ -135,10 +172,12 @@ module auto_chess::chess {
     #[lint_allow(self_transfer)]
     public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
+        // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
+        // ticket price
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
-        let pay_value = coin::value(&merged_coin);
-        assert!(utils::check_ticket_gold_cost(pay_value), ERR_PAYMENT_NOT_ENOUGH);
+        let paid_price = coin::value(&merged_coin);
+        assert!(utils::check_ticket_gold_cost(paid_price), ERR_PAYMENT_NOT_ENOUGH);
         let game = Chess {
             id: object::new(ctx),
             name:name,
@@ -150,15 +189,16 @@ module auto_chess::chess {
             challenge_win:0,
             challenge_lose:0,
             creator: sender,
-            gold_cost: pay_value,
+            gold_cost: paid_price,
             arena: true,
             arena_checked: false
         };
         let balance = coin::into_balance<SUI>(
-            coin::split<SUI>(&mut merged_coin, pay_value, ctx)
+            coin::split<SUI>(&mut merged_coin, paid_price, ctx)
         );
         balance::join(&mut global.balance_SUI, balance);
         if (coin::value(&merged_coin) > 0) {
+            // send the left coin back to the player after paying the ticket
             transfer::public_transfer(merged_coin, tx_context::sender(ctx));
         } else {
             coin::destroy_zero(merged_coin);
@@ -167,6 +207,7 @@ module auto_chess::chess {
         public_transfer(game, sender);
     }
 
+    // mint a chess nft
     #[lint_allow(self_transfer)]
     public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
@@ -189,18 +230,23 @@ module auto_chess::chess {
         public_transfer(game, sender);
     }
 
+    // Pay the arena rewards to the player, the ctx is player add
     #[lint_allow(self_transfer)]
     public entry fun check_out_arena_fee(global: &mut Global, chess: &mut Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         assert!(!chess.arena_checked, ERR_ARENA_FEE_HAS_CHECKED_OUT);
         chess.arena_checked = true;
         let total_amount = get_total_shui_amount(global);
+        // rewards = 0.3*wins*ticket price, has to be less than 90% of the total coins in the chess shop
         let reward_amount = utils::estimate_reward(total_amount, chess.gold_cost, chess.win);
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
     }
 
+    // Burn the arena nft, the ctx is player add
+    // ???  why not call check_out_arena_fee and then burn the arena nft??? : because check_out_arena_fee only check out arena mood reward
+    // but he may still has challenge mood reward to be checked out
     #[lint_allow(self_transfer)]
     public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
@@ -225,7 +271,15 @@ module auto_chess::chess {
         &chess.cards_pool
     }
 
-    fun match(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    //1. Makes sure the auto_checkout is not triggered, which is at 3 loses from the start of the chess round
+    //2. Generates the opponent lineup based on the player's winning time if challenge mode and win-lose tag if standard mode
+    //3. Calls fight functions to complete the rounds of actions till one team has no hero alive.
+    //4. Processes the battle result, record both winning and losing time 
+    //Returns true if player wines the battle and false othwewise
+    /*
+    match->battle
+    */
+    fun battle(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, ctx: &mut TxContext) {
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
@@ -243,6 +297,7 @@ module auto_chess::chess {
         // fight and record lineup
         if (fight(chess, &mut enemy_lineup, chanllenge_on, ctx)) {
             if (chanllenge_on) {
+                // challenge_win is 1 when chess.win is 0, it stays 0 till the 10th win on standard mode
                 chess.challenge_win = chess.challenge_win + 1;
                 challenge::rank_forward(challengeGlobal, chess.lineup);
             } else {
@@ -253,6 +308,7 @@ module auto_chess::chess {
                 };
             };
         } else {
+            // player losses
             if (chanllenge_on) {
                 chess.challenge_lose = chess.challenge_lose + 1;
             } else {
@@ -269,11 +325,15 @@ module auto_chess::chess {
         chess.cards_pool = lineup::generate_random_cards(role_global, ctx);
     }
 
+    // Performs the battle between the player and the rival by rounds of attacks and conter-attacks
+    // Return true if player wins and false if play loses
     public fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, is_challenge:bool, ctx:&mut TxContext) :bool {
         let my_lineup_fight = *&chess.lineup;
 
         // backup to avoid base_hp to be changed
         let enemy_lineup_fight = *enemy_lineup;
+
+        // records the states of the lineup before the battle
         let my_lineup_permanent = &mut chess.lineup;
         let my_roles = *lineup::get_roles(&my_lineup_fight);
         vector::reverse<role::Role>(&mut my_roles);
@@ -283,23 +343,32 @@ module auto_chess::chess {
         if (my_num == 0) {
             return false
         };
+
         let my_first_role = role::init_role();
         let enemy_first_role = role::init_role();
         let my_fist_role_index = 0;
         let enemy_first_role_index = 0;
+
+        // Do rounds of player-action and opponent conter-action till one team contains no living charactor
         while (fight::some_alive(&my_first_role, &my_roles) && fight::some_alive(&enemy_first_role, &enemy_roles)) {
+
+            // get the next living player role and remove dead herosQ
             while (vector::length(&my_roles) > 0 && (role::get_hp(&my_first_role) == 0 || (role::get_class(&my_first_role) == utf8(b"none") || role::get_class(&my_first_role) == utf8(b"init")))) {
                 my_first_role = vector::pop_back(&mut my_roles);
                 if (vector::length(&my_roles) < 5) {
                     my_fist_role_index = my_fist_role_index + 1;
                 };
             };
+
+            // get the next living opponent role and remove dead heros
             while (vector::length(&enemy_roles) > 0 && (role::get_hp(&enemy_first_role) == 0 || (role::get_class(&enemy_first_role) == utf8(b"none") || role::get_class(&enemy_first_role) == utf8(b"init")))) {
                 enemy_first_role = vector::pop_back(&mut enemy_roles);
                 if (vector::length(&enemy_roles) < 5) {
                     enemy_first_role_index = enemy_first_role_index + 1;
                 };
             };
+
+            // When both my acting role and opponent charactor are alive, both take actions (always player first?) till one is dead
             while(role::get_hp(&my_first_role) > 0 && role::get_hp(&enemy_first_role) > 0) {
                 fight::action(my_fist_role_index, &mut my_first_role, &mut enemy_first_role, &mut my_roles, &mut enemy_roles, my_lineup_permanent);
                 fight::action(enemy_first_role_index, &mut enemy_first_role, &mut my_first_role, &mut enemy_roles, &mut my_roles, my_lineup_permanent);
@@ -345,32 +414,40 @@ module auto_chess::chess {
         balance::value(&global.balance_SUI)
     }
 
-    // players operate and start a match
-    // param chess is the chess before the operations, in this function, it will be changed by players' operations, so it's mut
-    // param operations is a string fron frontend, which records the operations(buy role, sell role, exchange position, upgrade role ...) in order
-    // param lineup_str_vec is the new lineup after operations
-    // so what we do is verity or check, whether the operations is valid, whether the left money amount is right
-    // whether the new lineup is orinated from the old chess + operations
-    public entry fun operate_and_match(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
+    // The function is called before the next battle, the player adjusts(swap, upgrade, change role) the lineup and starts a battle
+    // param chess is the same chess nft existing before the operations, in this function, it will be altered by the player's operations.
+    // param operations is a string from frontend, which records the operations(buy role, sell role, exchange position, upgrade role ...) in order
+    // param lineup_str_vec is the new lineup descriptions after the operations, it contains 6 entries corresponding to the description of the 6 chosen heroes
+    // lineup_str_vec is purely the frontend result and needs to be verified
+    // The function verifies that the operations are valid and the left SUI balance is correct
+    // After verification, the function excutes the round of battle and records the battle result
+    public entry fun operate_and_battle(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
         challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
         lineup_str_vec: vector<String>, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
-        let init_lineup = *&chess.lineup;
-        let init_roles = lineup::get_mut_roles(&mut init_lineup);
+        let current_lineup = *&chess.lineup;
+        let current_roles = lineup::get_mut_roles(&mut current_lineup);
         let cards_pool = chess.cards_pool;
         let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
-        verify::verify_operation(role_global, init_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+
+        // todo: how to resolve the gas limit problem when publishing
+        verify::verify_operation(role_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
         let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.gold_cost, ctx);
+
+        // Player normally wins max 20 times because at the 20th win it is ranked num 1
+        // If it keeps winning it get no more gold before the next battle to upgrade the team
         if (chess.challenge_win + chess.challenge_lose >= 20) {
             // prevent from unlimited strength upon its lineup
             chess.gold = 0;
         } else {
+            // Operation done and the chess.gold is recovered to be 10(INIT_GOLD) for the next round of battle
             chess.gold = INIT_GOLD;
         };
         let tmp_hash = lineup::get_hash(&chess.lineup);
         chess.lineup = expected_lineup; 
         lineup::set_hash(&mut chess.lineup, tmp_hash);
-        match(role_global, lineup_global, challengeGlobal, chess, ctx);
-        global.total_match = global.total_match + 1;
+        // challenge mode, arena mode or standard mode will be processed in match function
+        battle(role_global, lineup_global, challengeGlobal, chess, ctx);
+        global.total_battle = global.total_battle + 1;
     }
 }

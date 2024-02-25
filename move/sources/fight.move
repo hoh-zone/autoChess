@@ -10,6 +10,7 @@ module auto_chess::fight {
 
     const INVALID_INDEX:u64 = 10000;
 
+    // reduce the passed role's attack by the reduced value
     public(friend) fun safe_reduce_attack(reduce_value:u64, opponent: &mut Role) {
         let char_hp = role::get_hp(opponent);
         let char_attack = role::get_attack(opponent);
@@ -23,6 +24,7 @@ module auto_chess::fight {
         }
     }
 
+    // inflict hp damage to the opponent 
     public(friend) fun safe_attack(attack:u64, opponent:&mut Role) {
         let other_hp = role::get_hp(opponent);
         if (other_hp <= attack) {
@@ -38,6 +40,7 @@ module auto_chess::fight {
         print(&role::get_hp(opponent));
     }
 
+    // increase the passed role's attack by the passed value 
     public(friend) fun increase_attack(added_value:u64, team_mate: &mut Role) {
         let char_hp = role::get_hp(team_mate);
         let char_attack = role::get_attack(team_mate);
@@ -47,6 +50,7 @@ module auto_chess::fight {
         role::set_attack(team_mate, char_attack + added_value);
     }
 
+    // recover hp for the role
     public(friend) fun heal(recovered_hp:u64, team_mate: &mut Role) {
         let char_hp = role::get_hp(team_mate);
         if (char_hp == 0) {
@@ -55,6 +59,10 @@ module auto_chess::fight {
         role::set_hp(team_mate, char_hp + recovered_hp);
     }
 
+    // role_index is the acting hero's index in my_lineup_permanent and only used for the effect 'all_max_hp_to_back1'
+    // enemy_role: acting opponent; my_roles:dynamic team exclude acting role
+    // role: acting player role(ps. bad naming); enemy_roles: dynamic opponent team exclude acting opponent; 
+    // my_lineup_permanent: the static team (with stats before the battle)
     public(friend) fun call_skill(role_index:u64, role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
         let effect = role::get_effect(role);
         let effect_value = role::get_effect_value(role);
@@ -65,6 +73,9 @@ module auto_chess::fight {
         let is_buff_forbidden = false;
         let is_debuff_forbiddenf = false;
 
+        // If a role in the opponent team has duff forbidden or debuff forbidden ability, the flag is set to be true.
+        // If is_buff_forbidden is true, all the enhancement skills can not take effect on the teamates
+        // If is_debuff_forbiddenf is true, all the damaging skills can not take effect on the enemies 
         let i = 0;
         let enemy_len = vector::length(enemy_roles);
         let my_len = vector::length(my_roles);
@@ -77,12 +88,14 @@ module auto_chess::fight {
             if (effect == utf8(b"forbid_debuff")) {
                 is_debuff_forbiddenf = true;
             };
+            // break the loop if both are ture, one member with each ability is enough
             if (is_buff_forbidden && is_debuff_forbiddenf) {
                 break
             };
             i = i + 1;
         };
 
+        // Afflict attack to the whole enemy team, not affected by buff/debuff forbidden flag
         if (effect == utf8(b"aoe")) {
             let attack = utils::utf8_to_u64(effect_value);
             let i = 0;
@@ -92,6 +105,7 @@ module auto_chess::fight {
                 safe_attack(attack, char);
                 i = i + 1;
             };
+        // Increase HP of all team mates affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"add_all_tmp_hp")) {
             if (is_buff_forbidden) {
                 print(&utf8(b"buff forbiden"));
@@ -106,6 +120,7 @@ module auto_chess::fight {
                 heal(added, char);
                 i = i + 1;
             };
+        // Boost the attack value of the whole team temporarily (one round?), affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"add_all_tmp_attack")) {
             if (is_buff_forbidden) {
                 print(&utf8(b"buff forbiden"));
@@ -120,6 +135,7 @@ module auto_chess::fight {
                 increase_attack(added_attack, char);
                 i = i + 1;
             };
+        // Boost the sp value of the whole team temporarily (one round), affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"add_all_tmp_sp")) {
             if (is_buff_forbidden) {
                 print(&utf8(b"buff forbiden"));
@@ -133,6 +149,10 @@ module auto_chess::fight {
                 role::set_sp(char, sp + added_sp);
                 i = i + 1;
             };
+        // Permenantly(meaning for all the following battles in the chess game) 
+        // increase hp value to the next charactor of the acting charactor,if the acting charactor is not the last in lineup,
+        // affected by buff/debuff forbidden flag
+        // The index choice is a bit confusing
         } else if (effect == utf8(b"all_max_hp_to_back1")) {
             if (is_buff_forbidden) {
                 print(&utf8(b"buff forbiden"));
@@ -146,6 +166,7 @@ module auto_chess::fight {
             let back_char = vector::borrow_mut(roles, role_index + 1);
             let hp = role::get_hp(back_char);
             role::set_hp(back_char, hp + added_hp);
+        // Reduce the attack value of the active opponent role(temp), affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"reduce_tmp_attack")) {
             if (is_debuff_forbiddenf) {
                 print(&utf8(b"debuff forbiden"));
@@ -153,6 +174,7 @@ module auto_chess::fight {
             };
             let reduced_attack = utils::utf8_to_u64(effect_value);
             safe_reduce_attack(reduced_attack, enemy_role);
+        // Reduce the attack value (temp, one round) of the whole enemy team, affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"reduce_all_tmp_attack")) {
             if (is_debuff_forbiddenf) {
                 print(&utf8(b"debuff forbiden"));
@@ -166,6 +188,9 @@ module auto_chess::fight {
                  safe_reduce_attack(reduced_attack, char);
                 i = i + 1;
             };
+        // Attack the acting opponent and inflict a certain percentage of hp lost to the next acting role,
+        // not affected by buff/debuff forbidden flag
+        // The next is not exactly the next to make sure that someone else gets attacked
         } else if (effect == utf8(b"attack_sputter_to_second_by_percent")) {
             let percent_by_ten = utils::utf8_to_u64(effect_value);
             let base_attack = role::get_attack(role);
@@ -176,6 +201,7 @@ module auto_chess::fight {
             };
             let next_one = vector::borrow_mut(enemy_roles, enemy_len - 1);
             safe_attack(suppter_attack, next_one);
+        // Attack the last charactor in the enemy team,when the acting opponent is not the only role left, not affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"attack_last_char")) {
             let effect_attack = utils::utf8_to_u64(effect_value);
             if (vector::length(enemy_roles) == 0) {
@@ -184,10 +210,13 @@ module auto_chess::fight {
                 let last_one = vector::borrow_mut(enemy_roles, 0);
                 safe_attack(effect_attack, last_one);
             }
+        // Attack the charactor with the lowest hp in the enemy team, not affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"attack_lowest_hp")) {
             let attack = utils::utf8_to_u64(effect_value);
             let role = find_lowest_hp_one(enemy_role, enemy_roles);
             safe_attack(attack, role);
+        // Inflict extract attack to the acting opponent role, the extract attack is a certain percentage of 
+        // the opponent's hp value, not affected by buff/debuff forbidden flag
         } else if (effect == utf8(b"attack_by_hp_percent")) {
             let value = utils::utf8_to_u64(effect_value);
             let enemy_hp = role::get_hp(enemy_role);
@@ -197,6 +226,7 @@ module auto_chess::fight {
         } 
     }
 
+    // Return the role with the lowest hp value in the role vector
     fun find_lowest_hp_one(default_role: &mut Role, roles: &mut vector<Role>) : &mut Role {
         let min_hp = INVALID_INDEX;
         let min_hp_index = INVALID_INDEX;
@@ -220,11 +250,15 @@ module auto_chess::fight {
         return default_role
     }
 
+    // first arguement role attack the second
     public(friend) fun standard_attack(my_hero: &Role, opponent: &mut Role) {
         let attack = role::get_attack(my_hero);
         safe_attack(attack, opponent);
     }
 
+    // When the player role is taking the turn in a fight. If the sp point is full， not cancelled out and the acting role has a skill,
+    // the skill attack is triggered and sp point cleared out.
+    // Otherwise the standard attact is trigged and sp point of the attacked opponent increases by 1.
     public(friend) fun action(role_index:u64, role: &mut Role, enemy_role: &mut Role, my_roles:&mut vector<Role>, enemy_roles:&mut vector<Role>, my_lineup_permanent: &mut LineUp) {
         let extra_sp_cap_debuff = get_extra_sp_cap_debuff(enemy_roles);
         let sp_cap = role::get_sp_cap(role);
@@ -242,6 +276,8 @@ module auto_chess::fight {
         };
     }
 
+    // Get the value of the possible largest de-sp value in the passed role vector.
+    // Only charactor with add_all_tmp_max_magic has the de-sp value larger than 0
     fun get_extra_sp_cap_debuff(roles: &vector<Role>): u8 {
         let value:u8 = 0;
         let len = vector::length(roles);

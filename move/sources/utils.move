@@ -15,6 +15,7 @@ module auto_chess::utils {
         string::utf8(vec)
     }
 
+    // example: passed in a string 3-5, the function returns (3,5)
     public fun get_left_right_number(input:String) : (u64, u64) {
         let comma_index = string::index_of(&input, &utf8(b"-"));
         let from_index = utf8_to_u64(string::sub_string(&input, 0, comma_index));

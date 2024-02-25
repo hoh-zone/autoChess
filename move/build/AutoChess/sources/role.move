@@ -1,4 +1,8 @@
-// we design 16 roles, everyone's attribute is coded in frontend and chain.
+/*This module manages the 16 roles designed in the game. The functions include:
+1. Set the initial attributes of each role
+2. Provide different ways to return a random role for lineup or cards
+3. Upgrade
+*/
 module auto_chess::role {
     use std::string::{utf8, String};
     use sui::tx_context::{TxContext};
@@ -17,6 +21,8 @@ module auto_chess::role {
     const ERR_DIFFERENT_hp:u64 = 0x03;
     const ERR_DIFFERENT_ATTACK:u64 = 0x04;
 
+    // charactors specifies all the 16 classes' basic stats
+    // Each class has the specifications of level 1,2,3,5,9 and corresponding stats
     struct Global has key {
         id: UID,
         charactors: VecMap<String, Role>
@@ -154,6 +160,7 @@ module auto_chess::role {
         }
     }
 
+    // when a hero is removed it is set to be 'none', could happen in card pool (hero pool) and player lineup
     public fun empty() : Role {
         Role {
             class:utf8(b"none"),
@@ -169,6 +176,8 @@ module auto_chess::role {
         }
     }
 
+    // return a randomly decided class of charactor of level 1, 3 or 9
+    // level is predetermined and class is randomly chosen
     fun get_random_role_by_level(global: &Global, level:u64, random: u64, _ctx:&mut TxContext) :Role {
         let max_roles_per_level = vec_map::size(&global.charactors) / 5;
         let index = random % max_roles_per_level;
@@ -184,6 +193,10 @@ module auto_chess::role {
         }
     }
 
+    // p2 and p3 are calculated in lineup::generate_lineup_by_power
+    // p2 = 35 * power; p3 = 0 or 2 times power when power >16
+    // higher p3 is more likely to get a level 9 charactor
+    // higher p2 is more likely to get a level 3 charactor
     public(friend) fun get_random_role_by_power(global: &Global, seed:u8, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
         let random = utils::get_random_num(0, 1000, seed, ctx);
         if (random < p3) {
@@ -195,6 +208,7 @@ module auto_chess::role {
         }
     }
 
+    // return a random class charactor of level 1, it is created for the basic hero pool with 30 heros
     public(friend) fun create_random_role_for_cards(global: &Global, seed:u8, ctx: &mut TxContext) : Role {
         let random = utils::get_random_num(0, 1000, seed, ctx);
         get_random_role_by_level(global, 1, random, ctx)
@@ -272,6 +286,7 @@ module auto_chess::role {
         role.effect_type
     }
 
+    // merge the two roles and get a stronger role
     public fun upgrade(global:&Global, from_role: &Role, to_role: &mut Role): bool {
         let sub_class1 = string::sub_string(&from_role.class, 0, 3);
         let sub_class2 = string::sub_string(&to_role.class, 0, 3);
@@ -333,7 +348,7 @@ module auto_chess::role {
             to_role.hp = updated_role.hp + hp_diff;
 
             // todo: upgrade effect value
-
+            to_role.effect_value = updated_role.effect_value;
         } else {
             return false
         };
@@ -351,6 +366,7 @@ module auto_chess::role {
         }
     }
 
+    // determine if the two vectors of roles are the same, meaning same class same stats same order
     public fun check_roles_equality(roles1: &vector<Role>, roles2: &vector<Role>) : bool {
         assert!(vector::length(roles1) == 6, ERR_WRONG_LINEUP_LENGTH);
         assert!(vector::length(roles2) == 6, ERR_WRONG_LINEUP_LENGTH);
