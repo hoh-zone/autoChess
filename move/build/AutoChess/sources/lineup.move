@@ -10,8 +10,10 @@ module auto_chess::lineup {
     use auto_chess::utils;
     friend auto_chess::challenge;
 
-    const ERR_WRONG_ROLES_NUMBER:u64 = 0x01;
-    const ERR_TAG_NOT_IN_TABLE:u64 = 0x02;
+    const ERR_WRONG_ROLES_NUMBER:u64 = 0x001;
+    const ERR_TAG_NOT_IN_TABLE:u64 = 0x002;
+    const ERR_ELE_NOT_CONTAINS:u64 = 0x003;
+    const ERR_EXCEED_VEC_LENGTH:u64 = 0x004;
 
     // lineup_pools save at most 10 newest lineups for each win-loss tag in the standard mode
     // arena_lineup_pools at most 10 newest lineups for each win-loss tag in the arena mode
@@ -146,6 +148,7 @@ module auto_chess::lineup {
             } else {
                 let tag = utils::u8_to_string(win);
                 string::append(&mut tag, utf8(b"-0"));
+                assert!(table::contains(&global.arena_mood_pools, tag), ERR_ELE_NOT_CONTAINS);
                 let lineup_vec = table::borrow(&global.arena_mood_pools, tag);
                 vec = *lineup_vec;
             };
@@ -156,6 +159,7 @@ module auto_chess::lineup {
             } else {
                 let tag = utils::u8_to_string(win);
                 string::append(&mut tag, utf8(b"-0"));
+                assert!(table::contains(&global.standard_mood_pools, tag), ERR_ELE_NOT_CONTAINS);
                 let lineup_vec = table::borrow(&global.standard_mood_pools, tag);
                 vec = *lineup_vec;
             };
@@ -164,6 +168,7 @@ module auto_chess::lineup {
         let len = vector::length(&vec);
         let random = utils::get_random_num(0, len, seed, ctx);
         let index = random % len;
+        assert!(vector::length(&vec) > index, ERR_EXCEED_VEC_LENGTH);
         *vector::borrow(&vec, index)
     }
 
@@ -226,6 +231,7 @@ module auto_chess::lineup {
         let hp_sum = 0;
         while (i < len) {
             // drop fragments
+            assert!(vector::length(&vec) > i, ERR_EXCEED_VEC_LENGTH);
             let role:&Role = vector::borrow(&vec, i);
             attack_sum = attack_sum + role::get_attack(role);
             hp_sum = hp_sum + role::get_hp(role);

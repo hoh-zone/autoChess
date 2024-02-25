@@ -9,6 +9,7 @@ module auto_chess::fight {
     friend auto_chess::chess;
 
     const INVALID_INDEX:u64 = 10000;
+    const ERR_EXCEED_VEC_LENGTH:u64 = 0x001;
 
     // reduce the passed role's attack by the reduced value
     public(friend) fun safe_reduce_attack(reduce_value:u64, opponent: &mut Role) {
@@ -80,6 +81,7 @@ module auto_chess::fight {
         let enemy_len = vector::length(enemy_roles);
         let my_len = vector::length(my_roles);
         while (i < enemy_len) {
+            assert!(vector::length(enemy_roles) > i, ERR_EXCEED_VEC_LENGTH);
             let role = vector::borrow(enemy_roles, i);
             let effect = role::get_effect(role);
             if (effect == utf8(b"forbid_buff")) {
@@ -101,6 +103,7 @@ module auto_chess::fight {
             let i = 0;
             safe_attack(attack, enemy_role);
             while (i < enemy_len) {
+                assert!(vector::length(enemy_roles) > i, ERR_EXCEED_VEC_LENGTH);
                 let char = vector::borrow_mut(enemy_roles, i);
                 safe_attack(attack, char);
                 i = i + 1;
@@ -116,6 +119,7 @@ module auto_chess::fight {
             role::set_hp(role, hp + added);
             let i = 0;
             while (i < my_len) {
+                assert!(vector::length(my_roles) > i, ERR_EXCEED_VEC_LENGTH);
                 let char = vector::borrow_mut(my_roles, i);
                 heal(added, char);
                 i = i + 1;
@@ -131,6 +135,7 @@ module auto_chess::fight {
             role::set_attack(role, attack + added_attack);
             let i = 0;
             while (i < my_len) {
+                assert!(vector::length(my_roles) > i, ERR_EXCEED_VEC_LENGTH);
                 let char = vector::borrow_mut(my_roles, i);
                 increase_attack(added_attack, char);
                 i = i + 1;
@@ -144,6 +149,7 @@ module auto_chess::fight {
             let added_sp = (utils::utf8_to_u64(effect_value) as u8);
             let i = 0;
             while (i < my_len) {
+                assert!(vector::length(my_roles) > i, ERR_EXCEED_VEC_LENGTH);
                 let char = vector::borrow_mut(my_roles, i);
                 let sp = role::get_sp(char);
                 role::set_sp(char, sp + added_sp);
@@ -163,6 +169,7 @@ module auto_chess::fight {
             if (role_index == 5) {
                 return
             };
+            assert!(vector::length(roles) > role_index + 1, ERR_EXCEED_VEC_LENGTH);
             let back_char = vector::borrow_mut(roles, role_index + 1);
             let hp = role::get_hp(back_char);
             role::set_hp(back_char, hp + added_hp);
@@ -184,6 +191,7 @@ module auto_chess::fight {
              safe_reduce_attack(reduced_attack, enemy_role);
             let i = 0;
             while (i < enemy_len) {
+                assert!(vector::length(enemy_roles) > i, ERR_EXCEED_VEC_LENGTH);
                 let char = vector::borrow_mut(enemy_roles, i);
                  safe_reduce_attack(reduced_attack, char);
                 i = i + 1;
@@ -199,6 +207,7 @@ module auto_chess::fight {
             if (vector::length(enemy_roles) == 0) {
                 return
             };
+            assert!(vector::length(enemy_roles) > enemy_len - 1, ERR_EXCEED_VEC_LENGTH);
             let next_one = vector::borrow_mut(enemy_roles, enemy_len - 1);
             safe_attack(suppter_attack, next_one);
         // Attack the last charactor in the enemy team,when the acting opponent is not the only role left, not affected by buff/debuff forbidden flag
@@ -207,6 +216,7 @@ module auto_chess::fight {
             if (vector::length(enemy_roles) == 0) {
                 safe_attack(effect_attack, enemy_role);
             } else {
+                assert!(vector::length(enemy_roles) > 0, ERR_EXCEED_VEC_LENGTH);
                 let last_one = vector::borrow_mut(enemy_roles, 0);
                 safe_attack(effect_attack, last_one);
             }
@@ -236,6 +246,7 @@ module auto_chess::fight {
         };
         let i = 0;
         while(i < len) {
+            assert!(vector::length(roles) > i, ERR_EXCEED_VEC_LENGTH);
             let role = vector::borrow(roles, i);
             let hp = role::get_hp(role);
             if (hp > 0 && hp < min_hp) {
@@ -245,6 +256,7 @@ module auto_chess::fight {
             i = i + 1;
         };
         if (min_hp_index != INVALID_INDEX) {
+            assert!(vector::length(roles) > min_hp_index, ERR_EXCEED_VEC_LENGTH);
             return vector::borrow_mut(roles, min_hp_index)
         };
         return default_role
@@ -283,6 +295,7 @@ module auto_chess::fight {
         let len = vector::length(roles);
         let i = 0;
         while (i < len) {
+            assert!(vector::length(roles) > 1, ERR_EXCEED_VEC_LENGTH);
             let role = vector::borrow(roles, i);
             if (role::get_effect(role)== utf8(b"add_all_tmp_sp_cap")) {
                 let tmp = (utils::utf8_to_u64(role::get_effect_value(role)) as u8);
@@ -301,6 +314,7 @@ module auto_chess::fight {
             return true
         };
         while (i < vector::length(roles)) {
+            assert!(vector::length(roles) > i, ERR_EXCEED_VEC_LENGTH);
             let role = vector::borrow(roles, i);
             if (role::get_class(role) != utf8(b"none") && role::get_hp(role) > 0) {
                 return true

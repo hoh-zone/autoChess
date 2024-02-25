@@ -65,7 +65,7 @@ module auto_chess::test {
             vector::push_back(&mut lineup2_str_vec, utf8(b"slime1-1:6:6"));
 
             let my_lineup = lineup::parse_lineup_str_vec(utf8(b"1"), &roleGlobal, lineup1_str_vec, 0, ctx(test));
-            let enemy_lineup = lineup::parse_lineup_str_vec(utf8(b"2"), &roleGlobal, lineup2_str_vec, 0, ctx(test));
+            let enemy_lineup = lineup::parse_lineup_str_vec(utf8(b"123122"), &roleGlobal, lineup2_str_vec, 0, ctx(test));
             // chess::test_fight(my_lineup, enemy_lineup);
             return_shared(chessGlobal);
             return_shared(roleGlobal);

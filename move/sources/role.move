@@ -16,10 +16,11 @@ module auto_chess::role {
     friend auto_chess::chess;
     friend auto_chess::lineup;
 
-    const ERR_WRONG_LINEUP_LENGTH:u64 = 0x01;
-    const ERR_DIFFERENT_class:u64 = 0x02;
-    const ERR_DIFFERENT_hp:u64 = 0x03;
-    const ERR_DIFFERENT_ATTACK:u64 = 0x04;
+    const ERR_WRONG_LINEUP_LENGTH:u64 = 0x001;
+    const ERR_DIFFERENT_class:u64 = 0x002;
+    const ERR_DIFFERENT_hp:u64 = 0x003;
+    const ERR_DIFFERENT_ATTACK:u64 = 0x004;
+    const ERR_EXCEED_VEC_LENGTH:u64 = 0x005;
 
     // charactors specifies all the 16 classes' basic stats
     // Each class has the specifications of level 1,2,3,5,9 and corresponding stats
@@ -370,6 +371,8 @@ module auto_chess::role {
         assert!(vector::length(roles2) == 6, ERR_WRONG_LINEUP_LENGTH);
         let i = 0;
         while (i < 6) {
+            assert!(vector::length(roles1) > i, ERR_EXCEED_VEC_LENGTH);
+            assert!(vector::length(roles2) > i, ERR_EXCEED_VEC_LENGTH);
             let role1 = vector::borrow(roles1, i);
             let role2 = vector::borrow(roles2, i);
             if (role1.class == utf8(b"none") && role2.class == utf8(b"none")) {

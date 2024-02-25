@@ -9,13 +9,13 @@ module auto_chess::verify {
 
     const REFRESH_gold_cost:u8 = 2;
     const CARDS_IN_ONE_REFRESH:u64 = 5;
-    const ERR_NOT_ENOUGH_GOLD:u64 = 0x07;
-    const ERR_INVALID_CHARACTOR:u64 = 0x08;
-    const ERR_CHARACTOR_IS_NONE:u64 = 0x09;
-    const ERR_UPGRADE_FAILED:u64 = 0x10;
-    const ERR_SAME_INDEX_UPGRADE:u64 = 0x11;
-    const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x12;
-    const ERR_WRONG_LEFT_GOLD:u64 = 0x13;
+    const ERR_INVALID_CHARACTOR:u64 = 0x001;
+    const ERR_CHARACTOR_IS_NONE:u64 = 0x002;
+    const ERR_UPGRADE_FAILED:u64 = 0x003;
+    const ERR_SAME_INDEX_UPGRADE:u64 = 0x004;
+    const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x005;
+    const ERR_WRONG_LEFT_GOLD:u64 = 0x006;
+    const ERR_EXCEED_VEC_LENGTH:u64 = 0x007;
 
     // Operations record the orders made by the play from the interaction with the frontend game portal.
     // Commands include: buy_upgrade; upgrade; buy; sell; swap;
@@ -46,15 +46,18 @@ module auto_chess::verify {
                 {
                     // return the chosen hero in the hero pool, current index is the position of the present 5 heros
                     // hero_pool_index = current_index + rotation_times*number_of_hero_present_in_each_rotation
+                    assert!(vector::length(cards_pool_roles) > (from_index + CARDS_IN_ONE_REFRESH * refresh_time), ERR_EXCEED_VEC_LENGTH);
                     from_role = *vector::borrow<role::Role>(cards_pool_roles, from_index + CARDS_IN_ONE_REFRESH * refresh_time);
                     gold_cost = role::get_gold_cost(&from_role);
                     assert!(role::get_class(&from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 };
+                assert!(vector::length(init_roles) > to_index, ERR_EXCEED_VEC_LENGTH);
                 let to_role = vector::borrow_mut<role::Role>(init_roles, to_index);
                 assert!(role::get_class(to_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 let res = role::upgrade(role_global, &from_role, to_role);
                 assert!(res, ERR_UPGRADE_FAILED);
                 // The chosen hero in the hero pool is removed by setting it's name to "none"
+                assert!(vector::length(cards_pool_roles) > from_index, ERR_EXCEED_VEC_LENGTH);
                 let from_role_mut = vector::borrow_mut<role::Role>(cards_pool_roles, from_index);
                 role::set_class(from_role_mut, utf8(b"none"));
                 gold = gold - gold_cost;
@@ -62,10 +65,12 @@ module auto_chess::verify {
                 // buy the chosen hero in the hero pool, has to be placed in an 'empty' lineup position  
                 let sub_str = vector::pop_back(&mut operations);
                 let (from_index, to_index) = utils::get_left_right_number(sub_str);
+                assert!(vector::length(cards_pool_roles) > (from_index + CARDS_IN_ONE_REFRESH * refresh_time), ERR_EXCEED_VEC_LENGTH);
                 let from_role = vector::borrow_mut<role::Role>(cards_pool_roles, from_index + CARDS_IN_ONE_REFRESH * refresh_time);
                 assert!(role::get_class(from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 let copy_role = *from_role;
                 role::set_class(from_role, utf8(b"none"));
+                assert!(vector::length(init_roles) > to_index, ERR_EXCEED_VEC_LENGTH);
                 let empty = vector::borrow<role::Role>(init_roles, to_index);
                 assert!(role::get_class(empty) == utf8(b"none"), ERR_INVALID_CHARACTOR);
                 vector::remove(init_roles, to_index);
@@ -93,9 +98,11 @@ module auto_chess::verify {
                 assert!(from_index != to_index, ERR_SAME_INDEX_UPGRADE);
                 let from_role;
                 {
+                    assert!(vector::length(init_roles) > from_index, ERR_EXCEED_VEC_LENGTH);
                     from_role = *vector::borrow<role::Role>(init_roles, from_index);
                     assert!(role::get_class(&from_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 };
+                assert!(vector::length(init_roles) > to_index, ERR_EXCEED_VEC_LENGTH);
                 let to_role = vector::borrow_mut<role::Role>(init_roles, to_index);
                 assert!(role::get_class(to_role) != utf8(b"none"), ERR_CHARACTOR_IS_NONE);
                 let res = role::upgrade(role_global, &from_role, to_role);

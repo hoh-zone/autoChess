@@ -23,6 +23,7 @@ module auto_chess::challenge {
     const DAY_IN_MS: u64 = 86_400_000;
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
     const ERR_ALREADY_INIT: u64 = 0x04;
+    const ERR_EXCEED_VEC_LENGTH: u64 = 0x05;
 
     // challenge admin, keeps the uptodate data with time stamp, updated every season (14-30 days)
     // rank_20 is the first 20 players identified by the lineup (when is it generated: mannually initiallized in ts script)
@@ -63,6 +64,7 @@ module auto_chess::challenge {
     }
 
     public(friend) fun get_lineup_by_rank(global: &Global, rank:u8): &LineUp {
+        assert!(vector::length(&global.rank_20) > (rank as u64), ERR_EXCEED_VEC_LENGTH);
         vector::borrow(&global.rank_20, (rank as u64))
     }
 
@@ -95,6 +97,7 @@ module auto_chess::challenge {
         let len = 20;
         let i = 0;
         while (i < len) {
+            assert!(vector::length(&global.rank_20) > i, ERR_EXCEED_VEC_LENGTH);
             let temp_lineup = vector::borrow(&global.rank_20, i);
             if (check_lineup_equality(temp_lineup, lineup)) {
                 return i + 1
@@ -133,6 +136,7 @@ module auto_chess::challenge {
         let i = 0;
         let vec_out:vector<u8> = vector::empty<u8>();
         while (i < len) {
+            assert!(vector::length(&global.rank_20) > i, ERR_EXCEED_VEC_LENGTH);
             let lineup = vector::borrow(&global.rank_20, i);
             let addr = lineup::get_creator(lineup);
             let addr_str = address::to_string(addr);
@@ -147,6 +151,7 @@ module auto_chess::challenge {
             vector::push_back(&mut vec_out, byte_comma);
             let j = 0;
             while (j < 6) {
+                assert!(vector::length(roles) > j, ERR_EXCEED_VEC_LENGTH);
                 let role = vector::borrow(roles, j);
                 let roleName = role::get_class(role);
                 let level = (role::get_level(role) as u64);
@@ -180,6 +185,7 @@ module auto_chess::challenge {
     }
 
     public(friend) fun get_reward_amount_by_rank(global: &Global, total_amount:u64, total_scores:u64, rank: u64) : u64 {
+        assert!(vector::length(&global.rank_20) > rank, ERR_EXCEED_VEC_LENGTH);
         let tmp_lineup = vector::borrow(&global.rank_20, rank);
         let gold_cost = lineup::get_gold_cost(tmp_lineup);
         let prop = gold_cost * get_base_weight_by_rank(rank) / total_scores;
@@ -195,6 +201,7 @@ module auto_chess::challenge {
         let rank = 0;
         let total_socres = 0;
         while(rank < 20) {
+            assert!(vector::length(&global.rank_20) > rank, ERR_EXCEED_VEC_LENGTH);
             let tmp_lineup = vector::borrow(&global.rank_20, rank);
             let gold_cost = lineup::get_gold_cost(tmp_lineup);
             let prop = get_base_weight_by_rank(rank);
@@ -206,6 +213,7 @@ module auto_chess::challenge {
 
     // score = lineup_price*(20-rank/2)
     public(friend) fun calculate_score(global: &Global, rank: u64) : u64 {
+        assert!(vector::length(&global.rank_20) > rank - 1, ERR_EXCEED_VEC_LENGTH);
         let tmp_lineup = vector::borrow(&global.rank_20, rank - 1);
         let gold_cost = lineup::get_gold_cost(tmp_lineup);
         let prop = get_base_weight_by_rank(rank - 1);
@@ -241,6 +249,7 @@ module auto_chess::challenge {
     #[lint_allow(self_transfer)]
     public(friend) fun send_reward_by_rank(global:&mut Global, rank:u8, ctx:&mut TxContext) {
         let receiver = tx_context::sender(ctx);
+        assert!(vector::length(&global.rank_20) > (rank as u64), ERR_EXCEED_VEC_LENGTH);
         let amount = *vector::borrow(&global.reward_20, (rank as u64));
         let balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(balance, ctx); 

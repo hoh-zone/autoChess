@@ -8,6 +8,7 @@ module auto_chess::utils {
     use std::debug::print;
 
     const AMOUNT_DECIMAL:u64 = 1_000_000_000;
+    const ERR_EXCEED_VEC_LENGTH:u64 = 0x001;
 
     public fun u8_to_string(num: u8) : String {
         let vec = vector::empty<u8>();
@@ -29,6 +30,7 @@ module auto_chess::utils {
         let i = 0;
         let res = 0;
         while (i < len) {
+            assert!(vector::length(&bytes) > i, ERR_EXCEED_VEC_LENGTH);
             res = res * 10 + ((*vector::borrow(&bytes, i) as u64) - 48);
             i = i + 1;
         };
@@ -49,6 +51,7 @@ module auto_chess::utils {
         let value = 0u64;
         let i = 0u64;
         while (i < 8) {
+            assert!(vector::length(&bytes) > i, ERR_EXCEED_VEC_LENGTH);
             value = value | ((*vector::borrow(&bytes, i) as u64) << ((8 * (7 - i)) as u8));
             i = i + 1;
         };
