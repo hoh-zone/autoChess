@@ -11,7 +11,7 @@ export function bytesArrayToString(input: Uint8Array): String {
 const useQueryChallengeRank = () => {
     const { wallet } = ethos.useWallet();
     let moveModule = "challenge";
-    let method = "query_rank_20";
+    let method = "generate_rank_20_description";
     const query_challenge_rank = useCallback(async () => {
         try {
             if (!wallet) return;

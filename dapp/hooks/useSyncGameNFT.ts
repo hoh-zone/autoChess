@@ -23,24 +23,21 @@ export const useSyncGameNFT = () => {
         setChallengeWin(nft.challenge_win);
         setChallengeLose(nft.challenge_lose);
         setSlotCharacter(nft.lineup.fields.roles.map((role) => {
-            if (role.fields.name == "none") {
+            if (role.fields.class == "none") {
                 return null;
             }
-            role.fields.max_life = role.fields.life;
-            role.fields.magic = 0;
+            role.fields.max_hp = role.fields.hp;
+            role.fields.sp = 0;
             return role.fields
         }));
         console.log("nft:", nft.lineup);
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
-            if (role.fields.name == "none") {
+            if (role.fields.class == "none") {
                 return null;
             }
-
-            // todo:待删除
-            role.fields.name = role.fields.name.replace("fireMega", "firemega");
             role.fields.attack = Number(role.fields.attack);
-            role.fields.life = Number(role.fields.life);
-            role.fields.max_life = role.fields.life;
+            role.fields.hp = Number(role.fields.hp);
+            role.fields.max_hp = role.fields.hp;
             return role.fields
         }));
         console.log("pool:",nft.cards_pool.fields.roles);

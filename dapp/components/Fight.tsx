@@ -70,9 +70,9 @@ export const Fight = () => {
         let enemys:CharacterFields[] = json['v2_lineup']['roles'];
         console.log("json res: ", enemys);
         enemys.map((ele) => {
-            ele.magic = 0;
-            ele.life = Number(ele.life);
-            ele.max_life = Number(ele.life);
+            ele.sp = 0;
+            ele.hp = Number(ele.hp);
+            ele.max_hp = Number(ele.hp);
             ele.attack = Number(ele.attack);
         })
         let name = json['v2_name'];

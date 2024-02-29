@@ -38,8 +38,8 @@ export const SkillTag = ({ id }: { id: number }) => {
       return assets?.forbid_debuff;
     } else if (effect === 'forbid_buff') {
       return assets?.forbid_buff;
-    } else if (effect === 'add_all_tmp_max_magic') {
-      return assets?.add_all_tmp_max_magic;
+    } else if (effect === 'add_all_tmp_max_sp') {
+      return assets?.add_all_tmp_max_sp;
     } else {
       return assets?.forbid_buff;
     }

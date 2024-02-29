@@ -6,7 +6,7 @@ import confetti from "canvas-confetti";
 import { CharacterFields } from "../types/nft";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
-import { get_max_magic } from "../components/character/rawData";
+import { get_max_sp } from "../components/character/rawData";
 
 export const useFight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
@@ -81,17 +81,17 @@ export const useFight = () => {
 
     const call_attack = (char: CharacterFields, enemyChar: CharacterFields, enemyIndex: number, is_opponent: boolean) => {
         let attack: number = char.attack;
-        if (enemyChar.life < attack) {
-            enemyChar.life = 0;
+        if (enemyChar.hp < attack) {
+            enemyChar.hp = 0;
         } else {
-            enemyChar.life -= attack;
+            enemyChar.hp -= attack;
         }
         if (is_opponent) {
             hpChange[enemyIndex] = -attack;
-            console.log("敌人：", char.name, " 普攻: ", attack, "生命:", char.life, " 攻击", enemyChar.name, "攻击后生命:", enemyChar.life);
+            console.log("敌人：", char.class, " 普攻: ", attack, "生命:", char.hp, " 攻击", enemyChar.class, "攻击后生命:", enemyChar.hp);
         } else {
             enemyHpChange[enemyIndex] = -attack;
-            console.log("我军：", char.name, " 普攻: ", attack, "生命:", char.life, " 攻击", enemyChar.name, "攻击后生命:", enemyChar.life);
+            console.log("我军：", char.class, " 普攻: ", attack, "生命:", char.hp, " 攻击", enemyChar.class, "攻击后生命:", enemyChar.hp);
         }
     }
 
@@ -133,7 +133,7 @@ export const useFight = () => {
                 if (role == null || role == undefined) {
                     continue;
                 }
-                if (role.life > 0) {
+                if (role.hp > 0) {
                     return i;
                 }
             }
@@ -146,7 +146,7 @@ export const useFight = () => {
                 if (role == null || role == undefined) {
                     continue;
                 }
-                if (role.life > 0) {
+                if (role.hp > 0) {
                     return i;
                 }
             }
@@ -160,7 +160,7 @@ export const useFight = () => {
                 if (role == null || role == undefined) {
                     continue;
                 }
-                if (role.life > 0) {
+                if (role.hp > 0) {
                     return i;
                 }
             }
@@ -170,7 +170,7 @@ export const useFight = () => {
                 if (role == null || role == undefined) {
                     continue;
                 }
-                if (role.life > 0) {
+                if (role.hp > 0) {
                     return i;
                 }
             }
@@ -190,7 +190,7 @@ export const useFight = () => {
             target_group = enemyChars;
         }
         for (const character of target_group) {
-            if (character != null && character.life > 0) {
+            if (character != null && character.hp > 0) {
                 if (character.effect === "forbid_buff") {
                     is_forbid_buff = true;
                 };
@@ -204,9 +204,9 @@ export const useFight = () => {
         }
 
         if (is_opponent) {
-            console.log("敌人:", char.name, " 释放技能:", char.effect, ":", value);
+            console.log("敌人:", char.class, " 释放技能:", char.effect, ":", value);
         } else {
-            console.log("我军:", char.name, " 释放技能:", char.effect, ":", value);
+            console.log("我军:", char.class, " 释放技能:", char.effect, ":", value);
         }
 
         if (effect == "aoe") {
@@ -225,10 +225,10 @@ export const useFight = () => {
             }
             target_group = get_target_group(is_opponent, false);
             target_group.map((ele: CharacterFields | null, index: number) => {
-                if (ele == null || ele.life <= 0) {
+                if (ele == null || ele.hp <= 0) {
                     return;
                 };
-                ele.life = Number(ele.life) + Number(value);
+                ele.hp = Number(ele.hp) + Number(value);
                 if (is_opponent) {
                     enemyHpChange[index] = value;
                 } else {
@@ -267,8 +267,8 @@ export const useFight = () => {
             }
 
             target_group = get_target_group(is_opponent, false);
-            target_group[next_one]!.max_life = Number(target_group[next_one]!.max_life) + Number(value);
-            target_group[next_one]!.life = Number(target_group[next_one]!.life) + Number(value);
+            target_group[next_one]!.max_hp = Number(target_group[next_one]!.max_hp) + Number(value);
+            target_group[next_one]!.hp = Number(target_group[next_one]!.hp) + Number(value);
             console.log("触发后一个角色永久生命值增加:", next_one, value);
             if (is_opponent) {
                 enemyHpChange[next_one] = value;
@@ -301,12 +301,12 @@ export const useFight = () => {
         } else if (effect == "attack_sputter_to_second_by_percent") {
             target_group = get_target_group(is_opponent, true);
             let suppter_attack = Math.round(value / 10 * char.attack);
-            enemy.life -= char.attack;
+            enemy.hp -= char.attack;
             let next_one_index = find_next_alive_char_index(!is_opponent, charIndex, enemyIndex);
             if (next_one_index == null) {
                 return;
             }
-            target_group[next_one_index]!.life -= suppter_attack;
+            target_group[next_one_index]!.hp -= suppter_attack;
             if (is_opponent) {
                 hpChange[enemyIndex] = -char.attack;
                 hpChange[next_one_index] = -(suppter_attack);
@@ -322,13 +322,13 @@ export const useFight = () => {
             if (last_one_index == null) {
                 return;
             }
-            target_group[last_one_index]!.life -= value;
+            target_group[last_one_index]!.hp -= value;
             if (is_opponent) {
                 hpChange[last_one_index] = -(value);
             } else {
                 enemyHpChange[last_one_index] = -(value);
             }
-            console.log("攻击最后一名角色:", target_group[last_one_index]?.name, value);
+            console.log("攻击最后一名角色:", target_group[last_one_index]?.class, value);
         } else if (effect == "reduce_tmp_attack") {
             if (is_forbid_debuff) {
                 console.log("触发特效: 加debuff失败")
@@ -344,7 +344,7 @@ export const useFight = () => {
                 enemyAttackChange[enemyIndex] = -(value);
             }
             console.log("触发单体降攻:", value);
-        } else if (effect == "add_all_tmp_magic") {
+        } else if (effect == "add_all_tmp.sp") {
             if (is_forbid_buff) {
                 console.log("触发特效: 加buff失败")
                 return;
@@ -354,9 +354,9 @@ export const useFight = () => {
                 if (ele == null || index == charIndex) {
                     return;
                 }
-                ele.magic += value;
-                if (ele.magic >= ele.max_magic) {
-                    ele.magic = ele.max_magic;
+                ele.sp += value;
+                if (ele.sp >= ele.max_sp) {
+                    ele.sp = ele.max_sp;
                 }
             });
             console.log("全体加魔法值:", value, target_group[3]);
@@ -366,17 +366,17 @@ export const useFight = () => {
             target_group = get_target_group(is_opponent, true);
             let min_hp_index = 0;
             target_group.map((character, index) => {
-                if (character == null || character.life == null) {
+                if (character == null || character.hp == null) {
                     return
                 }
-                if (min_hp_index < character.life) {
+                if (min_hp_index < character.hp) {
                     min_hp_index = index;
                 }
             });
-            console.log("目标：", target_group[min_hp_index]?.name, " 攻击前生命:", target_group[min_hp_index]?.life);
+            console.log("目标：", target_group[min_hp_index]?.class, " 攻击前生命:", target_group[min_hp_index]?.hp);
             if (target_group[min_hp_index] != null) {
-                target_group[min_hp_index]!.life = (target_group[min_hp_index]!.life - value) < 0 ? 0 : target_group[min_hp_index]!.life - value;
-                if (target_group[min_hp_index]!.life == 0) {
+                target_group[min_hp_index]!.hp = (target_group[min_hp_index]!.hp - value) < 0 ? 0 : target_group[min_hp_index]!.hp - value;
+                if (target_group[min_hp_index]!.hp == 0) {
                     console.log("对方死亡");
                     target_group[min_hp_index] = null
                 }
@@ -389,10 +389,10 @@ export const useFight = () => {
             set_target_group(target_group, is_opponent, true);
         } else if (effect == "attack_by_life_percent") {
             target_group = get_target_group(is_opponent, true);
-            let life = enemy.max_life;
+            let life = enemy.max_hp;
             let extra_attack = Math.round(value / 10 * life);
             let final_attack = Number(char.attack) + Number(extra_attack);
-            enemy.life -= (final_attack);
+            enemy.hp -= (final_attack);
             if (is_opponent) {
                 hpChange[enemyIndex] = -(final_attack);
             } else {
@@ -410,26 +410,26 @@ export const useFight = () => {
             if (ele == null) {
                 return;
             }
-            if (ele.life <= 0) {
+            if (ele.hp <= 0) {
                 if (is_opponent) {
-                    console.log("敌人:", ele.name, " 死亡");
+                    console.log("敌人:", ele.class, " 死亡");
                     enemyChars[index] = null
                 } else {
-                    console.log("我军：", ele.name, " 死亡");
+                    console.log("我军：", ele.class, " 死亡");
                     chars[index] = null
                 }
             }
         })
     }
 
-    const get_extra_max_magic_debuff = (is_opponent: boolean) => {
+    const get_extra_max_sp_debuff = (is_opponent: boolean) => {
         let value = 0;
         if (is_opponent) {
             chars.map((ele) => {
                 if (ele == null) {
                     return;
                 }
-                if (ele.effect === "add_all_tmp_max_magic") {
+                if (ele.effect === "add_all_tmp_max_sp") {
                     value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
                 }
             })
@@ -438,7 +438,7 @@ export const useFight = () => {
                 if (ele == null) {
                     return;
                 }
-                if (ele.effect === "add_all_tmp_max_magic") {
+                if (ele.effect === "add_all_tmp_max_sp") {
                     value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
                 }
             })
@@ -452,25 +452,25 @@ export const useFight = () => {
         return value;
     }
 
-    const modify_max_magic = (extra_max_magic_debuff: number, is_opponent: boolean, charIndex: number) => {
+    const modify_max_sp = (extra_max_sp_debuff: number, is_opponent: boolean, charIndex: number) => {
         let target_group = get_target_group(is_opponent, false);
         if (target_group[charIndex] == null) {
             return;
         }
-        if (extra_max_magic_debuff > 0) {
-            target_group[charIndex]!.max_magic = get_max_magic(target_group[charIndex]) + Number(extra_max_magic_debuff);
-        } else if (extra_max_magic_debuff == 0 && target_group[charIndex]!.max_magic > get_max_magic(target_group[charIndex])) {
-            target_group[charIndex]!.max_magic = get_max_magic(target_group[charIndex]);
+        if (extra_max_sp_debuff > 0) {
+            target_group[charIndex]!.max_sp = get_max_sp(target_group[charIndex]) + Number(extra_max_sp_debuff);
+        } else if (extra_max_sp_debuff == 0 && target_group[charIndex]!.max_sp > get_max_sp(target_group[charIndex])) {
+            target_group[charIndex]!.max_sp = get_max_sp(target_group[charIndex]);
         }
     }
 
     const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
-        let extra_max_magic_debuff = get_extra_max_magic_debuff(is_opponent);
-        modify_max_magic(extra_max_magic_debuff, is_opponent, charIndex);
-        if (char.magic >= Number(char.max_magic) && char.effect_type === "skill") {
+        let extra_max_sp_debuff = get_extra_max_sp_debuff(is_opponent);
+        modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
+        if (char.sp >= Number(char.max_sp) && char.effect_type === "skill") {
             skillTag[charIndex] = "1";
             char.attacking = 2;
-            char.magic = 0;
+            char.sp = 0;
             setChars(chars.slice());
             setEnemyChars(enemyChars.slice());
             await sleep(1000);
@@ -483,7 +483,7 @@ export const useFight = () => {
             setEnemyChars(enemyChars.slice());
             await sleep(700);
             call_attack(char, enemy, enemyIndex, is_opponent);
-            char.magic = char.magic + 1;
+            char.sp = char.sp + 1;
             char.attacking = 0;
         }
     }
@@ -511,7 +511,7 @@ export const useFight = () => {
 
             // 同时攻击
             let max_loop = 40;
-            while (char.life > 0 && enemyChar.life > 0) {
+            while (char.hp > 0 && enemyChar.hp > 0) {
                 await sleep(500);
                 await action(char, enemyChar, charIndex, enemyCharIndex, false);
                 await action(enemyChar, char, enemyCharIndex, charIndex, true);

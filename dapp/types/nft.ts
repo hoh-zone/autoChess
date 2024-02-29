@@ -4,7 +4,7 @@ export interface GameNft {
     even:          number;
     gold:          string;
     id:            ID;
-    life:          number;
+    hp:          number;
     lineup:        CardsPool;
     win:           number;
     lose:          number;
@@ -37,17 +37,16 @@ export interface ID {
 }
 
 export interface CharacterFields {
-    name:    string;
+    class:    string;
     level:   number;
 
     attack:  number;
-    life: number;
-    magic: number;
+    hp: number;
+    sp: number;
 
-    // max-life
     base_attack: number;
-    max_life: number;
-    max_magic: number;
+    max_hp: number;
+    max_sp: number;
     effect_type: string; // 常驻触发，主动释放，被动触发
     effect: string; // 可能有亡语，需要读取释放
     effect_value: string;

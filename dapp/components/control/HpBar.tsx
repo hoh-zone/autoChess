@@ -26,15 +26,15 @@ export const HpBar = ({id}: {
         if (!char) {
             return start;
         }
-        let total = char.max_life
+        let total = char.max_hp
         if (total == undefined) {
             return start;
         }
-        let life = (char == null||char.life<0) ? 0 : char.life;
+        let life = (char == null||char.hp<0) ? 0 : char.hp;
         return start + (life / total) * end
     }
 
-    const get_mp_url_by_magic = (char:CharacterFields | null) => {
+    const get_img_url_by_effect = (char:CharacterFields | null) => {
         if (char != null && char.effect_type === "ring") {
             return "url('fix_inner.png') no-repeat";
         };
@@ -48,7 +48,7 @@ export const HpBar = ({id}: {
         return "url('level.png') no-repeat";
     }
 
-    const get_width_by_magic = (char:CharacterFields | null) => {
+    const get_width_by_hp = (char:CharacterFields | null) => {
         let start = 10;
         let end = 45;
         if (char?.effect_type == "ring") {
@@ -60,22 +60,22 @@ export const HpBar = ({id}: {
         if (!char) {
             return start;
         };
-        let max = char.max_magic;
+        let max = char.max_sp;
         if (max == 0) {
             return end;
         }
         if (max == 0) {
             return end;
         }
-        return start + (end - start) * (char.magic) / max;
+        return start + (end - start) * (char.sp) / max;
     }
 
     
 
     return <HStack style={{zIndex:1000,position:"relative", justifyContent:"left"}}>
             <div style={{ justifyContent:"left" ,width: '50px', height: '30px', background: "url('status_bg.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left" }}>
-                <div style={{ width:  `${get_width_by_magic(char)}px`, height: '30px', background: `${get_mp_url_by_magic(char)}`, backgroundSize: '50px auto', backgroundPosition: "left" }}>
-                    <div style={{ width:  `${get_width_by_life(char)}px`, height: '30px', background: "url('hp_inner.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left"}}>
+                <div style={{ width:  `${get_img_url_by_effect(char)}px`, height: '30px', background: `${get_img_url_by_effect(char)}`, backgroundSize: '50px auto', backgroundPosition: "left" }}>
+                    <div style={{ width:  `${get_width_by_hp(char)}px`, height: '30px', background: "url('hp_inner.png') no-repeat", backgroundSize: '50px auto', backgroundPosition: "left"}}>
                         <div style={{ width: '30px', height: '30px', background: `${get_level_icon(char)}`, backgroundSize: '50px auto', backgroundPosition: "left"}}/>
                     </div>
                 </div>

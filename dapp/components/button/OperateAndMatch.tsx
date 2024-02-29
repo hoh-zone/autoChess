@@ -18,7 +18,7 @@ const useOperateAndMatch = () => {
             if (cha == null || cha == undefined) {
                 vec.push("");
             } else {
-                vec.push(cha.name + "-" +cha.level + ":" + cha.attack + ":" + cha.max_life);
+                vec.push(cha.class + "-" +cha.level + ":" + cha.attack + ":" + cha.max_hp);
             }
         }
 
@@ -28,12 +28,13 @@ const useOperateAndMatch = () => {
 
     const operate_submit = async (operations: string[]) => {
         console.log("operations:", operations);
+        console.log("chess:", chess_id);
         if (!wallet) return;
         try {
             const tx = new TransactionBlock();
             const left_gold = money;
             tx.moveCall({
-                target: `${PACKAGE_ID}::chess::operate_and_match`,
+                target: `${PACKAGE_ID}::chess::operate_and_battle`,
                 arguments: [
                     tx.pure(`${CHESS_GLOBAL}`),
                     tx.pure(`${ROLE_GLOBAL}`),
@@ -54,6 +55,7 @@ const useOperateAndMatch = () => {
                     showEvents:true,
                 }
             });
+            console.log("response:", response);
             if (response.objectChanges) {
                 const createObjectChange = response.objectChanges.find(
                     (objectChange) => objectChange.type === "created"

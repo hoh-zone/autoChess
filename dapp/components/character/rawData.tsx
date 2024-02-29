@@ -6,101 +6,101 @@ interface Roles {
 }
 
 const roles_info: Roles = {
-    "assa1": {name: "assa1",level: 1,attack:  6, life: 8, magic: 0, base_attack: 6, max_life: 8, max_magic: 3, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "6"},
-    "assa1_1": {name: "assa1_1",level: 2,attack:  6, life: 8, magic: 0, base_attack: 6, max_life: 8, max_magic: 3, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "6"},
-    "assa2": {name: "assa2",level: 3,attack:  12, life: 15, magic: 0, base_attack: 12, max_life: 15, max_magic: 2, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "12"},
-    "assa2_1": {name: "assa2_1",level: 6,attack:  12, life: 15, magic: 0, base_attack: 12, max_life: 15, max_magic: 2, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "12"},
-    "assa3": {name: "assa3",level: 9,attack:  24, life: 37, magic: 0, base_attack: 24, max_life: 37, max_magic: 1, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "18"},
+    "assa1": {class: "assa1",level: 1,attack:  6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, max_sp: 3, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "6"},
+    "assa1_1": {class: "assa1_1",level: 2,attack:  6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, max_sp: 3, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "6"},
+    "assa2": {class: "assa2",level: 3,attack:  12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, max_sp: 2, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "12"},
+    "assa2_1": {class: "assa2_1",level: 6,attack:  12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, max_sp: 2, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "12"},
+    "assa3": {class: "assa3",level: 9,attack:  24, hp: 37, sp: 0, base_attack: 24, max_hp: 37, max_sp: 1, effect_type: "skill", effect: "attack_lowest_hp", effect_value: "18"},
 
-    "cleric1": {name: "cleric1",level: 1,attack:  3, life: 8, magic: 0, base_attack: 3, max_life: 8, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "1"},
-    "cleric1_1": {name: "cleric1_1",level: 2,attack:  3, life: 8, magic: 0, base_attack: 3, max_life: 8, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "1"},
-    "cleric2": {name: "cleric2",level: 3,attack:  6, life: 15, magic: 0, base_attack: 6, max_life: 15, max_magic: 2, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "2"},
-    "cleric2_1": {name: "cleric2_1",level: 6,attack:  6, life: 15, magic: 0, base_attack: 6, max_life: 15, max_magic: 2, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "2"},
-    "cleric3": {name: "cleric3",level: 9,attack:  12, life: 37, magic: 0, base_attack: 12, max_life: 37, max_magic: 1, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "4"},
+    "cleric1": {class: "cleric1",level: 1,attack:  3, hp: 8, sp: 0, base_attack: 3, max_hp: 8, max_sp: 3, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "1"},
+    "cleric1_1": {class: "cleric1_1",level: 2,attack:  3, hp: 8, sp: 0, base_attack: 3, max_hp: 8, max_sp: 3, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "1"},
+    "cleric2": {class: "cleric2",level: 3,attack:  6, hp: 15, sp: 0, base_attack: 6, max_hp: 15, max_sp: 2, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "2"},
+    "cleric2_1": {class: "cleric2_1",level: 6,attack:  6, hp: 15, sp: 0, base_attack: 6, max_hp: 15, max_sp: 2, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "2"},
+    "cleric3": {class: "cleric3",level: 9,attack:  12, hp: 37, sp: 0, base_attack: 12, max_hp: 37, max_sp: 1, effect_type: "skill", effect: "add_all_tmp_attack", effect_value: "4"},
 
-    "fighter1": {name: "fighter1",level: 1,attack:  4, life: 9, magic: 0, base_attack: 4, max_life: 9, max_magic: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "2"},
-    "fighter1_1": {name: "fighter1_1",level: 2,attack:  4, life: 9, magic: 0, base_attack: 4, max_life: 9, max_magic: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "2"},
-    "fighter2": {name: "fighter2",level: 3,attack:  12, life: 18, magic: 0, base_attack: 12, max_life: 18, max_magic: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "4"},
-    "fighter2_1": {name: "fighter2_1",level: 6,attack:  12, life: 18, magic: 0, base_attack: 12, max_life: 18, max_magic: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "4"},
-    "fighter3": {name: "fighter3",level: 9,attack:  24, life: 45, magic: 0, base_attack: 24, max_life: 45, max_magic: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "8"},
+    "fighter1": {class: "fighter1",level: 1,attack:  4, hp: 9, sp: 0, base_attack: 4, max_hp: 9, max_sp: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "2"},
+    "fighter1_1": {class: "fighter1_1",level: 2,attack:  4, hp: 9, sp: 0, base_attack: 4, max_hp: 9, max_sp: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "2"},
+    "fighter2": {class: "fighter2",level: 3,attack:  12, hp: 18, sp: 0, base_attack: 12, max_hp: 18, max_sp: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "4"},
+    "fighter2_1": {class: "fighter2_1",level: 6,attack:  12, hp: 18, sp: 0, base_attack: 12, max_hp: 18, max_sp: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "4"},
+    "fighter3": {class: "fighter3",level: 9,attack:  24, hp: 45, sp: 0, base_attack: 24, max_hp: 45, max_sp: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "8"},
 
-    "golem1": {name: "golem1",level: 1,attack:  4, life: 12, magic: 0, base_attack: 4, max_life: 12, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_magic", effect_value: "1"},
-    "golem1_1": {name: "golem1_1",level: 2,attack:  4, life: 12, magic: 0, base_attack: 4, max_life: 12, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_magic", effect_value: "1"},
-    "golem2": {name: "golem2",level: 3,attack:  8, life: 24, magic: 0, base_attack: 8, max_life: 24, max_magic: 2, effect_type: "skill", effect: "add_all_tmp_magic", effect_value: "1"},
-    "golem2_1": {name: "golem2_1",level: 6,attack:  8, life: 24, magic: 0, base_attack: 8, max_life: 24, max_magic: 2, effect_type: "skill", effect: "add_all_tmp_magic", effect_value: "1"},
-    "golem3": {name: "golem3",level: 9,attack:  16, life: 60, magic: 0, base_attack: 16, max_life: 60, max_magic: 1, effect_type: "skill", effect: "add_all_tmp_magic", effect_value: "1"},
+    "golem1": {class: "golem1",level: 1,attack:  4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1"},
+    "golem1_1": {class: "golem1_1",level: 2,attack:  4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1"},
+    "golem2": {class: "golem2",level: 3,attack:  8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, max_sp: 2, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1"},
+    "golem2_1": {class: "golem2_1",level: 6,attack:  8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, max_sp: 2, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1"},
+    "golem3": {class: "golem3",level: 9,attack:  16, hp: 60, sp: 0, base_attack: 16, max_hp: 60, max_sp: 1, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1"},
 
-    "tank1": {name: "tank1",level: 1,attack:  3, life: 12, magic: 0, base_attack: 3, max_life: 12, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "2"},
-    "tank1_1": {name: "tank1_1",level: 2,attack:  3, life: 12, magic: 0, base_attack: 3, max_life: 12, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "2"},
-    "tank2": {name: "tank2",level: 3,attack:  6, life: 24, magic: 0, base_attack: 6, max_life: 24, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "4"},
-    "tank2_1": {name: "tank2_1",level: 6,attack:  6, life: 24, magic: 0, base_attack: 6, max_life: 24, max_magic: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "4"},
-    "tank3": {name: "tank3",level: 9,attack:  12, life: 60, magic: 0, base_attack: 12, max_life: 60, max_magic: 2, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "8"},
+    "tank1": {class: "tank1",level: 1,attack:  3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "2"},
+    "tank1_1": {class: "tank1_1",level: 2,attack:  3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "2"},
+    "tank2": {class: "tank2",level: 3,attack:  6, hp: 24, sp: 0, base_attack: 6, max_hp: 24, max_sp: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "4"},
+    "tank2_1": {class: "tank2_1",level: 6,attack:  6, hp: 24, sp: 0, base_attack: 6, max_hp: 24, max_sp: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "4"},
+    "tank3": {class: "tank3",level: 9,attack:  12, hp: 60, sp: 0, base_attack: 12, max_hp: 60, max_sp: 2, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "8"},
 
-    "mega1": {name: "mega1",level: 1,attack:  4, life: 11, magic: 0, base_attack: 4, max_life: 11, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "4"},
-    "mega1_1": {name: "mega1_1",level: 2,attack:  4, life: 11, magic: 0, base_attack: 4, max_life: 11, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "4"},
-    "mega2": {name: "mega2",level: 3,attack:  8, life: 21, magic: 0, base_attack: 8, max_life: 21, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "8"},
-    "mega2_1": {name: "mega2_1",level: 6,attack:  8, life: 21, magic: 0, base_attack: 8, max_life: 21, max_magic: 3, effect_type: "skill", effect: "aoe", effect_value: "8"},
-    "mega3": {name: "mega3",level: 9,attack:  16, life: 50, magic: 0, base_attack: 16, max_life: 50, max_magic: 2, effect_type: "skill", effect: "aoe", effect_value: "16"},
+    "mega1": {class: "mega1",level: 1,attack:  4, hp: 11, sp: 0, base_attack: 4, max_hp: 11, max_sp: 3, effect_type: "skill", effect: "aoe", effect_value: "4"},
+    "mega1_1": {class: "mega1_1",level: 2,attack:  4, hp: 11, sp: 0, base_attack: 4, max_hp: 11, max_sp: 3, effect_type: "skill", effect: "aoe", effect_value: "4"},
+    "mega2": {class: "mega2",level: 3,attack:  8, hp: 21, sp: 0, base_attack: 8, max_hp: 21, max_sp: 3, effect_type: "skill", effect: "aoe", effect_value: "8"},
+    "mega2_1": {class: "mega2_1",level: 6,attack:  8, hp: 21, sp: 0, base_attack: 8, max_hp: 21, max_sp: 3, effect_type: "skill", effect: "aoe", effect_value: "8"},
+    "mega3": {class: "mega3",level: 9,attack:  16, hp: 50, sp: 0, base_attack: 16, max_hp: 50, max_sp: 2, effect_type: "skill", effect: "aoe", effect_value: "16"},
 
-    "shaman1": {name: "shaman1",level: 1,attack:  5, life: 9, magic: 0, base_attack: 5, max_life: 9, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
-    "shaman1_1": {name: "shaman1_1",level: 2,attack:  5, life: 9, magic: 0, base_attack: 5, max_life: 9, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
-    "shaman2": {name: "shaman2",level: 3,attack:  10, life: 21, magic: 0, base_attack: 10, max_life: 21, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
-    "shaman2_1": {name: "shaman2_1",level: 6,attack:  10, life: 21, magic: 0, base_attack: 10, max_life: 21, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
-    "shaman3": {name: "shaman3",level: 9,attack:  20, life: 65, magic: 0, base_attack: 20, max_life: 65, max_magic: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
+    "shaman1": {class: "shaman1",level: 1,attack:  5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, max_sp: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
+    "shaman1_1": {class: "shaman1_1",level: 2,attack:  5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, max_sp: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
+    "shaman2": {class: "shaman2",level: 3,attack:  10, hp: 21, sp: 0, base_attack: 10, max_hp: 21, max_sp: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
+    "shaman2_1": {class: "shaman2_1",level: 6,attack:  10, hp: 21, sp: 0, base_attack: 10, max_hp: 21, max_sp: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
+    "shaman3": {class: "shaman3",level: 9,attack:  20, hp: 65, sp: 0, base_attack: 20, max_hp: 65, max_sp: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: ""},
 
-    "firemega1": {name: "firemega1",level: 1,attack:  6, life: 8, magic: 0, base_attack: 6, max_life: 8, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "firemega1_1": {name: "firemega1_1",level: 2,attack:  6, life: 8, magic: 0, base_attack: 6, max_life: 8, max_magic: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "firemega2": {name: "firemega2",level: 3,attack:  12, life: 15, magic: 0, base_attack: 12, max_life: 15, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "firemega2_1": {name: "firemega2_1",level: 6, attack:  12, life: 15, magic: 0, base_attack: 12, max_life: 15, max_magic: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
-    "firemega3": {name: "firemega3",level: 9,attack:  24, life: 37, magic: 0, base_attack: 24, max_life: 37, max_magic: 1, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega1": {class: "firemega1",level: 1,attack:  6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, max_sp: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega1_1": {class: "firemega1_1",level: 2,attack:  6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, max_sp: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega2": {class: "firemega2",level: 3,attack:  12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, max_sp: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega2_1": {class: "firemega2_1",level: 6, attack:  12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, max_sp: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
+    "firemega3": {class: "firemega3",level: 9,attack:  24, hp: 37, sp: 0, base_attack: 24, max_hp: 37, max_sp: 1, effect_type: "skill", effect: "forbid_debuff", effect_value: ""},
 
-    "slime1": {name: "slime1",level: 1,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
-    "slime1_1": {name: "slime1_1",level: 2,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
-    "slime2": {name: "slime2",level: 3, attack:  10, life: 30, magic: 0, base_attack: 10, max_life: 30, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
-    "slime2_1": {name: "slime2_1",level: 6,attack:  10, life: 30, magic: 0, base_attack: 10, max_life: 30, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
-    "slime3": {name: "slime3",level: 9,attack:  20, life: 65, magic: 0, base_attack: 20, max_life: 65, max_magic: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "10"},
+    "slime1": {class: "slime1",level: 1,attack:  6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, max_sp: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
+    "slime1_1": {class: "slime1_1",level: 2,attack:  6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, max_sp: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5"},
+    "slime2": {class: "slime2",level: 3, attack:  10, hp: 30, sp: 0, base_attack: 10, max_hp: 30, max_sp: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
+    "slime2_1": {class: "slime2_1",level: 6,attack:  10, hp: 30, sp: 0, base_attack: 10, max_hp: 30, max_sp: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "6"},
+    "slime3": {class: "slime3",level: 9,attack:  20, hp: 65, sp: 0, base_attack: 20, max_hp: 65, max_sp: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "10"},
     
-    "ani1": {name: "ani1",level: 1,attack:  4, life: 12, magic: 0, base_attack: 4, max_life: 12, max_magic: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
-    "ani1_1": {name: "ani1_1",level: 2,attack:  4, life: 12, magic: 0, base_attack: 4, max_life: 12, max_magic: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
-    "ani2": {name: "ani2",level: 3,attack:  8, life: 24, magic: 0, base_attack: 8, max_life: 24, max_magic: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
-    "ani2_1": {name: "ani2_1",level: 6,attack:  8, life: 24, magic: 0, base_attack: 8, max_life: 24, max_magic: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
-    "ani3": {name: "ani3",level: 9,attack:  16, life: 60, magic: 0, base_attack: 16, max_life: 60, max_magic: 1, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "9"},
+    "ani1": {class: "ani1",level: 1,attack:  4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
+    "ani1_1": {class: "ani1_1",level: 2,attack:  4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
+    "ani2": {class: "ani2",level: 3,attack:  8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, max_sp: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
+    "ani2_1": {class: "ani2_1",level: 6,attack:  8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, max_sp: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
+    "ani3": {class: "ani3",level: 9,attack:  16, hp: 60, sp: 0, base_attack: 16, max_hp: 60, max_sp: 1, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "9"},
     
-    "tree1": {name: "tree1",level: 1,attack:  5, life: 11, magic: 0, base_attack: 5, max_life: 11, max_magic: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
-    "tree1_1": {name: "tree1_1",level: 2,attack:  5, life: 11, magic: 0, base_attack: 5, max_life: 11, max_magic: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
-    "tree2": {name: "tree2",level: 3,attack:  10, life: 21, magic: 0, base_attack: 10, max_life: 21, max_magic: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
-    "tree2_1": {name: "tree2_1",level: 6,attack:  10, life: 21, magic: 0, base_attack: 10, max_life: 21, max_magic: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
-    "tree3": {name: "tree3",level: 9,attack:  20, life: 50, magic: 0, base_attack: 20, max_life: 50, max_magic: 1, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "9"},
+    "tree1": {class: "tree1",level: 1,attack:  5, hp: 11, sp: 0, base_attack: 5, max_hp: 11, max_sp: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
+    "tree1_1": {class: "tree1_1",level: 2,attack:  5, hp: 11, sp: 0, base_attack: 5, max_hp: 11, max_sp: 3, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "3"},
+    "tree2": {class: "tree2",level: 3,attack:  10, hp: 21, sp: 0, base_attack: 10, max_hp: 21, max_sp: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
+    "tree2_1": {class: "tree2_1",level: 6,attack:  10, hp: 21, sp: 0, base_attack: 10, max_hp: 21, max_sp: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6"},
+    "tree3": {class: "tree3",level: 9,attack:  20, hp: 50, sp: 0, base_attack: 20, max_hp: 50, max_sp: 1, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "9"},
     
-    "wizard1": {name: "wizard1",level: 1,attack:  5, life: 9, magic: 0, base_attack: 5, max_life: 9, max_magic: 0, effect_type: "ring", effect: "add_all_tmp_max_magic", effect_value: "1"},
-    "wizard1_1": {name: "wizard1_1",level: 2,attack:  5, life: 9, magic: 0, base_attack: 5, max_life: 9, max_magic: 0, effect_type: "ring", effect: "add_all_tmp_max_magic", effect_value: "1"},
-    "wizard2": {name: "wizard2",level: 3,attack:  10, life: 18, magic: 0, base_attack: 10, max_life: 18, max_magic: 0, effect_type: "ring", effect: "add_all_tmp_max_magic", effect_value: "1"},
-    "wizard2_1": {name: "wizard2_1",level: 6,attack:  10, life: 18, magic: 0, base_attack: 10, max_life: 18, max_magic: 0, effect_type: "ring", effect: "add_all_tmp_max_magic", effect_value: "1"},
-    "wizard3": {name: "wizard3",level: 9,attack:  20, life: 45, magic: 0, base_attack: 20, max_life: 45, max_magic: 0, effect_type: "ring", effect: "add_all_tmp_max_magic", effect_value: "2"},
+    "wizard1": {class: "wizard1",level: 1,attack:  5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, max_sp: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1"},
+    "wizard1_1": {class: "wizard1_1",level: 2,attack:  5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, max_sp: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1"},
+    "wizard2": {class: "wizard2",level: 3,attack:  10, hp: 18, sp: 0, base_attack: 10, max_hp: 18, max_sp: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1"},
+    "wizard2_1": {class: "wizard2_1",level: 6,attack:  10, hp: 18, sp: 0, base_attack: 10, max_hp: 18, max_sp: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1"},
+    "wizard3": {class: "wizard3",level: 9,attack:  20, hp: 45, sp: 0, base_attack: 20, max_hp: 45, max_sp: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "2"},
 
-    "priest1": {name: "priest1",level: 1,attack:  3, life: 12, magic: 0, base_attack: 3, max_life: 12, max_magic: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "6"},
-    "priest1_1": {name: "priest1_1",level: 2,attack:  3, life: 12, magic: 0, base_attack: 3, max_life: 12, max_magic: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "6"},
-    "priest2": {name: "priest2",level: 3,attack:  6, life: 24, magic: 0, base_attack: 6, max_life: 24, max_magic: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "8"},
-    "priest2_1": {name: "priest2_1",level: 6,attack:  6, life: 24, magic: 0, base_attack: 6, max_life: 24, max_magic: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "8"},
-    "priest3": {name: "priest3",level: 9,attack:  12, life: 60, magic: 0, base_attack: 12, max_life: 60, max_magic: 2, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "12"},
+    "priest1": {class: "priest1",level: 1,attack:  3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "6"},
+    "priest1_1": {class: "priest1_1",level: 2,attack:  3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "6"},
+    "priest2": {class: "priest2",level: 3,attack:  6, hp: 24, sp: 0, base_attack: 6, max_hp: 24, max_sp: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "8"},
+    "priest2_1": {class: "priest2_1",level: 6,attack:  6, hp: 24, sp: 0, base_attack: 6, max_hp: 24, max_sp: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "8"},
+    "priest3": {class: "priest3",level: 9,attack:  12, hp: 60, sp: 0, base_attack: 12, max_hp: 60, max_sp: 2, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "12"},
 
-    "shinobi1": {name: "shinobi1",level: 1,attack:  4, life: 12, magic: 0, base_attack: 4, max_life: 12, max_magic: 3, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "10"},
-    "shinobi1_1": {name: "shinobi1_1",level: 2,attack:  4, life: 12, magic: 0, base_attack: 4, max_life: 12, max_magic: 3, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "10"},
-    "shinobi2": {name: "shinobi2",level: 3,attack:  8, life: 24, magic: 0, base_attack: 8, max_life: 24, max_magic: 2, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "20"},
-    "shinobi2_1": {name: "shinobi2_1",level: 6,attack:  8, life: 24, magic: 0, base_attack: 8, max_life: 24, max_magic: 2, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "20"},
-    "shinobi3": {name: "shinobi3",level: 9,attack:  16, life: 60, magic: 0, base_attack: 16, max_life: 60, max_magic: 1, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "30"},
+    "shinobi1": {class: "shinobi1",level: 1,attack:  4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "10"},
+    "shinobi1_1": {class: "shinobi1_1",level: 2,attack:  4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, max_sp: 3, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "10"},
+    "shinobi2": {class: "shinobi2",level: 3,attack:  8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, max_sp: 2, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "20"},
+    "shinobi2_1": {class: "shinobi2_1",level: 6,attack:  8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, max_sp: 2, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "20"},
+    "shinobi3": {class: "shinobi3",level: 9,attack:  16, hp: 60, sp: 0, base_attack: 16, max_hp: 60, max_sp: 1, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "30"},
 
-    "kunoichi1": {name: "kunoichi1",level: 1,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
-    "kunoichi1_1": {name: "kunoichi1_1",level: 2,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
-    "kunoichi2": {name: "kunoichi2",level: 3,attack:  12, life: 18, magic: 0, base_attack: 12, max_life: 18, max_magic: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
-    "kunoichi2_1": {name: "kunoichi2_1",level: 6,attack:  12, life: 18, magic: 0, base_attack: 12, max_life: 18, max_magic: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
-    "kunoichi3": {name: "kunoichi3",level: 9,attack:  24, life: 45, magic: 0, base_attack: 24, max_life: 45, max_magic: 1, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
+    "kunoichi1": {class: "kunoichi1",level: 1,attack:  6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, max_sp: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
+    "kunoichi1_1": {class: "kunoichi1_1",level: 2,attack:  6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, max_sp: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
+    "kunoichi2": {class: "kunoichi2",level: 3,attack:  12, hp: 18, sp: 0, base_attack: 12, max_hp: 18, max_sp: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
+    "kunoichi2_1": {class: "kunoichi2_1",level: 6,attack:  12, hp: 18, sp: 0, base_attack: 12, max_hp: 18, max_sp: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
+    "kunoichi3": {class: "kunoichi3",level: 9,attack:  24, hp: 45, sp: 0, base_attack: 24, max_hp: 45, max_sp: 1, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50"},
 
-    "archer1": {name: "archer1",level: 1,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 3, effect_type: "skill", effect: "attack_last_char", effect_value: "7"},
-    "archer1_1": {name: "archer1_1",level: 2,attack:  6, life: 9, magic: 0, base_attack: 6, max_life: 9, max_magic: 3, effect_type: "skill", effect: "attack_last_char", effect_value: "7"},
-    "archer2": {name: "archer2",level: 3,attack:  12, life: 18, magic: 0, base_attack: 12, max_life: 18, max_magic: 2, effect_type: "skill", effect: "attack_last_char", effect_value: "14"},
-    "archer2_1": {name: "archer2_1",level: 6,attack:  12, life: 18, magic: 0, base_attack: 12, max_life: 18, max_magic: 2, effect_type: "skill", effect: "attack_last_char", effect_value: "14"},
-    "archer3": {name: "archer3",level: 9,attack:  24, life: 45, magic: 0, base_attack: 24, max_life: 45, max_magic: 1, effect_type: "skill", effect: "attack_last_char", effect_value: "24"},
+    "archer1": {class: "archer1",level: 1,attack:  6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, max_sp: 3, effect_type: "skill", effect: "attack_last_char", effect_value: "7"},
+    "archer1_1": {class: "archer1_1",level: 2,attack:  6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, max_sp: 3, effect_type: "skill", effect: "attack_last_char", effect_value: "7"},
+    "archer2": {class: "archer2",level: 3,attack:  12, hp: 18, sp: 0, base_attack: 12, max_hp: 18, max_sp: 2, effect_type: "skill", effect: "attack_last_char", effect_value: "14"},
+    "archer2_1": {class: "archer2_1",level: 6,attack:  12, hp: 18, sp: 0, base_attack: 12, max_hp: 18, max_sp: 2, effect_type: "skill", effect: "attack_last_char", effect_value: "14"},
+    "archer3": {class: "archer3",level: 9,attack:  24, hp: 45, sp: 0, base_attack: 24, max_hp: 45, max_sp: 1, effect_type: "skill", effect: "attack_last_char", effect_value: "24"},
 }
 
 export function get_chars(names:string[]) : CharacterFields[] {
@@ -148,11 +148,11 @@ export function get_sell_price(char:CharacterFields | null): number {
     }
 }
 
-export function get_max_magic(char:CharacterFields | null) : number {
+export function get_max_sp(char:CharacterFields | null) : number {
     if (!char) {
         return 0;
     }
-    return roles_info[char.name].max_magic;
+    return roles_info[char.class].max_sp;
 }
 
 export function get_star_num(char:CharacterFields | null) : number {
@@ -171,20 +171,20 @@ export function upgrade(char1:CharacterFields, char2:CharacterFields): Character
     console.log(char2);
     // 属性受角色战场永久buff效果影响，合成属性会高于基础值
     let level1 = char1.level;
-    let name1= char1.name;
-    let life1 = char1.life;
+    let class1= char1.class;
+    let life1 = char1.hp;
     let attack1 = char1.attack;
-    let base_life1 = roles_info[name1].max_life;
-    let base_attack1 = roles_info[name1].attack;
+    let base_life1 = roles_info[class1].max_hp;
+    let base_attack1 = roles_info[class1].attack;
     let life_buff1 = life1 - base_life1;
     let attack_buff1 = attack1 - base_attack1;
 
     let level2 = char2.level;
-    let name2 = char2.name;
-    let life2 = char2.life;
+    let class2 = char2.class;
+    let life2 = char2.hp;
     let attack2 = char2.attack;
-    let base_life2 = roles_info[name2].max_life;
-    let base_attack2 = roles_info[name2].attack;
+    let base_life2 = roles_info[class2].max_hp;
+    let base_attack2 = roles_info[class2].attack;
     let life_buff2 = life2- base_life2;
     let attack_buff2 = attack2 - base_attack2;
 
@@ -206,13 +206,12 @@ export function upgrade(char1:CharacterFields, char2:CharacterFields): Character
     } else if (new_level >= 9) {
         level_str = "3";
     }
-    let key = removeSuffix(name1) + level_str
-    console.log("key:", key);
+    let key = removeSuffix(class1) + level_str
     let clone = JSON.stringify(roles_info[key]);
     let res:CharacterFields = JSON.parse(clone);
     res.attack = res.attack + attack_buff;
-    res.life = res.life + life_buff;
-    res.max_life = res.life;
+    res.hp = res.hp + life_buff;
+    res.max_hp = res.hp;
     res.level = new_level;
     console.log("upgrade:", res);
     return res;

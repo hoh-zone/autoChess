@@ -21,17 +21,17 @@ export const StatusBar = ({ isOpponent = false }: { isOpponent?: boolean }) => {
     }
     let start = isOpponent ? 10 : 60
     let end = isOpponent ? 335 : 330
-    let total = char.max_life
+    let total = char.max_hp
     if (total == undefined) {
       return end
     }
-    let life = char == null || char.life < 0 ? 0 : char.life
+    let life = char == null || char.hp < 0 ? 0 : char.hp
     return start + (life / total) * end
   }
 
   const get_hp = (char: any) => {
     if (char) {
-      return char.life < 0 ? 0 : char.life
+      return char.hp < 0 ? 0 : char.hp
     }
     return 0
   }
@@ -68,14 +68,14 @@ export const StatusBar = ({ isOpponent = false }: { isOpponent?: boolean }) => {
       if (char == null) {
         name = "avatar"
       } else {
-        name = "avatar_" + removeSuffix(char!.name)
+        name = "avatar_" + removeSuffix(char!.class)
       }
     } else {
       let char = enemy_chars.find(Boolean)
       if (char == null) {
         name = "avatar"
       } else {
-        name = "avatar_" + removeSuffix(char!.name)
+        name = "avatar_" + removeSuffix(char!.class)
       }
     }
     path = name + ".png"
@@ -123,7 +123,7 @@ export const StatusBar = ({ isOpponent = false }: { isOpponent?: boolean }) => {
           <div style={{ width: `${get_width_by_life(char)}px`, height: "60px", background: `${get_bg2_url()}`, backgroundSize: "400px auto", backgroundPosition: `${get_bar_direction()}` }}></div>
           <HStack style={{ justifyContent: `${get_bg_direction()}` }}>
             <p>
-              {get_hp(char)}/{char?.max_life}
+              {get_hp(char)}/{char?.max_hp}
             </p>
             {lose == 0 && (
               <HStack>

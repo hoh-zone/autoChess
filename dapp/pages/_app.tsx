@@ -66,7 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       ethosConfiguration={ethosConfiguration}
       dappName="EthosConnect Example App"
       dappIcon={<ExampleIcon />}
-      connectMessage="Your connect message goes here!"
+      connectMessage=" "
     >
       <ChakraProvider>
         <Head>

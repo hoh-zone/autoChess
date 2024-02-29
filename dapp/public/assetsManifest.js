@@ -57,9 +57,9 @@ const assetsManifest = {
   "golem-attack-2": "golem-attack-2.png",
   "golem-idle": "golem-idle.png",
   health_left_bg: "health_left_bg.png",
-  health_left_life: "health_left_life.png",
+  health_left_hp: "health_left_life.png",
   health_right_bg: "health_right_bg.png",
-  health_right_life: "health_right_life.png",
+  health_right_hp: "health_right_life.png",
   heart: "heart.png",
   heart_broken: "heart_broken.png",
   hp_bg: "hp_bg.png",
@@ -110,7 +110,7 @@ const assetsManifest = {
   "wizard-idle": "wizard-idle.png",
   forbid_buff: "forbid_buff.png",
   forbid_debuff: "forbid_debuff.png",
-  add_all_tmp_max_magic: "add_all_tmp_max_magic.png"
+  add_all_tmp_max_sp: "add_all_tmp_max_sp.png"
 }
 
 export default assetsManifest

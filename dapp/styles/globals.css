@@ -447,6 +447,12 @@ a {
   opacity: 1;
 }
 
+@media only screen and (max-height: 767px) {
+  #ethos-close-on-click {
+  scale: 0.5;
+  }
+}
+
 @keyframes move-up {
   0% {
     transform: translateY(0);

@@ -35,12 +35,12 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
       return 0
     }
     if (isShopSlot) {
-      return char.max_life
+      return char.max_hp
     } else {
       if (stage == "fight") {
-        return char.life < 0 ? 0 : char.life
+        return char.hp < 0 ? 0 : char.hp
       } else {
-        return char.max_life < 0 ? 0 : char.max_life
+        return char.max_hp < 0 ? 0 : char.max_hp
       }
     }
   }

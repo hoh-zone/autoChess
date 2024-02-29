@@ -35,7 +35,7 @@ export const ShopSlot = ({ id }: { id: number }) => {
     >
       <div className="slot rounded-full w-full h-24 bg-slate-400 absolute bottom-[-25px]" />
       <div className="pointer-events-none absolute  top-1/2 left-1/2" style={{ transform: "translate(-50%, -50%)" }}>
-        {char && <Character attack={attack ? 2 : 0} charType={removeSuffix(char.name)} />}
+        {char && <Character attack={attack ? 2 : 0} charType={removeSuffix(char.class)} />}
       </div>
       {/* <Button className={twMerge("buy-button")}>
             Buy
