@@ -134,20 +134,20 @@ module auto_chess::utils {
         vec
     }
 
-    public fun removeSuffix(name:String) : String {
+    public fun removeSuffix(class:String) : String {
         // ani1 -> ani
-        if (string::index_of(&name, &utf8(b"3")) < string::length(&name)) {
-            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"3")))
-        } else if (string::index_of(&name, &utf8(b"2_1")) < string::length(&name)) {
-            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"2_1")))
-        } else if (string::index_of(&name, &utf8(b"2")) < string::length(&name)) {
-            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"2")))
-        } else if (string::index_of(&name, &utf8(b"1_1")) < string::length(&name)) {
-            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"1_1")))
-        } else if (string::index_of(&name, &utf8(b"1")) < string::length(&name)) {
-            return string::sub_string(&name, 0, string::index_of(&name, &utf8(b"1")))
+        if (string::index_of(&class, &utf8(b"3")) < string::length(&class)) {
+            return string::sub_string(&class, 0, string::index_of(&class, &utf8(b"3")))
+        } else if (string::index_of(&class, &utf8(b"2_1")) < string::length(&class)) {
+            return string::sub_string(&class, 0, string::index_of(&class, &utf8(b"2_1")))
+        } else if (string::index_of(&class, &utf8(b"2")) < string::length(&class)) {
+            return string::sub_string(&class, 0, string::index_of(&class, &utf8(b"2")))
+        } else if (string::index_of(&class, &utf8(b"1_1")) < string::length(&class)) {
+            return string::sub_string(&class, 0, string::index_of(&class, &utf8(b"1_1")))
+        } else if (string::index_of(&class, &utf8(b"1")) < string::length(&class)) {
+            return string::sub_string(&class, 0, string::index_of(&class, &utf8(b"1")))
         } else {
-            return name
+            return class
         }
     }
 

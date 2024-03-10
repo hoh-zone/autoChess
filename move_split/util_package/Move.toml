@@ -1,0 +1,14 @@
+[package]
+name = "util_package"
+version = "0.0.1"
+published-at = "0x25dbf0c35551d7a97d47a0d2cb493b728a7f8d46844b2c55dab0355b7c53778f"
+
+[dependencies]
+MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
+Sui = { local = "G:/autoChess/move_split/sui-framework" }
+
+[addresses]
+util_package = "0x25dbf0c35551d7a97d47a0d2cb493b728a7f8d46844b2c55dab0355b7c53778f"
+account = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
+std= "0x1"
+sui = "0x2"

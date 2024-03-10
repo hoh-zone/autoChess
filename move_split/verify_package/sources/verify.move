@@ -1,11 +1,11 @@
 // verify the oprations, it seems this part consumes much gas, i don't know why.
-module auto_chess::verify {
+module verify_package::verify {
     use sui::tx_context::{TxContext};
     use std::string::{utf8, String};
     use std::vector;
-    use auto_chess::lineup; 
-    use auto_chess::role::{Self, Role};
-    use auto_chess::utils;
+    use lineup_package::lineup; 
+    use role_package::role::{Self, Role};
+    use util_package::utils;
 
     const REFRESH_gold_cost:u8 = 2;
     const CARDS_IN_ONE_REFRESH:u64 = 5;
