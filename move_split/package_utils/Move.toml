@@ -1,0 +1,12 @@
+[package]
+name = "util_package"
+version = "0.0.1"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+
+[addresses]
+util_package = "0x0"
+account = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
+std= "0x1"
+sui = "0x2"
