@@ -1,36 +1,35 @@
-import { Chain, EthosConnectProvider } from "ethos-connect";
-import ExampleIcon from "../icons/ExampleIcon";
-import type { AppProps } from "next/app";
-import { NETWORK } from "../lib/constants";
-import Head from "next/head";
-import { ChakraProvider } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
-import { useAtom } from "jotai";
-import { stageAtom } from "../store/stages";
-import "../styles/globals.css";
+import { Chain, EthosConnectProvider } from "ethos-connect"
+import ExampleIcon from "../icons/ExampleIcon"
+import type { AppProps } from "next/app"
+import { NETWORK } from "../lib/constants"
+import Head from "next/head"
+import { ChakraProvider } from "@chakra-ui/react"
+import { useEffect, useRef } from "react"
+import { useAtom } from "jotai"
+import { stageAtom } from "../store/stages"
+import "../styles/globals.css"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
-    preferredWallets: ['Ethos Wallet'],
-    network: "https://fullnode.mainnet.sui.io",
-    chain: Chain.SUI_MAINNET
-  };
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const audioFightRef = useRef<HTMLAudioElement>(null);
-  const [stage, setStage] = useAtom(stageAtom);
+    preferredWallets: ["Ethos Wallet"],
+    network: "https://fullnode.testnet.sui.io",
+    chain: Chain.SUI_TESTNET
+  }
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const audioFightRef = useRef<HTMLAudioElement>(null)
+  const [stage, setStage] = useAtom(stageAtom)
 
   useEffect(() => {
     if (stage === "fight") {
-      audioFightRef.current?.play();
-      audioRef.current?.pause();
+      audioFightRef.current?.play()
+      audioRef.current?.pause()
       if (audioRef.current) {
         audioRef.current.currentTime = 0
       }
-    }
-    else {
-      audioRef.current?.play();
-      audioFightRef.current?.pause();
+    } else {
+      audioRef.current?.play()
+      audioFightRef.current?.pause()
       if (audioFightRef.current) {
         audioFightRef.current.currentTime = 0
       }
@@ -38,36 +37,30 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     const callback = () => {
       if (stage === "fight") {
-        audioFightRef.current?.play();
-        audioRef.current?.pause();
+        audioFightRef.current?.play()
+        audioRef.current?.pause()
         if (audioRef.current) {
           audioRef.current.currentTime = 0
         }
-      }
-      else {
-        audioRef.current?.play();
-        audioFightRef.current?.pause();
+      } else {
+        audioRef.current?.play()
+        audioFightRef.current?.pause()
         if (audioFightRef.current) {
           audioFightRef.current.currentTime = 0
         }
       }
     }
-    window.addEventListener("keydown", callback);
-    window.addEventListener("mousedown", callback);
-    
+    window.addEventListener("keydown", callback)
+    window.addEventListener("mousedown", callback)
+
     return () => {
       window.removeEventListener("keydown", callback)
       window.removeEventListener("mousedown", callback)
     }
-  }, [audioRef.current, stage]);
+  }, [audioRef.current, stage])
 
   return (
-    <EthosConnectProvider
-      ethosConfiguration={ethosConfiguration}
-      dappName="EthosConnect Example App"
-      dappIcon={<ExampleIcon />}
-      connectMessage=" "
-    >
+    <EthosConnectProvider ethosConfiguration={ethosConfiguration} dappName="EthosConnect Example App" dappIcon={<ExampleIcon />} connectMessage=" ">
       <ChakraProvider>
         <Head>
           <title>Sui Auto Chess</title>
@@ -82,7 +75,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </audio>
       </ChakraProvider>
     </EthosConnectProvider>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp
