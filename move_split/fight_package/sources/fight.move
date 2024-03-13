@@ -294,7 +294,6 @@ module fight_package::fight {
         let len = vector::length(roles);
         let i = 0;
         while (i < len) {
-            assert!(vector::length(roles) > 1, ERR_EXCEED_VEC_LENGTH);
             let role = vector::borrow(roles, i);
             if (role::get_effect(role)== utf8(b"add_all_tmp_sp_cap")) {
                 let tmp = (utils::utf8_to_u64(role::get_effect_value(role)) as u8);

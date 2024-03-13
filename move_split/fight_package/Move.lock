@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "82CCD797C58F181EE5EF1A17BFF465CE83AD7445F055F26063EE6EEB9DE3F982"
+manifest_digest = "90F21F73148B11762928472E0DCB1683D9B666C0591B30D3D17A50D0A429B00F"
 deps_digest = "397E6A9F7A624706DBDFEE056CE88391A15876868FD18A88504DA74EB458D697"
 
 dependencies = [
@@ -54,8 +54,3 @@ dependencies = [
   { name = "MoveStdlib" },
   { name = "Sui" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.20.0"
-edition = "legacy"
-flavor = "sui"
