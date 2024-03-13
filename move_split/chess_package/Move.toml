@@ -1,7 +1,7 @@
 [package]
 name = "chess_package"
-version = "0.0.1"
-published-at = "0x414579c433a436024e10785daf8ed58b2a3469de39d36a635912a1c9579f8ea3"
+version = "0.0.2"
+published-at = "0x7835fa08409800938c39431670b7d3e0c243c78feeacf11f554ed496eb4bf465"
 
 [dependencies]
 Sui = { local = "G:/autoChess/move_split/sui-framework" }
@@ -14,7 +14,7 @@ fight_package = { local = "G:/autoChess/move_split/fight_package" }
 verify_package = { local = "G:/autoChess/move_split/verify_package" }
 
 [addresses]
-chess_package = "0x414579c433a436024e10785daf8ed58b2a3469de39d36a635912a1c9579f8ea3"
+chess_package = "0x0"
 util_package = "0x25dbf0c35551d7a97d47a0d2cb493b728a7f8d46844b2c55dab0355b7c53778f"
 role_package = "0x1c69f07380653053fcc86e2677b74845fa37478fe6a80b56a80dc19f38c13af2"
 lineup_package = "0x0a17a2364118a774e140b522f6c9c6bbceb90daadced455a5111b77046ac4688"
