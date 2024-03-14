@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
 
 import { ethos } from "ethos-connect"
-import { CHESS_PACKAGE_ID } from "../../lib/constants"
+import { CHESS_PACKAGE_ID0, CHESS_PACKAGE_ID1 } from "../../lib/constants"
 import { GameNft } from "../../types/nft"
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
 import { PaginatedObjectsResponse } from "@mysten/sui.js"
@@ -42,12 +42,12 @@ const useQueryChesses = () => {
       },
       filter: {
         MoveModule: {
-          package: `${CHESS_PACKAGE_ID}`,
+          package: `${CHESS_PACKAGE_ID0}`,
           module: "chess"
         }
       }
     })
-    console.log(result)
+    console.log("chess", result)
     return record_nfts(result)
   }, [wallet])
   return { nfts, query_chess: update_chess, query_chesses }

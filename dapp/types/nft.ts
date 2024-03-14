@@ -46,7 +46,7 @@ export interface CharacterFields {
 
     base_attack: number;
     max_hp: number;
-    max_sp: number;
+    sp_cap: number;
     effect_type: string; // 常驻触发，主动释放，被动触发
     effect: string; // 可能有亡语，需要读取释放
     effect_value: string;

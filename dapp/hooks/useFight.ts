@@ -355,8 +355,8 @@ export const useFight = () => {
                     return;
                 }
                 ele.sp += value;
-                if (ele.sp >= ele.max_sp) {
-                    ele.sp = ele.max_sp;
+                if (ele.sp >= ele.sp_cap) {
+                    ele.sp = ele.sp_cap;
                 }
             });
             console.log("全体加魔法值:", value, target_group[3]);
@@ -458,16 +458,16 @@ export const useFight = () => {
             return;
         }
         if (extra_max_sp_debuff > 0) {
-            target_group[charIndex]!.max_sp = get_max_sp(target_group[charIndex]) + Number(extra_max_sp_debuff);
-        } else if (extra_max_sp_debuff == 0 && target_group[charIndex]!.max_sp > get_max_sp(target_group[charIndex])) {
-            target_group[charIndex]!.max_sp = get_max_sp(target_group[charIndex]);
+            target_group[charIndex]!.sp_cap = get_max_sp(target_group[charIndex]) + Number(extra_max_sp_debuff);
+        } else if (extra_max_sp_debuff == 0 && target_group[charIndex]!.sp_cap > get_max_sp(target_group[charIndex])) {
+            target_group[charIndex]!.sp_cap = get_max_sp(target_group[charIndex]);
         }
     }
 
     const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_sp_debuff = get_extra_max_sp_debuff(is_opponent);
         modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
-        if (char.sp >= Number(char.max_sp) && char.effect_type === "skill") {
+        if (char.sp >= Number(char.sp_cap) && char.effect_type === "skill") {
             skillTag[charIndex] = "1";
             char.attacking = 2;
             char.sp = 0;

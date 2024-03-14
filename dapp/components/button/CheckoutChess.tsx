@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_GLOBAL, CHESS_PACKAGE_ID } from "../../lib/constants"
+import { CHESS_GLOBAL, CHESS_PACKAGE_ID0 } from "../../lib/constants"
 
 type Props = {
   chess_id: string
@@ -18,7 +18,7 @@ const useCheckout = () => {
       try {
         const transactionBlock = new TransactionBlock()
         transactionBlock.moveCall({
-          target: `${CHESS_PACKAGE_ID}::${moveModule}::${method}`,
+          target: `${CHESS_PACKAGE_ID0}::${moveModule}::${method}`,
           arguments: [transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(`${chess_id}`)]
         })
         const response = await wallet.signAndExecuteTransactionBlock({

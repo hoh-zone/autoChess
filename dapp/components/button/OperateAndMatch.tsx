@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { chessId, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
-import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_PACKAGE_ID, LINEUP_GLOBAL, ROLE_GLOBAL } from "../../lib/constants"
+import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_PACKAGE_ID1, LINEUP_GLOBAL, ROLE_GLOBAL } from "../../lib/constants"
 import { useAtom } from "jotai"
 
 const useOperateAndMatch = () => {
@@ -34,7 +34,7 @@ const useOperateAndMatch = () => {
       const tx = new TransactionBlock()
       const left_gold = money
       tx.moveCall({
-        target: `${CHESS_PACKAGE_ID}::chess::operate_and_battle`,
+        target: `${CHESS_PACKAGE_ID1}::chess::operate_and_battle`,
         arguments: [
           tx.pure(`${CHESS_GLOBAL}`),
           tx.pure(`${ROLE_GLOBAL}`),
