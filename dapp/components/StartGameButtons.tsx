@@ -70,7 +70,7 @@ const StartGameButtons = ({ name }: { name: string }) => {
                 Cost more, earn more
               </Text>
               {[1, 10, 50, 100, 250, 500].map((amount, index) => (
-                <HStack className="w-full">
+                <HStack className="w-full" key={index}>
                   <Button
                     w={"full"}
                     key={amount}

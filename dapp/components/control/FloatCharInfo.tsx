@@ -7,12 +7,7 @@ import { get_star_num } from "../character/rawData"
 import { CharacterFields } from "../../types/nft"
 import { SKILL_DESCRIPTION } from "../../utils/skillDescription"
 
-export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: {
-  id: number,
-  isShowInfo?: boolean,
-  isShopSlot?: boolean
-  isOpponent?: boolean
-}) => {
+export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: { id: number; isShowInfo?: boolean; isShopSlot?: boolean; isOpponent?: boolean }) => {
   const [chars] = useAtom(slotCharacter)
   const [enemy_chars] = useAtom(enemyCharacter)
   const [shopChars] = useAtom(shopCharacter)
@@ -54,7 +49,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
             <HStack gap={4}>
               <HStack pos={"relative"} bottom={1}>
                 {Array.from({ length: get_star_num(char) }, (_, index) => (
-                  <Img style={{ width: "20px" }} src={assets?.star} />
+                  <Img style={{ width: "20px" }} src={assets?.star} key={index} />
                 ))}
                 {(char?.level == 2 || (char?.level >= 6 && char?.level <= 8)) && <Img style={{ width: "20px" }} src={assets?.star_half} />}
                 {/* <p className="text-[10px]">{capitalizeFirstChar(removeSuffix(char?.name))}</p> */}
@@ -64,7 +59,9 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
             </HStack>
             <Divider borderWidth={1} />
             <Text fontSize={"2xs"}>
-              {char.effect_type === "skill" ? "Active skill" : "Passive skill"}{": "}{SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value)}
+              {char.effect_type === "skill" ? "Active skill" : "Passive skill"}
+              {": "}
+              {SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value)}
             </Text>
           </Stack>
         </>

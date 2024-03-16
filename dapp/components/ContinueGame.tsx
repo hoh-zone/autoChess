@@ -60,7 +60,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
             {nfts.length > 0 && (
               <Stack gap={4}>
                 {nfts.map((nft, index) => (
-                  <HStack className="w-full">
+                  <HStack className="w-full" key={index}>
                     <Button
                       key={nft.id.id}
                       height={"unset"}
