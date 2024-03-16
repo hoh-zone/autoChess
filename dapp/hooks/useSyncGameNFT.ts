@@ -23,7 +23,6 @@ export const useSyncGameNFT = () => {
         setChallengeWin(nft.challenge_win);
         setChallengeLose(nft.challenge_lose);
         setSlotCharacter(nft.lineup.fields.roles.map((role) => {
-            console.log(role);
             if (role.fields.class == "none") {
                 return null;
             }
@@ -33,7 +32,6 @@ export const useSyncGameNFT = () => {
             role.fields.sp = Number(role.fields.sp);
             return role.fields
         }));
-        console.log("nft:", nft.lineup);
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
             if (role.fields.class == "none") {
                 return null;
@@ -44,6 +42,5 @@ export const useSyncGameNFT = () => {
             role.fields.sp = Number(role.fields.sp);
             return role.fields
         }));
-        console.log("pool:",nft.cards_pool.fields.roles);
     }, []);
 }

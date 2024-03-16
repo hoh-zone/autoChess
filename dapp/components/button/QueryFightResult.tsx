@@ -24,7 +24,6 @@ const useQueryFight = () => {
       })
       result.data.map((fight) => {
         let json = fight.parsedJson as any
-        console.log(json)
         if (json["v1_name"] != "") {
           let name = json["v1_name"]
           if (!rank_score_map.hasOwnProperty(name)) {
@@ -72,7 +71,6 @@ const useQueryFight = () => {
         res.push(key + ":" + rank_map[key])
       })
       setRanks(res)
-      console.log("rank", res)
     } catch (error) {
       console.log("err", error)
     }
@@ -93,7 +91,6 @@ const useQueryFight = () => {
             let json = result.data[i].parsedJson as any
             let chess_id = json["chess_id"]
             if (chess_id == nft_id) {
-              console.log("fight result", json)
               let win = Number(json["v1_win"])
               let lose = Number(json["v1_lose"])
               if (win <= last_win && lose <= last_lose) {

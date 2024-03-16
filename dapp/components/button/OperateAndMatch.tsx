@@ -70,7 +70,6 @@ const useOperateAndMatch = () => {
           return
         }
         let event_json = event.parsedJson as any
-        console.log("event json:", event)
         let res = event_json["res"]
         if (res == 1) {
           console.log("you win")

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { CHESS_GLOBAL, CHESS_PACKAGE_ID1, ROLE_GLOBAL } from "../../lib/constants"
+import { useToast } from "@chakra-ui/react"
 
 type Props = {
   username: string
@@ -11,6 +12,7 @@ type Props = {
 const useMintChess = () => {
   const { wallet } = ethos.useWallet()
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
+  const toast = useToast()
 
   const mint = useCallback(
     async ({ username, is_arena, price }: Props) => {
@@ -37,14 +39,16 @@ const useMintChess = () => {
           showObjectChanges: true
         }
       })
-      console.log("response:", response.objectChanges)
-
       if (response.objectChanges) {
         const createObjectChange = response.objectChanges.find((objectChange) => objectChange.type === "created")
-
         if (!!createObjectChange && "objectId" in createObjectChange) {
           setNftObjectId(createObjectChange.objectId)
-          console.log("objid", createObjectChange.objectId)
+          toast({
+            title: "new chess start",
+            status: "success",
+            duration: 2000,
+            isClosable: true
+          })
         }
       }
     },

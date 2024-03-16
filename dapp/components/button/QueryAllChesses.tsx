@@ -26,7 +26,6 @@ const useQueryChesses = () => {
         }
       })
       let updated_nft = (result.data?.content as any)?.fields as GameNft
-      console.log("updated nft:", updated_nft)
       syncGameNFT(updated_nft)
     },
     [wallet]
@@ -47,7 +46,6 @@ const useQueryChesses = () => {
         }
       }
     })
-    console.log("chess", result)
     return record_nfts(result)
   }, [wallet])
   return { nfts, query_chess: update_chess, query_chesses }

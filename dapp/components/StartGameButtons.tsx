@@ -26,9 +26,9 @@ const StartGameButtons = ({ name }: { name: string }) => {
         duration: 2000,
         isClosable: true
       })
-      return false;
+      return false
     }
-    return true;
+    return true
   }
 
   const onStart = async (isArena: boolean, price: number) => {
@@ -47,33 +47,29 @@ const StartGameButtons = ({ name }: { name: string }) => {
             operations.push(chars.toString())
           }
         })
-    }
-    finally {
+    } finally {
       setIsLoading(false)
     }
   }
   return (
     <>
-      <Button
-        isLoading={isLoading}
-        onClick={() =>
-          checkName() && onStart(false, 0)
-        }
-      >
-        Start New (Free)
+      <Button isLoading={isLoading} onClick={() => checkName() && onStart(false, 0)}>
+        Practice Mode
       </Button>
 
       <Button onClick={() => checkName() && onOpen()} isLoading={isLoading}>
-        Start New Arena (To Earn)
+        Arena Mode (Earn Sui)
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent className="rounded-[8px]" bg={"gray.500"} overflowY={"auto"} maxH={"50vh"}>
-          <ModalBody className="!p-[10px] rounded-[8px]" >
+          <ModalBody className="!p-[10px] rounded-[8px]">
             <Stack>
-              <Text w={"full"} textAlign={"center"} mb={4} color={"green.200"} fontSize={"lg"}>Cost more, earn more</Text>
-              {[1, 10, 50, 100, 250, 500,].map((amount, index) => (
+              <Text w={"full"} textAlign={"center"} mb={4} color={"green.200"} fontSize={"lg"}>
+                Cost more, earn more
+              </Text>
+              {[1, 10, 50, 100, 250, 500].map((amount, index) => (
                 <HStack className="w-full">
                   <Button
                     w={"full"}
