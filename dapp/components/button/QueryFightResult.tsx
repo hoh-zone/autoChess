@@ -1,9 +1,8 @@
 import { useCallback, useState } from "react"
 
 import { ethos } from "ethos-connect"
-import { CHESS_PACKAGE_ID0, SENDER } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, SENDER } from "../../lib/constants"
 import { sleep } from "../../utils/sleep"
-import { join } from "path"
 
 interface HashMap<T> {
   [key: string]: T
@@ -19,7 +18,7 @@ const useQueryFight = () => {
       if (!wallet) return
       const result = await wallet.client.queryEvents({
         query: {
-          MoveEventType: CHESS_PACKAGE_ID0 + "::chess::FightEvent"
+          MoveEventType: CHESS_CHALLENGE_PACKAGE + "::chess::FightEvent"
         }
       })
       result.data.map((fight) => {
@@ -41,7 +40,7 @@ const useQueryFight = () => {
       while (next != null && has_next) {
         let result_tmp = await wallet.client.queryEvents({
           query: {
-            MoveEventType: CHESS_PACKAGE_ID0 + "::chess::FightEvent"
+            MoveEventType: CHESS_CHALLENGE_PACKAGE + "::chess::FightEvent"
           },
           cursor: {
             eventSeq: next.eventSeq,
@@ -84,7 +83,7 @@ const useQueryFight = () => {
         while (max_query < 3) {
           const result = await wallet.client.queryEvents({
             query: {
-              MoveEventType: CHESS_PACKAGE_ID0 + "::chess::FightEvent"
+              MoveEventType: CHESS_CHALLENGE_PACKAGE + "::chess::FightEvent"
             }
           })
           for (let i = 0; i < result.data.length; i++) {

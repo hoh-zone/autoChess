@@ -174,7 +174,7 @@ const canUpgrade = (char1: any, char2: any) => {
   if (char1 == null || char2 == null) {
     return false
   }
-  if (removeSuffix(char1.name) != removeSuffix(char2.name)) {
+  if (removeSuffix(char1.class) != removeSuffix(char2.class)) {
     return false
   }
   let level1 = char1.level

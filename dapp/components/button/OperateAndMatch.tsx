@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { chessId, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
-import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_PACKAGE_ID1, LINEUP_GLOBAL, ROLE_GLOBAL } from "../../lib/constants"
+import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL } from "../../lib/constants"
 import { useAtom } from "jotai"
+import { Toast, useToast } from "@chakra-ui/react"
 
 const useOperateAndMatch = () => {
   const { wallet } = ethos.useWallet()
@@ -10,6 +11,7 @@ const useOperateAndMatch = () => {
   const [money] = useAtom(moneyAtom)
   const [chars] = useAtom(slotCharacter)
   const [chess_id] = useAtom(chessId)
+  const toast = useToast()
 
   const get_chars_strvec = () => {
     let vec: string[] = []
@@ -34,7 +36,7 @@ const useOperateAndMatch = () => {
       const tx = new TransactionBlock()
       const left_gold = money
       tx.moveCall({
-        target: `${CHESS_PACKAGE_ID1}::chess::operate_and_battle`,
+        target: `${CHESS_CHALLENGE_PACKAGE}::chess::operate_and_battle`,
         arguments: [
           tx.pure(`${CHESS_GLOBAL}`),
           tx.pure(`${ROLE_GLOBAL}`),
@@ -81,6 +83,14 @@ const useOperateAndMatch = () => {
         return event_json
       }
     } catch (error) {
+      if (String(error).indexOf("function: 9, instruction: 70") !== -1) {
+        toast({
+          title: "My lord, You have ranked to the 1st in the world",
+          status: "warning",
+          duration: 5000,
+          isClosable: true
+        })
+      }
       console.log(error)
       return false
     }

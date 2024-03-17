@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
 
 import { ethos } from "ethos-connect"
-import { CHESS_PACKAGE_ID0, CHESS_PACKAGE_ID1 } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE } from "../../lib/constants"
 import { GameNft } from "../../types/nft"
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
 import { PaginatedObjectsResponse } from "@mysten/sui.js"
@@ -41,7 +41,7 @@ const useQueryChesses = () => {
       },
       filter: {
         MoveModule: {
-          package: `${CHESS_PACKAGE_ID0}`,
+          package: `${CHESS_CHALLENGE_PACKAGE}`,
           module: "chess"
         }
       }

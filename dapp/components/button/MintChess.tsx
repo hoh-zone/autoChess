@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_GLOBAL, CHESS_PACKAGE_ID1, ROLE_GLOBAL } from "../../lib/constants"
+import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, ROLE_GLOBAL } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 
 type Props = {
@@ -24,12 +24,12 @@ const useMintChess = () => {
         let coins = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price * 1_000_000_000)])
         let coin_vec = transactionBlock.makeMoveVec({ objects: [coins] })
         transactionBlock.moveCall({
-          target: `${CHESS_PACKAGE_ID1}::${moveModule}::${method}`,
+          target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
           arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username), coin_vec]
         })
       } else {
         transactionBlock.moveCall({
-          target: `${CHESS_PACKAGE_ID1}::${moveModule}::${method}`,
+          target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
           arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username)]
         })
       }
