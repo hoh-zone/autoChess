@@ -6,8 +6,11 @@ import { assetsAtom } from "../../store/stages"
 
 export function Character({ isOpponent = false, charType, attack = 0, level = 1 }: { isOpponent?: boolean; charType: string; attack?: 0 | 1 | 2; level?: number }) {
   if (!charTable[charType as keyof typeof charTable]) {
+    if (charType === "none") {
+      return <></>
+    }
     console.error("not found", charType)
-    return <>no</>
+    return <></>
   }
   const [assets, setAssets] = useAtom(assetsAtom)
   const { attackSrc, attack2Src, moveSrc, moveWidth, moveHeight, attackWidth, attackHeight } = charTable[charType as keyof typeof charTable]

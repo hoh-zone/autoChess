@@ -24,11 +24,11 @@ const roles_info: Roles = {
   fighter2_1: { class: "fighter2_1", level: 6, attack: 12, hp: 18, sp: 0, base_attack: 12, max_hp: 18, sp_cap: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "4" },
   fighter3: { class: "fighter3", level: 9, attack: 24, hp: 45, sp: 0, base_attack: 24, max_hp: 45, sp_cap: 3, effect_type: "skill", effect: "reduce_all_tmp_attack", effect_value: "8" },
 
-  golem1: { class: "golem1", level: 1, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1" },
-  golem1_1: { class: "golem1_1", level: 2, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1" },
-  golem2: { class: "golem2", level: 3, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1" },
-  golem2_1: { class: "golem2_1", level: 6, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1" },
-  golem3: { class: "golem3", level: 9, attack: 16, hp: 60, sp: 0, base_attack: 16, max_hp: 60, sp_cap: 1, effect_type: "skill", effect: "add_all_tmp.sp", effect_value: "1" },
+  golem1: { class: "golem1", level: 1, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "add_all_tmp_sp", effect_value: "1" },
+  golem1_1: { class: "golem1_1", level: 2, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "add_all_tmp_sp", effect_value: "1" },
+  golem2: { class: "golem2", level: 3, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "add_all_tmp_sp", effect_value: "1" },
+  golem2_1: { class: "golem2_1", level: 6, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "add_all_tmp_sp", effect_value: "1" },
+  golem3: { class: "golem3", level: 9, attack: 16, hp: 60, sp: 0, base_attack: 16, max_hp: 60, sp_cap: 1, effect_type: "skill", effect: "add_all_tmp_sp", effect_value: "1" },
 
   tank1: { class: "tank1", level: 1, attack: 3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "2" },
   tank1_1: { class: "tank1_1", level: 2, attack: 3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "add_all_tmp_hp", effect_value: "2" },
@@ -72,11 +72,11 @@ const roles_info: Roles = {
   tree2_1: { class: "tree2_1", level: 6, attack: 10, hp: 21, sp: 0, base_attack: 10, max_hp: 21, sp_cap: 2, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "6" },
   tree3: { class: "tree3", level: 9, attack: 20, hp: 50, sp: 0, base_attack: 20, max_hp: 50, sp_cap: 1, effect_type: "skill", effect: "reduce_tmp_attack", effect_value: "9" },
 
-  wizard1: { class: "wizard1", level: 1, attack: 5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1" },
-  wizard1_1: { class: "wizard1_1", level: 2, attack: 5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1" },
-  wizard2: { class: "wizard2", level: 3, attack: 10, hp: 18, sp: 0, base_attack: 10, max_hp: 18, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1" },
-  wizard2_1: { class: "wizard2_1", level: 6, attack: 10, hp: 18, sp: 0, base_attack: 10, max_hp: 18, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "1" },
-  wizard3: { class: "wizard3", level: 9, attack: 20, hp: 45, sp: 0, base_attack: 20, max_hp: 45, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_max_sp", effect_value: "2" },
+  wizard1: { class: "wizard1", level: 1, attack: 5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_sp_cap", effect_value: "1" },
+  wizard1_1: { class: "wizard1_1", level: 2, attack: 5, hp: 9, sp: 0, base_attack: 5, max_hp: 9, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_sp_cap", effect_value: "1" },
+  wizard2: { class: "wizard2", level: 3, attack: 10, hp: 18, sp: 0, base_attack: 10, max_hp: 18, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_sp_cap", effect_value: "1" },
+  wizard2_1: { class: "wizard2_1", level: 6, attack: 10, hp: 18, sp: 0, base_attack: 10, max_hp: 18, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_sp_cap", effect_value: "1" },
+  wizard3: { class: "wizard3", level: 9, attack: 20, hp: 45, sp: 0, base_attack: 20, max_hp: 45, sp_cap: 0, effect_type: "ring", effect: "add_all_tmp_sp_cap", effect_value: "2" },
 
   priest1: { class: "priest1", level: 1, attack: 3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "6" },
   priest1_1: { class: "priest1_1", level: 2, attack: 3, hp: 12, sp: 0, base_attack: 3, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "6" },
@@ -84,11 +84,11 @@ const roles_info: Roles = {
   priest2_1: { class: "priest2_1", level: 6, attack: 6, hp: 24, sp: 0, base_attack: 6, max_hp: 24, sp_cap: 3, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "8" },
   priest3: { class: "priest3", level: 9, attack: 12, hp: 60, sp: 0, base_attack: 12, max_hp: 60, sp_cap: 2, effect_type: "skill", effect: "all_max_hp_to_back1", effect_value: "12" },
 
-  shinobi1: { class: "shinobi1", level: 1, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "10" },
-  shinobi1_1: { class: "shinobi1_1", level: 2, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "10" },
-  shinobi2: { class: "shinobi2", level: 3, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "20" },
-  shinobi2_1: { class: "shinobi2_1", level: 6, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "20" },
-  shinobi3: { class: "shinobi3", level: 9, attack: 16, hp: 60, sp: 0, base_attack: 16, max_hp: 60, sp_cap: 1, effect_type: "skill", effect: "attack_by_life_percent", effect_value: "30" },
+  shinobi1: { class: "shinobi1", level: 1, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "attack_by_hp_percent", effect_value: "10" },
+  shinobi1_1: { class: "shinobi1_1", level: 2, attack: 4, hp: 12, sp: 0, base_attack: 4, max_hp: 12, sp_cap: 3, effect_type: "skill", effect: "attack_by_hp_percent", effect_value: "10" },
+  shinobi2: { class: "shinobi2", level: 3, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "attack_by_hp_percent", effect_value: "20" },
+  shinobi2_1: { class: "shinobi2_1", level: 6, attack: 8, hp: 24, sp: 0, base_attack: 8, max_hp: 24, sp_cap: 2, effect_type: "skill", effect: "attack_by_hp_percent", effect_value: "20" },
+  shinobi3: { class: "shinobi3", level: 9, attack: 16, hp: 60, sp: 0, base_attack: 16, max_hp: 60, sp_cap: 1, effect_type: "skill", effect: "attack_by_hp_percent", effect_value: "30" },
 
   kunoichi1: { class: "kunoichi1", level: 1, attack: 6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, sp_cap: 2, effect_type: "skill", effect: "attack_sputter_to_second_by_percent", effect_value: "50" },
   kunoichi1_1: {
