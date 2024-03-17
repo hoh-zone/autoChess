@@ -32,7 +32,7 @@ export const LeaderboardItem = ({
   address: string;
   rank: number;
   items: string[];
-  estimateSui: number;
+  estimateSui: String;
 }) => {
   return (
     <HStack
@@ -50,12 +50,13 @@ export const LeaderboardItem = ({
         {walletAddressEllipsis(address)}
       </Link>
       <HStack gap={0} maxW={"60%"}>
-        {items.map((item, i) => (
-          <VStack key={i}>
-            <Text>Lv{get_role_level(item)}</Text>
-            <Character charType={get_role_name(item)} isOpponent={false} />
-          </VStack>
-        ))}
+        {Array.isArray(items) &&
+          items.map((item, i) => (
+            <VStack key={i}>
+              <Text>Lv{get_role_level(item)}</Text>
+              <Character charType={get_role_name(item)} isOpponent={false} />
+            </VStack>
+          ))}
       </HStack>
       <HStack className="text-2xl mr-8">
         <Image alt={"gold"} width={24} height={24} src={"/gold.png"}></Image>
@@ -64,7 +65,7 @@ export const LeaderboardItem = ({
 
       <HStack className="text-2xl mr-8">
         <Image alt={"sui"} width={24} height={24} src={"/sui.png"}></Image>
-        <Text>{estimateSui} Sui</Text>
+        <Text>{Number(estimateSui) / 1_000_000_000} Sui</Text>
       </HStack>
     </HStack>
   );

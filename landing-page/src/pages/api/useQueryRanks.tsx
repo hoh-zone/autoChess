@@ -3,7 +3,7 @@ import {
   CHALLENGE_GLOBAL,
   ISMAINNET,
   SENDER,
-  CHESS_CHALLENGE_PACKAGE_ID,
+  CHESS_CHALLENGE_PACKAGE_ID3,
 } from "../../constants";
 import {
   JsonRpcProvider,
@@ -51,10 +51,9 @@ function get_addr(data: string, name: string): string {
   return data;
 }
 
-function splitRankStr(data: String): [LineUp[], number] {
+function splitRankStr(data: String): LineUp[] {
   let array = data.split(";");
   let res: LineUp[] = [];
-  let totalScore = 0;
   array.forEach((item) => {
     if (item === "") {
       return;
@@ -66,16 +65,16 @@ function splitRankStr(data: String): [LineUp[], number] {
       name: name,
       rank: parseInt(temp[2]),
       roles: [temp[3], temp[4], temp[5], temp[6], temp[7], temp[8]],
-      score: parseInt(temp[9]) / 1_000_000_000,
+      score: parseInt(temp[9]),
       estimateSui: 0,
     };
-    totalScore = totalScore + Number(lineUp["score"]);
     if (lineUp.walletAddr) {
       res.push(lineUp);
     }
   });
-  return [res, totalScore];
+  return res;
 }
+
 function bytesToU64(bytes: Uint8Array): number {
   const dataView = new DataView(bytes.buffer);
   const intValue = dataView.getInt32(0, true);
@@ -93,7 +92,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "get_rewards_balance";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
     const result = await provider.devInspectTransactionBlock({
@@ -111,7 +110,7 @@ const useQueryRanks = () => {
     return bytesToU64(new Uint8Array(res));
   }, []);
 
-  const query_rank20 = useCallback(async () => {
+  const query_rank20_reward = useCallback(async () => {
     let provider;
     if (ISMAINNET) {
       provider = new JsonRpcProvider(mainnetConnection);
@@ -120,9 +119,9 @@ const useQueryRanks = () => {
     }
     const tx = new TransactionBlock();
     const moveModule = "challenge";
-    const method = "generate_rank_20_description";
+    const method = "get_estimate_reward_20_amounts";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
     const result = await provider.devInspectTransactionBlock({
@@ -134,16 +133,49 @@ const useQueryRanks = () => {
       !result.results ||
       !result.results[0] ||
       !result.results[0].returnValues
-    )
+    ) {
       return "";
+    }
     let source = result.results[0].returnValues[0][0];
     source = source.slice(2);
+    console.log("source", source);
     let resultStr = bytesArrayToString(new Uint8Array(source));
-    let [resultArr, totalScore] = splitRankStr(resultStr);
-    console.log("resultsss:", totalScore);
-    return [resultArr, totalScore];
+    console.log("resultsss:", resultStr);
+    return resultStr;
   }, []);
-  return { query_rank20, query_total_pools_value };
+
+  const query_rank20 = useCallback(async () => {
+    let provider;
+    if (ISMAINNET) {
+      provider = new JsonRpcProvider(mainnetConnection);
+    } else {
+      provider = new JsonRpcProvider(testnetConnection);
+    }
+    const tx = new TransactionBlock();
+    const moveModule = "challenge";
+    const method = "generate_rank_20_description";
+    tx.moveCall({
+      target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
+      arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
+    });
+    const result = await provider.devInspectTransactionBlock({
+      transactionBlock: tx,
+      sender: SENDER,
+    });
+    if (
+      !result ||
+      !result.results ||
+      !result.results[0] ||
+      !result.results[0].returnValues
+    ) {
+      return "";
+    }
+    let source = result.results[0].returnValues[0][0];
+    let resultStr = bytesArrayToString(new Uint8Array(source));
+    let resultArr = splitRankStr(resultStr);
+    return resultArr;
+  }, []);
+  return { query_rank20, query_rank20_reward };
 };
 
 export default useQueryRanks;
