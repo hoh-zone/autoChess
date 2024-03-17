@@ -7,15 +7,46 @@ import useQueryRanks, { LineUp } from "@/pages/api/useQueryRanks";
 export const Leaderboard: React.FC = () => {
   const [data, setData] = useState<LineUp[]>([]);
   const [rewards, setRewards] = useState<Number[]>([]);
-  const { query_rank20, query_rank20_reward } = useQueryRanks();
+  const [countdown, setCountDown] = useState("");
+  const { query_rank20, query_rank20_reward, query_left_challenge_time } =
+    useQueryRanks();
+
+  const formatMilliseconds = (milliseconds: any) => {
+    if (milliseconds == 0) {
+      return "";
+    }
+    var seconds = Math.floor(milliseconds / 1000);
+    var days = Math.floor(seconds / (24 * 60 * 60));
+    seconds -= days * 24 * 60 * 60;
+    var hours = Math.floor(seconds / (60 * 60));
+    seconds -= hours * 60 * 60;
+    var minutes = Math.floor(seconds / 60);
+    seconds -= minutes * 60;
+    if (days > 1) {
+      return days + " days " + hours + " hours " + minutes + " min";
+    } else {
+      if (hours > 1) {
+        return hours + " hours " + minutes + " min";
+      } else {
+        return minutes + " min";
+      }
+    }
+  };
+
   useEffect(() => {
     fetch();
   }, []);
 
   const fetch = async () => {
-    const results = await Promise.all([query_rank20(), query_rank20_reward()]);
+    const results = await Promise.all([
+      query_rank20(),
+      query_rank20_reward(),
+      query_left_challenge_time(),
+    ]);
     let ranks: any = results[0];
     let rewardsSui = results[1];
+    let leftTime = results[2];
+    setCountDown(formatMilliseconds(Number(1200000)));
     let array: any = String(rewardsSui).split(",");
     console.log(ranks);
     setData(ranks);
@@ -31,6 +62,9 @@ export const Leaderboard: React.FC = () => {
     >
       <Box className="glass py-0 w-full">
         <Center as="h2">Leaderboard</Center>
+        {countdown !== "" && (
+          <Center as="h3">Unlock Countdown: {countdown}</Center>
+        )}
       </Box>
 
       <Stack className="mt-16 glass2" gap={0}>

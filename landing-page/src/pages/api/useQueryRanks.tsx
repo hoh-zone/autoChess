@@ -81,7 +81,7 @@ function bytesToU64(bytes: Uint8Array): number {
   return intValue;
 }
 const useQueryRanks = () => {
-  const query_total_pools_value = useCallback(async () => {
+  const query_left_challenge_time = useCallback(async () => {
     let provider;
     if (ISMAINNET) {
       provider = new JsonRpcProvider(mainnetConnection);
@@ -90,10 +90,13 @@ const useQueryRanks = () => {
     }
     const tx = new TransactionBlock();
     const moveModule = "challenge";
-    const method = "get_rewards_balance";
+    const method = "query_left_challenge_time";
     tx.moveCall({
       target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
-      arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
+      arguments: [
+        tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
+        tx.pure(normalizeSuiObjectId("0x06")),
+      ],
     });
     const result = await provider.devInspectTransactionBlock({
       transactionBlock: tx,
@@ -176,7 +179,7 @@ const useQueryRanks = () => {
     let resultArr = splitRankStr(resultStr);
     return resultArr;
   }, []);
-  return { query_rank20, query_rank20_reward };
+  return { query_rank20, query_rank20_reward, query_left_challenge_time };
 };
 
 export default useQueryRanks;
