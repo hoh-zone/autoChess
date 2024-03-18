@@ -2,6 +2,8 @@ import { Button, HStack, Link, Spacer, Text, VStack } from "@chakra-ui/react";
 import { Character } from "../character/character";
 import { walletAddressEllipsis } from "@/utils/walletAddressEllipsis";
 import Image from "next/image";
+import useQueryRanks from "@/pages/api/useQueryRanks";
+import { ethos } from "ethos-connect";
 
 function get_role_name(data: string): string {
   if (data) {
@@ -34,6 +36,8 @@ export const LeaderboardItem = ({
   items: string[];
   estimateSui: String;
 }) => {
+  const { wallet } = ethos.useWallet();
+  const { claim_reward } = useQueryRanks();
   return (
     <HStack
       className="w-full flex py-8  text-black"
@@ -69,7 +73,7 @@ export const LeaderboardItem = ({
       </HStack>
 
       <HStack className="text-2xl mr-8">
-        <Button>Claim</Button>
+        <Button onClick={() => claim_reward(wallet, address, 1)}>Claim</Button>
       </HStack>
     </HStack>
   );

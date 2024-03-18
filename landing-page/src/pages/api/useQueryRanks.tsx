@@ -179,7 +179,71 @@ const useQueryRanks = () => {
     let resultArr = splitRankStr(resultStr);
     return resultArr;
   }, []);
-  return { query_rank20, query_rank20_reward, query_left_challenge_time };
+
+  const claim_reward = useCallback(
+    async (wallet: any, chessId: any, rank: any) => {
+      let provider;
+      if (ISMAINNET) {
+        provider = new JsonRpcProvider(mainnetConnection);
+      } else {
+        provider = new JsonRpcProvider(testnetConnection);
+      }
+      const tx = new TransactionBlock();
+      const moveModule = "chess";
+      const method = "claim_rank_reward";
+      tx.moveCall({
+        target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
+        arguments: [
+          tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
+          tx.pure(normalizeSuiObjectId(chessId)),
+          tx.object(normalizeSuiObjectId("0x06")),
+          tx.pure(Number(rank)),
+        ],
+      });
+      const response = await wallet.signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+        options: {
+          showObjectChanges: true,
+          showEffects: true,
+          showEvents: true,
+        },
+      });
+      console.log("response:", response);
+      if (response.objectChanges) {
+        const createObjectChange = response.objectChanges.find(
+          (objectChange: any) => objectChange.type === "created"
+        );
+        if (!!createObjectChange && "objectId" in createObjectChange) {
+          console.log("objid", createObjectChange.objectId);
+        }
+      }
+
+      if (response.events != null) {
+        let event = response.events[0];
+        if (event == null) {
+          console.log("event 异常", event);
+          return;
+        }
+        let event_json = event.parsedJson as any;
+        let res = event_json["res"];
+        if (res == 1) {
+          console.log("you win");
+        } else if (res == 2) {
+          console.log("you lose");
+        } else {
+          console.log("even");
+        }
+      }
+    },
+    []
+  );
+
+  return {
+    query_rank20,
+    query_rank20_reward,
+    query_left_challenge_time,
+    claim_reward,
+  };
 };
 
 export default useQueryRanks;
