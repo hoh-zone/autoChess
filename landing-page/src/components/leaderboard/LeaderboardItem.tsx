@@ -72,9 +72,13 @@ export const LeaderboardItem = ({
         <Text>{Number(estimateSui) / 1_000_000_000} Sui</Text>
       </HStack>
 
-      <HStack className="text-2xl mr-8">
-        <Button onClick={() => claim_reward(wallet, address, 1)}>Claim</Button>
-      </HStack>
+      {address == wallet?.address && (
+        <HStack className="text-2xl mr-8">
+          <button onClick={() => claim_reward(wallet, 1, items)}>
+            <h6>Claim</h6>
+          </button>
+        </HStack>
+      )}
     </HStack>
   );
 };

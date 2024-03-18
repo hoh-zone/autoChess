@@ -3,7 +3,11 @@ import {
   CHALLENGE_GLOBAL,
   ISMAINNET,
   SENDER,
+  CHESS_CHALLENGE_PACKAGE_ID,
+  CHESS_CHALLENGE_PACKAGE_ID1,
+  CHESS_CHALLENGE_PACKAGE_ID2,
   CHESS_CHALLENGE_PACKAGE_ID3,
+  CHESS_CHALLENGE_PACKAGE_ID4,
 } from "../../constants";
 import {
   JsonRpcProvider,
@@ -14,6 +18,8 @@ import {
 } from "@mysten/sui.js";
 import { config } from "process";
 import { CONFIG_FILES } from "next/dist/shared/lib/constants";
+import { it } from "node:test";
+import { Toast } from "@chakra-ui/react";
 
 export interface LineUp {
   walletAddr: string;
@@ -92,7 +98,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "query_left_challenge_time";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
       arguments: [
         tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
         tx.pure(normalizeSuiObjectId("0x06")),
@@ -110,6 +116,7 @@ const useQueryRanks = () => {
     )
       return "";
     let res = result.results[0].returnValues[0][0];
+    console.log("ransk:", res);
     return bytesToU64(new Uint8Array(res));
   }, []);
 
@@ -124,7 +131,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "get_estimate_reward_20_amounts";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
     const result = await provider.devInspectTransactionBlock({
@@ -140,10 +147,9 @@ const useQueryRanks = () => {
       return "";
     }
     let source = result.results[0].returnValues[0][0];
-    source = source.slice(2);
-    console.log("source", source);
+    source = source.slice(1);
     let resultStr = bytesArrayToString(new Uint8Array(source));
-    console.log("resultsss:", resultStr);
+    console.log("rank_20 rewards:", resultStr);
     return resultStr;
   }, []);
 
@@ -158,7 +164,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "generate_rank_20_description";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
     const result = await provider.devInspectTransactionBlock({
@@ -177,27 +183,89 @@ const useQueryRanks = () => {
     source = source.slice(2);
     let resultStr = bytesArrayToString(new Uint8Array(source));
     let resultArr = splitRankStr(resultStr);
+    console.log("ranks:", resultArr);
     return resultArr;
   }, []);
 
+  const filterMyChess = (data: any[], lineup: any[]) => {
+    let res = "";
+    data.map((item) => {
+      if (res !== "") {
+        return;
+      }
+      let info = item.data.content.fields;
+      let arena = info.arena;
+      let challenge_win = info.challenge_win;
+      if (!arena || challenge_win == 0) {
+        return;
+      }
+      let roles = info.lineup.fields.roles;
+      let isEqual = true;
+      roles.map((role: any, index: number) => {
+        if (role.fields.class + "_" + role.fields.level !== lineup[index]) {
+          isEqual = false;
+        }
+      });
+      if (isEqual) {
+        res = item.data.objectId;
+      }
+      return;
+    });
+    return res;
+  };
+
   const claim_reward = useCallback(
-    async (wallet: any, chessId: any, rank: any) => {
+    async (wallet: any, rank: any, lineup: any) => {
+      console.log("rank", rank);
       let provider;
       if (ISMAINNET) {
         provider = new JsonRpcProvider(mainnetConnection);
       } else {
         provider = new JsonRpcProvider(testnetConnection);
       }
+      const result = await provider.getOwnedObjects({
+        owner: wallet.address,
+        filter: {
+          MatchAny: [
+            {
+              Package: CHESS_CHALLENGE_PACKAGE_ID,
+            },
+            {
+              Package: CHESS_CHALLENGE_PACKAGE_ID1,
+            },
+            {
+              Package: CHESS_CHALLENGE_PACKAGE_ID2,
+            },
+            {
+              Package: CHESS_CHALLENGE_PACKAGE_ID3,
+            },
+          ],
+        },
+        options: {
+          showContent: true,
+          showDisplay: true,
+          showType: true,
+        },
+      });
+      let chessId = filterMyChess(result.data, lineup);
+      if (chessId === "") {
+        Toast({
+          title: "My lord, You have ranked to the 1st in the world",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
       const tx = new TransactionBlock();
       const moveModule = "chess";
       const method = "claim_rank_reward";
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE_ID3}::${moveModule}::${method}`,
+        target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
         arguments: [
           tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
-          tx.pure(normalizeSuiObjectId(chessId)),
+          tx.object(normalizeSuiObjectId(chessId)),
           tx.object(normalizeSuiObjectId("0x06")),
-          tx.pure(Number(rank)),
+          tx.pure(Number(rank) - 1),
         ],
       });
       const response = await wallet.signAndExecuteTransactionBlock({
@@ -215,23 +283,6 @@ const useQueryRanks = () => {
         );
         if (!!createObjectChange && "objectId" in createObjectChange) {
           console.log("objid", createObjectChange.objectId);
-        }
-      }
-
-      if (response.events != null) {
-        let event = response.events[0];
-        if (event == null) {
-          console.log("event 异常", event);
-          return;
-        }
-        let event_json = event.parsedJson as any;
-        let res = event_json["res"];
-        if (res == 1) {
-          console.log("you win");
-        } else if (res == 2) {
-          console.log("you lose");
-        } else {
-          console.log("even");
         }
       }
     },
