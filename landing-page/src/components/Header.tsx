@@ -1,4 +1,5 @@
 import { HStack, Spacer } from "@chakra-ui/react"
+import { SignInButton } from "ethos-connect";
 import Image from "next/image";
 import { FaXTwitter } from "react-icons/fa6";
 
@@ -28,6 +29,7 @@ export const Header = () => {
             <a href="https://twitter.com/SuiAutoChess" target="_blank">
                 <FaXTwitter />
             </a>
+            <SignInButton />
         </HStack>
     </nav>
 }

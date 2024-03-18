@@ -1,20 +1,19 @@
 import { Chain, EthosConnectProvider } from "ethos-connect"
-import ExampleIcon from "../icons/ExampleIcon"
 import type { AppProps } from "next/app"
-import { NETWORK } from "../lib/constants"
 import Head from "next/head"
 import { ChakraProvider } from "@chakra-ui/react"
 import { useEffect, useRef } from "react"
 import { useAtom } from "jotai"
 import { stageAtom } from "../store/stages"
 import "../styles/globals.css"
+import Image from "next/image";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ["Ethos Wallet"],
-    network: "https://fullnode.testnet.sui.io",
-    chain: Chain.SUI_TESTNET
+    network: "https://fullnode.mainnet.sui.io",
+    chain: Chain.SUI_MAINNET
   }
   const audioRef = useRef<HTMLAudioElement>(null)
   const audioFightRef = useRef<HTMLAudioElement>(null)
@@ -60,7 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [audioRef.current, stage])
 
   return (
-    <EthosConnectProvider ethosConfiguration={ethosConfiguration} dappName="EthosConnect Example App" dappIcon={<ExampleIcon />} connectMessage=" ">
+    <EthosConnectProvider ethosConfiguration={ethosConfiguration} dappName="Sui Auto Chess" dappIcon={<Image src={"/favicon.ico"} className="rounded-full" width={32} height={32} alt="" />} connectMessage=" ">
       <ChakraProvider>
         <Head>
           <title>Sui Auto Chess</title>

@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mysten/sui.js": "^0.34.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
+    "@mysten/sui.js": "^0.34.1",
+    "ethos-connect": "^0.0.194",
     "framer-motion": "^10.16.16",
     "next": "14.0.3",
     "react": "^18",
@@ -21,9 +22,9 @@
     "tailwind-merge": "^2.1.0"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.1",
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/canvas-confetti": "^1.6.1",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
