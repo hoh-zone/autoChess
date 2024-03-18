@@ -2,15 +2,17 @@
 
 [move]
 version = 0
-manifest_digest = "0C391C296A72D61BD6F3DFAEEA39F433944919D0062504444B61844ED29C9AEB"
-deps_digest = "397E6A9F7A624706DBDFEE056CE88391A15876868FD18A88504DA74EB458D697"
+manifest_digest = "E56F926EFE91C03C0879D0DA91606EA1962590A1AF97D0D7272B7D4977665201"
+deps_digest = "CAFAD8A7CF51067FB4358215BECB86BD100DD64E57C2AC8A7AE7D74B688F5965"
 
 dependencies = [
   { name = "MoveStdlib" },
   { name = "Sui" },
+  { name = "fight_package" },
   { name = "lineup_package" },
   { name = "role_package" },
   { name = "util_package" },
+  { name = "verify_package" },
 ]
 
 [[move.package]]
@@ -23,6 +25,18 @@ source = { local = "G:\\autoChess\\move_split\\sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
+]
+
+[[move.package]]
+name = "fight_package"
+source = { local = "G:\\autoChess\\move_split\\fight_package" }
+
+dependencies = [
+  { name = "MoveStdlib" },
+  { name = "Sui" },
+  { name = "lineup_package" },
+  { name = "role_package" },
+  { name = "util_package" },
 ]
 
 [[move.package]]
@@ -55,7 +69,14 @@ dependencies = [
   { name = "Sui" },
 ]
 
-[move.toolchain-version]
-compiler-version = "1.20.0"
-edition = "legacy"
-flavor = "sui"
+[[move.package]]
+name = "verify_package"
+source = { local = "G:\\autoChess\\move_split\\verify_package" }
+
+dependencies = [
+  { name = "MoveStdlib" },
+  { name = "Sui" },
+  { name = "lineup_package" },
+  { name = "role_package" },
+  { name = "util_package" },
+]

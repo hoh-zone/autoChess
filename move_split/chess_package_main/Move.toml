@@ -1,7 +1,7 @@
 [package]
-name = "verify_package"
-version = "0.0.1"
-published-at = "0x757218ec89c149a4b9114a59f43294965de1967f1457b8a858efa40c6e83ee4c"
+name = "chess_package_main"
+version = "0.0.2"
+published-at = "0x41e2e1ff897885b2e18d0e8373855af916adfb7b2b6c63b7485eb78ea8b19dbc"
 
 [dependencies]
 Sui = { local = "G:/autoChess/move_split/sui-framework" }
@@ -9,10 +9,14 @@ MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
 util_package = { local = "G:/autoChess/move_split/util_package" }
 role_package = { local = "G:/autoChess/move_split/role_package" }
 lineup_package = { local = "G:/autoChess/move_split/lineup_package" }
+fight_package = { local = "G:/autoChess/move_split/fight_package" }
+verify_package = { local = "G:/autoChess/move_split/verify_package" }
 
 [addresses]
-verify_package = "0x757218ec89c149a4b9114a59f43294965de1967f1457b8a858efa40c6e83ee4c"
+chess_package_main = "0x0"
 util_package = "0xc13232fc2ac9f856aae1021330531c29a163698d7c68e557caa540bc2670b455"
 role_package = "0xd3cab2e96dfe5fa64f5d2738fac8f004406878ed04adc35bf76c979289c2ebe8"
 lineup_package = "0x7af142ead12929375ed708a7ad61b4244f472f60f94e8907bd94cc48cf0a107c"
+fight_package = "0xa13fb6cf28fc9b1ea839bc26fbf936ad7a18aca88e6018be50b43bbffb9d112d"
+verify_package = "0x757218ec89c149a4b9114a59f43294965de1967f1457b8a858efa40c6e83ee4c"
 account = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"

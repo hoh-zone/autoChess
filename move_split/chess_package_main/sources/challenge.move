@@ -1,9 +1,10 @@
 // this module is used for the challenge mode, every player who has won more than 10 chesses can attend the challenge mode to win more sui
 // every season we extract partial sui from our reward pool for the first 20 players in the challenge mode.
 // you can review your rank in web : https://home.autochess.app/
-module challenge_package::challenge {
+module chess_package_main::challenge {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
+    use sui::table;
     use sui::transfer::{Self};
     use std::string::{utf8, String, Self};
     use lineup_package::lineup::{Self, LineUp};
@@ -17,12 +18,16 @@ module challenge_package::challenge {
     use role_package::role;
     use sui::sui::SUI;
 
+    friend chess_package_main::chess;
+
     const ERR_CHALLENGE_NOT_END:u64 = 0x01;
     const ERR_NO_PERMISSION:u64 = 0x02;
     const DAY_IN_MS: u64 = 86_400_000;
+    const HOUR_IN_MS: u64 = 3_600_000;
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
     const ERR_ALREADY_INIT: u64 = 0x04;
     const ERR_EXCEED_VEC_LENGTH: u64 = 0x05;
+    const AMOUNT_DECIMAL:u64 = 1_000_000_000;
 
     // challenge admin, keeps the uptodate data with time stamp, updated every season (14-30 days)
     // rank_20 is the first 20 players identified by the lineup (when is it generated: mannually initiallized in ts script)
@@ -32,7 +37,7 @@ module challenge_package::challenge {
         id: UID,
         balance_SUI: Balance<SUI>,
         rank_20: vector<LineUp>,
-        reward_20: vector<u64>,
+        reward_20: table::Table<u64, u64>,
         publish_time: u64,
         lock:bool
     }
@@ -42,7 +47,7 @@ module challenge_package::challenge {
             id: object::new(ctx),
             balance_SUI: balance::zero(),
             rank_20: vector::empty<LineUp>(),
-            reward_20: vector::empty<u64>(),
+            reward_20: table::new<u64, u64>(ctx),
             publish_time: 0,
             lock: false
         };
@@ -55,7 +60,7 @@ module challenge_package::challenge {
             id: object::new(ctx),
             balance_SUI: balance::zero(),
             rank_20: vector::empty<LineUp>(),
-            reward_20: vector::empty<u64>(),
+            reward_20: table::new<u64, u64>(ctx),
             publish_time: 0,
             lock: false
         };
@@ -65,6 +70,17 @@ module challenge_package::challenge {
     public fun get_lineup_by_rank(global: &Global, rank:u8): &LineUp {
         assert!(vector::length(&global.rank_20) > (rank as u64), ERR_EXCEED_VEC_LENGTH);
         vector::borrow(&global.rank_20, (rank as u64))
+    }
+
+    // todo: Transfer the rewarding SUI to the player
+    #[lint_allow(self_transfer)]
+    public(friend) fun send_reward_by_rank(global:&mut Global, rank:u8, ctx:&mut TxContext) {
+        let receiver = tx_context::sender(ctx);
+        assert!(vector::length(&global.rank_20) > (rank as u64), ERR_EXCEED_VEC_LENGTH);
+        let amount = *table::borrow(&global.reward_20, (rank as u64));
+        let balance = balance::split(&mut global.balance_SUI, amount);
+        let sui = coin::from_balance(balance, ctx); 
+        transfer::public_transfer(sui, receiver);
     }
 
     // when the player wins, swap the ranking of the player with the previous one who was 1 rank ahead
@@ -171,11 +187,11 @@ module challenge_package::challenge {
     // published time
     public entry fun query_left_challenge_time(global: &Global, clock:&Clock):u64 {
         let now = clock::timestamp_ms(clock);
-        let one_week = DAY_IN_MS * 7;
-        if ((now - global.publish_time) >= one_week) {
+        let duration = HOUR_IN_MS * 1;
+        if ((now - global.publish_time) >= duration) {
             0
         } else {
-            one_week - (now - global.publish_time)
+            duration - (now - global.publish_time)
         }
     }
 
@@ -187,8 +203,12 @@ module challenge_package::challenge {
         assert!(vector::length(&global.rank_20) > rank, ERR_EXCEED_VEC_LENGTH);
         let tmp_lineup = vector::borrow(&global.rank_20, rank);
         let gold_cost = lineup::get_gold_cost(tmp_lineup);
-        let prop = gold_cost * get_base_weight_by_rank(rank) / total_scores;
-        total_amount * prop - 1_000_000_000
+        let prop = (gold_cost / AMOUNT_DECIMAL) * get_base_weight_by_rank(rank) / total_scores;
+        if (total_amount * prop > 100_000_000) {
+            total_amount * prop - 100_000_000
+        } else {
+            total_amount * prop
+        }
     }
 
     // Score reveals the evaluation of player's performance, 
@@ -204,7 +224,7 @@ module challenge_package::challenge {
             let tmp_lineup = vector::borrow(&global.rank_20, rank);
             let gold_cost = lineup::get_gold_cost(tmp_lineup);
             let prop = get_base_weight_by_rank(rank);
-            total_socres = (gold_cost * prop) + total_socres;
+            total_socres = (gold_cost / AMOUNT_DECIMAL * prop) + total_socres;
             rank = rank + 1;
         };
         total_socres
@@ -216,7 +236,7 @@ module challenge_package::challenge {
         let tmp_lineup = vector::borrow(&global.rank_20, rank - 1);
         let gold_cost = lineup::get_gold_cost(tmp_lineup);
         let prop = get_base_weight_by_rank(rank - 1);
-        (gold_cost * prop)
+        (gold_cost / AMOUNT_DECIMAL * prop)
     }
 
     // Transfer the left Sui in the rewards pool tho the chess shop account only when challenge timeout
@@ -230,33 +250,57 @@ module challenge_package::challenge {
         transfer::public_transfer(sui, tx_context::sender(ctx));
     }
 
-    public fun push_reward_amount(global:&mut Global, amount:u64) {
+    fun push_reward_amount(global:&mut Global, amount:u64, rank:u64) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
-        vector::push_back(&mut global.reward_20, amount)
+        if (table::contains(&global.reward_20, rank)) {
+            let old_amount = table::remove(&mut global.reward_20, rank);
+            table::add(&mut global.reward_20, rank, amount);
+        } else {
+            table::add(&mut global.reward_20, rank, amount);
+        };
     }
 
     // Send some SUI (balance:Balance<SUI>)from the chess shop account to the challenge rewards pool
     public fun top_up_challenge_pool(global:&mut Global, balance:Balance<SUI>) {
         balance::join(&mut global.balance_SUI, balance);
+        let i = 0;
+        let total_scores = calculate_scores(global);
+
+        // Calculate and generate the  reward_20 vector in the challenge admin
+        let total_reward = get_rewards_balance(global);
+        while (i < 20) {
+            let amount = get_reward_amount_by_rank(global, total_reward, total_scores, i);
+            push_reward_amount(global, amount, i);
+            i = i + 1;
+        };
     }
 
     public fun get_rewards_balance(global:&Global) : u64 {
         balance::value(&global.balance_SUI)
     }
 
-    // Transfer the rewarding SUI to the player
-    #[lint_allow(self_transfer)]
-    public fun send_reward_by_rank(global:&mut Global, rank:u8, ctx:&mut TxContext) {
-        let receiver = tx_context::sender(ctx);
-        assert!(vector::length(&global.rank_20) > (rank as u64), ERR_EXCEED_VEC_LENGTH);
-        let amount = *vector::borrow(&global.reward_20, (rank as u64));
-        let balance = balance::split(&mut global.balance_SUI, amount);
-        let sui = coin::from_balance(balance, ctx); 
-        transfer::public_transfer(sui, receiver);
+    // we have to lock the challenge rank in each season, so we have time to prepare reward for each player.
+    public fun lock_pool(global:&mut Global, ctx:&mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        global.lock = true
     }
 
-    // we have to lock the challenge rank in each season, so we have time to prepare reward for each player.
-    public fun lock_pool(global:&mut Global) {
-        global.lock = true
+    public fun unlock_pool(global:&mut Global, ctx:&mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        global.lock = false
+    }
+
+    public fun get_estimate_reward_20_amounts(global:&Global) : String {
+        let byte_comma = ascii::byte(ascii::char(44));
+        let len = table::length(&global.reward_20);
+        let i = 0;
+        let vec_out:vector<u8> = vector::empty<u8>();
+        while (i < len) {
+            let reward = table::borrow(&global.reward_20, i);
+            vector::append(&mut vec_out, utils::numbers_to_ascii_vector(*reward));
+            vector::push_back(&mut vec_out, byte_comma);
+            i = i + 1;
+        };
+        utf8(vec_out)
     }
 }

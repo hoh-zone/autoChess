@@ -4,7 +4,7 @@
 // standard mode is free, but you can't win sui. In arena mode, players have to buy a ticket to start the game and check out to win some sui.
 // before each battle, roles present in hero pool is determined, it costs gold to refresh to see the next five heros in the hero pool with 30 heros generated at the end of last battle
 // There is no dynamic generation on frontend when you click "refresh" button.
-module chess_package::chess {
+module chess_package_main::chess {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self, public_transfer};
@@ -18,7 +18,7 @@ module chess_package::chess {
     use sui::event;
     use role_package::role::{Self};
     use util_package::utils;
-    use challenge_package::challenge;
+    use chess_package_main::challenge;
     use fight_package::fight;
 
     use sui::sui::SUI;
@@ -131,27 +131,39 @@ module chess_package::chess {
         transfer::public_transfer(sui, tx_context::sender(ctx));
     }
 
-    // The function sends 1/10 of the SUI in the chess game shop to the challenge rewards pool when the challenge period is about to due.
-    // Then it calculates the rewards for the top 20 respectively.
-    // Finally it locks the challenge rewards pool
-    public fun lock_reward(global: &mut Global, challengeGlobal: &mut challenge::Global, clock:&Clock, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
-        assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
-        let challenge_mode_rewards = balance::value(&global.balance_SUI) / 10;
-        let balance = balance::split(&mut global.balance_SUI, challenge_mode_rewards);
-        challenge::top_up_challenge_pool(challengeGlobal, balance);
-        let i = 0;
-        let total_scores = challenge::calculate_scores(challengeGlobal);
-
-        // Calculate and generate the  reward_20 vector in the challenge admin
-        while (i < 20) {
-            let amount = challenge::get_reward_amount_by_rank(challengeGlobal, challenge_mode_rewards, total_scores, i);
-            challenge::push_reward_amount(challengeGlobal, amount);
-            i = i + 1;
+    #[lint_allow(self_transfer)]
+    public fun top_up_arena_pool(global:&mut Global, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        let amount = coin::value(&merged_coin);
+        let balance = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, amount, ctx)
+        );
+        balance::join(&mut global.balance_SUI, balance);
+        if (coin::value(&merged_coin) > 0) {
+            // send the left coin back to the player after paying the ticket
+            transfer::public_transfer(merged_coin, tx_context::sender(ctx));
+        } else {
+            coin::destroy_zero(merged_coin);
         };
-        challenge::lock_pool(challengeGlobal);
     }
 
+    #[lint_allow(self_transfer)]
+    public fun top_up_challenge_pool(challengeGlobal: &mut challenge::Global, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        let amount = coin::value(&merged_coin);
+        let balance = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, amount, ctx)
+        );
+        challenge::top_up_challenge_pool(challengeGlobal, balance);
+        if (coin::value(&merged_coin) > 0) {
+            // send the left coin back to the player after paying the ticket
+            transfer::public_transfer(merged_coin, tx_context::sender(ctx));
+        } else {
+            coin::destroy_zero(merged_coin);
+        };
+    }
 
     // For the player in the challenge mode when challenge period due
     // Sends the rewards to the player and burns the chess nft
@@ -160,13 +172,10 @@ module chess_package::chess {
         assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
         let sender = tx_context::sender(ctx);
         let tmp_lineup = challenge::get_lineup_by_rank(challengeGlobal, rank);
-        if (lineup::get_creator(tmp_lineup) == sender) {
-            let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked:_} = chess;
-            challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
-            object::delete(id);
-        } else {
-            public_transfer(chess, sender);
-        };
+        assert!((lineup::get_creator(tmp_lineup) == sender && lineup::get_hash(tmp_lineup) == lineup::get_hash(&chess.lineup)), ERR_NOT_PERMISSION);
+        let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked:_} = chess;
+        challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
+        object::delete(id);
     }
 
     #[lint_allow(self_transfer)]
@@ -236,7 +245,8 @@ module chess_package::chess {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         assert!(!chess.arena_checked, ERR_ARENA_FEE_HAS_CHECKED_OUT);
         chess.arena_checked = true;
-        let total_amount = get_total_shui_amount(global);
+        let total_amount = get_total_sui_amount(global);
+
         // rewards = 0.3*wins*ticket price, has to be less than 90% of the total coins in the chess shop
         let reward_amount = utils::estimate_reward(total_amount, chess.gold_cost, chess.win);
         let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
@@ -250,7 +260,7 @@ module chess_package::chess {
     #[lint_allow(self_transfer)]
     public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
-        let total_amount = get_total_shui_amount(global);
+        let total_amount = get_total_sui_amount(global);
         let reward_amount = utils::estimate_reward(total_amount, chess.gold_cost, chess.win);
         let Chess {id, name:_, lineup:_, cards_pool:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked: arena_checked} = chess;
         if (!arena_checked) {
@@ -382,16 +392,16 @@ module chess_package::chess {
         let res;
         if (fight::some_alive(&enemy_first_role, &enemy_roles)) {
             if (is_challenge) {
-                challenge_win = challenge_win + 1;
+                challenge_lose = challenge_lose + 1;
             } else {
-                win = win + 1;
+                lose = lose + 1;
             };
             res = false
         } else {
             if (is_challenge) {
-                challenge_lose = challenge_lose + 1;
+                challenge_win = challenge_win + 1;
             } else {
-                lose = lose + 1;
+                win = win + 1;
             };
             res = true;
         };
@@ -410,7 +420,7 @@ module chess_package::chess {
         res
     }
 
-    public fun get_total_shui_amount(global: &Global) : u64 {
+    public fun get_total_sui_amount(global: &Global) : u64 {
         balance::value(&global.balance_SUI)
     }
 
