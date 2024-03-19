@@ -22,7 +22,6 @@ module chess_package_main::challenge {
 
     const ERR_CHALLENGE_NOT_END:u64 = 0x01;
     const ERR_NO_PERMISSION:u64 = 0x02;
-    const DAY_IN_MS: u64 = 86_400_000;
     const HOUR_IN_MS: u64 = 3_600_000;
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
     const ERR_ALREADY_INIT: u64 = 0x04;
@@ -253,7 +252,7 @@ module chess_package_main::challenge {
     fun push_reward_amount(global:&mut Global, amount:u64, rank:u64) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
         if (table::contains(&global.reward_20, rank)) {
-            let old_amount = table::remove(&mut global.reward_20, rank);
+            table::remove(&mut global.reward_20, rank);
             table::add(&mut global.reward_20, rank, amount);
         } else {
             table::add(&mut global.reward_20, rank, amount);
