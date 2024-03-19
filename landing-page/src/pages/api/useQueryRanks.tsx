@@ -215,7 +215,7 @@ const useQueryRanks = () => {
   };
 
   const claim_reward = useCallback(
-    async (wallet: any, rank: any, lineup: any) => {
+    async (wallet: any, rank: any, lineup: any, toast: any) => {
       console.log("rank", rank);
       let provider;
       if (ISMAINNET) {
@@ -249,12 +249,13 @@ const useQueryRanks = () => {
       });
       let chessId = filterMyChess(result.data, lineup);
       if (chessId === "") {
-        Toast({
+        toast({
           title: "My lord, You have ranked to the 1st in the world",
           status: "warning",
           duration: 5000,
           isClosable: true,
         });
+        return;
       }
       const tx = new TransactionBlock();
       const moveModule = "chess";

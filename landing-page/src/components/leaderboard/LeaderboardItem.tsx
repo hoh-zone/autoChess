@@ -1,4 +1,12 @@
-import { Button, HStack, Link, Spacer, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Link,
+  Spacer,
+  Text,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 import { Character } from "../character/character";
 import { walletAddressEllipsis } from "@/utils/walletAddressEllipsis";
 import Image from "next/image";
@@ -38,6 +46,7 @@ export const LeaderboardItem = ({
 }) => {
   const { wallet } = ethos.useWallet();
   const { claim_reward } = useQueryRanks();
+  const toast = useToast();
   return (
     <HStack
       className="w-full flex py-8  text-black"
@@ -74,7 +83,7 @@ export const LeaderboardItem = ({
 
       {address == wallet?.address && (
         <HStack className="text-2xl mr-8">
-          <button onClick={() => claim_reward(wallet, 1, items)}>
+          <button onClick={() => claim_reward(wallet, 1, items, toast)}>
             <h6>Claim</h6>
           </button>
         </HStack>
