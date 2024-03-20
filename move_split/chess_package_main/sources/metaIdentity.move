@@ -7,9 +7,8 @@ module chess_package_main::metaIdentity {
     use sui::table::{Self};
     use std::vector::{Self};
     
-    const ERR_ALREADY_BIND:u64 = 0x008;
-    const ERR_HAS_BEEN_INVITED_BY_MYSELF:u64 = 0x015;
-    const ERR_HAS_BEEN_INVITED:u64 = 0x016;
+    const ERR_ALREADY_BIND:u64 = 0x001;
+    const ERR_ALREADY_BEEN_INVITED:u64 = 0x002;
 
     struct MetaIdentity has key {
         id:UID,
@@ -34,10 +33,8 @@ module chess_package_main::metaIdentity {
         // wallet_addr -> meta_addr
         wallet_meta_map:table::Table<address, address>,
 
-        inviteMap:LinkedTable<u64, vector<address>>,
-
-        // invitorMetaId -> invited addresses list
-        invitedMap:LinkedTable<u64, vector<address>>
+        // inviterMetaId -> invited players addresses list
+        invitedds_meta_map:LinkedTable<u64, vector<address>>
     }
 
     #[test_only]
@@ -46,9 +43,8 @@ module chess_package_main::metaIdentity {
             id: object::new(ctx),
             creator:@account,
             total_players: 0,
-            inviteMap:linked_table::new<u64, vector<address>>(ctx),
-            invitedMap:linked_table::new<u64, vector<address>>(ctx),
             wallet_meta_map:table::new<address, address>(ctx),
+            invitedds_meta_map:linked_table::new<u64, vector<address>>(ctx),
         };
         transfer::share_object(global);
     }
@@ -59,21 +55,22 @@ module chess_package_main::metaIdentity {
             id: object::new(ctx),
             creator:@account,
             total_players: 0,
-            inviteMap:linked_table::new<u64, vector<address>>(ctx),
-            invitedMap:linked_table::new<u64, vector<address>>(ctx),
             wallet_meta_map:table::new<address, address>(ctx),
+            invitedds_meta_map:linked_table::new<u64, vector<address>>(ctx),
         };
         transfer::share_object(global);
     }
 
-    public fun register_meta(global: &mut MetaInfoGlobal, name:string::String, ctx: &mut TxContext) {
+    public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, ctx:&mut TxContext) {
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
-        table::add(&mut global.wallet_meta_map, sender, sender);
+        let metaId = global.total_players;
         let uid = object::new(ctx);
+        let meta_addr = object::uid_to_address(&uid);
+        table::add(&mut global.wallet_meta_map, sender, meta_addr);
         let meta = MetaIdentity {
             id:uid,
-            metaId:global.total_players,
+            metaId:metaId,
             name:name,
             wallet_addr:sender,
             level: 0,
@@ -89,24 +86,45 @@ module chess_package_main::metaIdentity {
         transfer::transfer(meta, sender);
     }
 
-    public fun invite_players(global: &mut MetaInfoGlobal, inviteMetaId:u64, receiver:address, _ctx:&mut TxContext) {
-        assert!(!is_registered(global, receiver), ERR_HAS_BEEN_INVITED);
+    public fun register_invited_meta(global: &mut MetaInfoGlobal, inviterMetaId:u64, name:string::String, ctx: &mut TxContext) {
+        let sender = tx_context::sender(ctx);
+        assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
+        table::add(&mut global.wallet_meta_map, sender, sender);
+        let myMetaId = global.total_players;
+        let uid = object::new(ctx);
+        let meta_addr = object::uid_to_address(&uid);
+        table::add(&mut global.wallet_meta_map, sender, meta_addr);
+        let meta = MetaIdentity {
+            id:uid,
+            metaId:myMetaId,
+            name:name,
+            wallet_addr:sender,
+            level: 0,
+            exp: 0,
+            init_gold: 0,
+            ability1: string::utf8(b""),
+            ability2: string::utf8(b""),
+            ability3: string::utf8(b""),
+            ability4: string::utf8(b""),
+            ability5: string::utf8(b"")
+        };
+        global.total_players = global.total_players + 1;
+        transfer::transfer(meta, sender);
 
-        // add to map
-        if(linked_table::contains(&global.inviteMap, inviteMetaId)) {
-            let invite_players = linked_table::borrow_mut(&mut global.inviteMap, inviteMetaId);
-            assert!(!vector::contains(invite_players, &receiver), ERR_HAS_BEEN_INVITED_BY_MYSELF);
-            vector::push_back(invite_players, receiver);
+        if (!linked_table::contains(&global.invitedds_meta_map, inviterMetaId)) {
+            let newVec = vector::empty<address>();
+            vector::push_back(&mut newVec, sender);
+            linked_table::push_back(&mut global.invitedds_meta_map, inviterMetaId, newVec);
         } else {
-            let invite_players = vector::empty<address>();
-            vector::push_back(&mut invite_players, receiver);
-            linked_table::push_back(&mut global.inviteMap, inviteMetaId, invite_players);
+            let oldVec = linked_table::borrow_mut(&mut global.invitedds_meta_map, inviterMetaId);
+            assert!(!vector::contains(oldVec, &sender), ERR_ALREADY_BEEN_INVITED);
+            vector::push_back(oldVec, sender);
         };
     }
 
     public fun query_invited_num(global:&MetaInfoGlobal, metaId: u64) : u64 {
-        if (linked_table::contains(&global.invitedMap, metaId)) {
-            let addr_vec = linked_table::borrow(&global.invitedMap, metaId);
+        if (linked_table::contains(&global.invitedds_meta_map, metaId)) {
+            let addr_vec = linked_table::borrow(&global.invitedds_meta_map, metaId);
             vector::length(addr_vec)
         } else {
             0
@@ -124,6 +142,4 @@ module chess_package_main::metaIdentity {
     public fun is_registered(global: &MetaInfoGlobal, user_addr:address) : bool {
         table::contains(&global.wallet_meta_map, user_addr)
     }
-
-    // todo: claim area chess and add invited num
 }
