@@ -4,6 +4,7 @@ import { chessId, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
 import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { Toast, useToast } from "@chakra-ui/react"
+import { normalizeSuiObjectId } from "@mysten/sui.js"
 
 const useOperateAndMatch = () => {
   const { wallet } = ethos.useWallet()
@@ -28,7 +29,7 @@ const useOperateAndMatch = () => {
     return vec
   }
 
-  const operate_submit = async (operations: string[]) => {
+  const operate_submit = async (operations: string[], meta: any) => {
     console.log("operations:", operations)
     console.log("chess:", chess_id)
     if (!wallet) return
@@ -45,6 +46,7 @@ const useOperateAndMatch = () => {
           tx.pure(chess_id),
           tx.pure(operations),
           tx.pure(left_gold),
+          tx.object(normalizeSuiObjectId(meta)),
           tx.pure(get_chars_strvec())
         ]
       })

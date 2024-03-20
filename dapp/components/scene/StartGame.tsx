@@ -1,8 +1,9 @@
-import { Box, Center, HStack, Input, Spacer, Stack, VStack } from "@chakra-ui/react"
-import { assetsAtom } from "../../store/stages"
+import { Box, Button, Center, HStack, Input, Spacer, Stack, VStack } from "@chakra-ui/react"
+import { assetsAtom, metaA } from "../../store/stages"
 import { useAtom } from "jotai"
 import { Character } from "../character/character"
 import useQueryChesses from "../button/QueryAllChesses"
+import useQueryMetaInfo from "../button/QueryMetaInfo"
 import { useEffect, useState } from "react"
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
 import { ethos, SignInButton } from "ethos-connect"
@@ -15,13 +16,16 @@ import StartGameButtons from "../StartGameButtons"
 export const StartGame = () => {
   const [inputValue, setInputValue] = useState("")
   const { nfts, query_chesses } = useQueryChesses()
+  const { register_meta, query_meta_info } = useQueryMetaInfo()
   const syncGameNFT = useSyncGameNFT()
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useAtom(assetsAtom)
+  const [meta, _setMeta] = useAtom(metaA)
 
   const fetch = async () => {
     setIsLoading(true)
+    const meta = await query_meta_info()
     const result = await query_chesses()
     setIsLoading(false)
     return result
@@ -49,8 +53,16 @@ export const StartGame = () => {
                     <br />
                     Chess
                   </motion.p>
-
-                  <ContinueGame isLoading={isLoading} />
+                  <VStack>
+                    <Button
+                      onClick={() => {
+                        register_meta()
+                      }}
+                    >
+                      Register Account
+                    </Button>
+                    <ContinueGame isLoading={isLoading} />
+                  </VStack>
                 </div>
 
                 <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
@@ -59,7 +71,9 @@ export const StartGame = () => {
             </div>
           ) : (
             <div className="absolute text-white bottom-80 z-50">
-              <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">Connect</SignInButton>
+              <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                Connect
+              </SignInButton>
             </div>
           )}
           <div className="absolute top-0 right-0 m-4">

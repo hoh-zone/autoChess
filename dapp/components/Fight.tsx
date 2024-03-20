@@ -24,6 +24,8 @@ export const Fight = () => {
   const toast = useToast()
 
   const fight = useFight()
+
+  // for test
   const init_chars = () => {
     console.log("初始化角色")
     let chars_names = ["archer3", "shinobi3", "ani1", "ani3"]
@@ -64,7 +66,7 @@ export const Fight = () => {
             if (debug) {
               json = await query_fight(chess_id, win - 1, lose)
             } else {
-              json = await operate_submit(operations)
+              json = await operate_submit(operations, meta)
               setOperations([])
               if (!json) {
                 return
