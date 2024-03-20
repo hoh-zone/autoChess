@@ -1,14 +1,14 @@
 [package]
 name = "util_package"
 version = "0.0.1"
-published-at = "0xc13232fc2ac9f856aae1021330531c29a163698d7c68e557caa540bc2670b455"
+published-at = "0xf0f784497b08a2c21f71b09064a000c7ab1aa89296ccc24d6900e1f550dd16ca"
 
 [dependencies]
 MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
 Sui = { local = "G:/autoChess/move_split/sui-framework" }
 
 [addresses]
-util_package = "0xc13232fc2ac9f856aae1021330531c29a163698d7c68e557caa540bc2670b455"
+util_package = "0xf0f784497b08a2c21f71b09064a000c7ab1aa89296ccc24d6900e1f550dd16ca"
 account = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
 std= "0x1"
 sui = "0x2"

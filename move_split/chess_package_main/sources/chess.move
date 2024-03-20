@@ -314,7 +314,7 @@ module chess_package_main::chess {
             if (chanllenge_on) {
                 // challenge_win is 1 when chess.win is 0, it stays 0 till the 10th win on standard mode
                 chess.challenge_win = chess.challenge_win + 1;
-                challenge::rank_forward(challengeGlobal, chess.lineup);
+                challenge::rank_forward(challengeGlobal, chess.lineup, meta);
                 metaIdentity::record_add_win(meta);
             } else {
                 chess.win = chess.win + 1;

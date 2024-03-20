@@ -1,7 +1,7 @@
 [package]
 name = "fight_package"
 version = "0.0.1"
-published-at = "0xa13fb6cf28fc9b1ea839bc26fbf936ad7a18aca88e6018be50b43bbffb9d112d"
+published-at = "0xf6d0a2523984c82cb13e70bed6fbc3ebe5d62d3d49841a1118405326b1ae520f"
 
 [dependencies]
 Sui = { local = "G:/autoChess/move_split/sui-framework" }
@@ -11,8 +11,8 @@ role_package = { local = "G:/autoChess/move_split/role_package" }
 lineup_package = { local = "G:/autoChess/move_split/lineup_package" }
 
 [addresses]
-fight_package = "0xa13fb6cf28fc9b1ea839bc26fbf936ad7a18aca88e6018be50b43bbffb9d112d"
-util_package = "0xc13232fc2ac9f856aae1021330531c29a163698d7c68e557caa540bc2670b455"
-role_package = "0xd3cab2e96dfe5fa64f5d2738fac8f004406878ed04adc35bf76c979289c2ebe8"
-lineup_package = "0x7af142ead12929375ed708a7ad61b4244f472f60f94e8907bd94cc48cf0a107c"
+fight_package = "0xf6d0a2523984c82cb13e70bed6fbc3ebe5d62d3d49841a1118405326b1ae520f"
+util_package = "0xf0f784497b08a2c21f71b09064a000c7ab1aa89296ccc24d6900e1f550dd16ca"
+role_package = "0xa95b96b87e6775411b9702b3f82426c7dd2f57900e1cf710afab30ed5e54a5d7"
+lineup_package = "0xd4ac4db16620586df0aff093efd3aaa4c69794b65ff2284ad898d22dc9350f15"
 account = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"

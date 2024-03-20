@@ -17,6 +17,7 @@ module chess_package_main::challenge {
     use sui::address;
     use role_package::role;
     use sui::sui::SUI;
+    use chess_package_main::metaIdentity;
 
     friend chess_package_main::chess;
 
@@ -83,20 +84,23 @@ module chess_package_main::challenge {
     }
 
     // when the player wins, swap the ranking of the player with the previous one who was 1 rank ahead
-    public fun rank_forward(global: &mut Global, lineup:LineUp) {
+    public fun rank_forward(global: &mut Global, lineup:LineUp, meta:&mut metaIdentity::MetaIdentity) {
         assert!(!global.lock, ERR_REWARD_HAS_BEEN_LOCKED);
         let previous_rank = find_rank(global, &lineup);
         // if the player was not in the top 20, it is now 20th
         if (previous_rank == 21) {
             vector::pop_back(&mut global.rank_20);
             vector::insert(&mut global.rank_20, lineup, 19);
+            metaIdentity::record_update_best_rank(meta, 19);
         } else if (previous_rank == 1) {
             // do nothing
+            metaIdentity::record_update_best_rank(meta, 1);
         } else {
             // 15(rank = 15) -> 14(index = 13)
             let old_index = previous_rank - 1;
             vector::remove(&mut global.rank_20, old_index);
             vector::insert(&mut global.rank_20, lineup, old_index - 1);
+            metaIdentity::record_update_best_rank(meta, old_index - 1);
         };
     }
 

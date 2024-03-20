@@ -7,6 +7,7 @@ module chess_package_main::metaIdentity {
     use sui::table::{Self};
     use std::vector::{Self};
     friend chess_package_main::chess;
+    friend chess_package_main::challenge;
     
     const ERR_ALREADY_BIND:u64 = 0x001;
     const EXP_LEVEL1:u64 = 20;

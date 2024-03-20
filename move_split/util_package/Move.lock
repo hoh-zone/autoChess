@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "3B6F0BEEA75780C8CDE4F195B5B5050B3070C30D446439FCEDFB9F8C617647CB"
+manifest_digest = "72BD2BFA4DCE3226521458EC9610805D11E101EBE98FCF8590C77C98F3EBC0C4"
 deps_digest = "3C4103934B1E040BB6B23F1D610B4EF9F2F1166A50A104EADCF77467C004C600"
 
 dependencies = [
@@ -21,8 +21,3 @@ source = { local = "G:\\autoChess\\move_split\\sui-framework" }
 dependencies = [
   { name = "MoveStdlib" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.20.0"
-edition = "legacy"
-flavor = "sui"
