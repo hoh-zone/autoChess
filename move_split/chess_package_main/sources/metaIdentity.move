@@ -9,17 +9,25 @@ module chess_package_main::metaIdentity {
     friend chess_package_main::chess;
     
     const ERR_ALREADY_BIND:u64 = 0x001;
+    const EXP_LEVEL1:u64 = 20;
+    const EXP_LEVEL2:u64 = 40;
+    const EXP_LEVEL3:u64 = 80;
+    const EXP_LEVEL4:u64 = 100;
+    const EXP_LEVEL5:u64 = 200;
 
     struct MetaIdentity has key {
         id:UID,
         metaId:u64,
         name:string::String,
         wallet_addr:address,
+
+        // record the num clamied for invite activity to prevent double claim
+        invited_claimed_num: u64,
         level: u64,
         exp: u64,
         total_arena_win: u64,
         total_arena_lose: u64,
-        best_challenge_rank: u64,
+        best_rank_map: table::Table<u64, u64>,
         init_gold: u64,
         ability1: string::String,
         ability2: string::String,
@@ -77,11 +85,12 @@ module chess_package_main::metaIdentity {
             metaId:metaId,
             name:name,
             wallet_addr:sender,
+            invited_claimed_num: 0,
             level: 0,
             exp: 0,
             total_arena_win: 0,
             total_arena_lose: 0,
-            best_challenge_rank: 21,
+            best_rank_map: table::new<u64, u64>(ctx),
             init_gold: 0,
             ability1: string::utf8(b""),
             ability2: string::utf8(b""),
@@ -107,11 +116,12 @@ module chess_package_main::metaIdentity {
             metaId:myMetaId,
             name:name,
             wallet_addr:sender,
+            invited_claimed_num: 0,
             level: 0,
             exp: 0,
             total_arena_win: 0,
             total_arena_lose: 0,
-            best_challenge_rank: 21,
+            best_rank_map: table::new<u64, u64>(ctx),
             init_gold: 0,
             ability1: string::utf8(b""),
             ability2: string::utf8(b""),
@@ -139,6 +149,65 @@ module chess_package_main::metaIdentity {
         };
     }
 
+    public(friend) fun record_add_win(meta: &mut MetaIdentity) {
+        meta.total_arena_win = meta.total_arena_win + 1;
+        add_exp(meta, 4);
+    }
+
+    public(friend) fun record_add_lose(meta: &mut MetaIdentity) {
+        meta.total_arena_lose = meta.total_arena_lose + 1;
+        add_exp(meta, 1);
+    }
+
+    public(friend) fun record_update_best_rank(meta: &mut MetaIdentity, rank:u64) {
+        let seasonId = 1;
+        if (table::contains(&meta.best_rank_map, seasonId)) {
+            let last_rank = *table::borrow(&meta.best_rank_map, seasonId);
+            if (rank < last_rank) {
+                table::remove(&mut meta.best_rank_map, seasonId);
+                table::add(&mut meta.best_rank_map, seasonId, rank);
+            };
+        } else {
+            table::add(&mut meta.best_rank_map, seasonId, rank);
+        };
+    }
+
+    fun add_exp(meta: &mut MetaIdentity, exp:u64) {
+        let current_level = meta.level;
+        let current_exp = meta.exp;
+        current_exp = current_exp + exp;
+        if (current_level == 0 && current_exp >= EXP_LEVEL1) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL1;
+        } else if (current_level == 1 && current_exp >= EXP_LEVEL2) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL2;
+        } else if (current_level == 2 && current_exp >= EXP_LEVEL3) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL3;
+        } else if (current_level == 3 && current_exp >= EXP_LEVEL4) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL4;
+        } else if (current_level == 4 && current_exp >= EXP_LEVEL5) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL5;
+        } else if (current_level == 5) {
+            meta.exp = current_exp;
+        };
+    }
+
+    fun level_up(meta: &mut MetaIdentity) {
+        meta.level = meta.level + 1;
+    }
+
+    public fun query_best_rank_by_season(meta: &mut MetaIdentity, seasonId: u64) :u64 {
+        if (table::contains(&meta.best_rank_map, seasonId)) {
+            *table::borrow(&meta.best_rank_map, seasonId)
+        } else {
+            21
+        }
+    }
+
     public fun query_invited_num(global:&MetaInfoGlobal, metaId: u64) : u64 {
         if (linked_table::contains(&global.invited_meta_map, metaId)) {
             let addr_vec = linked_table::borrow(&global.invited_meta_map, metaId);
@@ -146,6 +215,15 @@ module chess_package_main::metaIdentity {
         } else {
             0
         }
+    }
+
+    public fun claim_invite_exp(global:&MetaInfoGlobal, meta:&mut MetaIdentity) {
+        let metaId = meta.metaId;
+        let invited_num = query_invited_num(global, metaId);
+        let claimed_num = meta.invited_claimed_num;
+        if (invited_num > claimed_num) {
+            add_exp(meta, (invited_num - claimed_num) * 20);
+        };
     }
 
     public fun get_is_registered(global: &MetaInfoGlobal, user_addr:address) : u64 {

@@ -293,7 +293,8 @@ module chess_package_main::chess {
     /*
     match->battle
     */
-    fun battle(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    fun battle(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, 
+    chess:&mut Chess, meta:&mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
 
         // match an enemy config
@@ -314,6 +315,7 @@ module chess_package_main::chess {
                 // challenge_win is 1 when chess.win is 0, it stays 0 till the 10th win on standard mode
                 chess.challenge_win = chess.challenge_win + 1;
                 challenge::rank_forward(challengeGlobal, chess.lineup);
+                metaIdentity::record_add_win(meta);
             } else {
                 chess.win = chess.win + 1;
                 lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
@@ -325,6 +327,7 @@ module chess_package_main::chess {
             // player losses
             if (chanllenge_on) {
                 chess.challenge_lose = chess.challenge_lose + 1;
+                metaIdentity::record_add_lose(meta);
             } else {
                 chess.lose = chess.lose + 1;
                 lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
@@ -437,7 +440,7 @@ module chess_package_main::chess {
     // After verification, the function excutes the round of battle and records the battle result
     public entry fun operate_and_battle(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
         challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
-        lineup_str_vec: vector<String>, ctx:&mut TxContext) {
+        lineup_str_vec: vector<String>, meta: &mut metaIdentity::MetaIdentity, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let current_lineup = *&chess.lineup;
         let current_roles = lineup::get_mut_roles(&mut current_lineup);
@@ -461,7 +464,7 @@ module chess_package_main::chess {
         chess.lineup = expected_lineup; 
         lineup::set_hash(&mut chess.lineup, tmp_hash);
         // challenge mode, arena mode or standard mode will be processed in match function
-        battle(role_global, lineup_global, challengeGlobal, chess, ctx);
+        battle(role_global, lineup_global, challengeGlobal, chess, meta, ctx);
         global.total_battle = global.total_battle + 1;
     }
 }
