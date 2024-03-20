@@ -6,9 +6,9 @@ module chess_package_main::metaIdentity {
     use sui::transfer::{Self};
     use sui::table::{Self};
     use std::vector::{Self};
+    friend chess_package_main::chess;
     
     const ERR_ALREADY_BIND:u64 = 0x001;
-    const ERR_ALREADY_BEEN_INVITED:u64 = 0x002;
 
     struct MetaIdentity has key {
         id:UID,
@@ -17,12 +17,16 @@ module chess_package_main::metaIdentity {
         wallet_addr:address,
         level: u64,
         exp: u64,
+        total_arena_win: u64,
+        total_arena_lose: u64,
+        best_challenge_rank: u64,
         init_gold: u64,
         ability1: string::String,
         ability2: string::String,
         ability3: string::String,
         ability4: string::String,
-        ability5: string::String
+        ability5: string::String,
+        inviterMetaId: u64
     }
 
     struct MetaInfoGlobal has key{
@@ -34,7 +38,7 @@ module chess_package_main::metaIdentity {
         wallet_meta_map:table::Table<address, address>,
 
         // inviterMetaId -> invited players addresses list
-        invitedds_meta_map:LinkedTable<u64, vector<address>>
+        invited_meta_map:LinkedTable<u64, vector<address>>
     }
 
     #[test_only]
@@ -44,7 +48,7 @@ module chess_package_main::metaIdentity {
             creator:@account,
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
-            invitedds_meta_map:linked_table::new<u64, vector<address>>(ctx),
+            invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
         };
         transfer::share_object(global);
     }
@@ -56,7 +60,7 @@ module chess_package_main::metaIdentity {
             creator:@account,
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
-            invitedds_meta_map:linked_table::new<u64, vector<address>>(ctx),
+            invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
         };
         transfer::share_object(global);
     }
@@ -75,12 +79,16 @@ module chess_package_main::metaIdentity {
             wallet_addr:sender,
             level: 0,
             exp: 0,
+            total_arena_win: 0,
+            total_arena_lose: 0,
+            best_challenge_rank: 21,
             init_gold: 0,
             ability1: string::utf8(b""),
             ability2: string::utf8(b""),
             ability3: string::utf8(b""),
             ability4: string::utf8(b""),
-            ability5: string::utf8(b"")
+            ability5: string::utf8(b""),
+            inviterMetaId: 0
         };
         global.total_players = global.total_players + 1;
         transfer::transfer(meta, sender);
@@ -101,30 +109,39 @@ module chess_package_main::metaIdentity {
             wallet_addr:sender,
             level: 0,
             exp: 0,
+            total_arena_win: 0,
+            total_arena_lose: 0,
+            best_challenge_rank: 21,
             init_gold: 0,
             ability1: string::utf8(b""),
             ability2: string::utf8(b""),
             ability3: string::utf8(b""),
             ability4: string::utf8(b""),
-            ability5: string::utf8(b"")
+            ability5: string::utf8(b""),
+            inviterMetaId: inviterMetaId
         };
         global.total_players = global.total_players + 1;
         transfer::transfer(meta, sender);
+    }
 
-        if (!linked_table::contains(&global.invitedds_meta_map, inviterMetaId)) {
+    public(friend) fun record_invited_success(global:&mut MetaInfoGlobal, meta: &MetaIdentity) {
+        let inviterMetaId = meta.inviterMetaId;
+        let user_addr = meta.wallet_addr;
+        if (!linked_table::contains(&global.invited_meta_map, inviterMetaId)) {
             let newVec = vector::empty<address>();
-            vector::push_back(&mut newVec, sender);
-            linked_table::push_back(&mut global.invitedds_meta_map, inviterMetaId, newVec);
+            vector::push_back(&mut newVec, user_addr);
+            linked_table::push_back(&mut global.invited_meta_map, inviterMetaId, newVec);
         } else {
-            let oldVec = linked_table::borrow_mut(&mut global.invitedds_meta_map, inviterMetaId);
-            assert!(!vector::contains(oldVec, &sender), ERR_ALREADY_BEEN_INVITED);
-            vector::push_back(oldVec, sender);
+            let oldVec = linked_table::borrow_mut(&mut global.invited_meta_map, inviterMetaId);
+            if (!vector::contains(oldVec, &user_addr)) {
+                vector::push_back(oldVec, user_addr);
+            }
         };
     }
 
     public fun query_invited_num(global:&MetaInfoGlobal, metaId: u64) : u64 {
-        if (linked_table::contains(&global.invitedds_meta_map, metaId)) {
-            let addr_vec = linked_table::borrow(&global.invitedds_meta_map, metaId);
+        if (linked_table::contains(&global.invited_meta_map, metaId)) {
+            let addr_vec = linked_table::borrow(&global.invited_meta_map, metaId);
             vector::length(addr_vec)
         } else {
             0

@@ -20,6 +20,7 @@ module chess_package_main::chess {
     use util_package::utils;
     use chess_package_main::challenge;
     use fight_package::fight;
+    use chess_package_main::metaIdentity;
 
     use sui::sui::SUI;
     use verify_package::verify;
@@ -179,7 +180,8 @@ module chess_package_main::chess {
     }
 
     #[lint_allow(self_transfer)]
-    public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+    public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, 
+    metaGlobal:&mut metaIdentity::MetaInfoGlobal, meta: &mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
         // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
         // ticket price
@@ -214,6 +216,8 @@ module chess_package_main::chess {
         };
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
+
+        metaIdentity::record_invited_success(metaGlobal, meta);
     }
 
     // mint a chess nft
