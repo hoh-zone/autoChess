@@ -16,7 +16,7 @@ export const useSyncGameNFT = () => {
 
     return useCallback((nft: GameNft) => {
         console.log('nft:', nft)
-        setChessId(nft.id.id)
+        setChessId(nft?.id?.id)
         setGold(Number(nft.gold));
         setWin(nft.win);
         setLose(nft.lose);

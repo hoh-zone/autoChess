@@ -47,8 +47,8 @@ const useOperateAndMatch = () => {
           tx.pure(chess_id),
           tx.pure(operations),
           tx.pure(left_gold),
-          tx.object(normalizeSuiObjectId(meta)),
-          tx.pure(get_chars_strvec())
+          tx.pure(get_chars_strvec()),
+          tx.object(normalizeSuiObjectId(meta))
         ]
       })
 

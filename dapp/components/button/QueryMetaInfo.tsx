@@ -41,7 +41,7 @@ const useQueryMetaInfo = () => {
       })
       console.log("response:", response)
       if (response.objectChanges) {
-        const createObjectChange = response.objectChanges.find((objectChange:any) => objectChange.type === "created")
+        const createObjectChange = response.objectChanges.find((objectChange: any) => objectChange.type === "created")
         if (!!createObjectChange && "objectId" in createObjectChange) {
           console.log("objid", createObjectChange.objectId)
         }
@@ -90,7 +90,6 @@ const useQueryMetaInfo = () => {
         wallet: fields.wallet_addr,
         abilitities: [fields.ability1, fields.ability2, fields.ability3, fields.ability4, fields.ability5]
       }
-      console.log("meta", meta)
       setMeta(meta.objectId)
       return meta
       // todo:筛选出其中的metaIdentity

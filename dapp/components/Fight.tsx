@@ -1,5 +1,5 @@
 import { useAtom } from "jotai"
-import { chessId, enemyCharacter, stageAtom, winA, loseA, slotCharacter, operationsA, enemyNameA, challengeWinA, challengeLoseA } from "../store/stages"
+import { chessId, enemyCharacter, stageAtom, winA, loseA, slotCharacter, operationsA, enemyNameA, challengeWinA, challengeLoseA, metaA } from "../store/stages"
 import useOperateAndMatch from "./button/OperateAndMatch"
 import useQueryFight from "./button/QueryFightResult"
 import { useFight } from "../hooks/useFight"
@@ -19,6 +19,7 @@ export const Fight = () => {
   const [chess_id] = useAtom(chessId)
   const [win, _setWin] = useAtom(winA)
   const [lose, _setLose] = useAtom(loseA)
+  const [meta, _setMeta] = useAtom(metaA)
   const [challengeWin, _setChallengeWin] = useAtom(challengeWinA)
   const [challengeLose, _setChallengeLose] = useAtom(challengeLoseA)
   const toast = useToast()
