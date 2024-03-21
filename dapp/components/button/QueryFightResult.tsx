@@ -42,7 +42,7 @@ const useQueryFight = () => {
         }
       })
 
-      let next = result["nextCursor"]
+      let next: any = result["nextCursor"]
       let has_next = result["hasNextPage"]
       while (next != null && has_next) {
         let result_tmp = await wallet.client.queryEvents({
