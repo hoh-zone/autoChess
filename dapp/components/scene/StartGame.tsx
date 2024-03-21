@@ -11,6 +11,7 @@ import { Rank } from "../Rank"
 import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
 import ContinueGame from "../ContinueGame"
+import Register from "../Register"
 import StartGameButtons from "../StartGameButtons"
 
 export const StartGame = () => {
@@ -37,6 +38,13 @@ export const StartGame = () => {
     fetch()
   }, [status, query_chesses])
 
+  const getName =(name:any) =>{
+    console.log(name);
+    // 不为空则登录
+    if(name){
+      register_meta(name)
+    }
+  }
   return (
     <>
       <Center className="h-full w-full relative block">
@@ -48,20 +56,21 @@ export const StartGame = () => {
           {wallet ? (
             <div className="absolute text-white z-50">
               <Stack className="items-center text-center" gap={4}>
-                <div className="mb-12">
+                <div className="mb-4">
                   <motion.p initial={{ opacity: 0, scale: 0, y: "30px" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: "30px", fontSize: "100px" }}>
                     Auto
                     <br />
                     Chess
                   </motion.p>
                   <VStack>
-                    <Button
+                    <Register getName={getName}/>
+                    {/* <Button
                       onClick={() => {
                         register_meta("sean")
                       }}
                     >
                       Register Account
-                    </Button>
+                    </Button> */}
                     <ContinueGame isLoading={isLoading} />
                   </VStack>
                 </div>

@@ -41,7 +41,7 @@ const useQueryMetaInfo = () => {
       })
       console.log("response:", response)
       if (response.objectChanges) {
-        const createObjectChange = response.objectChanges.find((objectChange) => objectChange.type === "created")
+        const createObjectChange = response.objectChanges.find((objectChange:any) => objectChange.type === "created")
         if (!!createObjectChange && "objectId" in createObjectChange) {
           console.log("objid", createObjectChange.objectId)
         }
