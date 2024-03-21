@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react"
 
 import { ethos } from "ethos-connect"
-import { CHESS_CHALLENGE_PACKAGE } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, ISMAINNET } from "../../lib/constants"
 import { GameNft } from "../../types/nft"
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
-import { PaginatedObjectsResponse } from "@mysten/sui.js"
+import { JsonRpcProvider, PaginatedObjectsResponse, mainnetConnection, testnetConnection } from "@mysten/sui.js"
 
 const useQueryChesses = () => {
   const { wallet } = ethos.useWallet()
@@ -33,15 +33,21 @@ const useQueryChesses = () => {
 
   const query_chesses = useCallback(async () => {
     if (!wallet) return
-
-    const result = await wallet.client.getOwnedObjects({
+    let provider = null
+    if (ISMAINNET) {
+      provider = new JsonRpcProvider(mainnetConnection)
+    } else {
+      provider = new JsonRpcProvider(testnetConnection)
+    }
+    if (!wallet) return
+    const result = await provider.getOwnedObjects({
       owner: wallet.address,
       options: {
         showContent: true
       },
       filter: {
         MoveModule: {
-          package: `${CHESS_CHALLENGE_PACKAGE}`,
+          package: CHESS_CHALLENGE_PACKAGE,
           module: "chess"
         }
       }

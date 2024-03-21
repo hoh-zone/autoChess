@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react"
 
 import { ethos } from "ethos-connect"
-import { CHESS_CHALLENGE_PACKAGE, SENDER } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, ISMAINNET, SENDER } from "../../lib/constants"
 import { sleep } from "../../utils/sleep"
+import { JsonRpcProvider, mainnetConnection, testnetConnection } from "@mysten/sui.js"
 
 interface HashMap<T> {
   [key: string]: T
@@ -15,8 +16,14 @@ const useQueryFight = () => {
     const rank_score_map: HashMap<number> = {}
     const rank_map: HashMap<string> = {}
     try {
+      let provider = null
+      if (ISMAINNET) {
+        provider = new JsonRpcProvider(mainnetConnection)
+      } else {
+        provider = new JsonRpcProvider(testnetConnection)
+      }
       if (!wallet) return
-      const result = await wallet.client.queryEvents({
+      const result = await provider.queryEvents({
         query: {
           MoveEventType: CHESS_CHALLENGE_PACKAGE + "::chess::FightEvent"
         }
