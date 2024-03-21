@@ -21,7 +21,7 @@ const StartGameButtons = ({ name }: { name: string }) => {
   const checkName = () => {
     if (name === "") {
       toast({
-        title: "Please enter your name",
+        title: "Please enter your chess name",
         status: "warning",
         duration: 2000,
         isClosable: true

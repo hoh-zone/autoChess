@@ -21,11 +21,12 @@ export const StartGame = () => {
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useAtom(assetsAtom)
-  const [meta, _setMeta] = useAtom(metaA)
+  const [meta, setMeta] = useAtom(metaA)
 
   const fetch = async () => {
     setIsLoading(true)
     const meta = await query_meta_info()
+    console.log(meta)
     const result = await query_chesses()
     setIsLoading(false)
     return result
@@ -56,7 +57,7 @@ export const StartGame = () => {
                   <VStack>
                     <Button
                       onClick={() => {
-                        register_meta()
+                        register_meta("sean")
                       }}
                     >
                       Register Account
@@ -65,7 +66,7 @@ export const StartGame = () => {
                   </VStack>
                 </div>
 
-                <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your name" onChange={(v) => setInputValue(v.target.value)} />
+                <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your chess name" onChange={(v) => setInputValue(v.target.value)} />
                 <StartGameButtons name={inputValue} />
               </Stack>
             </div>

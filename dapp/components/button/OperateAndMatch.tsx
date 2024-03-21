@@ -1,13 +1,14 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { chessId, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
+import { chessId, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
 import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL } from "../../lib/constants"
 import { useAtom } from "jotai"
-import { Toast, useToast } from "@chakra-ui/react"
+import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
 
 const useOperateAndMatch = () => {
   const { wallet } = ethos.useWallet()
+  const [meta, _setMeta] = useAtom(metaA)
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
   const [money] = useAtom(moneyAtom)
   const [chars] = useAtom(slotCharacter)

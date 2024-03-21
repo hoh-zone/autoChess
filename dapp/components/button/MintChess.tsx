@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, ROLE_GLOBAL } from "../../lib/constants"
+import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, ROLE_GLOBAL, META_GLOBAL } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
+import { metaA } from "../../store/stages"
+import { useAtom } from "jotai"
 
 type Props = {
   username: string
@@ -11,6 +13,7 @@ type Props = {
 
 const useMintChess = () => {
   const { wallet } = ethos.useWallet()
+  const [meta, _setMeta] = useAtom(metaA)
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
   const toast = useToast()
 
@@ -25,7 +28,14 @@ const useMintChess = () => {
         let coin_vec = transactionBlock.makeMoveVec({ objects: [coins] })
         transactionBlock.moveCall({
           target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
-          arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username), coin_vec]
+          arguments: [
+            transactionBlock.pure(`${ROLE_GLOBAL}`),
+            transactionBlock.pure(`${CHESS_GLOBAL}`),
+            transactionBlock.pure(username),
+            coin_vec,
+            transactionBlock.pure(`${META_GLOBAL}`),
+            transactionBlock.pure(meta)
+          ]
         })
       } else {
         transactionBlock.moveCall({

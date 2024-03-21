@@ -1,13 +1,29 @@
 import { useCallback, useState } from "react"
-
+import { metaA } from "../../store/stages"
 import { ethos } from "ethos-connect"
+import { useAtom } from "jotai"
 import { CHESS_CHALLENGE_PACKAGE, ISMAINNET, META_GLOBAL } from "../../lib/constants"
 import { JsonRpcProvider, TransactionBlock, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
 
+interface Meta {
+  metaId: Number
+  objectId: string
+  name: string
+  level: number
+  exp: number
+  invited_claimed_num: number
+  inviterMetaId: number
+  total_arena_lose: number
+  total_arena_win: number
+  wallet: String
+  abilitities: string[]
+}
+
 const useQueryMetaInfo = () => {
+  const [_meta, setMeta] = useAtom(metaA)
   const { wallet } = ethos.useWallet()
 
-  const register_meta = async () => {
+  const register_meta = async (name: String) => {
     if (!wallet) return
     try {
       const tx = new TransactionBlock()
@@ -44,7 +60,7 @@ const useQueryMetaInfo = () => {
       } else {
         provider = new JsonRpcProvider(testnetConnection)
       }
-      const results = provider.getOwnedObjects({
+      const results = await provider.getOwnedObjects({
         owner: wallet.address,
         filter: {
           MoveModule: {
@@ -58,7 +74,25 @@ const useQueryMetaInfo = () => {
           showType: true
         }
       })
-
+      let data: any = results.data[0].data
+      let content: any = data.content
+      let fields: any = content.fields
+      let meta: Meta = {
+        metaId: Number(fields.metaId),
+        objectId: data.objectId,
+        name: fields.name,
+        level: Number(fields.level),
+        exp: Number(fields.exp),
+        invited_claimed_num: Number(fields.invited_claimed_num),
+        inviterMetaId: Number(fields.inviterMetaId),
+        total_arena_lose: Number(fields.total_arena_lose),
+        total_arena_win: Number(fields.total_arena_win),
+        wallet: fields.wallet_addr,
+        abilitities: [fields.ability1, fields.ability2, fields.ability3, fields.ability4, fields.ability5]
+      }
+      console.log("meta", meta)
+      setMeta(meta.objectId)
+      return meta
       // todo:筛选出其中的metaIdentity
     } catch (error) {
       console.log("err", error)
