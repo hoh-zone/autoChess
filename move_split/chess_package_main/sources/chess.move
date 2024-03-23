@@ -40,6 +40,7 @@ module chess_package_main::chess {
         total_chesses: u64,
         total_battle:u64,
         balance_SUI: Balance<SUI>,
+        version: u64
     }
 
     // Each chess is the round(s) of game with 3-20 something battles in line
@@ -107,6 +108,7 @@ module chess_package_main::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
+            version: 1
         };
         transfer::share_object(global);
     }
@@ -118,6 +120,7 @@ module chess_package_main::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
+            version: 1
         };
         transfer::share_object(global);
     }

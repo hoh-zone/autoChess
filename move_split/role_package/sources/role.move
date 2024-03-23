@@ -26,7 +26,8 @@ module role_package::role {
     // Each class has the specifications of level 1,2,3,5,9 and corresponding stats
     struct Global has key {
         id: UID,
-        charactors: VecMap<String, Role>
+        charactors: VecMap<String, Role>,
+        version: u64
     }
 
     struct Role has store, copy, drop {
@@ -45,7 +46,8 @@ module role_package::role {
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            charactors: vec_map::empty<String, Role>()
+            charactors: vec_map::empty<String, Role>(),
+            version: 1
         };
         transfer::share_object(global);
     }
@@ -54,7 +56,8 @@ module role_package::role {
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            charactors: vec_map::empty<String, Role>()
+            charactors: vec_map::empty<String, Role>(),
+            version: 1
         };
         transfer::share_object(global);
     }

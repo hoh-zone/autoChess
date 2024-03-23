@@ -23,6 +23,7 @@ module lineup_package::lineup {
         standard_mood_pools: Table<String, vector<LineUp>>,
 
         arena_mood_pools: Table<String, vector<LineUp>>,
+        version:u64
     }
 
     // One lineup has up to 6 roles
@@ -42,7 +43,8 @@ module lineup_package::lineup {
         let global = Global {
             id: object::new(ctx),
             standard_mood_pools: table::new<String, vector<LineUp>>(ctx),
-            arena_mood_pools: table::new<String, vector<LineUp>>(ctx)
+            arena_mood_pools: table::new<String, vector<LineUp>>(ctx),
+            version:1
         };
         transfer::share_object(global);
     }
@@ -52,7 +54,8 @@ module lineup_package::lineup {
         let global = Global {
             id: object::new(ctx),
             standard_mood_pools : table::new<String, vector<LineUp>>(ctx),
-            arena_mood_pools: table::new<String, vector<LineUp>>(ctx)
+            arena_mood_pools: table::new<String, vector<LineUp>>(ctx),
+            version:1
         };
         transfer::share_object(global);
     }

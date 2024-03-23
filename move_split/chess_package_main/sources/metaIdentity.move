@@ -39,7 +39,7 @@ module chess_package_main::metaIdentity {
         inviterMetaId: u64
     }
 
-    struct MetaInfoGlobal has key{
+    struct MetaInfoGlobal has key {
         id:UID,
         creator: address,
         total_players: u64,
@@ -48,7 +48,8 @@ module chess_package_main::metaIdentity {
         wallet_meta_map:table::Table<address, address>,
 
         // inviterMetaId -> invited players addresses list
-        invited_meta_map:LinkedTable<u64, vector<address>>
+        invited_meta_map:LinkedTable<u64, vector<address>>,
+        version: u64
     }
 
     #[test_only]
@@ -59,6 +60,7 @@ module chess_package_main::metaIdentity {
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
             invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
+            version: 1
         };
         transfer::share_object(global);
     }
@@ -71,6 +73,7 @@ module chess_package_main::metaIdentity {
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
             invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
+            version: 1
         };
         transfer::share_object(global);
     }

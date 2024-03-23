@@ -39,7 +39,8 @@ module chess_package_main::challenge {
         rank_20: vector<LineUp>,
         reward_20: table::Table<u64, u64>,
         publish_time: u64,
-        lock:bool
+        lock:bool,
+        version: u64
     }
 
     fun init(ctx: &mut TxContext) {
@@ -49,7 +50,8 @@ module chess_package_main::challenge {
             rank_20: vector::empty<LineUp>(),
             reward_20: table::new<u64, u64>(ctx),
             publish_time: 0,
-            lock: false
+            lock: false,
+            version: 1
         };
         transfer::share_object(global);
     }
@@ -62,7 +64,8 @@ module chess_package_main::challenge {
             rank_20: vector::empty<LineUp>(),
             reward_20: table::new<u64, u64>(ctx),
             publish_time: 0,
-            lock: false
+            lock: false,
+            version: 1
         };
         transfer::share_object(global);
     }
