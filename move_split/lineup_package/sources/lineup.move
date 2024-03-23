@@ -25,7 +25,8 @@ module lineup_package::lineup {
         standard_mood_pools: Table<String, vector<LineUp>>,
 
         arena_mood_pools: Table<String, vector<LineUp>>,
-        version:u64
+        version:u64,
+        manager: address
     }
 
     // One lineup has up to 6 roles
@@ -46,7 +47,8 @@ module lineup_package::lineup {
             id: object::new(ctx),
             standard_mood_pools: table::new<String, vector<LineUp>>(ctx),
             arena_mood_pools: table::new<String, vector<LineUp>>(ctx),
-            version:CURRENT_VERSION
+            version:CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -57,7 +59,8 @@ module lineup_package::lineup {
             id: object::new(ctx),
             standard_mood_pools : table::new<String, vector<LineUp>>(ctx),
             arena_mood_pools: table::new<String, vector<LineUp>>(ctx),
-            version:CURRENT_VERSION
+            version:CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -316,7 +319,12 @@ module lineup_package::lineup {
     }
 
     public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.version = version;
+    }
+
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
     }
 }

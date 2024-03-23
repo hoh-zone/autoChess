@@ -13,13 +13,13 @@ module role_package::test {
     use role_package::role;
 
 
-    fun scenario(): Scenario { begin(@account) }
+    fun scenario(): Scenario { begin(@admin) }
 
     #[test]
     fun test_virtual_fight() {
         let scenario = scenario();
         let test = &mut scenario;
-        let admin = @account;
+        let admin = @admin;
         next_tx(test, admin);
         {
             // init modules

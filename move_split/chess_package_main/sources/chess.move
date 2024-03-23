@@ -43,7 +43,8 @@ module chess_package_main::chess {
         total_chesses: u64,
         total_battle:u64,
         balance_SUI: Balance<SUI>,
-        version: u64
+        version: u64,
+        manager: address
     }
 
     // Each chess is the round(s) of game with 3-20 something battles in line
@@ -111,7 +112,8 @@ module chess_package_main::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -123,7 +125,8 @@ module chess_package_main::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -132,7 +135,7 @@ module chess_package_main::chess {
     // who publishes the package
     #[lint_allow(self_transfer)]
     public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NOT_PERMISSION);
         let sui_balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
@@ -480,7 +483,12 @@ module chess_package_main::chess {
     }
 
     public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.version = version;
+    }
+
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
     }
 }

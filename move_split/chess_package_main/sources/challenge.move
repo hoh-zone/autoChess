@@ -43,7 +43,8 @@ module chess_package_main::challenge {
         publish_time: u64,
         duration_hours: u64,
         lock:bool,
-        version: u64
+        version: u64,
+        manager: address
     }
 
     fun init(ctx: &mut TxContext) {
@@ -55,7 +56,8 @@ module chess_package_main::challenge {
             publish_time: 0,
             duration_hours: TWO_WEEKS_HOURS,
             lock: false,
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -70,7 +72,8 @@ module chess_package_main::challenge {
             publish_time: 0,
             duration_hours: TWO_WEEKS_HOURS,
             lock: false,
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -257,7 +260,7 @@ module chess_package_main::challenge {
     // Transfer the left Sui in the rewards pool tho the chess shop account only when challenge timeout
     #[lint_allow(self_transfer)]
     public fun withdraw_left_amount(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
         let value = balance::value(&global.balance_SUI);
         let balance = balance::split(&mut global.balance_SUI, value);
@@ -296,12 +299,12 @@ module chess_package_main::challenge {
 
     // we have to lock the challenge rank in each season, so we have time to prepare reward for each player.
     public fun lock_pool(global:&mut Global, ctx:&mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.lock = true
     }
 
     public fun unlock_pool(global:&mut Global, ctx:&mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.lock = false
     }
 
@@ -320,7 +323,12 @@ module chess_package_main::challenge {
     }
 
     public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.version = version;
+    }
+
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
     }
 }

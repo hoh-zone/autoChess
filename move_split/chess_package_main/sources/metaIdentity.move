@@ -52,18 +52,20 @@ module chess_package_main::metaIdentity {
 
         // inviterMetaId -> invited players addresses list
         invited_meta_map:LinkedTable<u64, vector<address>>,
-        version: u64
+        version: u64,
+        manager: address
     }
 
     #[test_only]
     public fun init_for_test(ctx: &mut TxContext) {
         let global = MetaInfoGlobal {
             id: object::new(ctx),
-            creator:@account,
+            creator:@admin,
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
             invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -72,11 +74,12 @@ module chess_package_main::metaIdentity {
     fun init(ctx: &mut TxContext) {
         let global = MetaInfoGlobal {
             id: object::new(ctx),
-            creator:@account,
+            creator:@admin,
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
             invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -257,7 +260,12 @@ module chess_package_main::metaIdentity {
     }
 
     public fun upgradeVersion(global: &mut MetaInfoGlobal, version:u64, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.version = version;
+    }
+
+    public fun change_manager(global: &mut MetaInfoGlobal, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
     }
 }

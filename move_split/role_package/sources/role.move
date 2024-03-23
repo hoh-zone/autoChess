@@ -29,7 +29,8 @@ module role_package::role {
     struct Global has key {
         id: UID,
         charactors: VecMap<String, Role>,
-        version: u64
+        version: u64,
+        manager: address
     }
 
     struct Role has store, copy, drop {
@@ -49,7 +50,8 @@ module role_package::role {
         let global = Global {
             id: object::new(ctx),
             charactors: vec_map::empty<String, Role>(),
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -59,7 +61,8 @@ module role_package::role {
         let global = Global {
             id: object::new(ctx),
             charactors: vec_map::empty<String, Role>(),
-            version: CURRENT_VERSION
+            version: CURRENT_VERSION,
+            manager: @admin
         };
         transfer::share_object(global);
     }
@@ -393,7 +396,12 @@ module role_package::role {
     }
 
     public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.version = version;
+    }
+
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
     }
 }

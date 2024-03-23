@@ -9,6 +9,6 @@ Sui = { local = "G:/autoChess/move_split/sui-framework" }
 
 [addresses]
 util_package = "0xf0f784497b08a2c21f71b09064a000c7ab1aa89296ccc24d6900e1f550dd16ca"
-account = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
+admin = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
 std= "0x1"
 sui = "0x2"
