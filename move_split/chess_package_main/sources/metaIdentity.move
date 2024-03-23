@@ -28,6 +28,7 @@ module chess_package_main::metaIdentity {
         exp: u64,
         total_arena_win: u64,
         total_arena_lose: u64,
+        avatar_name: string::String,
         best_rank_map: table::Table<u64, u64>,
         init_gold: u64,
         ability1: string::String,
@@ -74,7 +75,7 @@ module chess_package_main::metaIdentity {
         transfer::share_object(global);
     }
 
-    public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, ctx:&mut TxContext) {
+    public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, avatar_name: string::String, ctx:&mut TxContext) {
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
         let metaId = global.total_players;
@@ -91,6 +92,7 @@ module chess_package_main::metaIdentity {
             exp: 0,
             total_arena_win: 0,
             total_arena_lose: 0,
+            avatar_name: avatar_name,
             best_rank_map: table::new<u64, u64>(ctx),
             init_gold: 0,
             ability1: string::utf8(b""),
@@ -104,7 +106,7 @@ module chess_package_main::metaIdentity {
         transfer::transfer(meta, sender);
     }
 
-    public fun register_invited_meta(global: &mut MetaInfoGlobal, inviterMetaId:u64, name:string::String, ctx: &mut TxContext) {
+    public fun register_invited_meta(global: &mut MetaInfoGlobal, inviterMetaId:u64, name:string::String, avatar_name: string::String, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
         table::add(&mut global.wallet_meta_map, sender, sender);
@@ -122,6 +124,7 @@ module chess_package_main::metaIdentity {
             exp: 0,
             total_arena_win: 0,
             total_arena_lose: 0,
+            avatar_name: avatar_name,
             best_rank_map: table::new<u64, u64>(ctx),
             init_gold: 0,
             ability1: string::utf8(b""),
@@ -133,6 +136,11 @@ module chess_package_main::metaIdentity {
         };
         global.total_players = global.total_players + 1;
         transfer::transfer(meta, sender);
+    }
+
+    public fun changeMetaInfo(meta: &mut MetaIdentity, name:string::String, avatar_name: string::String) {
+        meta.name = name;
+        meta.avatar_name = avatar_name;
     }
 
     public(friend) fun record_invited_success(global:&mut MetaInfoGlobal, meta: &MetaIdentity) {
