@@ -26,6 +26,7 @@ const useMintChess = () => {
       if (is_arena) {
         let coins = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price * 1_000_000_000)])
         let coin_vec = transactionBlock.makeMoveVec({ objects: [coins] })
+        console.log(coin_vec)
         transactionBlock.moveCall({
           target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
           arguments: [

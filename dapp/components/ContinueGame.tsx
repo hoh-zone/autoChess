@@ -41,7 +41,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
     toastId = toast({
       title: "You can redeem sui as rewards, the amount depends on your winning records, are you sure to checkout now?",
       status: "warning",
-      duration: 1000,
+      duration: 2000,
       isClosable: true
     })
   }
@@ -97,7 +97,11 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                         onMouseLeave={() => {
                           closeToast()
                         }}
-                        onClick={() => checkout({ chess_id: nft.id.id })}
+                        onClick={() => {
+                          checkout({ chess_id: nft.id.id })
+                          onClose()
+                          fetch()
+                        }}
                       >
                         <VStack>
                           <p>Redeem</p>
