@@ -27,7 +27,9 @@ module chess_package_main::challenge {
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
     const ERR_ALREADY_INIT: u64 = 0x04;
     const ERR_EXCEED_VEC_LENGTH: u64 = 0x05;
+    const TWO_WEEKS_HOURS: u64 = 336;
     const AMOUNT_DECIMAL:u64 = 1_000_000_000;
+    const CURRENT_VERSION: u64 = 1;
 
     // challenge admin, keeps the uptodate data with time stamp, updated every season (14-30 days)
     // rank_20 is the first 20 players identified by the lineup (when is it generated: mannually initiallized in ts script)
@@ -39,6 +41,7 @@ module chess_package_main::challenge {
         rank_20: vector<LineUp>,
         reward_20: table::Table<u64, u64>,
         publish_time: u64,
+        duration_hours: u64,
         lock:bool,
         version: u64
     }
@@ -50,8 +53,9 @@ module chess_package_main::challenge {
             rank_20: vector::empty<LineUp>(),
             reward_20: table::new<u64, u64>(ctx),
             publish_time: 0,
+            duration_hours: TWO_WEEKS_HOURS,
             lock: false,
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -64,8 +68,9 @@ module chess_package_main::challenge {
             rank_20: vector::empty<LineUp>(),
             reward_20: table::new<u64, u64>(ctx),
             publish_time: 0,
+            duration_hours: TWO_WEEKS_HOURS,
             lock: false,
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -193,12 +198,16 @@ module chess_package_main::challenge {
     // published time
     public entry fun query_left_challenge_time(global: &Global, clock:&Clock):u64 {
         let now = clock::timestamp_ms(clock);
-        let duration = HOUR_IN_MS * 1;
+        let duration = global.duration_hours * HOUR_IN_MS;
         if ((now - global.publish_time) >= duration) {
             0
         } else {
             duration - (now - global.publish_time)
         }
+    }
+
+    public fun change_season_duration(global: &mut Global, duration_hours:u64) {
+        global.duration_hours = duration_hours;
     }
 
     fun get_base_weight_by_rank(rank:u64) : u64 {
@@ -308,5 +317,10 @@ module chess_package_main::challenge {
             i = i + 1;
         };
         utf8(vec_out)
+    }
+
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        global.version = version;
     }
 }

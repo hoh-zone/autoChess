@@ -13,6 +13,8 @@ module lineup_package::lineup {
     const ERR_TAG_NOT_IN_TABLE:u64 = 0x002;
     const ERR_ELE_NOT_CONTAINS:u64 = 0x003;
     const ERR_EXCEED_VEC_LENGTH:u64 = 0x004;
+    const ERR_NO_PERMISSION:u64 = 0x005;
+    const CURRENT_VERSION:u64 = 1;
 
     // lineup_pools save at most 10 newest lineups for each win-loss tag in the standard mode
     // arena_lineup_pools at most 10 newest lineups for each win-loss tag in the arena mode
@@ -44,7 +46,7 @@ module lineup_package::lineup {
             id: object::new(ctx),
             standard_mood_pools: table::new<String, vector<LineUp>>(ctx),
             arena_mood_pools: table::new<String, vector<LineUp>>(ctx),
-            version:1
+            version:CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -55,7 +57,7 @@ module lineup_package::lineup {
             id: object::new(ctx),
             standard_mood_pools : table::new<String, vector<LineUp>>(ctx),
             arena_mood_pools: table::new<String, vector<LineUp>>(ctx),
-            version:1
+            version:CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -311,5 +313,10 @@ module lineup_package::lineup {
 
     public fun set_hash(lineup:&mut LineUp, hash:vector<u8>) {
         lineup.hash = hash;
+    }
+
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        global.version = version;
     }
 }

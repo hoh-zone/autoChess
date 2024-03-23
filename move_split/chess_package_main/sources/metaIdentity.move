@@ -10,11 +10,14 @@ module chess_package_main::metaIdentity {
     friend chess_package_main::challenge;
     
     const ERR_ALREADY_BIND:u64 = 0x001;
+    const ERR_NO_PERMISSION:u64 = 0x002;
+    const ERR_INVALID_VERSION:u64 = 0x003;
     const EXP_LEVEL1:u64 = 20;
     const EXP_LEVEL2:u64 = 40;
     const EXP_LEVEL3:u64 = 80;
     const EXP_LEVEL4:u64 = 100;
     const EXP_LEVEL5:u64 = 200;
+    const CURRENT_VERSION:u64 = 1;
 
     struct MetaIdentity has key {
         id:UID,
@@ -60,7 +63,7 @@ module chess_package_main::metaIdentity {
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
             invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -73,12 +76,13 @@ module chess_package_main::metaIdentity {
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
             invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
 
     public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, avatar_name: string::String, ctx:&mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
         let metaId = global.total_players;
@@ -110,6 +114,7 @@ module chess_package_main::metaIdentity {
     }
 
     public fun register_invited_meta(global: &mut MetaInfoGlobal, inviterMetaId:u64, name:string::String, avatar_name: string::String, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
         table::add(&mut global.wallet_meta_map, sender, sender);
@@ -230,6 +235,7 @@ module chess_package_main::metaIdentity {
     }
 
     public fun claim_invite_exp(global:&MetaInfoGlobal, meta:&mut MetaIdentity) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let metaId = meta.metaId;
         let invited_num = query_invited_num(global, metaId);
         let claimed_num = meta.invited_claimed_num;
@@ -248,5 +254,10 @@ module chess_package_main::metaIdentity {
 
     public fun is_registered(global: &MetaInfoGlobal, user_addr:address) : bool {
         table::contains(&global.wallet_meta_map, user_addr)
+    }
+
+    public fun upgradeVersion(global: &mut MetaInfoGlobal, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        global.version = version;
     }
 }

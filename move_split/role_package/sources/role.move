@@ -5,7 +5,7 @@
 */
 module role_package::role {
     use std::string::{utf8, String};
-    use sui::tx_context::{TxContext};
+    use sui::tx_context::{TxContext, Self};
     use std::debug::print;
     use sui::object::{UID, Self};
     use sui::transfer::{Self};
@@ -21,6 +21,8 @@ module role_package::role {
     const ERR_DIFFERENT_hp:u64 = 0x003;
     const ERR_DIFFERENT_ATTACK:u64 = 0x004;
     const ERR_EXCEED_VEC_LENGTH:u64 = 0x005;
+    const ERR_NO_PERMISSION:u64 = 0x006;
+    const CURRENT_VERSION:u64 = 1;
 
     // charactors specifies all the 16 classes' basic stats
     // Each class has the specifications of level 1,2,3,5,9 and corresponding stats
@@ -47,7 +49,7 @@ module role_package::role {
         let global = Global {
             id: object::new(ctx),
             charactors: vec_map::empty<String, Role>(),
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -57,7 +59,7 @@ module role_package::role {
         let global = Global {
             id: object::new(ctx),
             charactors: vec_map::empty<String, Role>(),
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -388,5 +390,10 @@ module role_package::role {
             i = i + 1;
         };
         true
+    }
+
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        global.version = version;
     }
 }

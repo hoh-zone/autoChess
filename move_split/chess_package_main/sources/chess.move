@@ -34,6 +34,9 @@ module chess_package_main::chess {
     const ERR_ONLY_ARENA_MODE_ALLOWED:u64 = 0x12;
     const ERR_CHALLENGE_NOT_END:u64 = 0x013;
     const ERR_ARENA_FEE_HAS_CHECKED_OUT:u64 = 0x014;
+    const ERR_NO_PERMISSION:u64 = 0x015;
+    const ERR_INVALID_VERSION:u64 = 0x016;
+    const CURRENT_VERSION: u64 = 1;
 
     struct Global has key {
         id: UID,
@@ -108,7 +111,7 @@ module chess_package_main::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -120,7 +123,7 @@ module chess_package_main::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
-            version: 1
+            version: CURRENT_VERSION
         };
         transfer::share_object(global);
     }
@@ -185,6 +188,7 @@ module chess_package_main::chess {
     #[lint_allow(self_transfer)]
     public entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, 
     metaGlobal:&mut metaIdentity::MetaInfoGlobal, meta: &mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
         // ticket price
@@ -226,6 +230,7 @@ module chess_package_main::chess {
     // mint a chess nft
     #[lint_allow(self_transfer)]
     public entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
@@ -249,6 +254,7 @@ module chess_package_main::chess {
     // Pay the arena rewards to the player, the ctx is player add
     #[lint_allow(self_transfer)]
     public entry fun check_out_arena_fee(global: &mut Global, chess: &mut Chess, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         assert!(!chess.arena_checked, ERR_ARENA_FEE_HAS_CHECKED_OUT);
         chess.arena_checked = true;
@@ -266,6 +272,7 @@ module chess_package_main::chess {
     // but he may still has challenge mood reward to be checked out
     #[lint_allow(self_transfer)]
     public entry fun check_out_arena(global: &mut Global, chess: Chess, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         let total_amount = get_total_sui_amount(global);
         let reward_amount = utils::estimate_reward(total_amount, chess.gold_cost, chess.win);
@@ -444,6 +451,7 @@ module chess_package_main::chess {
     public entry fun operate_and_battle(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
         challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
         lineup_str_vec: vector<String>, meta: &mut metaIdentity::MetaIdentity, ctx:&mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let current_lineup = *&chess.lineup;
         let current_roles = lineup::get_mut_roles(&mut current_lineup);
@@ -469,5 +477,10 @@ module chess_package_main::chess {
         // challenge mode, arena mode or standard mode will be processed in match function
         battle(role_global, lineup_global, challengeGlobal, chess, meta, ctx);
         global.total_battle = global.total_battle + 1;
+    }
+
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        global.version = version;
     }
 }
