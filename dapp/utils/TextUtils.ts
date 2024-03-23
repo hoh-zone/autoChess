@@ -8,7 +8,14 @@ export function removeSuffix(str: string | null | undefined): string {
         return str.slice(0, match.index);
     }
     return str;
-}   
+}
+
+export function getSimplifidyWalletAddr(address: string, showLength: number) : string {
+    let str = address.substring(0, showLength);
+    str = str + '...';
+    str = str + address.slice(-showLength);
+    return str;
+}
 
 export function capitalizeFirstChar(str: String | undefined) : string {
     if (str == undefined) {

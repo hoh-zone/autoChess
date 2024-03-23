@@ -23,14 +23,23 @@ const useQueryMetaInfo = () => {
   const [_meta, setMeta] = useAtom(metaA)
   const { wallet } = ethos.useWallet()
 
-  const register_meta = async (name: String) => {
+  const register_meta = async (name: String, inviteMetaId: number) => {
     if (!wallet) return
     try {
       const tx = new TransactionBlock()
-      tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::mint_meta`,
-        arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(name)]
-      })
+      console.log(name)
+      console.log(inviteMetaId)
+      if (inviteMetaId > 0) {
+        tx.moveCall({
+          target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::register_invited_meta`,
+          arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(inviteMetaId), tx.pure(name)]
+        })
+      } else {
+        tx.moveCall({
+          target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::mint_meta`,
+          arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(name)]
+        })
+      }
       const response = await wallet.signAndExecuteTransactionBlock({
         transactionBlock: tx,
         options: {

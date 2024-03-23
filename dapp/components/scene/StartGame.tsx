@@ -5,7 +5,6 @@ import { Character } from "../character/character"
 import useQueryChesses from "../button/QueryAllChesses"
 import useQueryMetaInfo from "../button/QueryMetaInfo"
 import { useEffect, useState } from "react"
-import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
 import { ethos, SignInButton } from "ethos-connect"
 import { Rank } from "../Rank"
 import { motion } from "framer-motion"
@@ -17,8 +16,7 @@ import StartGameButtons from "../StartGameButtons"
 export const StartGame = () => {
   const [inputValue, setInputValue] = useState("")
   const { nfts, query_chesses } = useQueryChesses()
-  const { register_meta, query_meta_info } = useQueryMetaInfo()
-  const syncGameNFT = useSyncGameNFT()
+  const { query_meta_info } = useQueryMetaInfo()
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useAtom(assetsAtom)
@@ -26,8 +24,7 @@ export const StartGame = () => {
 
   const fetch = async () => {
     setIsLoading(true)
-    const meta = await query_meta_info()
-    console.log(meta)
+    await query_meta_info()
     const result = await query_chesses()
     setIsLoading(false)
     return result
@@ -38,13 +35,6 @@ export const StartGame = () => {
     fetch()
   }, [status, query_chesses])
 
-  const getName =(name:any) =>{
-    console.log(name);
-    // 不为空则登录
-    if(name){
-      register_meta(name)
-    }
-  }
   return (
     <>
       <Center className="h-full w-full relative block">
@@ -63,18 +53,10 @@ export const StartGame = () => {
                     Chess
                   </motion.p>
                   <VStack>
-                    <Register getName={getName}/>
-                    {/* <Button
-                      onClick={() => {
-                        register_meta("sean")
-                      }}
-                    >
-                      Register Account
-                    </Button> */}
-                    <ContinueGame isLoading={isLoading} />
+                    {!meta && <Register address={wallet.address} />}
+                    {meta && <ContinueGame isLoading={isLoading} />}
                   </VStack>
                 </div>
-
                 <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your chess name" onChange={(v) => setInputValue(v.target.value)} />
                 <StartGameButtons name={inputValue} />
               </Stack>
