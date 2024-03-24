@@ -46,7 +46,7 @@ export const Leaderboard: React.FC = () => {
     let ranks: any = results[0];
     let rewardsSui = results[1];
     let leftTime = results[2];
-    setCountDown(formatMilliseconds(Number(1200000)));
+    setCountDown(formatMilliseconds(Number(leftTime)));
     let array: any = String(rewardsSui).split(",");
     console.log(ranks);
     setData(ranks);
