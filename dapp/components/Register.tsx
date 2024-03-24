@@ -1,16 +1,14 @@
 import { Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Input, Img } from "@chakra-ui/react"
 import { assetsAtom } from "../store/stages"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useAtom } from "jotai"
-import { ethos } from "ethos-connect"
 import { getSimplifidyWalletAddr } from "../utils/TextUtils"
 import useQueryMetaInfo from "./button/QueryMetaInfo"
 import { useToast } from "@chakra-ui/react"
-import { log } from "console"
 
 const ContinueGame = (props: { address: any }) => {
   const [inputName, setInputName] = useState("")
-  const [ava, setAva] = useState("avatar")
+  const [ava, setAva] = useState("avatar_ani")
   const [avaIndex, setAvaIndex] = useState(0)
   const [inputWallet, setInputWallet] = useState("")
   const [inputInvite, setInputInvite] = useState("")
@@ -18,27 +16,27 @@ const ContinueGame = (props: { address: any }) => {
   const [assets, setAssets] = useAtom(assetsAtom)
   const { register_meta } = useQueryMetaInfo()
   const toast = useToast()
-  let avatarArr:any[] = []
-  if(assets) {
-    avatarArr = Object.keys(assets).filter(item=>{
-      return item.indexOf('avatar') > -1 
+  let avatarArr: any[] = []
+  if (assets) {
+    avatarArr = Object.keys(assets).filter((item) => {
+      return item.indexOf("avatar_") > -1
     })
   }
-  
-  const preAvatar = ()=> {
-    if(avaIndex>0){
-      setAvaIndex(avaIndex-1)
-      setAva(avatarArr[avaIndex-1])
-    }else{
-      setAvaIndex(avatarArr.length-1)
-      setAva(avatarArr[avatarArr.length-1])
+
+  const preAvatar = () => {
+    if (avaIndex > 0) {
+      setAvaIndex(avaIndex - 1)
+      setAva(avatarArr[avaIndex - 1])
+    } else {
+      setAvaIndex(avatarArr.length - 1)
+      setAva(avatarArr[avatarArr.length - 1])
     }
   }
-  const nextAvatar = ()=> {
-    if(avaIndex<(avatarArr.length-1)){
-      setAvaIndex(avaIndex+1)
-      setAva(avatarArr[avaIndex+1])
-    }else{
+  const nextAvatar = () => {
+    if (avaIndex < avatarArr.length - 1) {
+      setAvaIndex(avaIndex + 1)
+      setAva(avatarArr[avaIndex + 1])
+    } else {
       setAvaIndex(0)
       setAva(avatarArr[0])
     }
@@ -54,10 +52,10 @@ const ContinueGame = (props: { address: any }) => {
       })
       return
     }
-    register_meta(name, Number(inputInvite))
+    register_meta(name, Number(inputInvite), ava)
     onClose()
   }
-  
+
   return (
     <>
       <Button onClick={onOpen}>Register Account</Button>
@@ -69,9 +67,13 @@ const ContinueGame = (props: { address: any }) => {
             <div className="!p-[20px] rounded-[8px] border-2 border-solid" style={{ borderColor: "#352858" }}>
               <div className="text-white mb-2 text-se">Register your Account</div>
               <div className="flex items-center justify-center mt-6 text-white">
-                <span style={{cursor:'pointer'}} onClick={preAvatar}>&lt;</span>
+                <span style={{ cursor: "pointer" }} onClick={preAvatar}>
+                  &lt;
+                </span>
                 <Img className="ml-4 mr-4" src={assets?.[ava]} width={"120px"}></Img>
-                <span style={{cursor:'pointer'}} onClick={nextAvatar}>&gt;</span>
+                <span style={{ cursor: "pointer" }} onClick={nextAvatar}>
+                  &gt;
+                </span>
               </div>
               <div className="text-white mb-2 text-sm">Name</div>
               <Input type="text" className="rounded-[30px] text-white" width={"280px"} value={inputName} onChange={(v) => setInputName(v.target.value)} />

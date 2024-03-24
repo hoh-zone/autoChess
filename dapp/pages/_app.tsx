@@ -6,14 +6,14 @@ import { useEffect, useRef } from "react"
 import { useAtom } from "jotai"
 import { stageAtom } from "../store/stages"
 import "../styles/globals.css"
-import Image from "next/image";
+import Image from "next/image"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ["Ethos Wallet"],
-    network: "https://fullnode.mainnet.sui.io",
-    chain: Chain.SUI_MAINNET
+    network: "https://fullnode.testnet.sui.io",
+    chain: Chain.SUI_TESTNET
   }
   const audioRef = useRef<HTMLAudioElement>(null)
   const audioFightRef = useRef<HTMLAudioElement>(null)
@@ -59,7 +59,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [audioRef.current, stage])
 
   return (
-    <EthosConnectProvider ethosConfiguration={ethosConfiguration} dappName="Sui Auto Chess" dappIcon={<Image src={"/favicon.ico"} className="rounded-full" width={32} height={32} alt="" />} connectMessage=" ">
+    <EthosConnectProvider
+      ethosConfiguration={ethosConfiguration}
+      dappName="Sui Auto Chess"
+      dappIcon={<Image src={"/favicon.ico"} className="rounded-full" width={32} height={32} alt="" />}
+      connectMessage=" "
+    >
       <ChakraProvider>
         <Head>
           <title>Sui Auto Chess</title>

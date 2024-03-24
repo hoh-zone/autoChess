@@ -76,9 +76,11 @@ export const StartGame = () => {
             <div>
               <Instruction />
             </div>
-            <div className="mt-3">
-              <MyAccountInfo/>
-            </div>
+            {meta && (
+              <div className="mt-3">
+                <MyAccountInfo metaInfo={meta} />
+              </div>
+            )}
           </div>
           <Spacer />
           <VStack className="w-4/5 absolute bottom-0" gap={0}>

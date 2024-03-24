@@ -4,7 +4,7 @@ import { CharacterFields } from "../types/nft"
 export const currentNftId = atom<string>("")
 
 // Metaidentity
-export const metaA = atom<string>("")
+export const metaA = atom<any>("")
 
 // Game NFT
 export const moneyA = atom<number>(50)

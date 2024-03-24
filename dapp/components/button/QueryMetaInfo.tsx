@@ -4,6 +4,7 @@ import { ethos } from "ethos-connect"
 import { useAtom } from "jotai"
 import { CHESS_CHALLENGE_PACKAGE, ISMAINNET, META_GLOBAL } from "../../lib/constants"
 import { JsonRpcProvider, TransactionBlock, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
+import { bytesArrayToU64 } from "./utils"
 
 interface Meta {
   metaId: Number
@@ -11,6 +12,7 @@ interface Meta {
   name: string
   level: number
   exp: number
+  invited_num: number
   invited_claimed_num: number
   inviterMetaId: number
   total_arena_lose: number
@@ -23,7 +25,34 @@ const useQueryMetaInfo = () => {
   const [_meta, setMeta] = useAtom(metaA)
   const { wallet } = ethos.useWallet()
 
-  const register_meta = async (name: String, inviteMetaId: number) => {
+  const claim_invite_exp = async (meta: Meta) => {
+    if (!wallet) return
+    try {
+      const tx = new TransactionBlock()
+      tx.moveCall({
+        target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::claim_invite_exp`,
+        arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.object(normalizeSuiObjectId(meta.objectId))]
+      })
+      const response = await wallet.signAndExecuteTransactionBlock({
+        transactionBlock: tx,
+        options: {
+          showObjectChanges: true,
+          showEffects: true,
+          showEvents: true
+        }
+      })
+      if (response.objectChanges) {
+        const createObjectChange = response.objectChanges.find((objectChange: any) => objectChange.type === "created")
+        if (!!createObjectChange && "objectId" in createObjectChange) {
+          console.log("objid", createObjectChange.objectId)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const register_meta = async (name: String, inviteMetaId: number, avatar_name: string) => {
     if (!wallet) return
     try {
       const tx = new TransactionBlock()
@@ -32,12 +61,12 @@ const useQueryMetaInfo = () => {
       if (inviteMetaId > 0) {
         tx.moveCall({
           target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::register_invited_meta`,
-          arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(inviteMetaId), tx.pure(name)]
+          arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(inviteMetaId), tx.pure(name), tx.pure(avatar_name)]
         })
       } else {
         tx.moveCall({
           target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::mint_meta`,
-          arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(name)]
+          arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(name), tx.pure(avatar_name)]
         })
       }
       const response = await wallet.signAndExecuteTransactionBlock({
@@ -57,6 +86,29 @@ const useQueryMetaInfo = () => {
       }
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const query_invited_num = async (metaId: Number) => {
+    let moveModule = "metaIdentity"
+    let method = "query_invited_num"
+    try {
+      if (!wallet) return
+      const transactionBlock = new TransactionBlock()
+      transactionBlock.moveCall({
+        target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
+        arguments: [transactionBlock.pure(META_GLOBAL), transactionBlock.pure(metaId)]
+      })
+      const result: any = await wallet.client.devInspectTransactionBlock({
+        transactionBlock: transactionBlock,
+        sender: wallet.address
+      })
+      const arr = new Uint8Array(result.results[0].returnValues[0][0])
+      const num: number = bytesArrayToU64(Array.from(arr))
+      console.log("arr:", arr)
+      return num
+    } catch (error) {
+      console.log("err", error)
     }
   }
 
@@ -92,6 +144,7 @@ const useQueryMetaInfo = () => {
         name: fields?.name,
         level: Number(fields?.level),
         exp: Number(fields?.exp),
+        invited_num: 0,
         invited_claimed_num: Number(fields?.invited_claimed_num),
         inviterMetaId: Number(fields?.inviterMetaId),
         total_arena_lose: Number(fields?.total_arena_lose),
@@ -99,14 +152,16 @@ const useQueryMetaInfo = () => {
         wallet: fields?.wallet_addr,
         abilitities: [fields?.ability1, fields?.ability2, fields?.ability3, fields?.ability4, fields?.ability5]
       }
-      setMeta(meta.objectId)
+      let invited = await query_invited_num(meta.metaId)
+      meta.invited_num = Number(invited)
+      console.log("meta:", meta)
+      setMeta(meta)
       return meta
-      // todo:筛选出其中的metaIdentity
     } catch (error) {
       console.log("err", error)
     }
   }, [wallet])
-  return { register_meta, query_meta_info }
+  return { register_meta, query_meta_info, query_invited_num, claim_invite_exp }
 }
 
 export default useQueryMetaInfo

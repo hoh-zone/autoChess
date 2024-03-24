@@ -35,7 +35,7 @@ const useMintChess = () => {
             transactionBlock.pure(username),
             coin_vec,
             transactionBlock.pure(`${META_GLOBAL}`),
-            transactionBlock.pure(meta)
+            transactionBlock.pure(meta.objectId)
           ]
         })
       } else {
