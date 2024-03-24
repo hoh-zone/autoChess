@@ -12,6 +12,7 @@ module chess_package_main::metaIdentity {
     const ERR_ALREADY_BIND:u64 = 0x001;
     const ERR_NO_PERMISSION:u64 = 0x002;
     const ERR_INVALID_VERSION:u64 = 0x003;
+    const ERR_ALREADY_CLAMIED:u64 = 0x004;
     const EXP_LEVEL1:u64 = 20;
     const EXP_LEVEL2:u64 = 40;
     const EXP_LEVEL3:u64 = 80;
@@ -248,9 +249,8 @@ module chess_package_main::metaIdentity {
         let metaId = meta.metaId;
         let invited_num = query_invited_num(global, metaId);
         let claimed_num = meta.invited_claimed_num;
-        if (invited_num > claimed_num) {
-            add_exp(meta, (invited_num - claimed_num) * 20);
-        };
+        assert!(invited_num > claimed_num, ERR_ALREADY_CLAMIED);
+        add_exp(meta, (invited_num - claimed_num) * 20);
         meta.invited_claimed_num = meta.invited_claimed_num + 1;
     }
 
