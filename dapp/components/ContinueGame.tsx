@@ -97,8 +97,8 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                         onMouseLeave={() => {
                           closeToast()
                         }}
-                        onClick={async () => {
-                          await checkout({ chess_id: nft.id.id, fun: fetch })
+                        onClick={() => {
+                          checkout({ chess_id: nft.id.id, fun: fetch })
                           onClose()
                           // fetch()
                         }}
