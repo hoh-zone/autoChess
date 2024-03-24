@@ -4,7 +4,8 @@ import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 
 type Props = {
-  chess_id: string
+  chess_id: string,
+  fun?: ()=>any
 }
 
 const useCheckout = () => {
@@ -12,7 +13,7 @@ const useCheckout = () => {
   const toast = useToast()
 
   const checkout = useCallback(
-    async ({ chess_id }: Props) => {
+    async ({ chess_id, fun }: Props) => {
       if (!wallet) return
       let method = "check_out_arena"
       let moveModule = "chess"
@@ -40,6 +41,8 @@ const useCheckout = () => {
             })
           }
         }
+        // 回调
+        fun && fun()
       } catch (error) {
         toast({
           title: "redeem failed",

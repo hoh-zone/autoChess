@@ -11,6 +11,7 @@ import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
 import ContinueGame from "../ContinueGame"
 import Register from "../Register"
+import MyAccountInfo from "../MyAccountInfo"
 import StartGameButtons from "../StartGameButtons"
 
 export const StartGame = () => {
@@ -72,7 +73,12 @@ export const StartGame = () => {
             <Rank />
           </div>
           <div className="absolute top-0 left-0 m-4">
-            <Instruction />
+            <div>
+              <Instruction />
+            </div>
+            <div className="mt-3">
+              <MyAccountInfo/>
+            </div>
           </div>
           <Spacer />
           <VStack className="w-4/5 absolute bottom-0" gap={0}>

@@ -83,21 +83,21 @@ const useQueryMetaInfo = () => {
           showType: true
         }
       })
-      let data: any = results.data[0].data
-      let content: any = data.content
-      let fields: any = content.fields
+      let data: any = results.data[0]?.data
+      let content: any = data?.content
+      let fields: any = content?.fields
       let meta: Meta = {
-        metaId: Number(fields.metaId),
-        objectId: data.objectId,
-        name: fields.name,
-        level: Number(fields.level),
-        exp: Number(fields.exp),
-        invited_claimed_num: Number(fields.invited_claimed_num),
-        inviterMetaId: Number(fields.inviterMetaId),
-        total_arena_lose: Number(fields.total_arena_lose),
-        total_arena_win: Number(fields.total_arena_win),
-        wallet: fields.wallet_addr,
-        abilitities: [fields.ability1, fields.ability2, fields.ability3, fields.ability4, fields.ability5]
+        metaId: Number(fields?.metaId),
+        objectId: data?.objectId,
+        name: fields?.name,
+        level: Number(fields?.level),
+        exp: Number(fields?.exp),
+        invited_claimed_num: Number(fields?.invited_claimed_num),
+        inviterMetaId: Number(fields?.inviterMetaId),
+        total_arena_lose: Number(fields?.total_arena_lose),
+        total_arena_win: Number(fields?.total_arena_win),
+        wallet: fields?.wallet_addr,
+        abilitities: [fields?.ability1, fields?.ability2, fields?.ability3, fields?.ability4, fields?.ability5]
       }
       setMeta(meta.objectId)
       return meta

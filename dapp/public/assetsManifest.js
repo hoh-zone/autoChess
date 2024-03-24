@@ -110,7 +110,8 @@ const assetsManifest = {
   "wizard-idle": "wizard-idle.png",
   forbid_buff: "forbid_buff.png",
   forbid_debuff: "forbid_debuff.png",
-  add_all_tmp_max_sp: "add_all_tmp_max_sp.png"
+  add_all_tmp_max_sp: "add_all_tmp_max_sp.png",
+  account_title_icon: "account_title_icon.png"
 }
 
 export default assetsManifest

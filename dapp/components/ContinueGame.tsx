@@ -97,10 +97,10 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                         onMouseLeave={() => {
                           closeToast()
                         }}
-                        onClick={() => {
-                          checkout({ chess_id: nft.id.id })
+                        onClick={async () => {
+                          await checkout({ chess_id: nft.id.id, fun: fetch })
                           onClose()
-                          fetch()
+                          // fetch()
                         }}
                       >
                         <VStack>

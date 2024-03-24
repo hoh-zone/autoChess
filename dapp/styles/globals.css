@@ -463,3 +463,32 @@ a {
     opacity: 0;
   }
 }
+.accountInfoInput{
+  position: relative;
+  width: 150px;
+  height: 15px;
+  padding: 0 5px;
+  border-radius: 2px;
+  line-height: 18px;
+  font-size: 8px;
+  box-shadow: 0 0 2px 2px #192541;
+  overflow: hidden;
+}
+.accountInfoInputExp{
+  position: absolute;
+  top: 0;
+  left:0;
+  height:100%;
+  background-color: #fff;
+  z-index: 0;
+}
+.accountCharacterText{
+  width: 80px;
+  height: 20px;
+  margin-right: 10px;
+  margin-bottom: 8px;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 2px;
+  background-color: #554D5D;
+}
