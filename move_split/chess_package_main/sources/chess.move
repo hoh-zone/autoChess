@@ -226,7 +226,6 @@ module chess_package_main::chess {
         };
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
-
         metaIdentity::record_invited_success(metaGlobal, meta);
     }
 

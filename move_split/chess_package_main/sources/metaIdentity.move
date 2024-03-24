@@ -17,6 +17,7 @@ module chess_package_main::metaIdentity {
     const EXP_LEVEL3:u64 = 80;
     const EXP_LEVEL4:u64 = 100;
     const EXP_LEVEL5:u64 = 200;
+    const INIT_META_ID_INDEX:u64 = 10000;
     const CURRENT_VERSION:u64 = 1;
 
     struct MetaIdentity has key {
@@ -88,7 +89,7 @@ module chess_package_main::metaIdentity {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
-        let metaId = global.total_players;
+        let metaId = INIT_META_ID_INDEX + global.total_players;
         let uid = object::new(ctx);
         let meta_addr = object::uid_to_address(&uid);
         table::add(&mut global.wallet_meta_map, sender, meta_addr);
@@ -121,13 +122,13 @@ module chess_package_main::metaIdentity {
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
         table::add(&mut global.wallet_meta_map, sender, sender);
-        let myMetaId = global.total_players;
+        let metaId = INIT_META_ID_INDEX + global.total_players;
         let uid = object::new(ctx);
         let meta_addr = object::uid_to_address(&uid);
         table::add(&mut global.wallet_meta_map, sender, meta_addr);
         let meta = MetaIdentity {
             id:uid,
-            metaId:myMetaId,
+            metaId:metaId,
             name:name,
             wallet_addr:sender,
             invited_claimed_num: 0,
@@ -155,6 +156,10 @@ module chess_package_main::metaIdentity {
     }
 
     public(friend) fun record_invited_success(global:&mut MetaInfoGlobal, meta: &MetaIdentity) {
+        if (meta.inviterMetaId == meta.metaId) {
+            // prevent invite myself
+            return
+        };
         let inviterMetaId = meta.inviterMetaId;
         let user_addr = meta.wallet_addr;
         if (!linked_table::contains(&global.invited_meta_map, inviterMetaId)) {
@@ -228,6 +233,7 @@ module chess_package_main::metaIdentity {
         }
     }
 
+    // query the successfully invited num
     public fun query_invited_num(global:&MetaInfoGlobal, metaId: u64) : u64 {
         if (linked_table::contains(&global.invited_meta_map, metaId)) {
             let addr_vec = linked_table::borrow(&global.invited_meta_map, metaId);
@@ -245,6 +251,7 @@ module chess_package_main::metaIdentity {
         if (invited_num > claimed_num) {
             add_exp(meta, (invited_num - claimed_num) * 20);
         };
+        meta.invited_claimed_num = meta.invited_claimed_num + 1;
     }
 
     public fun get_is_registered(global: &MetaInfoGlobal, user_addr:address) : u64 {
