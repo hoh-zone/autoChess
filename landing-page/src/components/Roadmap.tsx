@@ -36,7 +36,7 @@ export const Roadmap = () => {
               <p
                 className={`m-0 max-w-[30ch] text-md  font-sans text-gray-800`}
               >
-                Airdrop will be distributed according to player's level
+                {"Airdrop will be distributed according to player's level"}
               </p>
             </VStack>
           </Box>
