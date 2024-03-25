@@ -60,13 +60,10 @@ export const Leaderboard: React.FC = () => {
       py={64}
       className={"bg-[url('/bg1.jpg')] bg-top"}
     >
-      <Box className="glass py-0 w-full">
-        <Center as="h2">Leaderboard</Center>
-        {countdown !== "" && (
-          <Center as="h3">Unlock Countdown: {countdown}</Center>
-        )}
-      </Box>
-
+      <Center as="h2">Leaderboard</Center>
+      {countdown !== "" && (
+        <Center as="h3">Unlock Countdown: {countdown}</Center>
+      )}
       <Stack className="mt-16 glass2" gap={0}>
         {/* todo:先不显示，要存点钱进去的 */}
         {/* <Text>Total Pool: {poolValue / 100_000_000} SUI</Text> */}

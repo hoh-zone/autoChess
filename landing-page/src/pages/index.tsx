@@ -1,14 +1,22 @@
-import Image from "next/image";
 import { Tektur } from "next/font/google";
 import { CharacterLine } from "@/components/CharacterLine";
 import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { Roadmap } from "@/components/Roadmap";
+import { Activity } from "@/components/Activity";
+
+import { useRouter } from "next/router";
 
 const inter = Tektur({ subsets: ["latin"] });
 
 export default function Home() {
+  const router = useRouter();
+
+  function handleClick() {
+    // 假设你想跳转到一个名为 "dashboard" 的页面
+    router.push("/index2");
+  }
   return (
     <>
       <main
@@ -26,7 +34,7 @@ export default function Home() {
           <h1>Sui Auto Chess</h1>
         </motion.div>
 
-        <a href="https://suiautochess.com" className="mt-16 mb-24">
+        <a href="/NewPage" className="mt-16 mb-24">
           <button>Enter Game 🕹️</button>
         </a>
 
@@ -76,6 +84,7 @@ export default function Home() {
         </motion.div>
       </main>
       <Leaderboard />
+      <Activity />
       <Roadmap />
     </>
   );

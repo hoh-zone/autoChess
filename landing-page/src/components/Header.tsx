@@ -1,10 +1,15 @@
 import { HStack, Spacer } from "@chakra-ui/react";
 import { SignInButton, ethos } from "ethos-connect";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { FaXTwitter } from "react-icons/fa6";
 
 export const Header = () => {
   const { wallet } = ethos.useWallet();
+  const router = useRouter();
+  const handleJump = (path: string) => {
+    router.push(path);
+  };
   return (
     <nav className="w-full fixed top-0 z-50">
       <HStack
@@ -24,9 +29,34 @@ export const Header = () => {
           height={38}
           className="rounded-full"
         />
-        <a href="#home">Home</a>
-        <a href="#leaderboard">Leaderboard</a>
-        <a href="#roadmap">Roadmap</a>
+        <a
+          onClick={() => {
+            handleJump("/");
+          }}
+        >
+          Home
+        </a>
+        <a
+          onClick={() => {
+            handleJump("/#leaderboard");
+          }}
+        >
+          Leaderboard
+        </a>
+        <a
+          onClick={() => {
+            handleJump("/#activity");
+          }}
+        >
+          Event
+        </a>
+        <a
+          onClick={() => {
+            handleJump("/#roadmap");
+          }}
+        >
+          Roadmap
+        </a>
         <Spacer />
         <a href="https://twitter.com/SuiAutoChess" target="_blank">
           <FaXTwitter />
