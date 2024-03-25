@@ -34,7 +34,7 @@ export default function Home() {
           <h1>Sui Auto Chess</h1>
         </motion.div>
 
-        <a href="/NewPage" className="mt-16 mb-24">
+        <a href="https://suiautochess.com" className="mt-16 mb-24">
           <button>Enter Game 🕹️</button>
         </a>
 
