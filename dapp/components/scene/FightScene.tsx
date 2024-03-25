@@ -69,7 +69,13 @@ export const FightScene = () => {
               <FightResultText />
             </div>
             <Text color={"gray.300"}>Win more than 10 turns to fight with Leaderboard and earn more rewards.</Text>
-            <Text display={"inline"} fontSize={"2xl"}>👉</Text><Link color={"blue.300"} href="https://home.autochess.app/#leaderboard" isExternal> Check Leaderboard</Link>
+            <Text display={"inline"} fontSize={"2xl"}>
+              👉
+            </Text>
+            <Link color={"blue.300"} href="https://home.suiautochess.com/#leaderboard" isExternal>
+              {" "}
+              Check Leaderboard
+            </Link>
           </ModalBody>
 
           <ModalFooter className="flex !justify-center">
