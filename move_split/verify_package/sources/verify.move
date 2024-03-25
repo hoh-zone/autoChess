@@ -113,6 +113,9 @@ module verify_package::verify {
                 // rotate the hero pool, each rotation action costs 2 gold
                 gold = gold - REFRESH_gold_cost;
                 refresh_time = refresh_time + 1;
+                if (refresh_time == 6) {
+                    refresh_time = 0;
+                };
             }
         };
         let expected_lineup = lineup::parse_lineup_str_vec(name, role_global, lineup_str_vec, ticket_gold_cost, ctx);
