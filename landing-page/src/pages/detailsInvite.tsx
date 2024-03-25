@@ -27,9 +27,56 @@ export default function DetailsInvite() {
           <Center>
             <VStack>
               <div className="glass2 p-16">
-                <Character charType="fighter" attack={1} isOpponent={false} />
+                <Character charType="ani" attack={1} isOpponent={false} />
                 <h2 className={`mb-3 text-2xl font-semibold`}>Invite Event</h2>
-                <p className={`m-0 text-md  font-sans text-gray-800`}></p>
+                <p className={`m-0 text-md  font-sans text-gray-800`}>
+                  SuiAutoChess: Rally Friends for a Shared Points Feast<br></br>
+                  <br></br>
+                  Event Duration: 3/27 to 4/10<br></br>
+                  How to Participate: Each player will receive a unique
+                  invitation code. Share your invitation code with friends and
+                  invite them to join the world of “SuiAutoChess”!<br></br>
+                  Valid Users: New users need to register using your invitation
+                  code and complete at least one battle in the Arena. Regardless
+                  of the outcome, both you and your new comrade will <br></br>
+                  receive points rewards!<br></br>
+                  Invitation Limit: Each player can invite up to 5 valid users.
+                  The more successful invitations, the more generous the
+                  rewards!<br></br>
+                  Permanent Rewards: Inviters will receive 20% of the ticket
+                  handling fees and points rewards from the invitees in each
+                  round!<br></br>
+                  Mysterious Airdrop: Players who successfully invite 5 valid
+                  users will also receive a mysterious airdrop reward prepared
+                  by us!<br></br>
+                  <br></br>
+                  💡 Event Rules:<br></br>
+                  <br></br>
+                  The invitation code must be filled in during new user
+                  registration.<br></br>
+                  Valid Arena battles must be completed within the event
+                  duration.<br></br>
+                  Points rewards will be updated within 24 hours after the
+                  battle ends.<br></br>
+                  Mysterious airdrop rewards will be distributed within a week
+                  after the event ends.<br></br>
+                  <br></br>
+                  🌟 Let’s fight together and win glory! Not only can you enjoy
+                  the fun of strategic battles, but you can also win rewards
+                  with friends.<br></br>
+                  <br></br>
+                  🔗 Learn More:<br></br>- Official Website:
+                  https://www.autochess.app/<br></br>- Twitter:
+                  https://twitter.com/SuiAutoChess<br></br>- Discord: TBD (To Be
+                  Determined)<br></br>
+                  <br></br>
+                  Thank you for your support of SuiAutoChess. Let&apos;s embark
+                  on this feast of strategy and wisdom together!<br></br>
+                  <br></br>
+                  Best regards,<br></br>
+                  <br></br>
+                  The SuiAutoChess Team<br></br>
+                </p>
               </div>
             </VStack>
           </Center>
