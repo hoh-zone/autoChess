@@ -1,5 +1,15 @@
-import { Text, Box, Center, HStack, VStack } from "@chakra-ui/react";
+import {
+  Text,
+  Box,
+  Center,
+  HStack,
+  VStack,
+  Img,
+  Button,
+  Link,
+} from "@chakra-ui/react";
 import { Character } from "./character/character";
+import Image from "next/image";
 
 export const Roadmap = () => {
   return (
@@ -16,64 +26,66 @@ export const Roadmap = () => {
 
       <Box className="glass py-0 w-full mt-16">
         <HStack>
-          <Box className="glass2 py-0 w-fit ml-32 mt-80 mb-32 pb-8 px-8">
-            <VStack>
-              <Character charType="tank" attack={1} isOpponent={false} />
-              <Text as="h5" fontSize={"2vw"}>
-                {"Milestone 1"}
-              </Text>
-              <Text as="h5" fontSize={"1vw"}>
-                {"📌Launch on Sui Mainnet on March 27"}
-              </Text>
-              <p
-                className={`m-0 max-w-[30ch] text-md  font-sans text-gray-800`}
+          <Box
+            className="mt-20 ml-16 mb-16"
+            style={{ position: "relative", width: "100%", height: "auto" }}
+          >
+            <Image
+              className="blackglass"
+              alt={"sui"}
+              layout="responsive"
+              width={400}
+              height={600}
+              src={"/battle2.png"}
+            ></Image>
+            <a href="https://suiautochess.com">
+              <Button
+                style={{
+                  position: "absolute",
+                  width: "auto",
+                  height: "15%",
+                  left: "5%",
+                  top: "80%",
+                }}
               >
-                Construct Discord, promotion on Twiiter
-              </p>
-              <Text as="h5" style={{ textAlign: "left" }} fontSize={"1vw"}>
-                {"📌Airdrop distribution for early participators"}
-              </Text>
-              <p
-                className={`m-0 max-w-[30ch] text-md  font-sans text-gray-800`}
-              >
-                {"Airdrop will be distributed according to player's level"}
-              </p>
-            </VStack>
+                Plat to earn 🕹️
+              </Button>
+            </a>
           </Box>
-          <Box className="glass2 py-0 w-fit ml-32 mt-40 mb-32 pb-8 px-8">
-            <VStack>
-              <Character charType="wizard" isOpponent={false} />
-              <Text as="h5" fontSize={"2vw"}>
-                {"Milestone 2"}
-              </Text>
-              <Text as="h5" fontSize={"1vw"}>
-                {"📋 Fight Balance modification"}
-              </Text>
-              <Text as="h5" fontSize={"1vw"}>
-                {"📋 add new roles before May 2024"}
-              </Text>
-              <Text as="h5" fontSize={"1vw"}>
-                {"📋 Add object items in shop"}
-              </Text>
-            </VStack>
+          <Box className="mt-20 mb-16 mr-16 ml-16">
+            <Image
+              className="blackglass"
+              alt={"sui"}
+              layout="responsive"
+              width={500}
+              height={500}
+              src={"/rank.png"}
+            ></Image>
           </Box>
-          <Box className="glass2 py-0 w-fit ml-32 mt-0 mb-32  pb-8 px-8">
-            <VStack>
-              <Character charType="tree" isOpponent={false} />
-              <Text as="h5" fontSize={"2vw"}>
-                {"Milestone 3"}
-              </Text>
-              <Text as="h5" fontSize={"1vw"}>
-                {"📋 Achievement Systgem"}
-              </Text>
-              <Text as="h5" fontSize={"1vw"}>
-                {"📋 Market System"}
-              </Text>
-              <Text as="h5" fontSize={"1vw"}>
-                {"📋 Add object items in shop"}
-              </Text>
-            </VStack>
+          <Box className="mt-20 mb-16 mr-16">
+            <Image
+              className="blackglass"
+              alt={"sui"}
+              layout="responsive"
+              width={500}
+              height={500}
+              src={"/invite.png"}
+            ></Image>
           </Box>
+          {/* <Image
+            className="glass2 py-0 w-fit ml-12 mt-40 mb-32 pb-8 pt-8 px-8"
+            alt={"sui"}
+            width={354}
+            height={354}
+            src={"/invite.png"}
+          ></Image>
+          <Image
+            className="glass2 py-0 w-fit ml-12 mt-40 mb-32 pb-8 pt-8 px-8"
+            alt={"sui"}
+            width={354}
+            height={354}
+            src={"/rank.png"}
+          ></Image> */}
         </HStack>
       </Box>
     </Box>
