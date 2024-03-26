@@ -100,7 +100,6 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                         onClick={() => {
                           checkout({ chess_id: nft.id.id, fun: fetch })
                           onClose()
-                          // fetch()
                         }}
                       >
                         <VStack>

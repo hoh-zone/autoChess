@@ -22,7 +22,6 @@ interface Meta {
 }
 
 const useQueryMetaInfo = () => {
-  const [_meta, setMeta] = useAtom(metaA)
   const { wallet } = ethos.useWallet()
 
   const claim_invite_exp = async (meta: Meta) => {
@@ -82,6 +81,7 @@ const useQueryMetaInfo = () => {
         const createObjectChange = response.objectChanges.find((objectChange: any) => objectChange.type === "created")
         if (!!createObjectChange && "objectId" in createObjectChange) {
           console.log("objid", createObjectChange.objectId)
+          query_meta_info()
         }
       }
     } catch (error) {
@@ -136,6 +136,9 @@ const useQueryMetaInfo = () => {
         }
       })
       let data: any = results.data[0]?.data
+      if (!data) {
+        return ""
+      }
       let content: any = data?.content
       let fields: any = content?.fields
       let meta: Meta = {
@@ -154,8 +157,7 @@ const useQueryMetaInfo = () => {
       }
       let invited = await query_invited_num(meta.metaId)
       meta.invited_num = Number(invited)
-      console.log("meta:", meta)
-      setMeta(meta)
+      console.log("setmeta:", meta)
       return meta
     } catch (error) {
       console.log("err", error)

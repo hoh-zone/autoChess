@@ -25,7 +25,7 @@ export const StartGame = () => {
 
   const fetch = async () => {
     setIsLoading(true)
-    await query_meta_info()
+    setMeta(await query_meta_info())
     const result = await query_chesses()
     setIsLoading(false)
     return result

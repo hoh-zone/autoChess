@@ -20,6 +20,7 @@ const useMintChess = () => {
   const mint = useCallback(
     async ({ username, is_arena, price }: Props) => {
       if (!wallet) return
+      console.log("meta", meta)
       let method = is_arena ? "mint_arena_chess" : "mint_chess"
       let moveModule = "chess"
       const transactionBlock = new TransactionBlock()
