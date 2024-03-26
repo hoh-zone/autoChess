@@ -23,7 +23,6 @@ interface Meta {
 
 const useQueryMetaInfo = () => {
   const { wallet } = ethos.useWallet()
-
   const claim_invite_exp = async (meta: Meta) => {
     if (!wallet) return
     try {

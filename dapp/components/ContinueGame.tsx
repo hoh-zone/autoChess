@@ -54,8 +54,8 @@ const ContinueGame = (props: { isLoading: boolean }) => {
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent className="rounded-[8px]" bg={"gray.500"} overflowY={"auto"} maxH={"50vh"}>
-          <ModalBody className="!p-[10px] rounded-[8px]">
+        <ModalContent maxWidth={500} className="rounded-[8px]" bg={"gray.500"} overflowY={"auto"} maxH={"50vh"}>
+          <ModalBody maxWidth={500}  className="!p-[10px] rounded-[8px]">
             {nfts.length == 0 && <Text>no records</Text>}
             {nfts.length > 0 && (
               <Stack gap={4}>
@@ -75,7 +75,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                       }}
                     >
                       <Stack gap={2}>
-                        <p className="text-slate-800">
+                        <p className="text-slate-800" style={{whiteSpace:"pre-wrap"}}>
                           Name: {nft.name} {nft.arena ? "(Arena)" : ""}
                         </p>
                         <p className="text-slate-800">Mode: {!nft.arena ? "free" : "arena"}</p>

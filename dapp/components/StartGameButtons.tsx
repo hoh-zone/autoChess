@@ -6,11 +6,13 @@ import { operationsA, slotCharacter, stageAtom } from "../store/stages"
 import useMintChess from "./button/MintChess"
 import { useState } from "react"
 import { sleep } from "../utils/sleep"
+import { metaA } from "../store/stages"
 
 const StartGameButtons = ({ name }: { name: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
-  const { nftObjectId, mint } = useMintChess()
+  const [meta, _setMeta] = useAtom(metaA)
+  const { mint } = useMintChess()
   const { nfts, query_chesses } = useQueryChesses()
   const syncGameNFT = useSyncGameNFT()
   const [stage, setStage] = useAtom(stageAtom)
@@ -34,7 +36,7 @@ const StartGameButtons = ({ name }: { name: string }) => {
   const onStart = async (isArena: boolean, price: number) => {
     try {
       setIsLoading(true)
-      await mint({ username: name, is_arena: isArena, price })
+      await mint({ username: name, is_arena: isArena, price, meta })
       await sleep(2000)
 
       const nfts = await query_chesses()
