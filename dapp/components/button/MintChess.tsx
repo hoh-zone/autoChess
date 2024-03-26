@@ -2,25 +2,23 @@ import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, ROLE_GLOBAL, META_GLOBAL } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
-import { metaA } from "../../store/stages"
-import { useAtom } from "jotai"
 
 type Props = {
   username: string
   is_arena: boolean
-  price: number
+  price: number,
+  meta: any
 }
 
 const useMintChess = () => {
   const { wallet } = ethos.useWallet()
-  const [meta, _setMeta] = useAtom(metaA)
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
   const toast = useToast()
-
+  
   const mint = useCallback(
-    async ({ username, is_arena, price }: Props) => {
+    async ({ username, is_arena, price, meta }: Props) => {
       if (!wallet) return
-      console.log("meta", meta)
+      console.log("meta1", meta)
       let method = is_arena ? "mint_arena_chess" : "mint_chess"
       let moveModule = "chess"
       const transactionBlock = new TransactionBlock()

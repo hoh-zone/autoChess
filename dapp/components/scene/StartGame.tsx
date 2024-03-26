@@ -30,7 +30,7 @@ export const StartGame = () => {
     setIsLoading(false)
     return result
   }
-
+  
   useEffect(() => {
     if (status !== "connected") return
     fetch()
