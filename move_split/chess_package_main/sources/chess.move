@@ -327,7 +327,6 @@ module chess_package_main::chess {
                 // challenge_win is 1 when chess.win is 0, it stays 0 till the 10th win on standard mode
                 chess.challenge_win = chess.challenge_win + 1;
                 challenge::rank_forward(challengeGlobal, chess.lineup, meta);
-                metaIdentity::record_add_win(meta);
             } else {
                 chess.win = chess.win + 1;
                 lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
@@ -335,15 +334,16 @@ module chess_package_main::chess {
                     lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup, chess.arena);
                 };
             };
+            metaIdentity::record_add_win(meta);
         } else {
             // player losses
             if (chanllenge_on) {
                 chess.challenge_lose = chess.challenge_lose + 1;
-                metaIdentity::record_add_lose(meta);
             } else {
                 chess.lose = chess.lose + 1;
                 lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
-            }
+            };
+            metaIdentity::record_add_lose(meta);
         };
         if (chess.lose <= 2) {
             refresh_cards_pools(role_global, chess, ctx);

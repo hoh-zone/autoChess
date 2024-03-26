@@ -146,7 +146,7 @@ module chess_package_main::challenge {
         while (i < 20) {
             let lineup = lineup::generate_lineup_by_power(roleGlobal, init_power, seed, ctx);
             vector::push_back(&mut global.rank_20, lineup);
-            init_power = init_power - 2;
+            init_power = init_power - 3;
             seed = seed + 1;
             i = i + 1;
         };

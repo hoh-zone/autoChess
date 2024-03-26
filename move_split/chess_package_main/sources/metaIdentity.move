@@ -217,9 +217,9 @@ module chess_package_main::metaIdentity {
         } else if (current_level == 4 && current_exp >= EXP_LEVEL5) {
             level_up(meta);
             meta.exp = current_exp - EXP_LEVEL5;
-        } else if (current_level == 5) {
+        } else {
             meta.exp = current_exp;
-        };
+        }
     }
 
     fun level_up(meta: &mut MetaIdentity) {

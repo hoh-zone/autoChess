@@ -1,7 +1,7 @@
 [package]
 name = "chess_package_main"
 version = "0.0.1"
-published-at = "0x2bf0424851ef517e4c891ae023922daf5538554e7f334448e1a4db8ac2f28695"
+## published-at = "0x2bf0424851ef517e4c891ae023922daf5538554e7f334448e1a4db8ac2f28695"
 
 
 [dependencies]
@@ -14,7 +14,7 @@ fight_package = { local = "G:/autoChess/move_split/fight_package" }
 verify_package = { local = "G:/autoChess/move_split/verify_package" }
 
 [addresses]
-chess_package_main = "0x2bf0424851ef517e4c891ae023922daf5538554e7f334448e1a4db8ac2f28695"
+chess_package_main = "0x0"
 util_package = "0xf0f784497b08a2c21f71b09064a000c7ab1aa89296ccc24d6900e1f550dd16ca"
 role_package = "0xa95b96b87e6775411b9702b3f82426c7dd2f57900e1cf710afab30ed5e54a5d7"
 lineup_package = "0xd4ac4db16620586df0aff093efd3aaa4c69794b65ff2284ad898d22dc9350f15"
