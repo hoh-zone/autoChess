@@ -4,10 +4,6 @@ import {
   ISMAINNET,
   SENDER,
   CHESS_CHALLENGE_PACKAGE_ID,
-  CHESS_CHALLENGE_PACKAGE_ID1,
-  CHESS_CHALLENGE_PACKAGE_ID2,
-  CHESS_CHALLENGE_PACKAGE_ID3,
-  CHESS_CHALLENGE_PACKAGE_ID4,
 } from "../../constants";
 import {
   JsonRpcProvider,
@@ -44,11 +40,7 @@ function get_name(data: string): string {
 }
 
 function get_addr(data: string, name: string): string {
-  if (
-    data ==
-      "be379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18" &&
-    name == "AI"
-  ) {
+  if (data == SENDER.replace("0x", "") && name == "AI") {
     return "...";
   }
   if (data) {
@@ -98,7 +90,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "query_left_challenge_time";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
       arguments: [
         tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
         tx.pure(normalizeSuiObjectId("0x06")),
@@ -116,7 +108,6 @@ const useQueryRanks = () => {
     )
       return "";
     let res = result.results[0].returnValues[0][0];
-    console.log("ransk:", res);
     return bytesToU64(new Uint8Array(res));
   }, []);
 
@@ -131,7 +122,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "get_estimate_reward_20_amounts";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
     const result = await provider.devInspectTransactionBlock({
@@ -146,14 +137,16 @@ const useQueryRanks = () => {
     ) {
       return "";
     }
+    console.log("result:", result);
     let source = result.results[0].returnValues[0][0];
-    source = source.slice(1);
+    console.log("rank_20 source:", source.shift());
     let resultStr = bytesArrayToString(new Uint8Array(source));
     console.log("rank_20 rewards:", resultStr);
     return resultStr;
   }, []);
 
   const query_rank20 = useCallback(async () => {
+    console.log("query rank20");
     let provider;
     if (ISMAINNET) {
       provider = new JsonRpcProvider(mainnetConnection);
@@ -164,13 +157,15 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "generate_rank_20_description";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
+      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
+    console.log(1);
     const result = await provider.devInspectTransactionBlock({
       transactionBlock: tx,
       sender: SENDER,
     });
+    console.log(result);
     if (
       !result ||
       !result.results ||
@@ -183,7 +178,7 @@ const useQueryRanks = () => {
     source = source.slice(2);
     let resultStr = bytesArrayToString(new Uint8Array(source));
     let resultArr = splitRankStr(resultStr);
-    console.log("ranks:", resultArr);
+
     return resultArr;
   }, []);
 
@@ -216,7 +211,6 @@ const useQueryRanks = () => {
 
   const claim_reward = useCallback(
     async (wallet: any, rank: any, lineup: any, toast: any) => {
-      console.log("rank", rank);
       let provider;
       if (ISMAINNET) {
         provider = new JsonRpcProvider(mainnetConnection);
@@ -229,15 +223,6 @@ const useQueryRanks = () => {
           MatchAny: [
             {
               Package: CHESS_CHALLENGE_PACKAGE_ID,
-            },
-            {
-              Package: CHESS_CHALLENGE_PACKAGE_ID1,
-            },
-            {
-              Package: CHESS_CHALLENGE_PACKAGE_ID2,
-            },
-            {
-              Package: CHESS_CHALLENGE_PACKAGE_ID3,
             },
           ],
         },
@@ -261,7 +246,7 @@ const useQueryRanks = () => {
       const moveModule = "chess";
       const method = "claim_rank_reward";
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE_ID4}::${moveModule}::${method}`,
+        target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
         arguments: [
           tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
           tx.object(normalizeSuiObjectId(chessId)),
