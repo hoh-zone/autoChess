@@ -54,12 +54,12 @@ export const StartGame = () => {
                     Chess
                   </motion.p>
                   <VStack>
-                    {!meta && <Register address={wallet.address} />}
+                    {!meta && <Register isLoading={isLoading} address={wallet.address} />}
                     {meta && <ContinueGame isLoading={isLoading} />}
                   </VStack>
                 </div>
-                <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your chess name" onChange={(v) => setInputValue(v.target.value)} />
-                <StartGameButtons name={inputValue} />
+                {!isLoading && <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your chess name" onChange={(v) => setInputValue(v.target.value)} />}
+                {!isLoading && <StartGameButtons name={inputValue} />}
               </Stack>
             </div>
           ) : (

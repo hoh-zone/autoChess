@@ -6,7 +6,7 @@ import { getSimplifidyWalletAddr } from "../utils/TextUtils"
 import useQueryMetaInfo from "./button/QueryMetaInfo"
 import { useToast } from "@chakra-ui/react"
 
-const ContinueGame = (props: { address: any }) => {
+const ContinueGame = (props: { isLoading: boolean; address: any }) => {
   const [inputName, setInputName] = useState("")
   const [ava, setAva] = useState("avatar_ani")
   const [avaIndex, setAvaIndex] = useState(0)
@@ -15,6 +15,7 @@ const ContinueGame = (props: { address: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [assets, setAssets] = useAtom(assetsAtom)
   const { register_meta } = useQueryMetaInfo()
+  const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
   let avatarArr: any[] = []
   if (assets) {
@@ -58,7 +59,9 @@ const ContinueGame = (props: { address: any }) => {
 
   return (
     <>
-      <Button onClick={onOpen}>Register Account</Button>
+      <Button isLoading={props.isLoading} onClick={onOpen}>
+        Register Account
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
