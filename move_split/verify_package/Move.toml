@@ -1,7 +1,7 @@
 [package]
 name = "verify_package"
 version = "0.0.1"
-published-at = "0x27933a2ee06d692a5315c6e26545fa56c8c064a73a34a70e38de9c491e2504a5"
+published-at = "0x537b04d93d32682923cf748442866ee7b5428774ced2492ae042a0b6a4309db6"
 
 
 [dependencies]
@@ -12,8 +12,8 @@ role_package = { local = "G:/autoChess/move_split/role_package" }
 lineup_package = { local = "G:/autoChess/move_split/lineup_package" }
 
 [addresses]
-verify_package = "0x27933a2ee06d692a5315c6e26545fa56c8c064a73a34a70e38de9c491e2504a5"
-util_package = "0xf0f784497b08a2c21f71b09064a000c7ab1aa89296ccc24d6900e1f550dd16ca"
-role_package = "0xa95b96b87e6775411b9702b3f82426c7dd2f57900e1cf710afab30ed5e54a5d7"
-lineup_package = "0xd4ac4db16620586df0aff093efd3aaa4c69794b65ff2284ad898d22dc9350f15"
-admin = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
+verify_package = "0x537b04d93d32682923cf748442866ee7b5428774ced2492ae042a0b6a4309db6"
+util_package = "0xd676f5b01f25ceace77b17fbbc91cbb2a5b43eea7695b99b32d15866f6a706d8"
+role_package = "0x4ef7d22f731621fcde258cc376f716127caf61d8dfa4c3fb96074643300097e9"
+lineup_package = "0x82b36157bea705ea46329400615d2c4e3540e498643475d7c7fa7fe47a308deb"
+admin = "0xb2a79beac8a092b336f560ba27f278382bcab2da831c64e546d7e0e087acc4fe"

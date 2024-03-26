@@ -1,7 +1,7 @@
 [package]
 name = "chess_package_main"
 version = "0.0.1"
-## published-at = "0x2bf0424851ef517e4c891ae023922daf5538554e7f334448e1a4db8ac2f28695"
+published-at = "0x81028857c94206813c541ba305da607f1d7be2896392d9ea1e65f753e9e67687"
 
 
 [dependencies]
@@ -14,10 +14,10 @@ fight_package = { local = "G:/autoChess/move_split/fight_package" }
 verify_package = { local = "G:/autoChess/move_split/verify_package" }
 
 [addresses]
-chess_package_main = "0x0"
-util_package = "0xf0f784497b08a2c21f71b09064a000c7ab1aa89296ccc24d6900e1f550dd16ca"
-role_package = "0xa95b96b87e6775411b9702b3f82426c7dd2f57900e1cf710afab30ed5e54a5d7"
-lineup_package = "0xd4ac4db16620586df0aff093efd3aaa4c69794b65ff2284ad898d22dc9350f15"
-fight_package = "0xf6d0a2523984c82cb13e70bed6fbc3ebe5d62d3d49841a1118405326b1ae520f"
-verify_package = "0x27933a2ee06d692a5315c6e26545fa56c8c064a73a34a70e38de9c491e2504a5"
-admin = "0xbe379359ac6e9d0fc0b867f147f248f1c2d9fc019a9a708adfcbe15fc3130c18"
+chess_package_main = "0x81028857c94206813c541ba305da607f1d7be2896392d9ea1e65f753e9e67687"
+util_package = "0xd676f5b01f25ceace77b17fbbc91cbb2a5b43eea7695b99b32d15866f6a706d8"
+role_package = "0x4ef7d22f731621fcde258cc376f716127caf61d8dfa4c3fb96074643300097e9"
+lineup_package = "0x82b36157bea705ea46329400615d2c4e3540e498643475d7c7fa7fe47a308deb"
+fight_package = "0x8fdf34d38b32953109918d4d4e4aba60381961cb861645a5602c6cba25f1efc1"
+verify_package = "0x537b04d93d32682923cf748442866ee7b5428774ced2492ae042a0b6a4309db6"
+admin = "0xb2a79beac8a092b336f560ba27f278382bcab2da831c64e546d7e0e087acc4fe"
