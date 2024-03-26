@@ -48,11 +48,11 @@ const roles_info: Roles = {
   shaman2_1: { class: "shaman2_1", level: 6, attack: 10, hp: 21, sp: 0, base_attack: 10, max_hp: 21, sp_cap: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: "" },
   shaman3: { class: "shaman3", level: 9, attack: 20, hp: 65, sp: 0, base_attack: 20, max_hp: 65, sp_cap: 0, effect_type: "ring", effect: "forbid_debuff", effect_value: "" },
 
-  firemega1: { class: "firemega1", level: 1, attack: 6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, sp_cap: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: "" },
-  firemega1_1: { class: "firemega1_1", level: 2, attack: 6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, sp_cap: 3, effect_type: "skill", effect: "forbid_debuff", effect_value: "" },
-  firemega2: { class: "firemega2", level: 3, attack: 12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, sp_cap: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: "" },
-  firemega2_1: { class: "firemega2_1", level: 6, attack: 12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, sp_cap: 2, effect_type: "skill", effect: "forbid_debuff", effect_value: "" },
-  firemega3: { class: "firemega3", level: 9, attack: 24, hp: 37, sp: 0, base_attack: 24, max_hp: 37, sp_cap: 1, effect_type: "skill", effect: "forbid_debuff", effect_value: "" },
+  firemega1: { class: "firemega1", level: 1, attack: 6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, sp_cap: 3, effect_type: "ring", effect: "forbid_debuff", effect_value: "" },
+  firemega1_1: { class: "firemega1_1", level: 2, attack: 6, hp: 8, sp: 0, base_attack: 6, max_hp: 8, sp_cap: 3, effect_type: "ring", effect: "forbid_debuff", effect_value: "" },
+  firemega2: { class: "firemega2", level: 3, attack: 12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, sp_cap: 2, effect_type: "ring", effect: "forbid_debuff", effect_value: "" },
+  firemega2_1: { class: "firemega2_1", level: 6, attack: 12, hp: 15, sp: 0, base_attack: 12, max_hp: 15, sp_cap: 2, effect_type: "ring", effect: "forbid_debuff", effect_value: "" },
+  firemega3: { class: "firemega3", level: 9, attack: 24, hp: 37, sp: 0, base_attack: 24, max_hp: 37, sp_cap: 1, effect_type: "ring", effect: "forbid_debuff", effect_value: "" },
 
   slime1: { class: "slime1", level: 1, attack: 6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, sp_cap: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5" },
   slime1_1: { class: "slime1_1", level: 2, attack: 6, hp: 9, sp: 0, base_attack: 6, max_hp: 9, sp_cap: 0, effect_type: "ring", effect: "forbid_buff", effect_value: "5" },

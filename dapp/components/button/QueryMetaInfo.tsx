@@ -12,6 +12,7 @@ interface Meta {
   name: string
   level: number
   exp: number
+  avatar_name: string
   invited_num: number
   invited_claimed_num: number
   inviterMetaId: number
@@ -93,13 +94,13 @@ const useQueryMetaInfo = () => {
     let method = "query_invited_num"
     try {
       if (!wallet) return
-      const transactionBlock = new TransactionBlock()
-      transactionBlock.moveCall({
+      const tx = new TransactionBlock()
+      tx.moveCall({
         target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
-        arguments: [transactionBlock.pure(META_GLOBAL), transactionBlock.pure(metaId)]
+        arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(metaId)]
       })
       const result: any = await wallet.client.devInspectTransactionBlock({
-        transactionBlock: transactionBlock,
+        transactionBlock: tx,
         sender: wallet.address
       })
       const arr = new Uint8Array(result.results[0].returnValues[0][0])
@@ -146,6 +147,7 @@ const useQueryMetaInfo = () => {
         name: fields?.name,
         level: Number(fields?.level),
         exp: Number(fields?.exp),
+        avatar_name: fields?.avatar_name,
         invited_num: 0,
         invited_claimed_num: Number(fields?.invited_claimed_num),
         inviterMetaId: Number(fields?.inviterMetaId),

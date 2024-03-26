@@ -387,7 +387,7 @@ export const useFight = () => {
                 }
             }
             set_target_group(target_group, is_opponent, true);
-        } else if (effect == "attack_by_life_percent") {
+        } else if (effect == "attack_by_hp_percent") {
             target_group = get_target_group(is_opponent, true);
             let life = enemy.max_hp;
             let extra_attack = Math.round(value / 10 * life);

@@ -30,7 +30,7 @@ export const StartGame = () => {
     setIsLoading(false)
     return result
   }
-  
+
   useEffect(() => {
     if (status !== "connected") return
     fetch()
@@ -58,8 +58,10 @@ export const StartGame = () => {
                     {meta && <ContinueGame isLoading={isLoading} />}
                   </VStack>
                 </div>
-                {!isLoading && <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your chess name" onChange={(v) => setInputValue(v.target.value)} />}
-                {!isLoading && <StartGameButtons name={inputValue} />}
+                {!isLoading && meta && (
+                  <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your chess name" onChange={(v) => setInputValue(v.target.value)} />
+                )}
+                {!isLoading && meta && <StartGameButtons name={inputValue} />}
               </Stack>
             </div>
           ) : (
