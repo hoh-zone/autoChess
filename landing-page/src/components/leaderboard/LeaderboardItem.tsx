@@ -69,7 +69,7 @@ export const LeaderboardItem = ({
 
       <HStack className="text-2xl mr-1">
         <Image alt={"sui"} width={24} height={24} src={"/sui.png"}></Image>
-        <Text>{Number(estimateSui) / 1_000_000_000} Sui</Text>
+        <Text>{Number(estimateSui)} Sui</Text>
       </HStack>
       {
         <HStack className="text-2xl mr-1">

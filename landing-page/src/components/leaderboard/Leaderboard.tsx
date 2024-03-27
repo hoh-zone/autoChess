@@ -45,12 +45,24 @@ export const Leaderboard: React.FC = () => {
     ]);
     let ranks: any = results[0];
     let rewardsSui = results[1];
+    let estimateRewards: any[] = [];
     let leftTime = results[2];
     setCountDown(formatMilliseconds(Number(leftTime)));
-    let array: any = String(rewardsSui).split(",");
+    let array: [] = [];
+    let init_sui_reward = 1000;
+    let total_scores = 0;
+    data.map((item) => {
+      total_scores += item.score;
+    });
+    data.map((item, index) => {
+      estimateRewards[index] = String(
+        ((item.score / total_scores) * init_sui_reward).toFixed(2)
+      );
+    });
+    console.log(estimateRewards);
     console.log(ranks);
     setData(ranks);
-    setRewards(array);
+    setRewards(estimateRewards);
   };
 
   return (
