@@ -1,17 +1,10 @@
-import {
-  Button,
-  HStack,
-  Link,
-  Spacer,
-  Text,
-  VStack,
-  useToast,
-} from "@chakra-ui/react";
+import { HStack, Link, Text, VStack } from "@chakra-ui/react";
 import { Character } from "../character/character";
 import { walletAddressEllipsis } from "@/utils/walletAddressEllipsis";
 import Image from "next/image";
 import useQueryRanks from "@/pages/api/useQueryRanks";
 import { ethos } from "ethos-connect";
+import { useToast } from "@chakra-ui/react";
 
 function get_role_name(data: string): string {
   if (data) {
@@ -44,9 +37,15 @@ export const LeaderboardItem = ({
   items: string[];
   estimateSui: String;
 }) => {
-  const { wallet } = ethos.useWallet();
-  const { claim_reward } = useQueryRanks();
   const toast = useToast();
+  const claim_reward = () =>
+    toast({
+      title: "My lord, You have ranked to the 1st in the world",
+      status: "warning",
+      duration: 5000,
+      isClosable: true,
+    });
+
   return (
     <HStack
       className="w-full flex py-8  text-black"
@@ -75,19 +74,29 @@ export const LeaderboardItem = ({
         <Image alt={"gold"} width={24} height={24} src={"/gold.png"}></Image>
         <Text>Score:{reward}</Text>
       </HStack>
-      {/* 
-      <HStack className="text-2xl mr-8">
+
+      <HStack className="text-2xl mr-1">
         <Image alt={"sui"} width={24} height={24} src={"/sui.png"}></Image>
         <Text>{Number(estimateSui) / 1_000_000_000} Sui</Text>
       </HStack>
-
-      {address == wallet?.address && (
-        <HStack className="text-2xl mr-8">
-          <button onClick={() => claim_reward(wallet, 1, items, toast)}>
+      {
+        <HStack className="text-2xl mr-1">
+          <button
+            onClick={() =>
+              toast({
+                title: "Sorry",
+                description:
+                  "The reward hasn't been unlocked, please wait for the end of rank activity",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+              })
+            }
+          >
             <h6>Claim</h6>
           </button>
         </HStack>
-      )} */}
+      }
     </HStack>
   );
 };
