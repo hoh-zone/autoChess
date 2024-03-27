@@ -137,16 +137,12 @@ const useQueryRanks = () => {
     ) {
       return "";
     }
-    console.log("result:", result);
     let source = result.results[0].returnValues[0][0];
-    console.log("rank_20 source:", source.shift());
     let resultStr = bytesArrayToString(new Uint8Array(source));
-    console.log("rank_20 rewards:", resultStr);
     return resultStr;
   }, []);
 
   const query_rank20 = useCallback(async () => {
-    console.log("query rank20");
     let provider;
     if (ISMAINNET) {
       provider = new JsonRpcProvider(mainnetConnection);
@@ -160,12 +156,10 @@ const useQueryRanks = () => {
       target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
-    console.log(1);
     const result = await provider.devInspectTransactionBlock({
       transactionBlock: tx,
       sender: SENDER,
     });
-    console.log(result);
     if (
       !result ||
       !result.results ||
@@ -262,13 +256,11 @@ const useQueryRanks = () => {
           showEvents: true,
         },
       });
-      console.log("response:", response);
       if (response.objectChanges) {
         const createObjectChange = response.objectChanges.find(
           (objectChange: any) => objectChange.type === "created"
         );
         if (!!createObjectChange && "objectId" in createObjectChange) {
-          console.log("objid", createObjectChange.objectId);
         }
       }
     },

@@ -57,8 +57,6 @@ export const Leaderboard: React.FC = () => {
         ((item.score / total_scores) * init_sui_reward).toFixed(2)
       );
     });
-    console.log("wes:", estimateRewards);
-    console.log(ranks);
     setData(ranks);
     setRewards(estimateRewards);
   };
