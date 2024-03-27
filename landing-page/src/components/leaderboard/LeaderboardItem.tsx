@@ -75,7 +75,7 @@ export const LeaderboardItem = ({
         <Image alt={"gold"} width={24} height={24} src={"/gold.png"}></Image>
         <Text>Score:{reward}</Text>
       </HStack>
-
+      {/* 
       <HStack className="text-2xl mr-8">
         <Image alt={"sui"} width={24} height={24} src={"/sui.png"}></Image>
         <Text>{Number(estimateSui) / 1_000_000_000} Sui</Text>
@@ -87,7 +87,7 @@ export const LeaderboardItem = ({
             <h6>Claim</h6>
           </button>
         </HStack>
-      )}
+      )} */}
     </HStack>
   );
 };
