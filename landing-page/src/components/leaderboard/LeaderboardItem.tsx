@@ -38,14 +38,6 @@ export const LeaderboardItem = ({
   estimateSui: String;
 }) => {
   const toast = useToast();
-  const claim_reward = () =>
-    toast({
-      title: "My lord, You have ranked to the 1st in the world",
-      status: "warning",
-      duration: 5000,
-      isClosable: true,
-    });
-
   return (
     <HStack
       className="w-full flex py-8  text-black"
