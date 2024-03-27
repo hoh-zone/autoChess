@@ -40,26 +40,24 @@ export const Leaderboard: React.FC = () => {
   const fetch = async () => {
     const results = await Promise.all([
       query_rank20(),
-      query_rank20_reward(),
       query_left_challenge_time(),
     ]);
     let ranks: any = results[0];
-    let rewardsSui = results[1];
     let estimateRewards: any[] = [];
-    let leftTime = results[2];
+    let leftTime = results[1];
     setCountDown(formatMilliseconds(Number(leftTime)));
     let array: [] = [];
     let init_sui_reward = 1000;
     let total_scores = 0;
-    data.map((item) => {
+    ranks.map((item: any) => {
       total_scores += item.score;
     });
-    data.map((item, index) => {
+    ranks.map((item: any, index: number) => {
       estimateRewards[index] = String(
         ((item.score / total_scores) * init_sui_reward).toFixed(2)
       );
     });
-    console.log(estimateRewards);
+    console.log("wes:", estimateRewards);
     console.log(ranks);
     setData(ranks);
     setRewards(estimateRewards);
