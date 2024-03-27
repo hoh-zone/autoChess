@@ -13,6 +13,7 @@ export interface GameNft {
     name:          string;
     refresh_price: string;
     arena:         boolean;
+    arena_checked: boolean;
 }
 
 export interface CardsPool {

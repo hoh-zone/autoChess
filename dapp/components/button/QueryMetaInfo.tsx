@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import { metaA } from "../../store/stages"
 import { ethos } from "ethos-connect"
 import { useAtom } from "jotai"
-import { CHESS_CHALLENGE_PACKAGE, ISMAINNET, META_GLOBAL } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE1, ISMAINNET, META_GLOBAL } from "../../lib/constants"
 import { JsonRpcProvider, TransactionBlock, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
 import { bytesArrayToU64 } from "./utils"
 
@@ -121,6 +121,7 @@ const useQueryMetaInfo = () => {
       } else {
         provider = new JsonRpcProvider(testnetConnection)
       }
+      console.log("addr", wallet.address)
       const results = await provider.getOwnedObjects({
         owner: wallet.address,
         filter: {
@@ -135,6 +136,7 @@ const useQueryMetaInfo = () => {
           showType: true
         }
       })
+      console.log("result", results)
       let data: any = results.data[0]?.data
       if (!data) {
         return ""

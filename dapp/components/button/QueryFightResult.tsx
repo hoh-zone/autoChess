@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
 
 import { ethos } from "ethos-connect"
-import { CHESS_CHALLENGE_PACKAGE, ISMAINNET, SENDER } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE1, CHESS_CHALLENGE_PACKAGE2, ISMAINNET, SENDER } from "../../lib/constants"
 import { sleep } from "../../utils/sleep"
 import { JsonRpcProvider, mainnetConnection, testnetConnection } from "@mysten/sui.js"
 

@@ -55,7 +55,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent maxWidth={500} className="rounded-[8px]" bg={"gray.500"} overflowY={"auto"} maxH={"50vh"}>
-          <ModalBody maxWidth={500}  className="!p-[10px] rounded-[8px]">
+          <ModalBody maxWidth={500} className="!p-[10px] rounded-[8px]">
             {nfts.length == 0 && <Text>no records</Text>}
             {nfts.length > 0 && (
               <Stack gap={4}>
@@ -75,7 +75,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                       }}
                     >
                       <Stack gap={2}>
-                        <p className="text-slate-800" style={{whiteSpace:"pre-wrap"}}>
+                        <p className="text-slate-800" style={{ whiteSpace: "pre-wrap" }}>
                           Name: {nft.name} {nft.arena ? "(Arena)" : ""}
                         </p>
                         <p className="text-slate-800">Mode: {!nft.arena ? "free" : "arena"}</p>
@@ -90,7 +90,8 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                         height={"unset"}
                         className="w-1/2 py-4 h-fit"
                         fontSize={"x-small"}
-                        style={{ backgroundColor: "yellow" }}
+                        isDisabled={nft.arena_checked}
+                        style={{ backgroundColor: nft.arena_checked ? "gray" : "yellow" }}
                         onMouseOver={() => {
                           showToast()
                         }}
@@ -103,8 +104,13 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                         }}
                       >
                         <VStack>
-                          <p>Redeem</p>
-                          <p>Sui</p>
+                          {!nft.arena_checked && (
+                            <>
+                              <p>Redeem</p>
+                              <p>Sui</p>
+                            </>
+                          )}
+                          {nft.arena_checked && <p>Checked</p>}
                         </VStack>
                       </Button>
                     )}

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, ROLE_GLOBAL, META_GLOBAL } from "../../lib/constants"
+import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, ROLE_GLOBAL, META_GLOBAL, CHESS_CHALLENGE_PACKAGE2 } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 
 type Props = {
   username: string
   is_arena: boolean
-  price: number,
+  price: number
   meta: any
 }
 
@@ -14,7 +14,7 @@ const useMintChess = () => {
   const { wallet } = ethos.useWallet()
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
   const toast = useToast()
-  
+
   const mint = useCallback(
     async ({ username, is_arena, price, meta }: Props) => {
       if (!wallet) return
@@ -27,7 +27,7 @@ const useMintChess = () => {
         let coin_vec = transactionBlock.makeMoveVec({ objects: [coins] })
         console.log(coin_vec)
         transactionBlock.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
+          target: `${CHESS_CHALLENGE_PACKAGE2}::${moveModule}::${method}`,
           arguments: [
             transactionBlock.pure(`${ROLE_GLOBAL}`),
             transactionBlock.pure(`${CHESS_GLOBAL}`),
@@ -39,7 +39,7 @@ const useMintChess = () => {
         })
       } else {
         transactionBlock.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
+          target: `${CHESS_CHALLENGE_PACKAGE2}::${moveModule}::${method}`,
           arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username)]
         })
       }

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { chessId, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
-import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL } from "../../lib/constants"
+import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALLENGE_PACKAGE2 } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
@@ -38,7 +38,7 @@ const useOperateAndMatch = () => {
       const tx = new TransactionBlock()
       const left_gold = money
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE}::chess::operate_and_battle`,
+        target: `${CHESS_CHALLENGE_PACKAGE2}::chess::operate_and_battle`,
         arguments: [
           tx.pure(`${CHESS_GLOBAL}`),
           tx.pure(`${ROLE_GLOBAL}`),
@@ -86,6 +86,7 @@ const useOperateAndMatch = () => {
         return event_json
       }
     } catch (error) {
+      console.log(error)
       if (String(error).indexOf("function: 9, instruction: 70") !== -1) {
         toast({
           title: "My lord, You have ranked to the 1st in the world",
@@ -93,8 +94,23 @@ const useOperateAndMatch = () => {
           duration: 5000,
           isClosable: true
         })
+        return false
       }
-      console.log(error)
+      if (String(error).indexOf("objects are invalid") !== -1) {
+        toast({
+          title: "Timeout, please try again",
+          status: "warning",
+          duration: 5000,
+          isClosable: true
+        })
+        return false
+      }
+      toast({
+        title: "error, please try again",
+        status: "warning",
+        duration: 5000,
+        isClosable: true
+      })
       return false
     }
   }

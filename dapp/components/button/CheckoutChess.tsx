@@ -4,8 +4,8 @@ import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 
 type Props = {
-  chess_id: string,
-  fun?: ()=>any
+  chess_id: string
+  fun?: () => any
 }
 
 const useCheckout = () => {
@@ -15,7 +15,7 @@ const useCheckout = () => {
   const checkout = useCallback(
     async ({ chess_id, fun }: Props) => {
       if (!wallet) return
-      let method = "check_out_arena"
+      let method = "check_out_arena_fee"
       let moveModule = "chess"
       try {
         const transactionBlock = new TransactionBlock()
