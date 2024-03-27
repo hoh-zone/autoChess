@@ -181,7 +181,6 @@ export function get_buy_price(char: CharacterFields | null): number {
 }
 
 export function get_sell_price(char: CharacterFields | null): number {
-  console.log("sell", char)
   if (!char) {
     return 0
   }
@@ -214,8 +213,6 @@ export function get_star_num(char: CharacterFields | null): number {
 }
 
 export function upgrade(char1: CharacterFields, char2: CharacterFields): CharacterFields {
-  console.log(char1)
-  console.log(char2)
   // 属性受角色战场永久buff效果影响，合成属性会高于基础值
   let level1 = char1.level
   let class1 = char1.class
@@ -260,6 +257,5 @@ export function upgrade(char1: CharacterFields, char2: CharacterFields): Charact
   res.hp = res.hp + life_buff
   res.max_hp = res.hp
   res.level = new_level
-  console.log("upgrade:", res)
   return res
 }

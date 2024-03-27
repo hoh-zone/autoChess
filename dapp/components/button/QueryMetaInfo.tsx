@@ -55,8 +55,6 @@ const useQueryMetaInfo = () => {
     if (!wallet) return
     try {
       const tx = new TransactionBlock()
-      console.log(name)
-      console.log(inviteMetaId)
       if (inviteMetaId > 0) {
         tx.moveCall({
           target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::register_invited_meta`,
@@ -76,7 +74,6 @@ const useQueryMetaInfo = () => {
           showEvents: true
         }
       })
-      console.log("response:", response)
       if (response.objectChanges) {
         const createObjectChange = response.objectChanges.find((objectChange: any) => objectChange.type === "created")
         if (!!createObjectChange && "objectId" in createObjectChange) {
@@ -105,7 +102,6 @@ const useQueryMetaInfo = () => {
       })
       const arr = new Uint8Array(result.results[0].returnValues[0][0])
       const num: number = bytesArrayToU64(Array.from(arr))
-      console.log("arr:", arr)
       return num
     } catch (error) {
       console.log("err", error)
@@ -160,7 +156,6 @@ const useQueryMetaInfo = () => {
       }
       let invited = await query_invited_num(meta.metaId)
       meta.invited_num = Number(invited)
-      console.log("setmeta:", meta)
       return meta
     } catch (error) {
       console.log("err", error)

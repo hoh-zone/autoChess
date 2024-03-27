@@ -25,14 +25,10 @@ const useOperateAndMatch = () => {
         vec.push(cha.class + "-" + cha.level + ":" + cha.attack + ":" + cha.max_hp)
       }
     }
-
-    console.log("operate: ", vec)
     return vec
   }
 
   const operate_submit = async (operations: string[], meta: any) => {
-    console.log("operations:", operations)
-    console.log("chess:", chess_id)
     if (!wallet) return
     try {
       const tx = new TransactionBlock()
@@ -60,7 +56,6 @@ const useOperateAndMatch = () => {
           showEvents: true
         }
       })
-      console.log("response:", response)
       if (response.objectChanges) {
         const createObjectChange = response.objectChanges.find((objectChange) => objectChange.type === "created")
         if (!!createObjectChange && "objectId" in createObjectChange) {

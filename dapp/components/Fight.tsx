@@ -28,7 +28,6 @@ export const Fight = () => {
 
   // for test
   const init_chars = () => {
-    console.log("初始化角色")
     let chars_names = ["archer3", "shinobi3", "ani1", "ani3"]
     let enemy_names = ["priest3", "priest3", "priest2", "archer2"]
     let init_chars = get_chars(chars_names)

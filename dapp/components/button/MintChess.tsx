@@ -18,14 +18,12 @@ const useMintChess = () => {
   const mint = useCallback(
     async ({ username, is_arena, price, meta }: Props) => {
       if (!wallet) return
-      console.log("meta1", meta)
       let method = is_arena ? "mint_arena_chess" : "mint_chess"
       let moveModule = "chess"
       const transactionBlock = new TransactionBlock()
       if (is_arena) {
         let coins = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price * 1_000_000_000)])
         let coin_vec = transactionBlock.makeMoveVec({ objects: [coins] })
-        console.log(coin_vec)
         transactionBlock.moveCall({
           target: `${CHESS_CHALLENGE_PACKAGE2}::${moveModule}::${method}`,
           arguments: [

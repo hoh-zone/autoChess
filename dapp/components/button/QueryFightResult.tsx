@@ -100,7 +100,6 @@ const useQueryFight = () => {
               let win = Number(json["v1_win"])
               let lose = Number(json["v1_lose"])
               if (win <= last_win && lose <= last_lose) {
-                console.log("查询失败，触发下次查询")
                 await sleep(500)
                 break
               }
