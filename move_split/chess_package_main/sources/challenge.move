@@ -221,11 +221,10 @@ module chess_package_main::challenge {
         assert!(vector::length(&global.rank_20) > rank, ERR_EXCEED_VEC_LENGTH);
         let tmp_lineup = vector::borrow(&global.rank_20, rank);
         let gold_cost = lineup::get_gold_cost(tmp_lineup);
-        let prop = (gold_cost / AMOUNT_DECIMAL) * get_base_weight_by_rank(rank) / total_scores;
-        if (total_amount * prop > 100_000_000) {
-            total_amount * prop - 100_000_000
+        if (total_amount * ((gold_cost / AMOUNT_DECIMAL) * get_base_weight_by_rank(rank) / total_scores) > 100_000_000) {
+            total_amount * ((gold_cost / AMOUNT_DECIMAL) * get_base_weight_by_rank(rank) / total_scores) - 100_000_000
         } else {
-            total_amount * prop
+            total_amount * (gold_cost / AMOUNT_DECIMAL) * get_base_weight_by_rank(rank) / total_scores
         }
     }
 
