@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "D820EF1234F0DF644E6F79E3FF896274180B9B115E043121100791E9C6F4C4A4"
+manifest_digest = "FD357D77C0D32ED3CAD0BD62DE4F705601C0CBB2EFB63CC8C819369E1F01720F"
 deps_digest = "CAFAD8A7CF51067FB4358215BECB86BD100DD64E57C2AC8A7AE7D74B688F5965"
 
 dependencies = [
@@ -80,8 +80,3 @@ dependencies = [
   { name = "role_package" },
   { name = "util_package" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.20.0"
-edition = "legacy"
-flavor = "sui"
