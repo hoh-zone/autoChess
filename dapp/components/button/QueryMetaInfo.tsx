@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import { metaA } from "../../store/stages"
 import { ethos } from "ethos-connect"
 import { useAtom } from "jotai"
-import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE1, ISMAINNET, META_GLOBAL } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE3, ISMAINNET, META_GLOBAL } from "../../lib/constants"
 import { JsonRpcProvider, TransactionBlock, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
 import { bytesArrayToU64 } from "./utils"
 
@@ -56,13 +56,14 @@ const useQueryMetaInfo = () => {
     try {
       const tx = new TransactionBlock()
       if (inviteMetaId > 0) {
+        console.log(inviteMetaId)
         tx.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::register_invited_meta`,
+          target: `${CHESS_CHALLENGE_PACKAGE3}::metaIdentity::register_invited_meta`,
           arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(inviteMetaId), tx.pure(name), tx.pure(avatar_name)]
         })
       } else {
         tx.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::mint_meta`,
+          target: `${CHESS_CHALLENGE_PACKAGE3}::metaIdentity::mint_meta`,
           arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(name), tx.pure(avatar_name)]
         })
       }
