@@ -94,7 +94,7 @@ const useQueryMetaInfo = () => {
       if (!wallet) return
       const tx = new TransactionBlock()
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
+        target: `${CHESS_CHALLENGE_PACKAGE3}::${moveModule}::${method}`,
         arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(metaId)]
       })
       const result: any = await wallet.client.devInspectTransactionBlock({
