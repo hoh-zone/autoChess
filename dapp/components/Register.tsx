@@ -5,8 +5,10 @@ import { useAtom } from "jotai"
 import { getSimplifidyWalletAddr } from "../utils/TextUtils"
 import useQueryMetaInfo from "./button/QueryMetaInfo"
 import { useToast } from "@chakra-ui/react"
+import { ethos } from "ethos-connect"
 
 const ContinueGame = (props: { isLoading: boolean; address: any }) => {
+  const { wallet } = ethos.useWallet()
   const [inputName, setInputName] = useState("")
   const [ava, setAva] = useState("avatar_ani")
   const [avaIndex, setAvaIndex] = useState(0)

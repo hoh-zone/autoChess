@@ -6,6 +6,9 @@ export const currentNftId = atom<string>("")
 // Metaidentity
 export const metaA = atom<any>("")
 
+// fight result sync
+export const fightResA = atom<boolean>(true)
+
 // Game NFT
 export const moneyA = atom<number>(50)
 export const winA = atom<number>(99)

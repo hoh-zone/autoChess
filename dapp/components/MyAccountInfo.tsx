@@ -68,7 +68,7 @@ const ContinueGame = (props: { metaInfo: any }) => {
               <div style={{ height: "82px" }}>
                 <Img className="absolute top-0 left-0" src={assets?.account_title_icon} style={{ width: "100%" }} />
                 <div className="absolute left-0 top-0 text-center" style={{ width: "100%", lineHeight: "82px" }}>
-                  Account Id: 0x000{props.metaInfo.metaId}
+                  Account Id: {props.metaInfo.metaId}
                 </div>
               </div>
               <div className="flex justify-between !p-[20px]">

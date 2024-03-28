@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { chessId, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
+import { chessId, fightResA, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
 import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALLENGE_PACKAGE2 } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
 
 const useOperateAndMatch = () => {
+  const [fightRes, setFightRes] = useAtom(fightResA)
   const { wallet } = ethos.useWallet()
   const [meta, _setMeta] = useAtom(metaA)
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
@@ -72,11 +73,12 @@ const useOperateAndMatch = () => {
         let event_json = event.parsedJson as any
         let res = event_json["res"]
         if (res == 1) {
-          console.log("you win")
+          setFightRes(true)
         } else if (res == 2) {
-          console.log("you lose")
+          setFightRes(false)
         } else {
-          console.log("even")
+          // even
+          setFightRes(true)
         }
         return event_json
       }

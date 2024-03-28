@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom,fightResultModalVisibleAtom } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom,fightResultModalVisibleAtom, fightResA } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
@@ -9,6 +9,7 @@ import { sleep } from "../utils/sleep";
 import { get_max_sp } from "../components/character/rawData";
 
 export const useFight = () => {
+    const [fightRes, setFightRes] = useAtom(fightResA)
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
     const [chars, setChars] = useAtom(slotCharacter);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
@@ -531,7 +532,8 @@ export const useFight = () => {
             }
         }
 
-        if (some(enemyChars, Boolean)) {
+        // 这里改成合约查询
+        if (!fightRes) {
             setFightResult("you lose");
             animationEnd = Date.now() + 2000;
             lose_effect();
