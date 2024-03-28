@@ -47,7 +47,7 @@ export const Leaderboard: React.FC = () => {
     let leftTime = results[1];
     setCountDown(formatMilliseconds(Number(leftTime)));
     let array: [] = [];
-    let init_sui_reward = 1000;
+    let init_sui_reward = 2000;
     let total_scores = 0;
     ranks.map((item: any) => {
       total_scores += item.score;
