@@ -1,4 +1,4 @@
-import { HStack, Link, Text, VStack } from "@chakra-ui/react";
+import { Button, HStack, Link, Text, VStack } from "@chakra-ui/react";
 import { Character } from "../character/character";
 import { walletAddressEllipsis } from "@/utils/walletAddressEllipsis";
 import Image from "next/image";
@@ -73,7 +73,7 @@ export const LeaderboardItem = ({
       </HStack>
       {
         <HStack className="text-2xl mr-1">
-          <button
+          <Button
             onClick={() =>
               toast({
                 title: "Sorry",
@@ -85,8 +85,8 @@ export const LeaderboardItem = ({
               })
             }
           >
-            <h6>Claim</h6>
-          </button>
+            <h6>Claim Rewards</h6>
+          </Button>
         </HStack>
       }
     </HStack>

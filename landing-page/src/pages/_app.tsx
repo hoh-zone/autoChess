@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { ChakraProvider } from "@chakra-ui/react";
 import { Chain, EthosConnectProvider } from "ethos-connect";
 import type { AppProps } from "next/app";
 import Image from "next/image";
@@ -25,7 +26,9 @@ export default function App({ Component, pageProps }: AppProps) {
       }
       connectMessage=" "
     >
-      <Component {...pageProps} />
+      <ChakraProvider>
+        <Component {...pageProps} />
+      </ChakraProvider>
     </EthosConnectProvider>
   );
 }
