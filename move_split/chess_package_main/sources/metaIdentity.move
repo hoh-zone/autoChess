@@ -122,7 +122,6 @@ module chess_package_main::metaIdentity {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
-        table::add(&mut global.wallet_meta_map, sender, sender);
         let metaId = INIT_META_ID_INDEX + global.total_players;
         let uid = object::new(ctx);
         let meta_addr = object::uid_to_address(&uid);
