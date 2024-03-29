@@ -1,6 +1,6 @@
-import { Text, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Center, HStack, Stack, VStack, useToast } from "@chakra-ui/react"
+import { Text, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Center, HStack, Stack, VStack, useToast, Checkbox, CheckboxGroup } from "@chakra-ui/react"
 import useQueryChesses from "./button/QueryAllChesses"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { useSyncGameNFT } from "../hooks/useSyncGameNFT"
 import { useAtom } from "jotai"
 import { operationsA, stageAtom } from "../store/stages"
@@ -17,6 +17,10 @@ const ContinueGame = (props: { isLoading: boolean }) => {
   const [operations, setOperations] = useAtom(operationsA)
   const { checkout } = useCheckout()
   const [isLoading, setIsLoading] = useState(false)
+  const [check_Items, set_Check_Items] = useState([])
+  const chckFn = (values: any) => {
+    set_Check_Items(values)
+  }
   let toastId: any = null
   const fetch = async () => {
     setIsLoading(true)
@@ -59,63 +63,134 @@ const ContinueGame = (props: { isLoading: boolean }) => {
             {nfts.length == 0 && <Text>no records</Text>}
             {nfts.length > 0 && (
               <Stack gap={4}>
-                {nfts.map((nft, index) => (
-                  <HStack className="w-full" key={index}>
-                    <Button
-                      key={nft.id.id}
-                      height={"unset"}
-                      className="w-full bg-slate-200 py-4 h-fit"
-                      fontSize={"x-small"}
-                      isDisabled={nft.lose == 3 || nft.challenge_lose == 3}
-                      onClick={async () => {
-                        syncGameNFT(nft)
-                        setStage("shop")
-                        setOperations([])
-                        // todo: operations.push(chars.toString());
-                      }}
-                    >
-                      <Stack gap={2}>
-                        <p className="text-slate-800" style={{ whiteSpace: "pre-wrap" }}>
-                          Name: {nft.name} {nft.arena ? "(Arena)" : ""}
-                        </p>
-                        <p className="text-slate-800">Mode: {!nft.arena ? "free" : "arena"}</p>
-                        <p className="text-slate-800">
-                          {nft.win} win, {nft.lose} lose
-                        </p>
-                      </Stack>
-                      {/* {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose} */}
-                    </Button>
-                    {nft.arena && (
-                      <Button
-                        height={"unset"}
-                        className="w-1/2 py-4 h-fit"
-                        fontSize={"x-small"}
-                        isDisabled={nft.arena_checked}
-                        style={{ backgroundColor: nft.arena_checked ? "gray" : "yellow" }}
-                        onMouseOver={() => {
-                          showToast()
-                        }}
-                        onMouseLeave={() => {
-                          closeToast()
-                        }}
-                        onClick={() => {
-                          checkout({ chess_id: nft.id.id, fun: fetch })
-                          onClose()
-                        }}
-                      >
-                        <VStack>
-                          {!nft.arena_checked && (
-                            <>
-                              <p>Redeem</p>
-                              <p>Sui</p>
-                            </>
-                          )}
-                          {nft.arena_checked && <p>Checked</p>}
-                        </VStack>
-                      </Button>
-                    )}
+                <>
+                  <HStack>
+                    <Text>Filters: </Text>
+                    <CheckboxGroup colorScheme="pink" defaultValue={["opt1"]} value={check_Items} onChange={chckFn}>
+                      <Checkbox value="opt1" colorScheme="blue">
+                        Include Checked
+                      </Checkbox>
+                    </CheckboxGroup>
                   </HStack>
-                ))}
+                  {nfts.map((nft, index) => {
+                    if (check_Items.length == 0 && (!nft.arena || !nft.arena_checked)) {
+                      return (
+                        <HStack className="w-full" key={index}>
+                          <Button
+                            key={nft.id.id}
+                            height={"unset"}
+                            className="w-full bg-slate-200 py-4 h-fit"
+                            fontSize={"x-small"}
+                            isDisabled={nft.lose == 3 || nft.challenge_lose == 3}
+                            onClick={async () => {
+                              syncGameNFT(nft)
+                              setStage("shop")
+                              setOperations([])
+                            }}
+                          >
+                            <Stack gap={2}>
+                              <p className="text-slate-800" style={{ whiteSpace: "pre-wrap" }}>
+                                Name: {nft.name} {nft.arena ? "(Arena)" : ""}
+                              </p>
+                              <p className="text-slate-800">Mode: {!nft.arena ? "free" : "arena"}</p>
+                              <p className="text-slate-800">
+                                {nft.win} win, {nft.lose} lose
+                              </p>
+                            </Stack>
+                            {/* {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose} */}
+                          </Button>
+                          {nft.arena && (
+                            <Button
+                              height={"unset"}
+                              className="w-1/2 py-4 h-fit"
+                              fontSize={"x-small"}
+                              isDisabled={nft.arena_checked}
+                              style={{ backgroundColor: nft.arena_checked ? "gray" : "yellow" }}
+                              onMouseOver={() => {
+                                showToast()
+                              }}
+                              onMouseLeave={() => {
+                                closeToast()
+                              }}
+                              onClick={() => {
+                                checkout({ chess_id: nft.id.id, fun: fetch })
+                                onClose()
+                              }}
+                            >
+                              <VStack>
+                                {!nft.arena_checked && (
+                                  <>
+                                    <p>Redeem</p>
+                                    <p>Sui</p>
+                                  </>
+                                )}
+                                {nft.arena_checked && <p>Checked</p>}
+                              </VStack>
+                            </Button>
+                          )}
+                        </HStack>
+                      )
+                    } else if (check_Items.length == 1) {
+                      return (
+                        <HStack className="w-full" key={index}>
+                          <Button
+                            key={nft.id.id}
+                            height={"unset"}
+                            className="w-full bg-slate-200 py-4 h-fit"
+                            fontSize={"x-small"}
+                            isDisabled={nft.lose == 3 || nft.challenge_lose == 3}
+                            onClick={async () => {
+                              syncGameNFT(nft)
+                              setStage("shop")
+                              setOperations([])
+                              // todo: operations.push(chars.toString());
+                            }}
+                          >
+                            <Stack gap={2}>
+                              <p className="text-slate-800" style={{ whiteSpace: "pre-wrap" }}>
+                                Name: {nft.name} {nft.arena ? "(Arena)" : ""}
+                              </p>
+                              <p className="text-slate-800">Mode: {!nft.arena ? "free" : "arena"}</p>
+                              <p className="text-slate-800">
+                                {nft.win} win, {nft.lose} lose
+                              </p>
+                            </Stack>
+                            {/* {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose} */}
+                          </Button>
+                          {nft.arena && (
+                            <Button
+                              height={"unset"}
+                              className="w-1/2 py-4 h-fit"
+                              fontSize={"x-small"}
+                              isDisabled={nft.arena_checked}
+                              style={{ backgroundColor: nft.arena_checked ? "gray" : "yellow" }}
+                              onMouseOver={() => {
+                                showToast()
+                              }}
+                              onMouseLeave={() => {
+                                closeToast()
+                              }}
+                              onClick={() => {
+                                checkout({ chess_id: nft.id.id, fun: fetch })
+                                onClose()
+                              }}
+                            >
+                              <VStack>
+                                {!nft.arena_checked && (
+                                  <>
+                                    <p>Redeem</p>
+                                    <p>Sui</p>
+                                  </>
+                                )}
+                                {nft.arena_checked && <p>Checked</p>}
+                              </VStack>
+                            </Button>
+                          )}
+                        </HStack>
+                      )
+                    }
+                  })}
+                </>
               </Stack>
             )}
           </ModalBody>

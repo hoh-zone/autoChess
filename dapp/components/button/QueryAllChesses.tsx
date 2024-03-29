@@ -10,12 +10,6 @@ const useQueryChesses = () => {
   const { wallet } = ethos.useWallet()
   const [nfts, setNfts] = useState<GameNft[]>([])
   const syncGameNFT = useSyncGameNFT()
-  const record_nfts = (result: PaginatedObjectsResponse) => {
-    let games = result.data.map((d) => (d.data?.content as any)?.fields).filter(Boolean) as GameNft[]
-    setNfts(games)
-    return games
-  }
-
   const update_chess = useCallback(
     async (chess_id: string) => {
       if (!wallet) return
@@ -39,20 +33,34 @@ const useQueryChesses = () => {
     } else {
       provider = new JsonRpcProvider(testnetConnection)
     }
+    let gamesList: GameNft[] = []
     if (!wallet) return
-    const result = await provider.getOwnedObjects({
-      owner: wallet.address,
-      options: {
-        showContent: true
-      },
-      filter: {
-        MoveModule: {
-          package: CHESS_CHALLENGE_PACKAGE,
-          module: "chess"
+    let hasNext = true
+    let cursor = undefined
+    while (hasNext) {
+      const result = await provider.getOwnedObjects({
+        owner: wallet.address,
+        options: {
+          showContent: true
+        },
+        filter: {
+          MoveModule: {
+            package: CHESS_CHALLENGE_PACKAGE,
+            module: "chess"
+          }
+        },
+        cursor: cursor
+      })
+      hasNext = result.hasNextPage
+      cursor = result.nextCursor
+      result.data.map((item: any) => {
+        if ((item.data?.content as any)?.fields) {
+          gamesList.push((item.data?.content as any)?.fields)
         }
-      }
-    })
-    return record_nfts(result)
+      })
+    }
+    setNfts(gamesList)
+    return gamesList
   }, [wallet])
   return { nfts, query_chess: update_chess, query_chesses }
 }
