@@ -535,11 +535,13 @@ export const useFight = () => {
         // 这里改成合约查询
         if (!fightRes) {
             setFightResult("you lose");
+            console.log("you lose2")
             animationEnd = Date.now() + 2000;
             lose_effect();
             await sleep(2000);
         } else {
             setFightResult("you win");
+            console.log("you win2")
             for (let i = 0; i < 5; ++i) {
                 win_effect();
             }

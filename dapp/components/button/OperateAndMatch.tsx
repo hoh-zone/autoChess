@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { chessId, fightResA, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
-import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALLENGE_PACKAGE2 } from "../../lib/constants"
+import { CHALLENGE_GLOBAL, CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALLENGE_PACKAGE2, CHESS_CHALLENGE_PACKAGE3, CHESS_CHALLENGE_PACKAGE4 } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
@@ -35,7 +35,7 @@ const useOperateAndMatch = () => {
       const tx = new TransactionBlock()
       const left_gold = money
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE2}::chess::operate_and_battle`,
+        target: `${CHESS_CHALLENGE_PACKAGE4}::chess::operate_and_battle`,
         arguments: [
           tx.pure(`${CHESS_GLOBAL}`),
           tx.pure(`${ROLE_GLOBAL}`),
@@ -67,18 +67,27 @@ const useOperateAndMatch = () => {
       if (response.events != null) {
         let event = response.events[0]
         if (event == null) {
-          console.log("event 异常", event)
+          toast({
+            title: "Network error, please refresh and try again",
+            status: "error",
+            duration: 5000,
+            isClosable: true
+          })
           return
         }
         let event_json = event.parsedJson as any
         let res = event_json["res"]
+        console.log("fight res", res)
         if (res == 1) {
           setFightRes(true)
+          console.log("you win")
         } else if (res == 2) {
           setFightRes(false)
+          console.log("you lose")
         } else {
           // even
           setFightRes(true)
+          console.log("you win")
         }
         return event_json
       }
@@ -95,7 +104,7 @@ const useOperateAndMatch = () => {
       }
       if (String(error).indexOf("objects are invalid") !== -1) {
         toast({
-          title: "Timeout, please try again",
+          title: "Timeout, please refresh and try again",
           status: "warning",
           duration: 5000,
           isClosable: true
