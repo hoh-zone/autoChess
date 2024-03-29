@@ -409,19 +409,22 @@ module chess_package_main::chess {
         let challenge_win = chess.challenge_win;
         let challenge_lose = chess.challenge_lose;
         let res;
+        let res_num;
         if (fight::some_alive(&enemy_first_role, &enemy_roles)) {
             if (is_challenge) {
                 challenge_lose = challenge_lose + 1;
             } else {
                 lose = lose + 1;
             };
-            res = false
+            res_num = 2;
+            res = false;
         } else {
             if (is_challenge) {
                 challenge_win = challenge_win + 1;
             } else {
                 win = win + 1;
             };
+            res_num = 1;
             res = true;
         };
         event::emit(FightEvent {
@@ -434,7 +437,7 @@ module chess_package_main::chess {
             v1_challenge_lose: challenge_lose,
             v2_name: lineup::get_name(enemy_lineup),
             v2_lineup:*enemy_lineup,
-            res: 2
+            res: res_num
         });
         res
     }
