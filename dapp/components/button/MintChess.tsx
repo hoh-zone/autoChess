@@ -38,7 +38,7 @@ const useMintChess = () => {
         })
       } else {
         transactionBlock.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
+          target: `${CHESS_CHALLENGE_PACKAGE5}::${moveModule}::${method}`,
           arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username)]
         })
       }
