@@ -130,6 +130,14 @@ module chess_package_main::metaIdentity {
         balance::join(&mut global.balance_SUI, balance);
     }
 
+    #[lint_allow(self_transfer)]
+    public fun airdrop_split(amount:u64, global: &mut RewardsGlobal, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NOT_PERMISSION);
+        let sui_balance = balance::split(&mut global.balance_SUI, amount);
+        let sui = coin::from_balance(sui_balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
     public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, avatar_name: string::String, ctx:&mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
@@ -339,7 +347,7 @@ module chess_package_main::metaIdentity {
 
         // record num
         if (!table::contains(&rewardsGlobal.claimed_rewards_num_map, metaId)) {
-            table::add(&mut rewardsGlobal.claimed_rewards_num_map, metaId, diff_num);
+            table::add(&mut rewardsGlobal.claimed_rewards_num_map, metaId, invited_num);
         } else {
             table::remove(&mut rewardsGlobal.claimed_rewards_num_map, metaId);
             table::add(&mut rewardsGlobal.claimed_rewards_num_map, metaId, invited_num);

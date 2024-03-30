@@ -269,6 +269,7 @@ module chess_package_main::chess {
             coin::split<SUI>(&mut merged_coin, left_value, ctx)
         );
         balance::join(&mut global.balance_SUI, balance);
+
         let balance_for_invite = coin::into_balance<SUI>(
             coin::split<SUI>(&mut merged_coin, split_value, ctx)
         );
