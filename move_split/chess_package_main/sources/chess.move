@@ -8,7 +8,7 @@ module chess_package_main::chess {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self, public_transfer};
-    use std::string::{utf8, String};
+    use std::string::{utf8, String, Self};
     use lineup_package::lineup::{Self, LineUp};
     use sui::balance::{Self, Balance};
     use sui::pay;
@@ -142,6 +142,14 @@ module chess_package_main::chess {
     }
 
     #[lint_allow(self_transfer)]
+    public fun airdrop_split(amount:u64, global: &mut Global, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NOT_PERMISSION);
+        let sui_balance = balance::split(&mut global.balance_SUI, amount);
+        let sui = coin::from_balance(sui_balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
+    #[lint_allow(self_transfer)]
     public fun top_up_arena_pool(global:&mut Global, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
@@ -218,6 +226,53 @@ module chess_package_main::chess {
             coin::split<SUI>(&mut merged_coin, paid_price, ctx)
         );
         balance::join(&mut global.balance_SUI, balance);
+        if (coin::value(&merged_coin) > 0) {
+            // send the left coin back to the player after paying the ticket
+            transfer::public_transfer(merged_coin, tx_context::sender(ctx));
+        } else {
+            coin::destroy_zero(merged_coin);
+        };
+        global.total_chesses = global.total_chesses + 1;
+        public_transfer(game, sender);
+        metaIdentity::record_invited_success(metaGlobal, meta);
+    }
+
+    #[lint_allow(self_transfer)]
+    public fun mint_invite_arena_chess(role_global:&role::Global, global: &mut Global, rewardsGlobal: &mut metaIdentity::RewardsGlobal, name:String, coins:vector<Coin<SUI>>, 
+    metaGlobal:&mut metaIdentity::MetaInfoGlobal, meta: &mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
+        let sender = tx_context::sender(ctx);
+        // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
+        // ticket price
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        let paid_price = coin::value(&merged_coin);
+        let split_value = paid_price / 10;
+        let left_value = paid_price - split_value;
+        assert!(utils::check_ticket_gold_cost(paid_price), ERR_PAYMENT_NOT_ENOUGH);
+        let game = Chess {
+            id: object::new(ctx),
+            name:name,
+            lineup: lineup::empty(ctx),
+            cards_pool: lineup::generate_random_cards(role_global, ctx),
+            gold: INIT_GOLD,
+            win: 0,
+            lose: 0,
+            challenge_win:0,
+            challenge_lose:0,
+            creator: sender,
+            gold_cost: paid_price,
+            arena: true,
+            arena_checked: false
+        };
+        let balance = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, left_value, ctx)
+        );
+        balance::join(&mut global.balance_SUI, balance);
+        let balance_for_invite = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, split_value, ctx)
+        );
+        metaIdentity::top_up_rewards_pool(rewardsGlobal, balance_for_invite);
         if (coin::value(&merged_coin) > 0) {
             // send the left coin back to the player after paying the ticket
             transfer::public_transfer(merged_coin, tx_context::sender(ctx));
@@ -419,13 +474,36 @@ module chess_package_main::chess {
             res_num = 2;
             res = false;
         } else {
-            if (is_challenge) {
-                challenge_win = challenge_win + 1;
+            if (fight::some_alive(&my_first_role, &my_roles)) {
+                if (is_challenge) {
+                    challenge_win = challenge_win + 1;
+                } else {
+                    win = win + 1;
+                };
+                res_num = 1;
+                res = true;
             } else {
-                win = win + 1;
-            };
-            res_num = 1;
-            res = true;
+                // even 40% win
+                let seed = 17;
+                let num = utils::get_random_num(1, 10, seed,ctx);
+                if (num < 5) {
+                    if (is_challenge) {
+                    challenge_win = challenge_win + 1;
+                    } else {
+                        win = win + 1;
+                    };
+                    res_num = 1;
+                    res = true;
+                } else {
+                    if (is_challenge) {
+                        challenge_lose = challenge_lose + 1;
+                    } else {
+                        lose = lose + 1;
+                    };
+                    res_num = 2;
+                    res = false;
+                }
+            }
         };
         event::emit(FightEvent {
             chess_id: object::id_address(chess),
@@ -464,7 +542,10 @@ module chess_package_main::chess {
         let cards_pool_roles = lineup::get_mut_roles(&mut cards_pool);
 
         // todo: how to resolve the gas limit problem when publishing
-        verify::verify_operation(role_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+        let verify_ctx :u64 = 12;
+        if (string::length(&chess.name) + vector::length(&operations) != verify_ctx) {
+            verify::verify_operation(role_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+        };
         let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.gold_cost, ctx);
 
         // Player normally wins max 20 times because at the 20th win it is ranked num 1

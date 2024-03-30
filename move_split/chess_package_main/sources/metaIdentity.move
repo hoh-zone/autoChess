@@ -5,7 +5,11 @@ module chess_package_main::metaIdentity {
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self};
     use sui::table::{Self};
+    use sui::balance::{Self, Balance};
     use std::vector::{Self};
+    use sui::sui::SUI;
+    use sui::coin::{Self};
+
     friend chess_package_main::chess;
     friend chess_package_main::challenge;
     
@@ -18,7 +22,15 @@ module chess_package_main::metaIdentity {
     const EXP_LEVEL3:u64 = 80;
     const EXP_LEVEL4:u64 = 100;
     const EXP_LEVEL5:u64 = 200;
+    const EXP_LEVEL6:u64 = 300;
+    const EXP_LEVEL7:u64 = 400;
+    const EXP_LEVEL8:u64 = 500;
+    const EXP_LEVEL9:u64 = 600;
+    const EXP_LEVEL10:u64 = 1000;
+    const AMOUNT_DECIMAL:u64 = 1_000_000_000;
+
     const INIT_META_ID_INDEX:u64 = 10000;
+    const ERR_NOT_PERMISSION:u64 = 0x01;
     const CURRENT_VERSION:u64 = 1;
 
     struct MetaIdentity has key {
@@ -44,6 +56,21 @@ module chess_package_main::metaIdentity {
         inviterMetaId: u64
     }
 
+    struct RewardsGlobal has key {
+        id:UID,
+        creator: address,
+        balance_SUI: Balance<SUI>,
+
+        // metaId -> claimed num(in people) for sui rewards
+        claimed_rewards_num_map: table::Table<u64, u64>,
+
+        // metaId -> rebateLevel
+        // not in table: 2%, 1: 3%, 2:4% , 3:5%
+        rebate_level: table::Table<u64, u64>,
+        version: u64,
+        manager: address,
+    }
+
     struct MetaInfoGlobal has key {
         id:UID,
         creator: address,
@@ -62,7 +89,7 @@ module chess_package_main::metaIdentity {
     public fun init_for_test(ctx: &mut TxContext) {
         let global = MetaInfoGlobal {
             id: object::new(ctx),
-            creator:@admin,
+            creator: @admin,
             total_players: 0,
             wallet_meta_map:table::new<address, address>(ctx),
             invited_meta_map:linked_table::new<u64, vector<address>>(ctx),
@@ -84,6 +111,23 @@ module chess_package_main::metaIdentity {
             manager: @admin
         };
         transfer::share_object(global);
+    }
+
+    public fun init_rewards_global(ctx: &mut TxContext) {
+        let global = RewardsGlobal {
+            id: object::new(ctx),
+            creator: @admin,
+            balance_SUI: balance::zero(),
+            claimed_rewards_num_map: table::new<u64, u64>(ctx),
+            rebate_level: table::new<u64, u64>(ctx),
+            version: CURRENT_VERSION,
+            manager: @admin
+        };
+        transfer::share_object(global);
+    }
+
+    public fun top_up_rewards_pool(global:&mut RewardsGlobal, balance:Balance<SUI>) {
+        balance::join(&mut global.balance_SUI, balance);
     }
 
     public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, avatar_name: string::String, ctx:&mut TxContext) {
@@ -216,6 +260,21 @@ module chess_package_main::metaIdentity {
         } else if (current_level == 4 && current_exp >= EXP_LEVEL5) {
             level_up(meta);
             meta.exp = current_exp - EXP_LEVEL5;
+        } else if (current_level == 5 && current_exp >= EXP_LEVEL6) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL6;
+        } else if (current_level == 6 && current_exp >= EXP_LEVEL7) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL7;
+        } else if (current_level == 7 && current_exp >= EXP_LEVEL8) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL8;
+        } else if (current_level == 8 && current_exp >= EXP_LEVEL9) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL9;
+        } else if (current_level == 9 && current_exp >= EXP_LEVEL10) {
+            level_up(meta);
+            meta.exp = current_exp - EXP_LEVEL10;
         } else {
             meta.exp = current_exp;
         }
@@ -238,6 +297,63 @@ module chess_package_main::metaIdentity {
         if (linked_table::contains(&global.invited_meta_map, metaId)) {
             let addr_vec = linked_table::borrow(&global.invited_meta_map, metaId);
             vector::length(addr_vec)
+        } else {
+            0
+        }
+    }
+
+    #[lint_allow(self_transfer)]
+    public fun claim_invite_rewards(global:&MetaInfoGlobal, rewardsGlobal:&mut RewardsGlobal, meta: &mut MetaIdentity, ctx:&mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
+        assert!(rewardsGlobal.version == CURRENT_VERSION, ERR_INVALID_VERSION);
+        let metaId = meta.metaId;
+        let invited_num = query_invited_num(global, metaId);
+        let claimed_num;
+        if (!table::contains(&rewardsGlobal.claimed_rewards_num_map, metaId)) {
+            claimed_num = 0;
+        } else {
+            claimed_num = *table::borrow(&rewardsGlobal.claimed_rewards_num_map, metaId);
+        };
+        assert!(invited_num > claimed_num, ERR_ALREADY_CLAMIED);
+        let diff_num = invited_num - claimed_num;
+
+        // everyone can gain 2% rewards
+        let amount;
+        if (table::contains(&rewardsGlobal.rebate_level, metaId)) {
+            let level = *table::borrow(&rewardsGlobal.rebate_level, metaId);
+            if (level == 1) {
+                amount = diff_num * AMOUNT_DECIMAL / 33;
+            } else if (level == 2) {
+                amount = diff_num * AMOUNT_DECIMAL / 25;
+            } else if (level == 3) {
+                amount = diff_num * AMOUNT_DECIMAL / 20;
+            } else {
+                amount = diff_num * AMOUNT_DECIMAL / 50;
+            }
+        } else {
+            amount = diff_num * AMOUNT_DECIMAL / 50;
+        };
+        let sui_rewards = balance::split(&mut rewardsGlobal.balance_SUI, amount);
+        let sui = coin::from_balance(sui_rewards, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+
+        // record num
+        if (!table::contains(&rewardsGlobal.claimed_rewards_num_map, metaId)) {
+            table::add(&mut rewardsGlobal.claimed_rewards_num_map, metaId, diff_num);
+        } else {
+            table::remove(&mut rewardsGlobal.claimed_rewards_num_map, metaId);
+            table::add(&mut rewardsGlobal.claimed_rewards_num_map, metaId, invited_num);
+        };
+    }
+
+    public fun set_rebate_level(rewardsGlobal: &mut RewardsGlobal, metaId: u64, level: u64, ctx:&mut TxContext) {
+        assert!(tx_context::sender(ctx) == rewardsGlobal.manager, ERR_NOT_PERMISSION);
+        table::add(&mut rewardsGlobal.rebate_level, metaId, level);
+    }
+
+    public fun query_rebate_level(rewardsGlobal: &mut RewardsGlobal, metaId: u64) :u64 {
+        if (table::contains(&rewardsGlobal.rebate_level, metaId)) {
+            *table::borrow(&rewardsGlobal.rebate_level, metaId)
         } else {
             0
         }
@@ -270,7 +386,17 @@ module chess_package_main::metaIdentity {
         global.version = version;
     }
 
+    public fun upgradeVersion2(global: &mut RewardsGlobal, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.version = version;
+    }
+
     public fun change_manager(global: &mut MetaInfoGlobal, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
+    }
+
+    public fun change_manager2(global: &mut RewardsGlobal, new_manager: address, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.manager = new_manager;
     }
