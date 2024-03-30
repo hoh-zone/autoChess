@@ -38,7 +38,7 @@ const useQueryChesses = () => {
     let hasNext = true
     let cursor = undefined
     while (hasNext) {
-      const result = await provider.getOwnedObjects({
+      const result: any = await provider.getOwnedObjects({
         owner: wallet.address,
         options: {
           showContent: true
