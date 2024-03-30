@@ -499,7 +499,7 @@ export const useFight = () => {
         console.log("--------开始战斗-------");
         console.log(chars);
         console.log(enemyChars);
-        let loop = 50;
+        let loop = 80;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
             let charIndex = chars.findIndex(Boolean);
@@ -511,7 +511,7 @@ export const useFight = () => {
             let enemyChar = enemyChars[enemyCharIndex]!;
 
             // 同时攻击
-            let max_loop = 40;
+            let max_loop = 70;
             while (char.hp > 0 && enemyChar.hp > 0) {
                 await sleep(500);
                 await action(char, enemyChar, charIndex, enemyCharIndex, false);
