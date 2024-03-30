@@ -8,7 +8,7 @@ export const SKILL_DESCRIPTION: Record<string, string> = {
     "forbid_debuff": "Forbid all of the debuff from enemy",
     "forbid_buff": "Forbid all of the buff on enemy",
     "reduce_tmp_attack": "Reduce $value points of attack from enemy.",
-    "add_all_tmp_sp_cap": "Add $value points of max sp to all enemies.",
+    "add_all_tmp_sp_cap": "Increse the number of attacks to get full sp upon all enermies by $value times.",
     "all_max_hp_to_back1": "Permanently add $value of max HP to the next friendly unit.",
     "attack_by_hp_percent": "Inflict $value0% of HP damage to enemy.",
     "attack_sputter_to_second_by_percent": "Attack the enemy and sputter the next enemy, inflict $value% attack point HP damage to the next enemy.",

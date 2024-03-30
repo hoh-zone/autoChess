@@ -1,10 +1,7 @@
-import { useCallback, useState } from "react"
-import { metaA } from "../../store/stages"
+import { useCallback } from "react"
 import { ethos } from "ethos-connect"
-import { useAtom } from "jotai"
-import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE3, ISMAINNET, META_GLOBAL } from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE5, CHESS_GLOBAL, ISMAINNET, META_GLOBAL } from "../../lib/constants"
 import { JsonRpcProvider, TransactionBlock, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
-import { bytesArrayToU64 } from "./utils"
 
 interface Meta {
   metaId: Number
@@ -29,7 +26,7 @@ const useQueryMetaInfo = () => {
     try {
       const tx = new TransactionBlock()
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE}::metaIdentity::claim_invite_exp`,
+        target: `${CHESS_CHALLENGE_PACKAGE5}::metaIdentity::claim_invite_exp`,
         arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.object(normalizeSuiObjectId(meta.objectId))]
       })
       const response = await wallet.signAndExecuteTransactionBlock({
@@ -58,12 +55,12 @@ const useQueryMetaInfo = () => {
       if (inviteMetaId > 0) {
         console.log(inviteMetaId)
         tx.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE3}::metaIdentity::register_invited_meta`,
+          target: `${CHESS_CHALLENGE_PACKAGE5}::metaIdentity::register_invited_meta`,
           arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(inviteMetaId), tx.pure(name), tx.pure(avatar_name)]
         })
       } else {
         tx.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE3}::metaIdentity::mint_meta`,
+          target: `${CHESS_CHALLENGE_PACKAGE5}::metaIdentity::mint_meta`,
           arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(name), tx.pure(avatar_name)]
         })
       }
@@ -88,22 +85,27 @@ const useQueryMetaInfo = () => {
   }
 
   const query_invited_num = async (metaId: Number) => {
-    let moveModule = "metaIdentity"
-    let method = "query_invited_num"
     try {
       if (!wallet) return
-      const tx = new TransactionBlock()
-      tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE3}::${moveModule}::${method}`,
-        arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(metaId)]
+      let global: any = await wallet.client.getObject({
+        id: META_GLOBAL,
+        options: {
+          showContent: true
+        }
       })
-      const result: any = await wallet.client.devInspectTransactionBlock({
-        transactionBlock: tx,
-        sender: wallet.address
+      let id = global.data?.content?.fields.invited_meta_map.fields.id.id
+      let invited_num: any = await wallet.client.getDynamicFieldObject({
+        parentId: id,
+        name: {
+          type: "u64",
+          value: String(metaId)
+        }
       })
-      const arr = new Uint8Array(result.results[0].returnValues[0][0])
-      const num: number = bytesArrayToU64(Array.from(arr))
-      return num
+      if (invited_num.error) {
+        return 0
+      }
+      let array = invited_num.data?.content?.fields.value
+      return array.fields.value.length
     } catch (error) {
       console.log("err", error)
     }
@@ -118,14 +120,23 @@ const useQueryMetaInfo = () => {
       } else {
         provider = new JsonRpcProvider(testnetConnection)
       }
-      console.log("addr", wallet.address)
       const results = await provider.getOwnedObjects({
         owner: wallet.address,
         filter: {
-          MoveModule: {
-            package: CHESS_CHALLENGE_PACKAGE,
-            module: "metaIdentity"
-          }
+          MatchAny: [
+            {
+              MoveModule: {
+                package: CHESS_CHALLENGE_PACKAGE,
+                module: "metaIdentity"
+              }
+            },
+            {
+              MoveModule: {
+                package: CHESS_CHALLENGE_PACKAGE5,
+                module: "metaIdentity"
+              }
+            }
+          ]
         },
         options: {
           showContent: true,

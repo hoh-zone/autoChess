@@ -21,22 +21,20 @@ export const Rank = () => {
 
   return (
     <Tooltip
+      maxW="1200px"
       label={
         isLoading ? (
           "loading"
         ) : (
           <div>
-            <p></p>
             {ranks.map((fight, i) => (
-              <p key={i}>
-                {i + 1}:{fight}
-              </p>
+              <p key={i}>{fight}</p>
             ))}
           </div>
         )
       }
     >
-      <Button>Rank</Button>
+      <Button>Recent Records</Button>
     </Tooltip>
   )
 }
