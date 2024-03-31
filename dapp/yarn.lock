@@ -3245,7 +3245,7 @@ natural-compare@^1.4.0:
 
 next-i18next@^15.2.0:
   version "15.2.0"
-  resolved "https://registry.npmmirror.com/next-i18next/-/next-i18next-15.2.0.tgz"
+  resolved "https://registry.npmjs.org/next-i18next/-/next-i18next-15.2.0.tgz"
   integrity sha512-Rl5yZ4oGffsB0AjRykZ5PzNQ2M6am54MaMayldGmH/UKZisrIxk2SKEPJvaHhKlWe1qgdNi2FkodwK8sEjfEmg==
   dependencies:
     "@babel/runtime" "^7.23.2"
