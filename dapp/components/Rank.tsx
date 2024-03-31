@@ -2,12 +2,14 @@ import { useEffect, useState } from "react"
 import useQueryFight from "./button/QueryFightResult"
 import { ethos } from "ethos-connect"
 import { Button, Tooltip } from "@chakra-ui/react"
+import useLocale from "../hooks/useLocale"
 
 export const Rank = () => {
   const { ranks, query_fight_rank } = useQueryFight()
   const { status } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
-
+  const getLocale = useLocale()
+  
   useEffect(() => {
     if (status !== "connected") return
 
@@ -34,7 +36,7 @@ export const Rank = () => {
         )
       }
     >
-      <Button>Recent Records</Button>
+      <Button>{getLocale('Recent-Records')}</Button>
     </Tooltip>
   )
 }

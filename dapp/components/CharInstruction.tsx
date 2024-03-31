@@ -3,14 +3,16 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, EffectCards } from "swiper/modules"
 import { useAtom } from "jotai"
 import { assetsAtom } from "../store/stages"
+import useLocale from "../hooks/useLocale"
 
 const CharInstruction = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [assets, setAssets] = useAtom(assetsAtom)
+  const getLocale = useLocale()
 
   return (
     <>
-      <Button onClick={onOpen}>Instruction</Button>
+      <Button onClick={onOpen}>{getLocale('Instruction')}</Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" isCentered={true}>
         <ModalOverlay />
@@ -23,7 +25,7 @@ const CharInstruction = () => {
                   {({ isActive }) => (
                     isActive ? <Box p={8} >
                       <HStack>
-                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>Buy: </Text>
+                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>{getLocale('Buy')}: </Text>
                       </HStack>
                       <video style={{ objectFit: "contain" }} className="w-full h-full" autoPlay loop muted>
                         <source src={assets?.tutorial_buy} type="video/mp4" />
@@ -35,8 +37,8 @@ const CharInstruction = () => {
                   {({ isActive }) => (
                     isActive ? <Box p={8} >
                       <HStack>
-                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>Level Up: </Text>
-                        <Text color={"white"} fontSize={"xs"}>Merge 3 same characters to level up </Text>
+                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>{getLocale('Level-Up')}: </Text>
+                        <Text color={"white"} fontSize={"xs"}>{getLocale('Merge-to-level-up')}</Text>
                       </HStack>
                       <video style={{ objectFit: "contain" }} className="w-full h-full" autoPlay loop muted>
                         <source src={assets?.tutorial_level_up} type="video/mp4" />
@@ -48,7 +50,7 @@ const CharInstruction = () => {
                   {({ isActive }) => (
                     isActive ? <Box p={8} >
                       <HStack>
-                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>Fight: </Text>
+                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>{getLocale('Fight')}: </Text>
                       </HStack>
                       <video style={{ objectFit: "contain" }} className="w-full h-full" autoPlay loop muted>
                         <source src={assets?.tutorial_fight} type="video/mp4" />

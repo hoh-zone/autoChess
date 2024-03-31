@@ -2,12 +2,20 @@ import { Chain, EthosConnectProvider } from "ethos-connect"
 import type { AppProps } from "next/app"
 import Head from "next/head"
 import { ChakraProvider } from "@chakra-ui/react"
-import { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import { appWithTranslation } from 'next-i18next'
 import { useAtom } from "jotai"
 import { stageAtom } from "../store/stages"
 import "../styles/globals.css"
 import Image from "next/image"
 
+import enUs from '../public/locales/EN/common.json';
+import zhCN from '../public/locales/ZH_CN/common.json';
+import { error } from "console"
+
+export const AppContext = React.createContext<any>({})
+
+function MyA({ Component, pageProps }: AppProps) {
 function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
@@ -18,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const audioFightRef = useRef<HTMLAudioElement>(null)
   const [stage, setStage] = useAtom(stageAtom)
+  const [locale, setLocal] = useState(enUs)
 
   useEffect(() => {
     if (stage === "fight") {
@@ -59,7 +68,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [audioRef.current, stage])
 
   return (
-    <EthosConnectProvider
+    <AppContext.Provider value={{locale,setLocal}} >
+      <EthosConnectProvider
       ethosConfiguration={ethosConfiguration}
       dappName="Sui Auto Chess"
       dappIcon={<Image src={"/favicon.ico"} className="rounded-full" width={32} height={32} alt="" />}
@@ -79,7 +89,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         </audio>
       </ChakraProvider>
     </EthosConnectProvider>
+    </AppContext.Provider>
+    
   )
 }
 
-export default MyApp
+export default appWithTranslation(MyApp)

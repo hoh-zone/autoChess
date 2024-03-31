@@ -6,6 +6,7 @@ import { getSimplifidyWalletAddr } from "../utils/TextUtils"
 import useQueryMetaInfo from "./button/QueryMetaInfo"
 import { useToast } from "@chakra-ui/react"
 import { ethos } from "ethos-connect"
+import useLocale from "../hooks/useLocale"
 
 const ContinueGame = (props: { isLoading: boolean; address: any }) => {
   const { wallet } = ethos.useWallet()
@@ -19,6 +20,7 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
   const { register_meta } = useQueryMetaInfo()
   const [isLoading, setIsLoading] = useState(false)
   const toast = useToast()
+  const getLocale = useLocale()
   let avatarArr: any[] = []
   if (assets) {
     avatarArr = Object.keys(assets).filter((item) => {
@@ -48,7 +50,7 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
     let name = inputName.trim()
     if (name.length === 0) {
       toast({
-        title: "Please input your name",
+        title: getLocale('Please-input-your-name'),
         status: "warning",
         duration: 2000,
         isClosable: true
@@ -62,7 +64,7 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
   return (
     <>
       <Button isLoading={props.isLoading} onClick={onOpen}>
-        Register Account
+        {getLocale('Register-Account')}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -70,7 +72,7 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
         <ModalContent className="rounded-[8px]" bg={"#1F143D"} overflowY={"auto"} maxH={"65vh"} style={{ width: "330px" }}>
           <ModalBody className="!p-[5px] rounded-[8px]">
             <div className="!p-[20px] rounded-[8px] border-2 border-solid" style={{ borderColor: "#352858" }}>
-              <div className="text-white mb-2 text-se">Register your Account</div>
+              <div className="text-white mb-2 text-se">{getLocale('Register-your-Account')}</div>
               <div className="flex items-center justify-center mt-6 text-white">
                 <span style={{ cursor: "pointer" }} onClick={preAvatar}>
                   &lt;
@@ -80,16 +82,16 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
                   &gt;
                 </span>
               </div>
-              <div className="text-white mb-2 text-sm">Name</div>
+              <div className="text-white mb-2 text-sm">{getLocale('Name')}</div>
               <Input type="text" className="rounded-[30px] text-white" width={"280px"} value={inputName} onChange={(v) => setInputName(v.target.value)} />
-              <div className="text-white mt-4 mb-2 text-sm">Invite Code (Optional) </div>
+              <div className="text-white mt-4 mb-2 text-sm">{getLocale('Invite-Code-Optional')}</div>
               <Input type="text" className="text-white" width={"280px"} value={inputInvite} onChange={(v) => setInputInvite(v.target.value)} />
-              <div className="text-white mt-4 mb-2 text-sm">Wallet Address</div>
+              <div className="text-white mt-4 mb-2 text-sm">{getLocale('Wallet-Address')}</div>
               <Input type="text" className="text-white" width={"280px"} value={getSimplifidyWalletAddr(String(props.address), 8)} disabled={true} />
 
               <div className="flex justify-center mt-6">
                 <Button style={{ width: "260px" }} onClick={registerMeta}>
-                  Register
+                  {getLocale('Register')}
                 </Button>
               </div>
             </div>

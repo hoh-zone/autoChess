@@ -2,10 +2,12 @@ import { createFactory, useCallback, useEffect, useState } from 'react'
 import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
+import useLocale from "../hooks/useLocale"
 
 const Mint = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | undefined>();
+    const getLocale = useLocale()
 
     const mint = useCallback(async () => {
         if (!wallet?.currentAccount) return;
@@ -59,7 +61,7 @@ const Mint = () => {
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View Your NFT on the TestNet Explorer 
+                        {getLocale('View-Your-NFT')}
                     </a>
                 </SuccessMessage>
             )}
@@ -67,7 +69,7 @@ const Mint = () => {
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={mint}
             >
-                Mint an NFT
+                {getLocale('Mint-an-NFT')}
             </button>
         </div>
     )

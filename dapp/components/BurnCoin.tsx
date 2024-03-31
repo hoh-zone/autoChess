@@ -2,10 +2,12 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
+import useLocale from "../hooks/useLocale"
 
 const Burn = () => {
     const { wallet } = ethos.useWallet();
     const [transactionId, setTransactionId] = useState<string | null>(null);
+    const getLocale = useLocale()
 
     const clone = useCallback(async () => {
         if (!wallet) return;
@@ -73,7 +75,7 @@ const Burn = () => {
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View Coin burn transaction on the TestNet Explorer
+                        {getLocale('View-Coin-burn-transaction')}
                     </a>
                 </SuccessMessage>
             )}
@@ -81,7 +83,7 @@ const Burn = () => {
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={clone}
             >
-                Burn A Coin
+                {getLocale('Burn-A-Coin')}
             </button>
         </div>
     )

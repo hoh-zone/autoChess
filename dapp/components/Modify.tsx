@@ -2,10 +2,12 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants'
 import SuccessMessage from './SuccessMessage';
+import useLocale from "../hooks/useLocale"
 
 const Modify = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
+    const getLocale = useLocale()
 
     const mintAndModify = useCallback(async () => {
         // if (!wallet) return;
@@ -74,7 +76,7 @@ const Modify = () => {
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View the NFT you created and modified on the TestNet Explorer 
+                        {getLocale('View-the-NFT-modified')}
                     </a>
                 </SuccessMessage>
               )}
@@ -82,7 +84,7 @@ const Modify = () => {
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={mintAndModify}
               >
-                Mint and Modify
+                {getLocale('Mint-and-Modify')}
               </button>
           </div>
     )

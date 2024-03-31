@@ -3,14 +3,16 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, EffectCards } from "swiper/modules"
 import { assetsAtom } from "../store/stages"
 import { useAtom } from "jotai"
+import useLocale from "../hooks/useLocale"
 
 export const Instruction = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [assets, setAssets] = useAtom(assetsAtom)
+  const getLocale = useLocale()
 
   return (
     <>
-      <Button onClick={onOpen}>Instruction</Button>
+      <Button onClick={onOpen}>{getLocale('Instruction')}</Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" isCentered={true}>
         <ModalOverlay />
@@ -23,13 +25,13 @@ export const Instruction = () => {
                     <>
                       <div className="w-full h-full relative px-[60px]">
                         <div className={`w-full h-full relative overflow-y-auto rounded-[8px] text-white px-[20px] py-[20px] ${isActive ? "bg-slate-500" : "bg-slate-600"}`}>
-                          <p className="text-[length:var(--chakra-fontSizes-md)]">|Normal Mode|: practice and construct your lineup to fight with different players, your enemy would be other players’ past lineup records.</p>
+                          <p className="text-[length:var(--chakra-fontSizes-md)]">{getLocale('Normal-Mode')}: {getLocale('Normal-Mode-text')}</p>
                           <br />
-                          <p className="text-[length:var(--chakra-fontSizes-md)]">|Arena Mode|: you have to pay some SUI ticket fee to enter, and you can check out to get rewards at anytime, the checkout reward depends on your fighting winning records, so try to win to get earn more sui. The more you pay, the more you win. Averagely, winning at three times would cover the cost.</p>
+                          <p className="text-[length:var(--chakra-fontSizes-md)]">{getLocale('Arena-Mode')}: {getLocale('Arena-Mode-text')}</p>
                           <br />
-                          <p className="text-[length:var(--chakra-fontSizes-md)]">|How to play|: Every turn, you will have 10 coins to buy your charactors, different charactors own its specific feature, try to use it to gain advantage.</p>
+                          <p className="text-[length:var(--chakra-fontSizes-md)]">{getLocale('How-to-play')}: {getLocale('How-to-play-text')}</p>
                           <br />
-                          <p className="text-[length:var(--chakra-fontSizes-md)]">|Problem Feedback|: suiautochess@gmail.com</p>
+                          <p className="text-[length:var(--chakra-fontSizes-md)]">{getLocale('Problem-Feedback')}: suiautochess@gmail.com</p>
                         </div>
                       </div>
                     </>
@@ -39,7 +41,7 @@ export const Instruction = () => {
                   {({ isActive }) => (
                     isActive ? <Box p={8} >
                       <HStack>
-                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>Buy: </Text>
+                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>{getLocale('Buy')}: </Text>
                       </HStack>
                       <video style={{ objectFit: "contain" }} className="w-full h-full" autoPlay loop muted>
                         <source src={assets?.tutorial_buy} type="video/mp4" />
@@ -51,8 +53,8 @@ export const Instruction = () => {
                   {({ isActive }) => (
                     isActive ? <Box p={8} >
                       <HStack>
-                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>Level Up: </Text>
-                        <Text color={"white"} fontSize={"xs"}>Merge 3 same characters to level up </Text>
+                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>{getLocale('Level-Up')}: </Text>
+                        <Text color={"white"} fontSize={"xs"}>{getLocale('Merge-to-level-up')}</Text>
                       </HStack>
                       <video style={{ objectFit: "contain" }} className="w-full h-full" autoPlay loop muted>
                         <source src={assets?.tutorial_level_up} type="video/mp4" />
@@ -64,7 +66,7 @@ export const Instruction = () => {
                   {({ isActive }) => (
                     isActive ? <Box p={8} >
                       <HStack>
-                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>Fight: </Text>
+                        <Text color={"white"} fontSize={"2xl"} whiteSpace={"nowrap"}>{getLocale('Fight')}: </Text>
                       </HStack>
                       <video style={{ objectFit: "contain" }} className="w-full h-full" autoPlay loop muted>
                         <source src={assets?.tutorial_fight} type="video/mp4" />

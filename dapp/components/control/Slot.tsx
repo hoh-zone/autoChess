@@ -13,6 +13,7 @@ import { StatusChange } from "./StatusChange"
 import { CharacterFields } from "../../types/nft"
 import { get_buy_price } from "../character/rawData"
 import { SkillTag } from "./SkillTag"
+import useLocale from "../../hooks/useLocale"
 
 export const Slot = ({ isOpponent = false, id }: { isOpponent?: boolean; id: number }) => {
   const [slotNumber, setSlotNumber] = useAtom(selectedSlot)
@@ -22,6 +23,8 @@ export const Slot = ({ isOpponent = false, id }: { isOpponent?: boolean; id: num
   const [shopChars, setShopChars] = useAtom(shopCharacter)
   const [money, setMoney] = useAtom(moneyAtom)
   const [operations, setOperations] = useAtom(operationsA)
+  const getLocale = useLocale()
+
   let end = Date.now() + 1 * 1000
   const level_up_effect = () => {
     confetti({
@@ -58,7 +61,7 @@ export const Slot = ({ isOpponent = false, id }: { isOpponent?: boolean; id: num
 
   function show_failed_toast() {
     toast({
-      title: "Money is not enough",
+      title: getLocale('Money-is-not-enough'),
       status: "warning",
       duration: 2000,
       isClosable: true

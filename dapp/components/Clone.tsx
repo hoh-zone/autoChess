@@ -2,10 +2,12 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos, TransactionBlock } from 'ethos-connect'
 import { SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
+import useLocale from "../hooks/useLocale"
 
 const Clone = () => {
     const { wallet } = ethos.useWallet();
     const [nftObjectId, setNftObjectId] = useState<string | null>(null);
+    const getLocale = useLocale()
 
     const clone = useCallback(async () => {
         if (!wallet) return;
@@ -66,7 +68,7 @@ const Clone = () => {
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View your cloned NFT on the TestNet Explorer 
+                        {getLocale('View-your-cloned-NFT')} 
                     </a>
                 </SuccessMessage>
             )}
@@ -74,7 +76,7 @@ const Clone = () => {
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={clone}
             >
-                Clone an NFT
+                {getLocale('Clone-an-NFT')}
             </button>
         </div>
     )

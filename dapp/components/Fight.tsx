@@ -7,6 +7,7 @@ import { useEffect } from "react"
 import { Button, useToast } from "@chakra-ui/react"
 import { get_chars } from "./character/rawData"
 import { CharacterFields } from "../types/nft"
+import useLocale from "../hooks/useLocale"
 
 export const Fight = () => {
   const { nftObjectId, operate_submit } = useOperateAndMatch()
@@ -23,6 +24,7 @@ export const Fight = () => {
   const [challengeWin, _setChallengeWin] = useAtom(challengeWinA)
   const [challengeLose, _setChallengeLose] = useAtom(challengeLoseA)
   const toast = useToast()
+  const getLocale = useLocale()
 
   const fight = useFight()
 
@@ -53,7 +55,7 @@ export const Fight = () => {
           onClick={async () => {
             if (lose >= 3 || challengeLose >= 3) {
               toast({
-                title: "The game ends with 3 loses",
+                title: getLocale('The-game-ends'),
                 status: "warning",
                 duration: 2000,
                 isClosable: true
@@ -86,7 +88,7 @@ export const Fight = () => {
           }}
         >
           {" "}
-          Fight{" "}
+          {getLocale('Fight')}{" "}
         </Button>
       )}
     </>

@@ -5,6 +5,7 @@ import { CHALLENGE_GLOBAL, CHESS_GLOBAL, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALL
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
+import useLocale from "../../hooks/useLocale"
 
 const useOperateAndMatch = () => {
   const [fightRes, setFightRes] = useAtom(fightResA)
@@ -15,6 +16,7 @@ const useOperateAndMatch = () => {
   const [chars] = useAtom(slotCharacter)
   const [chess_id] = useAtom(chessId)
   const toast = useToast()
+  const getLocale = useLocale()
 
   const get_chars_strvec = () => {
     let vec: string[] = []
@@ -68,7 +70,7 @@ const useOperateAndMatch = () => {
         let event = response.events[0]
         if (event == null) {
           toast({
-            title: "Network error, please refresh and try again",
+            title: getLocale('Network-error'),
             status: "error",
             duration: 5000,
             isClosable: true
@@ -95,7 +97,7 @@ const useOperateAndMatch = () => {
       console.log(error)
       if (String(error).indexOf("function: 9, instruction: 70") !== -1) {
         toast({
-          title: "My lord, You have ranked to the 1st in the world",
+          title: getLocale('You-have-ranked'),
           status: "warning",
           duration: 5000,
           isClosable: true
@@ -104,7 +106,7 @@ const useOperateAndMatch = () => {
       }
       if (String(error).indexOf("objects are invalid") !== -1) {
         toast({
-          title: "Timeout, please refresh and try again",
+          title: getLocale('please-refresh-and-try-again'),
           status: "warning",
           duration: 5000,
           isClosable: true
@@ -112,7 +114,7 @@ const useOperateAndMatch = () => {
         return false
       }
       toast({
-        title: "error, please try again",
+        title: getLocale('please-try-again'),
         status: "warning",
         duration: 5000,
         isClosable: true

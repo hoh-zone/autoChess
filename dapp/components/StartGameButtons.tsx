@@ -7,6 +7,7 @@ import useMintChess from "./button/MintChess"
 import { useState } from "react"
 import { sleep } from "../utils/sleep"
 import { metaA } from "../store/stages"
+import useLocale from "../hooks/useLocale"
 
 const StartGameButtons = ({ name }: { name: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -19,11 +20,12 @@ const StartGameButtons = ({ name }: { name: string }) => {
   const [operations, setOperations] = useAtom(operationsA)
   const [chars, setChars] = useAtom(slotCharacter)
   const [isLoading, setIsLoading] = useState(false)
+  const getLocale = useLocale()
 
   const checkName = () => {
     if (name === "") {
       toast({
-        title: "Please enter your chess name",
+        title: getLocale('Please-enter-your-chess-name'),
         status: "warning",
         duration: 2000,
         isClosable: true
@@ -56,11 +58,11 @@ const StartGameButtons = ({ name }: { name: string }) => {
   return (
     <>
       <Button isLoading={isLoading} onClick={() => checkName() && onStart(false, 0)}>
-        Practice Mode
+        {getLocale('Practice-Mode')}
       </Button>
 
       <Button onClick={() => checkName() && onOpen()} isLoading={isLoading}>
-        Arena Mode (Earn Sui)
+        {getLocale('Arena-Mode-Earn')}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -69,7 +71,7 @@ const StartGameButtons = ({ name }: { name: string }) => {
           <ModalBody className="!p-[10px] rounded-[8px]">
             <Stack>
               <Text w={"full"} textAlign={"center"} mb={4} color={"green.200"} fontSize={"lg"}>
-                Cost more, earn more
+                {getLocale('Cost-more-earn-more')}
               </Text>
               {[1, 10, 50, 100, 250, 500].map((amount, index) => (
                 <HStack className="w-full" key={index}>

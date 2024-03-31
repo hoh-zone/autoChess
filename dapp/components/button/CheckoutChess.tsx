@@ -2,6 +2,7 @@ import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE5 } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
+import useLocale from "../../hooks/useLocale"
 
 type Props = {
   chess_id: string
@@ -11,6 +12,7 @@ type Props = {
 const useCheckout = () => {
   const { wallet } = ethos.useWallet()
   const toast = useToast()
+  const getLocale = useLocale()
 
   const checkout = useCallback(
     async ({ chess_id, fun }: Props) => {
@@ -34,7 +36,7 @@ const useCheckout = () => {
           const createObjectChange = response.objectChanges.find((objectChange) => objectChange.type === "created")
           if (!!createObjectChange && "objectId" in createObjectChange) {
             toast({
-              title: "redeem success",
+              title: getLocale('redeem-success'),
               status: "success",
               duration: 2000,
               isClosable: true
@@ -45,7 +47,7 @@ const useCheckout = () => {
         fun && fun()
       } catch (error) {
         toast({
-          title: "redeem failed",
+          title: getLocale('redeem-failed'),
           status: "error",
           duration: 2000,
           isClosable: true

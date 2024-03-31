@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethos, TransactionBlock } from 'ethos-connect'
 import { ErrorMessage, SuccessMessage } from '.';
+import useLocale from "../hooks/useLocale"
 
 const MergeCoins = () => {
     const { wallet } = ethos.useWallet();
     const [mergedCoinId, setMergedCoinId] = useState<string | undefined>();
     const [error, setError] = useState<string | undefined>()
+    const getLocale = useLocale()
 
     const mergeCoins = useCallback(async () => {
     //     if (!wallet) return;
@@ -57,7 +59,7 @@ const MergeCoins = () => {
                         rel="noreferrer"
                         className='underline font-blue-600' 
                     >
-                        View your merged coin on the Sui Explorer
+                        {getLocale('View-your-merged-coin')}
                     </a>
                 </SuccessMessage>
             )}
@@ -70,7 +72,7 @@ const MergeCoins = () => {
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={mergeCoins}
             >
-                Merge Coins
+                {getLocale('Merge-Coins')}
             </button>
         </div>
     )

@@ -492,3 +492,22 @@ a {
   border-radius: 2px;
   background-color: #554D5D;
 }
+.changeLang{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.changeLang .changeLang-btn{
+  padding: 0 20px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  color: #E5EBF2;
+  background: #1A202C;
+}
+.changeLang .changeLang-btn-s{
+  background-color: #E5EBF2;
+  color: #1A202C;
+}

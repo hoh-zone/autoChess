@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ethos } from 'ethos-connect'
 import { ErrorMessage, SuccessMessage } from '.';
 import { NETWORK, FAUCET } from '../lib/constants';
+import useLocale from "../hooks/useLocale"
 
 const Fund = () => {
     const { wallet } = ethos.useWallet();
@@ -9,6 +10,7 @@ const Fund = () => {
     const [funding, setFunding] = useState(false);
     const [fundingSuccess, setFundingSuccess] = useState(false);
     const [fundingError, setFundingError] = useState(false);
+    const getLocale = useLocale()
 
     const fund = useCallback(async () => {
         if (!wallet || !NETWORK || funding) return;
@@ -39,19 +41,19 @@ const Fund = () => {
         <div className='flex flex-col gap-6'>
             {fundingError && (
                 <ErrorMessage reset={reset}>
-                    <>The faucet did not work. Please try again in a little bit.</>
+                    <>{getLocale('The-faucet-did-not-work')}</>
                 </ErrorMessage>
             )}
             {fundingSuccess && (
                 <SuccessMessage reset={reset}>
-                    <>Your new balance is {wallet?.contents?.suiBalance.toString()} Mist!</>
+                    <>{getLocale('Your-new-balance-is')} {wallet?.contents?.suiBalance.toString()} {getLocale('Mist')}!</>
                 </SuccessMessage>
             )}
             <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={fund}
             >
-                {funding ? <>Funding...</> : <>Fund</>}
+                {funding ? <>{getLocale('Funding')}...</> : <>{getLocale('Fund')}</>}
             </button>
         </div>
     )

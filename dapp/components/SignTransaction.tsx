@@ -5,12 +5,14 @@ import { ErrorMessage, SuccessMessage } from '.';
 import { ETHOS_EXAMPLE_CONTRACT } from '../lib/constants';
 import { verifyTransactionBlock } from '@mysten/sui.js/verify';
 import { fromB64 } from '@mysten/sui.js/utils';
+import useLocale from "../hooks/useLocale"
 
 const SignTransaction = () => {
     const { wallet } = ethos.useWallet();
 
     const [signSuccess, setSignSuccess] = useState(false);
     const [signError, setSignError] = useState(false);
+    const getLocale = useLocale()
 
     const signTransaction = useCallback(async () => {
         const transactionBlock = new TransactionBlock();
@@ -64,19 +66,19 @@ const SignTransaction = () => {
         <div className='flex flex-col gap-6'>
             {signSuccess && (
                 <SuccessMessage reset={reset}>
-                    Check the developer console to see the result.
+                    {getLocale('Check-the-developer-console-to-see-the-result')}
                 </SuccessMessage>
             )}
             {signError && (
                 <ErrorMessage reset={reset}>
-                    Signing did not work. See the developer console for additional information.
+                    {getLocale('Signing-did-not-work')}
                 </ErrorMessage>
             )}
             <button
                 className="mx-auto px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={signTransaction}
             >
-                Sign transaction
+                {getLocale('Sign-transaction')}
             </button>
         </div>
     )

@@ -8,6 +8,7 @@ import range from "lodash/range"
 import { FightResultText } from "../effect/FightResultText"
 import { useMemo } from "react"
 import { useScale } from "../../hooks/useScreenSize"
+import useLocale from "../../hooks/useLocale"
 
 export const FightScene = () => {
   const [enemyChars, setEnemyChars] = useAtom(enemyCharacter)
@@ -21,6 +22,7 @@ export const FightScene = () => {
   const [win, _setWin] = useAtom(winA)
   const [lose, _setLose] = useAtom(loseA)
   const scale = useScale()
+  const getLocale = useLocale()
 
   const videoBg = useMemo(() => {
     return "bg" + (Math.floor((win + lose) / 3) % 3 || 1)
@@ -68,19 +70,19 @@ export const FightScene = () => {
             <div className="mx-[10px] my-[20px]">
               <FightResultText />
             </div>
-            <Text color={"gray.300"}>Win more than 10 turns to fight with Leaderboard and earn more rewards.</Text>
+            <Text color={"gray.300"}>{getLocale('Win-more-than')}</Text>
             <Text display={"inline"} fontSize={"2xl"}>
               👉
             </Text>
             <Link color={"blue.300"} href="https://home.suiautochess.com/#leaderboard" isExternal>
               {" "}
-              Check Leaderboard
+              {getLocale('Check-Leaderboard')}
             </Link>
           </ModalBody>
 
           <ModalFooter className="flex !justify-center">
             <Button colorScheme="blue" onClick={onClose}>
-              OK
+              {getLocale('OK')}
             </Button>
           </ModalFooter>
         </ModalContent>

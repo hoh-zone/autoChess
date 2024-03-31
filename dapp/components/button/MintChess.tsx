@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE5, ROLE_GLOBAL, META_GLOBAL, META_REWARDS_GLOBAL, CHESS_CHALLENGE_PACKAGE } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
+import useLocale from "../../hooks/useLocale"
 
 type Props = {
   username: string
@@ -14,6 +15,7 @@ const useMintChess = () => {
   const { wallet } = ethos.useWallet()
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
   const toast = useToast()
+  const getLocale = useLocale()
 
   const mint = useCallback(
     async ({ username, is_arena, price, meta }: Props) => {
@@ -53,7 +55,7 @@ const useMintChess = () => {
         if (!!createObjectChange && "objectId" in createObjectChange) {
           setNftObjectId(createObjectChange.objectId)
           toast({
-            title: "new chess start",
+            title: getLocale('new-chess-start'),
             status: "success",
             duration: 2000,
             isClosable: true

@@ -6,6 +6,7 @@ import { useAtom } from "jotai"
 import { operationsA, stageAtom } from "../store/stages"
 import useCheckout from "./button/CheckoutChess"
 import { ethos } from "ethos-connect"
+import useLocale from "../hooks/useLocale"
 
 const ContinueGame = (props: { isLoading: boolean }) => {
   const toast = useToast()
@@ -18,6 +19,8 @@ const ContinueGame = (props: { isLoading: boolean }) => {
   const { checkout } = useCheckout()
   const [isLoading, setIsLoading] = useState(false)
   const [check_Items, set_Check_Items] = useState([])
+  const getLocale = useLocale()
+  
   const chckFn = (values: any) => {
     set_Check_Items(values)
   }
@@ -43,7 +46,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
       return
     }
     toastId = toast({
-      title: "You can redeem sui as rewards, the amount depends on your winning records, are you sure to checkout now?",
+      title: getLocale('You-can-redeem-sui-as-rewards'),
       status: "warning",
       duration: 2000,
       isClosable: true
@@ -53,22 +56,22 @@ const ContinueGame = (props: { isLoading: boolean }) => {
   return (
     <>
       <Button isLoading={props.isLoading} onClick={onOpen}>
-        Continue Game
+        {getLocale('Continue-Game')}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent maxWidth={500} className="rounded-[8px]" bg={"gray.500"} overflowY={"auto"} maxH={"50vh"}>
           <ModalBody maxWidth={500} className="!p-[10px] rounded-[8px]">
-            {nfts.length == 0 && <Text>no records</Text>}
+            {nfts.length == 0 && <Text>{getLocale('no-records')}</Text>}
             {nfts.length > 0 && (
               <Stack gap={4}>
                 <>
                   <HStack>
-                    <Text>Filters: </Text>
+                    <Text>{getLocale('Filters')}: </Text>
                     <CheckboxGroup colorScheme="pink" defaultValue={["opt1"]} value={check_Items} onChange={chckFn}>
                       <Checkbox value="opt1" colorScheme="blue">
-                        Include Checked
+                        {getLocale('Include-Checked')}
                       </Checkbox>
                     </CheckboxGroup>
                   </HStack>
@@ -90,11 +93,11 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                           >
                             <Stack gap={2}>
                               <p className="text-slate-800" style={{ whiteSpace: "pre-wrap" }}>
-                                Name: {nft.name} {nft.arena ? "(Arena)" : ""}
+                                {getLocale('Name')}: {nft.name} {nft.arena ? getLocale('Arena') : ""}
                               </p>
-                              <p className="text-slate-800">Mode: {!nft.arena ? "free" : "arena"}</p>
+                              <p className="text-slate-800">{getLocale('Mode')}: {!nft.arena ? getLocale('free') : getLocale('arena')}</p>
                               <p className="text-slate-800">
-                                {nft.win} win, {nft.lose} lose
+                                {nft.win} {getLocale('win')}, {nft.lose} {getLocale('lose')}
                               </p>
                             </Stack>
                           </Button>
@@ -119,11 +122,11 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                               <VStack>
                                 {!nft.arena_checked && (
                                   <>
-                                    <p>Redeem</p>
+                                    <p>{getLocale('Redeem')}</p>
                                     <p>Sui</p>
                                   </>
                                 )}
-                                {nft.arena_checked && <p>Checked</p>}
+                                {nft.arena_checked && <p>{getLocale('Checked')}</p>}
                               </VStack>
                             </Button>
                           )}
@@ -147,11 +150,11 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                           >
                             <Stack gap={2}>
                               <p className="text-slate-800" style={{ whiteSpace: "pre-wrap" }}>
-                                Name: {nft.name} {nft.arena ? "(Arena)" : ""}
+                                {getLocale('Name')}: {nft.name} {nft.arena ? getLocale('Arena') : ""}
                               </p>
-                              <p className="text-slate-800">Mode: {!nft.arena ? "free" : "arena"}</p>
+                              <p className="text-slate-800">{getLocale('Mode')}: {!nft.arena ? getLocale('free') : getLocale('arena')}</p>
                               <p className="text-slate-800">
-                                {nft.win} win, {nft.lose} lose
+                                {nft.win} {getLocale('win')}, {nft.lose} {getLocale('lose')}
                               </p>
                             </Stack>
                             {/* {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose} */}
@@ -177,11 +180,11 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                               <VStack>
                                 {!nft.arena_checked && (
                                   <>
-                                    <p>Redeem</p>
+                                    <p>{getLocale('Redeem')}</p>
                                     <p>Sui</p>
                                   </>
                                 )}
-                                {nft.arena_checked && <p>Checked</p>}
+                                {nft.arena_checked && <p>{getLocale('Checked')}</p>}
                               </VStack>
                             </Button>
                           )}

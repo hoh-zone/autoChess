@@ -1,5 +1,6 @@
 import { Button, HStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import useLocale from "../../hooks/useLocale"
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface ModalProps {
 }
 
 const PopupWindow: React.FC<ModalProps> = ({ isOpen, ok, cancel, content_str }) => {
+  const getLocale = useLocale()
   if (!isOpen) {
     return null;
   }
@@ -23,8 +25,8 @@ const PopupWindow: React.FC<ModalProps> = ({ isOpen, ok, cancel, content_str }) 
       <div className="modal-content">
         <p style={{ color: 'gray' }}>{content_str}</p>
         <HStack>
-          <Button onClick={ok_close}>Yes</Button>
-          <Button onClick={cancel}>Cancel</Button>
+          <Button onClick={ok_close}>{getLocale('Yes')}</Button>
+          <Button onClick={cancel}>{getLocale('Cancel')}</Button>
         </HStack>
       </div>
     </div>

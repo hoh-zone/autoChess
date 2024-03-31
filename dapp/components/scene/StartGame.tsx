@@ -4,15 +4,17 @@ import { useAtom } from "jotai"
 import { Character } from "../character/character"
 import useQueryChesses from "../button/QueryAllChesses"
 import useQueryMetaInfo from "../button/QueryMetaInfo"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { ethos, SignInButton } from "ethos-connect"
 import { Rank } from "../Rank"
 import { motion } from "framer-motion"
 import { Instruction } from "../MainInstruction"
 import ContinueGame from "../ContinueGame"
+import ChangeLang from "../ChangeLang"
 import Register from "../Register"
 import MyAccountInfo from "../MyAccountInfo"
 import StartGameButtons from "../StartGameButtons"
+import useLocale from "../../hooks/useLocale"
 
 export const StartGame = () => {
   const [inputValue, setInputValue] = useState("")
@@ -22,6 +24,7 @@ export const StartGame = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useAtom(assetsAtom)
   const [meta, setMeta] = useAtom(metaA)
+  const getLocale = useLocale()
 
   const fetch = async () => {
     setIsLoading(true)
@@ -67,12 +70,15 @@ export const StartGame = () => {
           ) : (
             <div className="absolute text-white bottom-80 z-50">
               <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                Connect
+                {getLocale('Connect')}
               </SignInButton>
             </div>
           )}
           <div className="absolute top-0 right-0 m-4">
-            <Rank />
+              <ChangeLang/>
+          </div>
+          <div className="absolute top-12 right-0 m-4">
+              <Rank />
           </div>
           <div className="absolute top-0 left-0 m-4">
             <div>
