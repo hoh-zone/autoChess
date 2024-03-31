@@ -1,7 +1,7 @@
 import { useCallback } from "react"
-import { ethos } from "ethos-connect"
+import { ethos, TransactionBlock } from "ethos-connect"
 import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE5, CHESS_GLOBAL, ISMAINNET, META_GLOBAL } from "../../lib/constants"
-import { JsonRpcProvider, TransactionBlock, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
+import { JsonRpcProvider, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
 
 interface Meta {
   metaId: Number

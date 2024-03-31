@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const audioFightRef = useRef<HTMLAudioElement>(null)
   const [stage, setStage] = useAtom(stageAtom)
   const [locale, setLocal] = useState(enUs)
-  const [lang, setLang] = useState('EN')
+  const [lang, setLang] = useState("EN")
 
   useEffect(() => {
     if (stage === "fight") {
@@ -63,10 +63,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       window.removeEventListener("mousedown", callback)
     }
   }, [audioRef.current, stage])
-  // 报错点
-  asdas
   return (
-    <AppContext.Provider value={{locale, setLocal, lang, setLang}} >
+    <AppContext.Provider value={{ locale, setLocal, lang, setLang }}>
       <EthosConnectProvider
         ethosConfiguration={ethosConfiguration}
         dappName="Sui Auto Chess"

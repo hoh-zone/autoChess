@@ -50,7 +50,7 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
     let name = inputName.trim()
     if (name.length === 0) {
       toast({
-        title: getLocale('Please-input-your-name'),
+        title: getLocale("Please-input-your-name"),
         status: "warning",
         duration: 2000,
         isClosable: true
@@ -64,7 +64,7 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
   return (
     <>
       <Button isLoading={props.isLoading} onClick={onOpen}>
-        {getLocale('Register-Account')}
+        {getLocale("Register-Account")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -72,7 +72,7 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
         <ModalContent className="rounded-[8px]" bg={"#1F143D"} overflowY={"auto"} maxH={"65vh"} style={{ width: "330px" }}>
           <ModalBody className="!p-[5px] rounded-[8px]">
             <div className="!p-[20px] rounded-[8px] border-2 border-solid" style={{ borderColor: "#352858" }}>
-              <div className="text-white mb-2 text-se">{getLocale('Register-your-Account')}</div>
+              <div className="text-white mb-2 text-se">{getLocale("Register-your-Account")}</div>
               <div className="flex items-center justify-center mt-6 text-white">
                 <span style={{ cursor: "pointer" }} onClick={preAvatar}>
                   &lt;
@@ -82,16 +82,16 @@ const ContinueGame = (props: { isLoading: boolean; address: any }) => {
                   &gt;
                 </span>
               </div>
-              <div className="text-white mb-2 text-sm">{getLocale('Name')}</div>
+              <div className="text-white mb-2 text-sm">{getLocale("Name")}</div>
               <Input type="text" className="rounded-[30px] text-white" width={"280px"} value={inputName} onChange={(v) => setInputName(v.target.value)} />
-              <div className="text-white mt-4 mb-2 text-sm">{getLocale('Invite-Code-Optional')}</div>
+              <div className="text-white mt-4 mb-2 text-sm">{getLocale("Invite-Code-Optional")}</div>
               <Input type="text" className="text-white" width={"280px"} value={inputInvite} onChange={(v) => setInputInvite(v.target.value)} />
-              <div className="text-white mt-4 mb-2 text-sm">{getLocale('Wallet-Address')}</div>
+              <div className="text-white mt-4 mb-2 text-sm">{getLocale("Wallet-Address")}</div>
               <Input type="text" className="text-white" width={"280px"} value={getSimplifidyWalletAddr(String(props.address), 8)} disabled={true} />
 
               <div className="flex justify-center mt-6">
                 <Button style={{ width: "260px" }} onClick={registerMeta}>
-                  {getLocale('Register')}
+                  {getLocale("Register")}
                 </Button>
               </div>
             </div>
