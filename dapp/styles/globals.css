@@ -498,6 +498,7 @@ a {
   align-items: center;
   border-radius: 5px;
   overflow: hidden;
+  cursor: pointer;
 }
 .changeLang .changeLang-btn{
   padding: 0 20px;

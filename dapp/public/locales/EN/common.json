@@ -98,5 +98,10 @@
     "redeem-failed": "redeem failed",
     "redeem-success": "redeem success",
     "Money-is-not-enough": "Money is not enough",
-    "Refresh": "Refresh"
+    "Refresh": "Refresh",
+    "Enter-your-chess-name": "Enter your chess name",
+    "Active-skill": "Active skill",
+    "Passive-skill": "Passive skill",
+    "HP": "HP",
+    "ACK": "ACK"
 }

@@ -11,12 +11,10 @@ import Image from "next/image"
 
 import enUs from '../public/locales/EN/common.json';
 import zhCN from '../public/locales/ZH_CN/common.json';
-import { error } from "console"
 
 export const AppContext = React.createContext<any>({})
 
-function MyA({ Component, pageProps }: AppProps) {
-function MyApp({ Component, pageProps }: AppProps) {
+// function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ["Ethos Wallet"],
@@ -27,6 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const audioFightRef = useRef<HTMLAudioElement>(null)
   const [stage, setStage] = useAtom(stageAtom)
   const [locale, setLocal] = useState(enUs)
+  const [lang, setLang] = useState('EN')
 
   useEffect(() => {
     if (stage === "fight") {
@@ -68,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [audioRef.current, stage])
 
   return (
-    <AppContext.Provider value={{locale,setLocal}} >
+    <AppContext.Provider value={{locale, setLocal, lang, setLang}} >
       <EthosConnectProvider
       ethosConfiguration={ethosConfiguration}
       dappName="Sui Auto Chess"

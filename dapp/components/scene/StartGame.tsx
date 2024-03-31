@@ -62,7 +62,7 @@ export const StartGame = () => {
                   </VStack>
                 </div>
                 {!isLoading && meta && (
-                  <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder="Enter your chess name" onChange={(v) => setInputValue(v.target.value)} />
+                  <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder={getLocale('Enter-your-chess-name')!} onChange={(v) => setInputValue(v.target.value)} />
                 )}
                 {!isLoading && meta && <StartGameButtons name={inputValue} />}
               </Stack>

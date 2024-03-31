@@ -112,14 +112,17 @@ const ContinueGame = (props: { metaInfo: any }) => {
                     </div>
                   </div>
                   <div className="text-white mt-20 mb-4 text-xs">{getLocale('InviteNum')}: {props.metaInfo.invited_num}</div>
-                  <Button
+                  <div>
+                    <Button
                     onClick={() => {
                       getInviteLink(props.metaInfo.metaId)
                     }}
                   >
                     {getLocale('INVITE')}
                   </Button>
-                  <Button
+                  </div>
+                  <div>
+                    <Button
                     className="mt-4"
                     onClick={() => {
                       claim_invite_reward(props.metaInfo.invited_num)
@@ -127,6 +130,7 @@ const ContinueGame = (props: { metaInfo: any }) => {
                   >
                     {getLocale('CLAIM-REWARDS')}
                   </Button>
+                  </div>
                 </div>
                 <div>
                   <div className="overflow-hidden">

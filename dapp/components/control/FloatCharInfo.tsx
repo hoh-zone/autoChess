@@ -6,6 +6,10 @@ import { shopCharacter, stageAtom, enemyCharacter, slotCharacter, assetsAtom } f
 import { get_star_num } from "../character/rawData"
 import { CharacterFields } from "../../types/nft"
 import { SKILL_DESCRIPTION } from "../../utils/skillDescription"
+import { SKILL_DESCRIPTION_CN } from "../../utils/skillDescriptionCn"
+import { useContext } from "react"
+import { AppContext } from "../../pages/_app"
+import useLocale from "../../hooks/useLocale"
 
 export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOpponent = false }: { id: number; isShowInfo?: boolean; isShopSlot?: boolean; isOpponent?: boolean }) => {
   const [chars] = useAtom(slotCharacter)
@@ -13,7 +17,11 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
   const [shopChars] = useAtom(shopCharacter)
   const [stage] = useAtom(stageAtom)
   const [assets, setAssets] = useAtom(assetsAtom)
+  const { lang } = useContext(AppContext)
+  const getLocale = useLocale()
 
+  // console.log(locale);
+  
   let char: CharacterFields | null = null
   if (isShopSlot) {
     char = shopChars[id]
@@ -54,14 +62,14 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                 {(char?.level == 2 || (char?.level >= 6 && char?.level <= 8)) && <Img style={{ width: "20px" }} src={assets?.star_half} />}
                 {/* <p className="text-[10px]">{capitalizeFirstChar(removeSuffix(char?.name))}</p> */}
               </HStack>
-              <Text className="text-[8px]">HP:{get_base_life(char)}</Text>
-              <Text className="text-[8px]">ACK:{char?.attack}</Text>
+              <Text className="text-[8px]">{getLocale('HP')}:{get_base_life(char)}</Text>
+              <Text className="text-[8px]">{getLocale('ACK')}:{char?.attack}</Text>
             </HStack>
             <Divider borderWidth={1} />
             <Text fontSize={"2xs"}>
-              {char.effect_type === "skill" ? "Active skill" : "Passive skill"}
+              {char.effect_type === "skill" ? getLocale('Active-skill') : getLocale('Passive-skill')}
               {": "}
-              {SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value)}
+              {lang=='EN'? SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value):SKILL_DESCRIPTION_CN[char.effect]?.replace("$value", char.effect_value)}
             </Text>
           </Stack>
         </>

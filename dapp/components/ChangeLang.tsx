@@ -8,16 +8,15 @@ import enUs from '../public/locales/EN/common.json';
 import zhCN from '../public/locales/ZH_CN/common.json'
 
 const ChangeLang = () => {
-  const [lang,setlang] = useState('EN')
-  const { setLocal } = useContext(AppContext)
+  const { setLocal, lang, setLang } = useContext(AppContext)
   const handleLanguageChange = (value: string) => {
     if(value==='EN'){
       setLocal(enUs)
-      setlang('EN')
+      setLang('EN')
     }
     if(value==='ZH_CN'){
       setLocal(zhCN)
-      setlang('ZH_CN')
+      setLang('ZH_CN')
     }
   }
   return (
