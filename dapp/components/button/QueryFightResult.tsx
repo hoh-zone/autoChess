@@ -30,6 +30,7 @@ const useQueryFight = () => {
       })
       let res: string[] = []
       result_tmp.data.map((fight: any) => {
+        console.log(fight)
         let time = fight.timestampMs
         const date = new Date(Number(time))
         const formattedDate = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`

@@ -73,7 +73,7 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                     </CheckboxGroup>
                   </HStack>
                   {nfts.map((nft, index) => {
-                    if (check_Items.length == 0 && (!nft.arena || !nft.arena_checked)) {
+                    if (check_Items.length == 0 && ((!nft.arena && nft.lose < 3) || !nft.arena_checked)) {
                       return (
                         <HStack className="w-full" key={index}>
                           <Button
@@ -97,7 +97,6 @@ const ContinueGame = (props: { isLoading: boolean }) => {
                                 {nft.win} win, {nft.lose} lose
                               </p>
                             </Stack>
-                            {/* {"name: " + nft.name + " " + (!nft.arena ? "normal: " : "arena: ") + nft.win + " - " + nft.lose} */}
                           </Button>
                           {nft.arena && (
                             <Button
