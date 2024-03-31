@@ -3,18 +3,16 @@ import type { AppProps } from "next/app"
 import Head from "next/head"
 import { ChakraProvider } from "@chakra-ui/react"
 import React, { useEffect, useRef, useState } from "react"
-import { appWithTranslation } from 'next-i18next'
+import { appWithTranslation } from "next-i18next"
 import { useAtom } from "jotai"
 import { stageAtom } from "../store/stages"
 import "../styles/globals.css"
 import Image from "next/image"
 
-import enUs from '../public/locales/EN/common.json';
-import zhCN from '../public/locales/ZH_CN/common.json';
-
+import enUs from "../public/locales/EN/common.json"
 export const AppContext = React.createContext<any>({})
 
-// function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   const ethosConfiguration = {
     apiKey: process.env.NEXT_PUBLIC_ETHOS_API_KEY,
     preferredWallets: ["Ethos Wallet"],
@@ -65,31 +63,31 @@ export const AppContext = React.createContext<any>({})
       window.removeEventListener("mousedown", callback)
     }
   }, [audioRef.current, stage])
-
+  // 报错点
+  asdas
   return (
     <AppContext.Provider value={{locale, setLocal, lang, setLang}} >
       <EthosConnectProvider
-      ethosConfiguration={ethosConfiguration}
-      dappName="Sui Auto Chess"
-      dappIcon={<Image src={"/favicon.ico"} className="rounded-full" width={32} height={32} alt="" />}
-      connectMessage=" "
-    >
-      <ChakraProvider>
-        <Head>
-          <title>Sui Auto Chess</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
-        </Head>
-        <Component {...pageProps} />
-        <audio ref={audioRef} autoPlay>
-          <source src="./shop.mp3" type="audio/ogg" />
-        </audio>
-        <audio ref={audioFightRef} autoPlay>
-          <source src="./fight.mp3" type="audio/ogg" />
-        </audio>
-      </ChakraProvider>
-    </EthosConnectProvider>
+        ethosConfiguration={ethosConfiguration}
+        dappName="Sui Auto Chess"
+        dappIcon={<Image src={"/favicon.ico"} className="rounded-full" width={32} height={32} alt="" />}
+        connectMessage=" "
+      >
+        <ChakraProvider>
+          <Head>
+            <title>Sui Auto Chess</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
+          </Head>
+          <Component {...pageProps} />
+          <audio ref={audioRef} autoPlay>
+            <source src="./shop.mp3" type="audio/ogg" />
+          </audio>
+          <audio ref={audioFightRef} autoPlay>
+            <source src="./fight.mp3" type="audio/ogg" />
+          </audio>
+        </ChakraProvider>
+      </EthosConnectProvider>
     </AppContext.Provider>
-    
   )
 }
 

@@ -103,5 +103,7 @@
     "Active-skill": "Active skill",
     "Passive-skill": "Passive skill",
     "HP": "HP",
-    "ACK": "ACK"
+    "ACK": "ACK",
+    "you_lose": "you lose",
+    "you_win": "you win!"
 }
