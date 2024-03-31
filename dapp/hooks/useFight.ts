@@ -7,6 +7,7 @@ import { CharacterFields } from "../types/nft";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
 import { get_max_sp } from "../components/character/rawData";
+import useLocale from "./useLocale";
 
 export const useFight = () => {
     const [fightRes, setFightRes] = useAtom(fightResA)
@@ -26,6 +27,7 @@ export const useFight = () => {
     const [skillTag, setSkillTag] = useAtom(skillTagA);
     const [enemySkillTag, setEnemySkillTag] = useAtom(enemySkillTagA);
     const [fightResultModalVisible, setFightResultModalVisible] = useAtom(fightResultModalVisibleAtom)
+    const getLocale = useLocale()
 
     let animationEnd = Date.now() + 4000;
     let skew = 1;
@@ -534,13 +536,13 @@ export const useFight = () => {
 
         // 这里改成合约查询
         if (!fightRes) {
-            setFightResult("you lose");
+            setFightResult(getLocale("you_lose"));
             console.log("you lose2")
             animationEnd = Date.now() + 2000;
             lose_effect();
             await sleep(2000);
         } else {
-            setFightResult("you win");
+            setFightResult(getLocale("you_win"));
             console.log("you win2")
             for (let i = 0; i < 5; ++i) {
                 win_effect();

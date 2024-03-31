@@ -98,5 +98,7 @@
     "redeem-failed": "redeem failed",
     "redeem-success": "redeem success",
     "Money-is-not-enough": "Money is not enough",
-    "Refresh": "Refresh"
+    "Refresh": "Refresh",
+    "you_lose": "you lose",
+    "you_win": "you win!"
 }

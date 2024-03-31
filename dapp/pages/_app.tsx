@@ -63,7 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [audioRef.current, stage])
   // 报错点
-  asdasdsa
+  asdas
   return (
     <AppContext.Provider value={{ locale, setLocal }}>
       <EthosConnectProvider
