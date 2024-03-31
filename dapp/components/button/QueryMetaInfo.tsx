@@ -144,7 +144,6 @@ const useQueryMetaInfo = () => {
           showType: true
         }
       })
-      console.log("result", results)
       let data: any = results.data[0]?.data
       if (!data) {
         return ""

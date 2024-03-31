@@ -15,7 +15,6 @@ export const useSyncGameNFT = () => {
     const [_shopCharacter, setShopCharacter] = useAtom(shopCharacter);
 
     return useCallback((nft: GameNft) => {
-        console.log('nft:', nft)
         setChessId(nft?.id?.id)
         setGold(Number(nft.gold));
         setWin(nft.win);
