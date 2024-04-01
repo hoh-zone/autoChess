@@ -821,7 +821,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   shaman1_1: {
     class: "shaman1_1",
@@ -836,7 +836,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   shaman2: {
     class: "shaman2 ",
@@ -851,7 +851,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   shaman2_1: {
     class: "shaman2_1",
@@ -866,7 +866,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   shaman3: {
     class: "shaman3 ",
@@ -881,7 +881,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   firemega1: {
     class: "firemega1",
@@ -896,7 +896,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   firemega1_1: {
     class: "firemega1_1 ",
@@ -911,7 +911,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   firemega2: {
     class: "firemega2",
@@ -926,7 +926,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   firemega2_1: {
     class: "firemega2_1 ",
@@ -941,7 +941,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   firemega3: {
     class: "firemega3",
@@ -956,7 +956,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_debuff",
-    effect_value: ""
+    effect_value: undefined
   },
   slime1: {
     class: "slime1",
@@ -971,7 +971,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_buff ",
-    effect_value: ""
+    effect_value: undefined
   },
   slime1_1: {
     class: "slime1_1 ",
@@ -986,7 +986,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_buff ",
-    effect_value: ""
+    effect_value: undefined
   },
   slime2: {
     class: "slime2",
@@ -1001,7 +1001,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_buff ",
-    effect_value: ""
+    effect_value: undefined
   },
   slime2_1: {
     class: "slime2_1 ",
@@ -1016,7 +1016,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_buff ",
-    effect_value: ""
+    effect_value: undefined
   },
   slime3: {
     class: "slime3",
@@ -1031,7 +1031,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " forbid_buff ",
-    effect_value: ""
+    effect_value: undefined
   },
   wizard1: {
     class: "wizard1 ",
@@ -1091,7 +1091,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " add_all_tmp_sp_cap",
-    effect_value: ""
+    effect_value: undefined
   },
   wizard3: {
     class: "wizard3 ",
@@ -1106,7 +1106,7 @@ const roles_info: Roles = {
     sp_cap: undefined,
     effective_type: "ring ",
     effect: " add_all_tmp_sp_cap",
-    effect_value: ""
+    effect_value: undefined
   }
 }
 
