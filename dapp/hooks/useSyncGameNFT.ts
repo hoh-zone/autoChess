@@ -33,6 +33,7 @@ export const useSyncGameNFT = () => {
             role.fields.sp_cap = Number(role.fields.sp_cap);
             role.fields.sp = Number(role.fields.sp);
             role.fields.speed = Number(role.fields.speed);
+            role.fields.base_speed = Number(role.fields.speed);
             return role.fields
         }));
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
@@ -45,6 +46,7 @@ export const useSyncGameNFT = () => {
             role.fields.sp_cap = Number(role.fields.sp_cap);
             role.fields.sp = Number(role.fields.sp);
             role.fields.speed = Number(role.fields.speed);
+            role.fields.base_speed = Number(role.fields.speed);
             return role.fields
         }));
     }, []);
