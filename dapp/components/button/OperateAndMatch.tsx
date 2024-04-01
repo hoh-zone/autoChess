@@ -6,6 +6,7 @@ import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
 import useLocale from "../../hooks/useLocale"
+import { get_chars } from "../character/rawData"
 
 const useOperateAndMatch = () => {
   const [fightRes, setFightRes] = useAtom(fightResA)
@@ -33,6 +34,7 @@ const useOperateAndMatch = () => {
 
   const operate_submit = async (operations: string[], meta: any) => {
     if (!wallet) return
+    let chars = get_chars_strvec()
     try {
       const tx = new TransactionBlock()
       const left_gold = money
@@ -46,7 +48,7 @@ const useOperateAndMatch = () => {
           tx.pure(chess_id),
           tx.pure(operations),
           tx.pure(left_gold),
-          tx.pure(get_chars_strvec()),
+          tx.pure(chars),
           tx.object(normalizeSuiObjectId(meta.objectId))
         ]
       })
@@ -70,7 +72,7 @@ const useOperateAndMatch = () => {
         let event = response.events[0]
         if (event == null) {
           toast({
-            title: getLocale('Network-error'),
+            title: getLocale("Network-error"),
             status: "error",
             duration: 5000,
             isClosable: true
@@ -97,7 +99,7 @@ const useOperateAndMatch = () => {
       console.log(error)
       if (String(error).indexOf("function: 9, instruction: 70") !== -1) {
         toast({
-          title: getLocale('You-have-ranked'),
+          title: getLocale("You-have-ranked"),
           status: "warning",
           duration: 5000,
           isClosable: true
@@ -106,7 +108,7 @@ const useOperateAndMatch = () => {
       }
       if (String(error).indexOf("objects are invalid") !== -1) {
         toast({
-          title: getLocale('please-refresh-and-try-again'),
+          title: getLocale("please-refresh-and-try-again"),
           status: "warning",
           duration: 5000,
           isClosable: true
@@ -114,7 +116,7 @@ const useOperateAndMatch = () => {
         return false
       }
       toast({
-        title: getLocale('please-try-again'),
+        title: getLocale("please-try-again"),
         status: "warning",
         duration: 5000,
         isClosable: true

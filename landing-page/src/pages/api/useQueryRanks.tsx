@@ -12,10 +12,6 @@ import {
   mainnetConnection,
   normalizeSuiObjectId,
 } from "@mysten/sui.js";
-import { config } from "process";
-import { CONFIG_FILES } from "next/dist/shared/lib/constants";
-import { it } from "node:test";
-import { Toast } from "@chakra-ui/react";
 
 export interface LineUp {
   walletAddr: string;

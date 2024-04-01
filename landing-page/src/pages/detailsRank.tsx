@@ -57,7 +57,7 @@ export default function DetailsRank() {
                   rewards. - **Ladder Competition Event**: Participate in the
                   Arena battles, accumulate victories, and climb the ladder
                   rankings. The top 20 players will share a grand prize pool of
-                  over $10,000 in cash.<br></br>
+                  over $4,000 in cash.<br></br>
                   <br></br>
                   📢 Our Sincere Invitation:<br></br>
                   Join SuiAutoChess and showcase your wisdom in a world where
