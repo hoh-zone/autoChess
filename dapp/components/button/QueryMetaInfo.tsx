@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE5, CHESS_GLOBAL, ISMAINNET, META_GLOBAL } from "../../lib/constants"
+import { META_PACKAGE, ISMAINNET, META_GLOBAL } from "../../lib/constants"
 import { JsonRpcProvider, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
 
 interface Meta {
@@ -26,7 +26,7 @@ const useQueryMetaInfo = () => {
     try {
       const tx = new TransactionBlock()
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE5}::metaIdentity::claim_invite_exp`,
+        target: `${META_PACKAGE}::metaIdentity::claim_invite_exp`,
         arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.object(normalizeSuiObjectId(meta.objectId))]
       })
       const response = await wallet.signAndExecuteTransactionBlock({
@@ -55,12 +55,12 @@ const useQueryMetaInfo = () => {
       if (inviteMetaId > 0) {
         console.log(inviteMetaId)
         tx.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE5}::metaIdentity::register_invited_meta`,
+          target: `${META_PACKAGE}::metaIdentity::register_invited_meta`,
           arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(inviteMetaId), tx.pure(name), tx.pure(avatar_name)]
         })
       } else {
         tx.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE5}::metaIdentity::mint_meta`,
+          target: `${META_PACKAGE}::metaIdentity::mint_meta`,
           arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.pure(name), tx.pure(avatar_name)]
         })
       }
@@ -126,13 +126,13 @@ const useQueryMetaInfo = () => {
           MatchAny: [
             {
               MoveModule: {
-                package: CHESS_CHALLENGE_PACKAGE,
+                package: META_PACKAGE,
                 module: "metaIdentity"
               }
             },
             {
               MoveModule: {
-                package: CHESS_CHALLENGE_PACKAGE5,
+                package: META_PACKAGE,
                 module: "metaIdentity"
               }
             }

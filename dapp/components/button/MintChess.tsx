@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE5, ROLE_GLOBAL, META_GLOBAL, META_REWARDS_GLOBAL, CHESS_CHALLENGE_PACKAGE } from "../../lib/constants"
+import { CHESS_GLOBAL, CHESS_PACKAGE, ROLE_GLOBAL } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 import useLocale from "../../hooks/useLocale"
 
@@ -20,27 +20,27 @@ const useMintChess = () => {
   const mint = useCallback(
     async ({ username, is_arena, price, meta }: Props) => {
       if (!wallet) return
-      let method = is_arena ? "mint_invite_arena_chess" : "mint_chess"
+      let method = is_arena ? "mint_arena_chess" : "mint_chess"
       let moveModule = "chess"
       const transactionBlock = new TransactionBlock()
       if (is_arena) {
         let coins = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price * 1_000_000_000)])
         let coin_vec = transactionBlock.makeMoveVec({ objects: [coins] })
         transactionBlock.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE5}::${moveModule}::${method}`,
+          target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
           arguments: [
             transactionBlock.pure(`${ROLE_GLOBAL}`),
             transactionBlock.pure(`${CHESS_GLOBAL}`),
-            transactionBlock.pure(`${META_REWARDS_GLOBAL}`),
+            // transactionBlock.pure(`${META_REWARDS_GLOBAL}`),
             transactionBlock.pure(username),
-            coin_vec,
-            transactionBlock.pure(`${META_GLOBAL}`),
-            transactionBlock.pure(meta.objectId)
+            coin_vec
+            // transactionBlock.pure(`${META_GLOBAL}`),
+            // transactionBlock.pure(meta.objectId)
           ]
         })
       } else {
         transactionBlock.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE5}::${moveModule}::${method}`,
+          target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
           arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username)]
         })
       }
@@ -55,7 +55,7 @@ const useMintChess = () => {
         if (!!createObjectChange && "objectId" in createObjectChange) {
           setNftObjectId(createObjectChange.objectId)
           toast({
-            title: getLocale('new-chess-start'),
+            title: getLocale("new-chess-start"),
             status: "success",
             duration: 2000,
             isClosable: true

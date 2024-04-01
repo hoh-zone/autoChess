@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_GLOBAL, CHESS_CHALLENGE_PACKAGE5 } from "../../lib/constants"
+import { CHESS_GLOBAL, CHESS_PACKAGE } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 import useLocale from "../../hooks/useLocale"
 
@@ -22,7 +22,7 @@ const useCheckout = () => {
       try {
         const transactionBlock = new TransactionBlock()
         transactionBlock.moveCall({
-          target: `${CHESS_CHALLENGE_PACKAGE5}::${moveModule}::${method}`,
+          target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
           arguments: [transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(`${chess_id}`)]
         })
         const response = await wallet.signAndExecuteTransactionBlock({
@@ -36,7 +36,7 @@ const useCheckout = () => {
           const createObjectChange = response.objectChanges.find((objectChange) => objectChange.type === "created")
           if (!!createObjectChange && "objectId" in createObjectChange) {
             toast({
-              title: getLocale('redeem-success'),
+              title: getLocale("redeem-success"),
               status: "success",
               duration: 2000,
               isClosable: true
@@ -47,7 +47,7 @@ const useCheckout = () => {
         fun && fun()
       } catch (error) {
         toast({
-          title: getLocale('redeem-failed'),
+          title: getLocale("redeem-failed"),
           status: "error",
           duration: 2000,
           isClosable: true

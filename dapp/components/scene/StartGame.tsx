@@ -19,16 +19,16 @@ import useLocale from "../../hooks/useLocale"
 export const StartGame = () => {
   const [inputValue, setInputValue] = useState("")
   const { nfts, query_chesses } = useQueryChesses()
-  const { query_meta_info } = useQueryMetaInfo()
+  // const { query_meta_info } = useQueryMetaInfo()
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useAtom(assetsAtom)
-  const [meta, setMeta] = useAtom(metaA)
+  // const [meta, setMeta] = useAtom(metaA)
   const getLocale = useLocale()
 
   const fetch = async () => {
     setIsLoading(true)
-    setMeta(await query_meta_info())
+    // setMeta(await query_meta_info())
     const result = await query_chesses()
     setIsLoading(false)
     return result
@@ -57,38 +57,38 @@ export const StartGame = () => {
                     Chess
                   </motion.p>
                   <VStack>
-                    {!meta && <Register isLoading={isLoading} address={wallet.address} />}
-                    {meta && <ContinueGame isLoading={isLoading} />}
+                    {/* {!meta && <Register isLoading={isLoading} address={wallet.address} />} */}
+                    <ContinueGame isLoading={isLoading} />
                   </VStack>
                 </div>
-                {!isLoading && meta && (
-                  <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder={getLocale('Enter-your-chess-name')!} onChange={(v) => setInputValue(v.target.value)} />
+                {!isLoading && (
+                  <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder={getLocale("Enter-your-chess-name")!} onChange={(v) => setInputValue(v.target.value)} />
                 )}
-                {!isLoading && meta && <StartGameButtons name={inputValue} />}
+                {!isLoading && <StartGameButtons name={inputValue} />}
               </Stack>
             </div>
           ) : (
             <div className="absolute text-white bottom-80 z-50">
               <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                {getLocale('Connect')}
+                {getLocale("Connect")}
               </SignInButton>
             </div>
           )}
           <div className="absolute top-0 right-0 m-4">
-              <ChangeLang/>
+            <ChangeLang />
           </div>
           <div className="absolute top-12 right-0 m-4">
-              <Rank />
+            <Rank />
           </div>
           <div className="absolute top-0 left-0 m-4">
             <div>
               <Instruction />
             </div>
-            {meta && (
+            {/* {meta && (
               <div className="mt-3">
                 <MyAccountInfo metaInfo={meta} />
               </div>
-            )}
+            )} */}
           </div>
           <Spacer />
           <VStack className="w-4/5 absolute bottom-0" gap={0}>
