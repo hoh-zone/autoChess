@@ -470,7 +470,7 @@ export const useFight = () => {
     const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_sp_debuff = get_extra_max_sp_debuff(is_opponent);
         modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
-        if (char.sp >= Number(char.sp_cap) && char.effect_type === "skill") {
+        if (char.sp >= Number(char.sp_cap) && char.effective_type === "skill") {
             skillTag[charIndex] = "1";
             char.attacking = 2;
             char.sp = 0;

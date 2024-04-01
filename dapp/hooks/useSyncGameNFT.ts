@@ -23,23 +23,28 @@ export const useSyncGameNFT = () => {
         setChallengeWin(nft.challenge_win);
         setChallengeLose(nft.challenge_lose);
         setSlotCharacter(nft.lineup.fields.roles.map((role) => {
+            console.log('role:', role)
             if (role.fields.class == "none") {
                 return null;
             }
+            role.fields.hp = Number(role.fields.hp);
             role.fields.max_hp = Number(role.fields.hp);
             role.fields.attack = Number(role.fields.attack);
             role.fields.sp_cap = Number(role.fields.sp_cap);
             role.fields.sp = Number(role.fields.sp);
+            role.fields.speed = Number(role.fields.speed);
             return role.fields
         }));
         setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
             if (role.fields.class == "none") {
                 return null;
             }
+            role.fields.hp = Number(role.fields.hp);
             role.fields.attack = Number(role.fields.attack);
             role.fields.max_hp = Number(role.fields.hp);
             role.fields.sp_cap = Number(role.fields.sp_cap);
             role.fields.sp = Number(role.fields.sp);
+            role.fields.speed = Number(role.fields.speed);
             return role.fields
         }));
     }, []);

@@ -21,7 +21,7 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
   const getLocale = useLocale()
 
   // console.log(locale);
-  
+
   let char: CharacterFields | null = null
   if (isShopSlot) {
     char = shopChars[id]
@@ -62,14 +62,18 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
                 {(char?.level == 2 || (char?.level >= 6 && char?.level <= 8)) && <Img style={{ width: "20px" }} src={assets?.star_half} />}
                 {/* <p className="text-[10px]">{capitalizeFirstChar(removeSuffix(char?.name))}</p> */}
               </HStack>
-              <Text className="text-[8px]">{getLocale('HP')}:{get_base_life(char)}</Text>
-              <Text className="text-[8px]">{getLocale('ACK')}:{char?.attack}</Text>
+              <Text className="text-[8px]">
+                {getLocale("HP")}:{get_base_life(char)}
+              </Text>
+              <Text className="text-[8px]">
+                {getLocale("ACK")}:{char?.attack}
+              </Text>
             </HStack>
             <Divider borderWidth={1} />
             <Text fontSize={"2xs"}>
-              {char.effect_type === "skill" ? getLocale('Active-skill') : getLocale('Passive-skill')}
+              {char.effective_type === "skill" ? getLocale("Active-skill") : getLocale("Passive-skill")}
               {": "}
-              {lang=='EN'? SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value):SKILL_DESCRIPTION_CN[char.effect]?.replace("$value", char.effect_value)}
+              {lang == "EN" ? SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value) : SKILL_DESCRIPTION_CN[char.effect]?.replace("$value", char.effect_value)}
             </Text>
           </Stack>
         </>

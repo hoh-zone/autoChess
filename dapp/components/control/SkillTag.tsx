@@ -1,5 +1,5 @@
 import { useAtom } from "jotai"
-import { skillTagA, enemySkillTagA, enemyCharacter, slotCharacter, stageAtom, assetsAtom} from "../../store/stages"
+import { skillTagA, enemySkillTagA, enemyCharacter, slotCharacter, stageAtom, assetsAtom } from "../../store/stages"
 import { CharacterFields } from "../../types/nft"
 import { motion } from "framer-motion"
 import { HStack, Img } from "@chakra-ui/react"
@@ -33,28 +33,28 @@ export const SkillTag = ({ id }: { id: number }) => {
     }
   }
 
-  const get_img_url = (effect:undefined | string) => {
-    if (effect == 'forbid_debuff') {
-      return assets?.forbid_debuff;
-    } else if (effect === 'forbid_buff') {
-      return assets?.forbid_buff;
-    } else if (effect === 'add_all_tmp_max_sp') {
-      return assets?.add_all_tmp_max_sp;
+  const get_img_url = (effect: undefined | string) => {
+    if (effect == "forbid_debuff") {
+      return assets?.forbid_debuff
+    } else if (effect === "forbid_buff") {
+      return assets?.forbid_buff
+    } else if (effect === "add_all_tmp_max_sp") {
+      return assets?.add_all_tmp_max_sp
     } else {
-      return assets?.forbid_buff;
+      return assets?.forbid_buff
     }
   }
 
   return (
     <div style={{ zIndex: 1000, position: "relative", justifyContent: "left" }}>
-      {(skill !== "" || char?.effect_type === "ring") && stage === "fight" && (
+      {(skill !== "" || char?.effective_type === "ring") && stage === "fight" && (
         <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -250%)" }}>
-              <div className="skill_animation">
-                <Img src={get_img_url(char?.effect)}></Img>
-              </div>
+          <div className="skill_animation">
+            <Img src={get_img_url(char?.effect)}></Img>
+          </div>
         </div>
       )}
-      {char?.effect_type === "skill" && char.attacking == 2 && stage === "fight" && (
+      {char?.effective_type === "skill" && char.attacking == 2 && stage === "fight" && (
         <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -250%)" }}>
           <motion.div
             animate={{
