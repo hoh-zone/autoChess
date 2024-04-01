@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "53DF4979C9B352869CD2A7FD4B73B816EF85B619D2A99932A098B530865DF43F"
+manifest_digest = "0A2F5997897B104DD86E5DFF79043548BC731F09224DBD5EA5EAA68394583578"
 deps_digest = "060AD7E57DFB13104F21BE5F5C3759D03F0553FC3229247D9A7A6B45F50D03A3"
 
 dependencies = [
@@ -13,11 +13,11 @@ dependencies = [
 
 [[move.package]]
 name = "MoveStdlib"
-source = { local = "/Users/siminxie/sui_dev/autoChess/myMoveVersion/move-stdlib" }
+source = { local = "G:\\autoChess\\move_split\\move-stdlib" }
 
 [[move.package]]
 name = "Sui"
-source = { local = "/Users/siminxie/sui_dev/autoChess/myMoveVersion/sui-framework" }
+source = { local = "G:\\autoChess\\move_split\\sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -25,14 +25,9 @@ dependencies = [
 
 [[move.package]]
 name = "util_package"
-source = { local = "/Users/siminxie/sui_dev/autoChess/myMoveVersion/util_package" }
+source = { local = "G:\\autoChess\\myMoveVersion\\myMoveVersion\\util_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
   { name = "Sui" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.18.0"
-edition = "legacy"
-flavor = "sui"

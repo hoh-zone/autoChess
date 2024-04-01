@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "DE80E2BB59340A0875EB8758E91EE7372BB4932042280F3CEC85D055540F9E26"
+manifest_digest = "E56F8821905E8B20B72DD5EC967452C435D1B6CA9BD11C60C51FAD1A362942B7"
 deps_digest = "F9B494B64F0615AED0E98FC12A85B85ECD2BC5185C22D30E7F67786BB52E507C"
 
 dependencies = [
@@ -14,11 +14,11 @@ dependencies = [
 
 [[move.package]]
 name = "MoveStdlib"
-source = { local = "/Users/siminxie/sui_dev/autoChess/myMoveVersion/move-stdlib" }
+source = { local = "G:\\autoChess\\move_split\\move-stdlib" }
 
 [[move.package]]
 name = "Sui"
-source = { local = "/Users/siminxie/sui_dev/autoChess/myMoveVersion/sui-framework" }
+source = { local = "G:\\autoChess\\move_split\\sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -26,7 +26,7 @@ dependencies = [
 
 [[move.package]]
 name = "role_package"
-source = { local = "/Users/siminxie/sui_dev/autoChess/myMoveVersion/role_package" }
+source = { local = "G:\\autoChess\\myMoveVersion\\myMoveVersion\\role_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -36,14 +36,9 @@ dependencies = [
 
 [[move.package]]
 name = "util_package"
-source = { local = "/Users/siminxie/sui_dev/autoChess/myMoveVersion/util_package" }
+source = { local = "G:\\autoChess\\myMoveVersion\\myMoveVersion\\util_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
   { name = "Sui" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.18.0"
-edition = "legacy"
-flavor = "sui"
