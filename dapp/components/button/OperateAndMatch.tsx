@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { chessId, fightResA, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
-import { CHALLENGE_GLOBAL, CHESS_GLOBAL, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALLENGE_PACKAGE5 } from "../../lib/constants"
+import { CHALLENGE_GLOBAL, CHESS_GLOBAL, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALLENGE_PACKAGE6 } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
@@ -37,7 +37,7 @@ const useOperateAndMatch = () => {
       const tx = new TransactionBlock()
       const left_gold = money
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE5}::chess::operate_and_battle`,
+        target: `${CHESS_CHALLENGE_PACKAGE6}::chess::operate_and_battle`,
         arguments: [
           tx.pure(`${CHESS_GLOBAL}`),
           tx.pure(`${ROLE_GLOBAL}`),
@@ -70,7 +70,7 @@ const useOperateAndMatch = () => {
         let event = response.events[0]
         if (event == null) {
           toast({
-            title: getLocale('Network-error'),
+            title: getLocale("Network-error"),
             status: "error",
             duration: 5000,
             isClosable: true
@@ -97,7 +97,7 @@ const useOperateAndMatch = () => {
       console.log(error)
       if (String(error).indexOf("function: 9, instruction: 70") !== -1) {
         toast({
-          title: getLocale('You-have-ranked'),
+          title: getLocale("You-have-ranked"),
           status: "warning",
           duration: 5000,
           isClosable: true
@@ -106,7 +106,7 @@ const useOperateAndMatch = () => {
       }
       if (String(error).indexOf("objects are invalid") !== -1) {
         toast({
-          title: getLocale('please-refresh-and-try-again'),
+          title: getLocale("please-refresh-and-try-again"),
           status: "warning",
           duration: 5000,
           isClosable: true
@@ -114,7 +114,7 @@ const useOperateAndMatch = () => {
         return false
       }
       toast({
-        title: getLocale('please-try-again'),
+        title: getLocale("please-try-again"),
         status: "warning",
         duration: 5000,
         isClosable: true
