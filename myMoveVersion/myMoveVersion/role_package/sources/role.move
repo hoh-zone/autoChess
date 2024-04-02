@@ -21,12 +21,16 @@ module role_package::role {
     const ERR_DIFFERENT_class:u64 = 0x002;
     const ERR_DIFFERENT_hp:u64 = 0x003;
     const ERR_DIFFERENT_ATTACK:u64 = 0x004;
+    const ERR_NO_PERMISSION:u64 = 0x005;
+    const CURRENT_VERSION:u64 = 1;
 
     // charactors specifies all the 16 classes' basic stats
     // Each class has the specifications of level 1,2,3,5,9 and corresponding stats
     struct Global has key {
         id: UID,
-        charactors: VecMap<String, Role>
+        charactors: VecMap<String, Role>,
+        version: u64,
+        manager: address
     }
 
     struct Role has store, copy, drop {
@@ -46,7 +50,9 @@ module role_package::role {
     fun init(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            charactors: vec_map::empty<String, Role>()
+            charactors: vec_map::empty<String, Role>(),
+            version: CURRENT_VERSION,
+            manager: @manager
         };
         transfer::share_object(global);
     }
@@ -411,12 +417,25 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
             *role
         } 
     }
+
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.version = version;
+    }
+
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
+    }
+
 ////////////////////////////// Test
 
     public fun generate_role_global(ctx: &mut TxContext): Global{
         let global = Global {
             id: object::new(ctx),
-            charactors: vec_map::empty<String, Role>()
+            charactors: vec_map::empty<String, Role>(),
+            version: CURRENT_VERSION,
+            manager: @manager
         };
         init_charactors1(&mut global);
         init_charactors2(&mut global);
@@ -426,7 +445,9 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
     public fun delete_role_global(global:Global){
         let Global{
             id: id1,
-            charactors: _char         
+            charactors: _char,
+            version: _v,
+            manager: _m    
         } = global;
         object::delete(id1);
     }
@@ -497,7 +518,9 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
     public fun init_for_test(ctx: &mut TxContext) {
         let global = Global {
             id: object::new(ctx),
-            charactors: vec_map::empty<String, Role>()
+            charactors: vec_map::empty<String, Role>(),
+            version: CURRENT_VERSION,
+            manager: @manager
         };
         transfer::share_object(global);
     }

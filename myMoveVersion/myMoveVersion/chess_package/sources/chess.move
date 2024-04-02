@@ -18,7 +18,7 @@ module chess_package::chess {
     use sui::coin::{Self, Coin};
     use sui::clock::{Clock};
     use sui::event;
-    use sui::vec_map::{Self, VecMap};
+    use sui::vec_map::{Self};
 
     use lineup_package::lineup::{Self, LineUp};
     use role_package::role::{Self,Role};
@@ -44,12 +44,17 @@ module chess_package::chess {
     const ERR_CHECK_ROLES_NOT_EQUAL:u64 = 0x005;
     const ERR_WRONG_LEFT_GOLD:u64 = 0x006;
     const ERR_EXCEED_VEC_LENGTH:u64 = 0x007;
+    const ERR_NO_PERMISSION:u64 = 0x008;
+    const ERR_INVALID_VERSION:u64 = 0x009;
+    const CURRENT_VERSION: u64 = 1;
 
     struct Global has key {
         id: UID,
         total_chesses: u64,
         total_battle:u64,
         balance_SUI: Balance<SUI>,
+        version: u64,
+        manager: address
     }
 
     // Each chess is the round(s) of game with 3-20 something battles in line
@@ -117,6 +122,8 @@ module chess_package::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
+            version: CURRENT_VERSION,
+            manager: @manager
         };
         transfer::share_object(global);
     }
@@ -135,7 +142,7 @@ module chess_package::chess {
     // who publishes the package
     #[lint_allow(self_transfer)]
     public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        assert!(tx_context::sender(ctx) == @manager, ERR_NOT_PERMISSION);
         let sui_balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
@@ -145,7 +152,7 @@ module chess_package::chess {
     // Then it calculates the rewards for the top 20 respectively.
     // Finally it locks the challenge rewards pool
     public fun lock_reward(global: &mut Global, challengeGlobal: &mut challenge::Global, clock:&Clock, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NOT_PERMISSION);
+        assert!(tx_context::sender(ctx) == @manager, ERR_NOT_PERMISSION);
         assert!(challenge::query_left_challenge_time(challengeGlobal, clock) == 0, ERR_CHALLENGE_NOT_END);
         let challenge_mode_rewards = balance::value(&global.balance_SUI) / 10;
         let balance = balance::split(&mut global.balance_SUI, challenge_mode_rewards);
@@ -181,6 +188,7 @@ module chess_package::chess {
 
     #[lint_allow(self_transfer)]
     entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
         // ticket price
@@ -220,6 +228,7 @@ module chess_package::chess {
     // mint a chess nft
     #[lint_allow(self_transfer)]
     entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
@@ -243,6 +252,7 @@ module chess_package::chess {
     // Pay the arena rewards to the player, the ctx is player add
     #[lint_allow(self_transfer)]
     entry fun check_out_arena_fee(global: &mut Global, chess: &mut Chess, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         assert!(!chess.arena_checked, ERR_ARENA_FEE_HAS_CHECKED_OUT);
         chess.arena_checked = true;
@@ -469,7 +479,7 @@ module chess_package::chess {
         };
 
         // fight and record lineup
-        if (fight(chess, &mut enemy_lineup, chanllenge_on, ctx)) {
+        if (fight(chess, &enemy_lineup, chanllenge_on, ctx)) {
             if (chanllenge_on) {
                 // challenge_win is 1 when chess.win is 0, it stays 0 till the 10th win on standard mode
                 challenge::rank_forward(challengeGlobal, chess.lineup);
@@ -496,7 +506,7 @@ module chess_package::chess {
 
     // Performs the battle between the player and the rival by rounds of attacks and conter-attacks
     // Return true if player wins and false if play loses
-    fun fight(chess: &mut Chess, enemy_lineup: &mut LineUp, is_challenge:bool, ctx:&mut TxContext) :bool {
+    fun fight(chess: &mut Chess, enemy_lineup: &LineUp, is_challenge:bool, ctx:&mut TxContext) :bool {
         let my_lineup_fight = *&chess.lineup;
 
         // backup to avoid base_hp to be changed
@@ -607,6 +617,16 @@ module chess_package::chess {
         });
         res
     }
+    
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.version = version;
+    }
+
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
+    }
 
 //////////////////////////////////Mainly for test ////////////////////////////////Mainly for test ////////////////////////////////Mainly for test
 //////////////////////////////Mainly for test////////////////////////////////Mainly for test////////////////////////////////Mainly for test 
@@ -617,6 +637,8 @@ module chess_package::chess {
             total_chesses: 0,
             total_battle: 0,
             balance_SUI: balance::zero(),
+            version: CURRENT_VERSION,
+            manager: @manager
         };
         transfer::share_object(global);
     }
@@ -936,8 +958,4 @@ module chess_package::chess {
 
     #[test]
     fun test_battle(){}
-
-
-
-
 }

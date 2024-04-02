@@ -16,6 +16,8 @@ module lineup_package::lineup {
     const ERR_TAG_NOT_IN_TABLE:u64 = 0x002;
     const ERR_ELE_NOT_CONTAINS:u64 = 0x003;
     const ERR_EXCEED_VEC_LENGTH:u64 = 0x004;
+    const ERR_NO_PERMISSION:u64 = 0x005;
+    const CURRENT_VERSION:u64 = 1;
 
     // lineup_pools save at most 10 newest lineups for each win-loss tag in the standard mode
     // arena_lineup_pools at most 10 newest lineups for each win-loss tag in the arena mode
@@ -24,6 +26,8 @@ module lineup_package::lineup {
         // used for fight
         standard_mood_pools: VecMap<WinLose, vector<LineUp>>,
         arena_mood_pools: VecMap<WinLose, vector<LineUp>>,
+        version:u64,
+        manager: address
     }
 
     // One lineup has up to 6 roles
@@ -94,7 +98,9 @@ module lineup_package::lineup {
         let global = Global {
             id: object::new(ctx),
             standard_mood_pools: vec_map::empty<WinLose, vector<LineUp>>(),
-            arena_mood_pools: vec_map::empty<WinLose, vector<LineUp>>()
+            arena_mood_pools: vec_map::empty<WinLose, vector<LineUp>>(),
+            version:CURRENT_VERSION,
+            manager: @manager
         };
         transfer::share_object(global);
     }
@@ -337,7 +343,16 @@ module lineup_package::lineup {
         };
         new_lineUP(tx_context::sender(ctx), name, 6, vec, gold_cost, utils::seed(ctx, 123))
     }
+    
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.version = version;
+    }
 
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
+    }
 
 //////////////////////////////////Mainly for test ////////////////////////////////Mainly for test ////////////////////////////////Mainly for test
 //////////////////////////////Mainly for test////////////////////////////////Mainly for test////////////////////////////////Mainly for test
@@ -348,7 +363,9 @@ module lineup_package::lineup {
         Global {
             id: object::new(ctx),
             standard_mood_pools: vec_map::empty<WinLose, vector<LineUp>>(),
-            arena_mood_pools: vec_map::empty<WinLose, vector<LineUp>>()
+            arena_mood_pools: vec_map::empty<WinLose, vector<LineUp>>(),
+            version:CURRENT_VERSION,
+            manager: @manager
         }
     }
 
@@ -356,7 +373,9 @@ module lineup_package::lineup {
         let Global{
             id: id1,
             standard_mood_pools: _s,     
-            arena_mood_pools: _a   
+            arena_mood_pools: _a,
+            version: _v,
+            manager: _m
         } = global;
         //table::drop(s);
         object::delete(id1);

@@ -26,6 +26,7 @@ module challenge_package::challenge {
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
     const ERR_ALREADY_INIT: u64 = 0x04;
     const ERR_EXCEED_VEC_LENGTH: u64 = 0x05;
+    const CURRENT_VERSION: u64 = 1;
 
     // challenge admin, keeps the uptodate data with time stamp, updated every season (14-30 days)
     // rank_20 is the first 20 players identified by the lineup (when is it generated: mannually initiallized in ts script)
@@ -37,7 +38,9 @@ module challenge_package::challenge {
         rank_20: vector<LineUp>,
         reward_20: vector<u64>,
         publish_time: u64,
-        lock:bool
+        lock:bool,
+        version: u64,
+        manager: address
     }
 
     fun init(ctx: &mut TxContext) {
@@ -47,7 +50,9 @@ module challenge_package::challenge {
             rank_20: vector::empty<LineUp>(),
             reward_20: vector::empty<u64>(),
             publish_time: 0,
-            lock: false
+            lock: false,
+            version: CURRENT_VERSION,
+            manager: @manager
         };
         transfer::share_object(global);
     }
@@ -216,7 +221,7 @@ module challenge_package::challenge {
     // Transfer the left Sui in the rewards pool tho the chess shop account only when challenge timeout
     #[lint_allow(self_transfer)]
     public fun withdraw_left_amount(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == @account, ERR_NO_PERMISSION);
+        assert!(tx_context::sender(ctx) == @manager, ERR_NO_PERMISSION);
         assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
         let value = balance::value(&global.balance_SUI);
         let balance = balance::split(&mut global.balance_SUI, value);
@@ -254,6 +259,16 @@ module challenge_package::challenge {
         global.lock = true
     }
 
+    public fun upgradeVersion(global: &mut Global, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.version = version;
+    }
+
+    public fun change_manager(global: &mut Global, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
+    }
+ 
 ////////////////////////////////Mainly for test ////////////////////////////////Mainly for test ////////////////////////////////Mainly for test
 ////////////////////////////////Mainly for test////////////////////////////////Mainly for test////////////////////////////////Mainly for test
 
@@ -277,7 +292,9 @@ module challenge_package::challenge {
             rank_20: _r,
             reward_20: _re,
             publish_time: _t,
-            lock: _l
+            lock: _l,
+            version: _v,
+            manager: _m
         } = global;
         //balance::withdraw_all(&mut b);
         balance::destroy_zero(b);
