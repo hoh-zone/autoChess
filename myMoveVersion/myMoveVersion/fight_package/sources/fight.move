@@ -1,5 +1,5 @@
 // fight logic in every match.
-module fight_package::fight {
+module fight_packagev2::fight {
     use std::debug::print;
     use std::vector;
     use std::string::{String, utf8};
@@ -7,9 +7,9 @@ module fight_package::fight {
     use sui::vec_map::{Self, VecMap};
     use sui::tx_context::{Self};
 
-    use role_package::role::{Self, Role};
-    use lineup_package::lineup::{Self, LineUp};
-    use util_package::utils::{Self, Int_wrapper};
+    use role_packagev2::role::{Self, Role};
+    use lineup_packagev2::lineup::{Self, LineUp};
+    use util_packagev2::utils::{Self, Int_wrapper};
 
     //const INVALID_INDEX:u64 = 10000;
     //const ERR_EXCEED_VEC_LENGTH:u64 = 0x001;

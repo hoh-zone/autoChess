@@ -4,7 +4,7 @@
 // standard mode is free, but you can't win sui. In arena mode, players have to buy a ticket to start the game and check out to win some sui.
 // before each battle, roles present in hero pool is determined, it costs gold to refresh to see the next five heros in the hero pool with 30 heros generated at the end of last battle
 // There is no dynamic generation on frontend when you click "refresh" button.
-module chess_package::chess {
+module chess_packagev2::chess {
     use std::vector;
     use std::string::{utf8, String};
     use std::debug::print;
@@ -20,11 +20,11 @@ module chess_package::chess {
     use sui::event;
     use sui::vec_map::{Self};
 
-    use lineup_package::lineup::{Self, LineUp};
-    use role_package::role::{Self,Role};
-    use challenge_package::challenge;
-    use fight_package::fight;
-    use util_package::utils::{Self, Int_wrapper};
+    use lineup_packagev2::lineup::{Self, LineUp};
+    use role_packagev2::role::{Self,Role};
+    use challenge_packagev2::challenge;
+    use fight_packagev2::fight;
+    use util_packagev2::utils::{Self, Int_wrapper};
 
     const INIT_GOLD:u64 = 10;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
@@ -141,7 +141,7 @@ module chess_package::chess {
     // Withdraw a the 'amount' of SUI from the chess shop balance and transfer to the local account
     // who publishes the package
     #[lint_allow(self_transfer)]
-    public fun withdraw(amount:u64, global: &mut Global, ctx: &mut TxContext) {
+    public fun split_amount(amount:u64, global: &mut Global, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @manager, ERR_NOT_PERMISSION);
         let sui_balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(sui_balance, ctx);

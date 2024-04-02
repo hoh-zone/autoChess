@@ -1,5 +1,5 @@
 // player's lineup, it contains some roles.
-module lineup_package::lineup {
+module lineup_packagev2::lineup {
     use std::vector::{Self};
     use std::string::{Self, utf8, String};
     use std::debug::print;
@@ -9,8 +9,8 @@ module lineup_package::lineup {
     use sui::transfer;
     use sui::object::{Self, UID};
 
-    use role_package::role::{Role, Self};
-    use util_package::utils;
+    use role_packagev2::role::{Role, Self};
+    use util_packagev2::utils;
 
     const ERR_WRONG_ROLES_NUMBER:u64 = 0x001;
     const ERR_TAG_NOT_IN_TABLE:u64 = 0x002;

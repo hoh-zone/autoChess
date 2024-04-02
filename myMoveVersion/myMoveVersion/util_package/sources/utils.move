@@ -1,4 +1,4 @@
-module util_package::utils {
+module util_packagev2::utils {
     use std::string::{Self, utf8, String};
     use sui::tx_context::{Self, TxContext};
     use sui::object::{Self};

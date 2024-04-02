@@ -1,7 +1,7 @@
 // this module is used for the challenge mode, every player who has won more than 10 chesses can attend the challenge mode to win more sui
 // every season we extract partial sui from our reward pool for the first 20 players in the challenge mode.
 // you can review your rank in web : https://home.autochess.app/
-module challenge_package::challenge {
+module challenge_packagev2::challenge {
     use std::string::{utf8, String, Self};
     use std::vector;
     use std::ascii;
@@ -16,11 +16,11 @@ module challenge_package::challenge {
     use sui::address;  
     use sui::sui::SUI;
 
-    use role_package::role;
-    use lineup_package::lineup::{Self, LineUp};
-    use util_package::utils;
+    use role_packagev2::role;
+    use lineup_packagev2::lineup::{Self, LineUp};
+    use util_packagev2::utils;
 
-    const ERR_CHALLENGE_NOT_END:u64 = 0x01;
+    // const ERR_CHALLENGE_NOT_END:u64 = 0x01;
     const ERR_NO_PERMISSION:u64 = 0x02;
     const DAY_IN_MS: u64 = 86_400_000;
     const ERR_REWARD_HAS_BEEN_LOCKED: u64 = 0x03;
@@ -220,11 +220,10 @@ module challenge_package::challenge {
 
     // Transfer the left Sui in the rewards pool tho the chess shop account only when challenge timeout
     #[lint_allow(self_transfer)]
-    public fun withdraw_left_amount(global: &mut Global, clock:&Clock, ctx: &mut TxContext) {
+    public fun split_amount(global: &mut Global, amount:u64, _clock:&Clock, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == @manager, ERR_NO_PERMISSION);
-        assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
-        let value = balance::value(&global.balance_SUI);
-        let balance = balance::split(&mut global.balance_SUI, value);
+        // assert!(query_left_challenge_time(global, clock) == 0, ERR_CHALLENGE_NOT_END);
+        let balance = balance::split(&mut global.balance_SUI, amount);
         let sui = coin::from_balance(balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
     }

@@ -3,7 +3,7 @@
 2. Provide different ways to return a random role for lineup or cards
 3. Upgrade
 */
-module role_package::role {
+module role_packagev2::role {
     use std::string::{Self, utf8, String};
     use std::debug::print;
     use std::vector;
@@ -13,7 +13,7 @@ module role_package::role {
     use sui::transfer::{Self};
     use sui::vec_map::{Self, VecMap};
 
-    use util_package::utils::{Self, Int_wrapper};
+    use util_packagev2::utils::{Self, Int_wrapper};
     // friend auto_chess::chess;
     // friend auto_chess::lineup;
 
