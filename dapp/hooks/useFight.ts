@@ -499,8 +499,8 @@ export const useFight = () => {
 
     return useCallback(async () => {
         console.log("--------开始战斗-------");
-        console.log(chars);
-        console.log(enemyChars);
+        console.log('我方', chars);
+        console.log('敌方', enemyChars);
         let loop = 80;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1

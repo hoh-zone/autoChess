@@ -23,7 +23,6 @@ export const useSyncGameNFT = () => {
         setChallengeWin(nft.challenge_win);
         setChallengeLose(nft.challenge_lose);
         setSlotCharacter(nft.lineup.fields.roles.map((role) => {
-            console.log('role:', role)
             if (role.fields.class == "none") {
                 return null;
             }
