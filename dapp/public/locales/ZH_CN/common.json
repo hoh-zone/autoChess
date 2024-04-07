@@ -105,5 +105,9 @@
   "Active-skill": "主动技能",
   "Passive-skill": "被动技能",
   "HP": "生命",
-  "ACK": "攻击"
+  "ACK": "攻击",
+  "SPEED": "速度",
+  "update-info": "Autochess 2.0 更新内容：",
+  "update-info1": "1、更新了全新的速度系统，每名角色有不同的初始速度，决定了攻击的先后手顺序",
+  "update-info2": "2、修复了战斗结果概率性和演算动画不一致的bug"
 }

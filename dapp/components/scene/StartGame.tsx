@@ -45,16 +45,16 @@ export const StartGame = () => {
         <>
           {/* todo video 可以改成高度大些的动态图片啥的 */}
           <video style={{ objectFit: "cover" }} className="w-full h-auto" autoPlay loop muted>
-            <source src={assets?.bg7} type="video/mp4" />
+            <source src={assets?.bg1} type="video/mp4" />
           </video>
           {wallet ? (
             <div className="absolute text-white z-50">
               <Stack className="items-center text-center" gap={4}>
                 <div className="mb-4">
-                  <motion.p initial={{ opacity: 0, scale: 0, y: "30px" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: "30px", fontSize: "100px" }}>
-                    Auto
+                  <motion.p initial={{ opacity: 0, scale: 0, y: "30px" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: "30px", fontSize: "80px" }}>
+                    Sui Auto
                     <br />
-                    Chess
+                    Chess V2
                   </motion.p>
                   <VStack>
                     {/* {!meta && <Register isLoading={isLoading} address={wallet.address} />} */}
@@ -93,18 +93,13 @@ export const StartGame = () => {
           <Spacer />
           <VStack className="w-4/5 absolute bottom-0" gap={0}>
             <HStack className="w-full flex justify-around h-24">
-              <Character charType="archer" isOpponent={false} />
-              <Character charType="shaman" isOpponent={false} />
-              <Character charType="slime" isOpponent={true} />
-            </HStack>
-            <HStack className="w-full flex justify-around h-24">
               <Character charType="assa" isOpponent={false} />
               <Character charType="tank" isOpponent={false} />
               <Character charType="shaman" isOpponent={true} />
               <Character charType="tree" isOpponent={true} />
             </HStack>
             <HStack className="w-full flex justify-around h-24">
-              <Character charType="firemega" isOpponent={false} />
+              {/* <Character charType="firemega" isOpponent={false} /> */}
               <Character charType="golem" isOpponent={false} />
               <Character charType="mega" isOpponent={true} />
               <Character charType="fighter" isOpponent={true} />

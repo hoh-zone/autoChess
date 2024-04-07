@@ -104,6 +104,10 @@
     "Passive-skill": "Passive skill",
     "HP": "HP",
     "ACK": "ACK",
+    "SPEED": "SPEED",
     "you_lose": "you lose",
-    "you_win": "you win!"
+    "you_win": "you win!",
+    "update-info": "Autochess 2.0 Update Content：",
+    "update-info1": "1、New speed system has been updated. Each character has a different initial speed, which determines the order of attacks.",
+    "update-info2": "2、Fixed a bug in which the probability of battle results and the calculation animation were inconsistent"
 }

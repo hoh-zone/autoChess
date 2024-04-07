@@ -48,6 +48,17 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
     }
   }
 
+  const get_base_speed = (char: CharacterFields | null) => {
+    if (!char) {
+      return 0
+    }
+    if (isShopSlot) {
+      return char.base_speed
+    } else {
+      return char.speed
+    }
+  }
+
   return (
     <div className="float-container pointer-events-none">
       {/* 触发范围 */}
@@ -67,6 +78,9 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
               </Text>
               <Text className="text-[8px]">
                 {getLocale("ACK")}:{char?.attack}
+              </Text>
+              <Text className="text-[8px]">
+                {getLocale("SPEED")}:{get_base_speed(char)}
               </Text>
             </HStack>
             <Divider borderWidth={1} />

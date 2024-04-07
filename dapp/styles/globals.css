@@ -362,7 +362,7 @@ a {
 
 .float-container {
   position: absolute;
-  width: 140px;
+  width: 200px;
   bottom: 100%;
   left: 50%;
   transform: translate(-50%, 0);
