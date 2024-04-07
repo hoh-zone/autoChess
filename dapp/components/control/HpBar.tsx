@@ -32,7 +32,7 @@ export const HpBar = ({ id }: { id: number }) => {
   }
 
   const get_img_url_by_effect = (char: CharacterFields | null) => {
-    if (char != null && char.effective_type === "ring") {
+    if (char != null && char.effect_type === "ring") {
       return "url('fix_inner.png') no-repeat"
     }
     return "url('mp_inner.png') no-repeat"
@@ -48,7 +48,7 @@ export const HpBar = ({ id }: { id: number }) => {
   const get_width_by_sp = (char: CharacterFields | null) => {
     let start = 10
     let end = 45
-    if (char?.effective_type == "ring") {
+    if (char?.effect_type == "ring") {
       return end
     }
     if (stage == "shop") {

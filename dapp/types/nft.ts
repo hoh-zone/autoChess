@@ -50,7 +50,7 @@ export interface CharacterFields {
     max_hp: number;
     base_speed: number;
     sp_cap: number | undefined;
-    effective_type: string; // 常驻触发，主动释放，被动触发
+    effect_type: string; // 常驻触发，主动释放，被动触发
     effect: string; // 可能有亡语，需要读取释放
     effect_value: string | undefined;
     attacking?: 0 | 1 | 2;

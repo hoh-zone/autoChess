@@ -17,7 +17,7 @@ const roles_info: Roles = {
     max_hp: 8,
     base_speed: 10,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_lowest_hp",
     effect_value: "6",
     attacking: 0
@@ -33,7 +33,7 @@ const roles_info: Roles = {
     max_hp: 8,
     base_speed: 10,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_lowest_hp",
     effect_value: "6",
     attacking: 0
@@ -49,7 +49,7 @@ const roles_info: Roles = {
     max_hp: 15,
     base_speed: 12,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_lowest_hp",
     effect_value: "12",
     attacking: 0
@@ -65,7 +65,7 @@ const roles_info: Roles = {
     max_hp: 15,
     base_speed: 12,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_lowest_hp",
     effect_value: "12",
     attacking: 0
@@ -81,7 +81,7 @@ const roles_info: Roles = {
     max_hp: 37,
     base_speed: 14,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_lowest_hp",
     effect_value: "18",
     attacking: 0
@@ -97,7 +97,7 @@ const roles_info: Roles = {
     max_hp: 11,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "aoe",
     effect_value: "4",
     attacking: 0
@@ -113,7 +113,7 @@ const roles_info: Roles = {
     max_hp: 11,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "aoe",
     effect_value: "4",
     attacking: 0
@@ -129,7 +129,7 @@ const roles_info: Roles = {
     max_hp: 21,
     base_speed: 8,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "aoe",
     effect_value: "8",
     attacking: 0
@@ -145,7 +145,7 @@ const roles_info: Roles = {
     max_hp: 21,
     base_speed: 8,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "aoe",
     effect_value: "8",
     attacking: 0
@@ -161,7 +161,7 @@ const roles_info: Roles = {
     max_hp: 50,
     base_speed: 10,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "aoe",
     effect_value: "16",
     attacking: 0
@@ -177,7 +177,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_by_hp_percent",
     effect_value: "1",
     attacking: 0
@@ -193,7 +193,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_by_hp_percent",
     effect_value: "1",
     attacking: 0
@@ -209,7 +209,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_by_hp_percent",
     effect_value: "2",
     attacking: 0
@@ -225,7 +225,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_by_hp_percent",
     effect_value: "2",
     attacking: 0
@@ -241,7 +241,7 @@ const roles_info: Roles = {
     max_hp: 60,
     base_speed: 10,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_by_hp_percent",
     effect_value: "3",
     attacking: 0
@@ -257,7 +257,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_sputter_to_second_by_percent",
     effect_value: "5",
     attacking: 0
@@ -273,7 +273,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_sputter_to_second_by_percent",
     effect_value: "5",
     attacking: 0
@@ -289,7 +289,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 10,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_sputter_to_second_by_percent",
     effect_value: "5",
     attacking: 0
@@ -305,7 +305,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 10,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_sputter_to_second_by_percent",
     effect_value: "5",
     attacking: 0
@@ -321,7 +321,7 @@ const roles_info: Roles = {
     max_hp: 45,
     base_speed: 12,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_sputter_to_second_by_percent",
     effect_value: "5",
     attacking: 0
@@ -337,7 +337,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 7,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_last_char",
     effect_value: "7",
     attacking: 0
@@ -353,7 +353,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 7,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_last_char",
     effect_value: "7",
     attacking: 0
@@ -369,7 +369,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 9,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_last_char",
     effect_value: "14",
     attacking: 0
@@ -385,7 +385,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 9,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_last_char",
     effect_value: "14",
     attacking: 0
@@ -401,7 +401,7 @@ const roles_info: Roles = {
     max_hp: 45,
     base_speed: 12,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "attack_last_char",
     effect_value: "24",
     attacking: 0
@@ -417,7 +417,7 @@ const roles_info: Roles = {
     max_hp: 8,
     base_speed: 5,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_attack",
     effect_value: "1",
     attacking: 0
@@ -433,7 +433,7 @@ const roles_info: Roles = {
     max_hp: 8,
     base_speed: 5,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_attack",
     effect_value: "1",
     attacking: 0
@@ -449,7 +449,7 @@ const roles_info: Roles = {
     max_hp: 15,
     base_speed: 7,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_attack",
     effect_value: "2",
     attacking: 0
@@ -465,7 +465,7 @@ const roles_info: Roles = {
     max_hp: 15,
     base_speed: 7,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_attack",
     effect_value: "2",
     attacking: 0
@@ -481,7 +481,7 @@ const roles_info: Roles = {
     max_hp: 37,
     base_speed: 10,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_attack",
     effect_value: "4",
     attacking: 0
@@ -497,7 +497,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 4,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_sp",
     effect_value: "1",
     attacking: 0
@@ -513,7 +513,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 4,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_sp",
     effect_value: "1",
     attacking: 0
@@ -529,7 +529,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_sp",
     effect_value: "1",
     attacking: 0
@@ -545,7 +545,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_sp",
     effect_value: "1",
     attacking: 0
@@ -561,7 +561,7 @@ const roles_info: Roles = {
     max_hp: 60,
     base_speed: 13,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_sp",
     effect_value: "1",
     attacking: 0
@@ -577,7 +577,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 4,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_hp",
     effect_value: "2",
     attacking: 0
@@ -593,7 +593,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 4,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_hp",
     effect_value: "2",
     attacking: 0
@@ -609,7 +609,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_hp",
     effect_value: "4",
     attacking: 0
@@ -625,7 +625,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_hp",
     effect_value: "4"
   },
@@ -640,7 +640,7 @@ const roles_info: Roles = {
     max_hp: 60,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "add_all_tmp_hp",
     effect_value: "8",
     attacking: 0
@@ -656,7 +656,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 4,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "all_max_hp_to_back1",
     effect_value: "6",
     attacking: 0
@@ -672,7 +672,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 4,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "all_max_hp_to_back1",
     effect_value: "6",
     attacking: 0
@@ -688,7 +688,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "all_max_hp_to_back1",
     effect_value: "8",
     attacking: 0
@@ -704,7 +704,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "all_max_hp_to_back1",
     effect_value: "8",
     attacking: 0
@@ -720,7 +720,7 @@ const roles_info: Roles = {
     max_hp: 60,
     base_speed: 9,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "all_max_hp_to_back1",
     effect_value: "12",
     attacking: 0
@@ -736,7 +736,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_all_tmp_attack",
     effect_value: "2",
     attacking: 0
@@ -752,7 +752,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 6,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_all_tmp_attack",
     effect_value: "2",
     attacking: 0
@@ -768,7 +768,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 8,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_all_tmp_attack",
     effect_value: "4",
     attacking: 0
@@ -784,7 +784,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_all_tmp_attack",
     effect_value: "4",
     attacking: 0
@@ -800,7 +800,7 @@ const roles_info: Roles = {
     max_hp: 45,
     base_speed: 12,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_all_tmp_attack",
     effect_value: "8",
     attacking: 0
@@ -816,7 +816,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 7,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "3",
     attacking: 0
@@ -832,7 +832,7 @@ const roles_info: Roles = {
     max_hp: 12,
     base_speed: 7,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "3",
     attacking: 0
@@ -848,7 +848,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "6",
     attacking: 0
@@ -864,7 +864,7 @@ const roles_info: Roles = {
     max_hp: 24,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "6",
     attacking: 0
@@ -880,7 +880,7 @@ const roles_info: Roles = {
     max_hp: 60,
     base_speed: 9,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "9",
     attacking: 0
@@ -896,7 +896,7 @@ const roles_info: Roles = {
     max_hp: 11,
     base_speed: 7,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "3",
     attacking: 0
@@ -912,7 +912,7 @@ const roles_info: Roles = {
     max_hp: 11,
     base_speed: 7,
     sp_cap: 3,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "3",
     attacking: 0
@@ -928,7 +928,7 @@ const roles_info: Roles = {
     max_hp: 21,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "6",
     attacking: 0
@@ -944,7 +944,7 @@ const roles_info: Roles = {
     max_hp: 21,
     base_speed: 8,
     sp_cap: 2,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "6",
     attacking: 0
@@ -960,7 +960,7 @@ const roles_info: Roles = {
     max_hp: 50,
     base_speed: 10,
     sp_cap: 1,
-    effective_type: "skill",
+    effect_type: "skill",
     effect: "reduce_tmp_attack",
     effect_value: "9",
     attacking: 0
@@ -976,7 +976,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 6,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -992,7 +992,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 6,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1008,7 +1008,7 @@ const roles_info: Roles = {
     max_hp: 21,
     base_speed: 8,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1024,7 +1024,7 @@ const roles_info: Roles = {
     max_hp: 21,
     base_speed: 8,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1040,7 +1040,7 @@ const roles_info: Roles = {
     max_hp: 65,
     base_speed: 10,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1056,7 +1056,7 @@ const roles_info: Roles = {
     max_hp: 8,
     base_speed: 5,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1072,7 +1072,7 @@ const roles_info: Roles = {
     max_hp: 8,
     base_speed: 5,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1088,7 +1088,7 @@ const roles_info: Roles = {
     max_hp: 15,
     base_speed: 9,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1104,7 +1104,7 @@ const roles_info: Roles = {
     max_hp: 15,
     base_speed: 9,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1120,7 +1120,7 @@ const roles_info: Roles = {
     max_hp: 37,
     base_speed: 11,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
     attacking: 0
@@ -1136,7 +1136,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 5,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
     attacking: 0
@@ -1152,7 +1152,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 5,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
     attacking: 0
@@ -1168,7 +1168,7 @@ const roles_info: Roles = {
     max_hp: 30,
     base_speed: 7,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
     attacking: 0
@@ -1184,7 +1184,7 @@ const roles_info: Roles = {
     max_hp: 30,
     base_speed: 7,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
     attacking: 0
@@ -1200,7 +1200,7 @@ const roles_info: Roles = {
     max_hp: 65,
     base_speed: 10,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
     attacking: 0
@@ -1216,7 +1216,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 7,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
     attacking: 0
@@ -1232,7 +1232,7 @@ const roles_info: Roles = {
     max_hp: 9,
     base_speed: 7,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
     attacking: 0
@@ -1248,7 +1248,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 9,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
     attacking: 0
@@ -1264,7 +1264,7 @@ const roles_info: Roles = {
     max_hp: 18,
     base_speed: 9,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
     attacking: 0
@@ -1280,7 +1280,7 @@ const roles_info: Roles = {
     max_hp: 45,
     base_speed: 12,
     sp_cap: undefined,
-    effective_type: "ring",
+    effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "2",
     attacking: 0

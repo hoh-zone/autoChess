@@ -504,15 +504,15 @@ export const useFight = () => {
 
     const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_sp_debuff = get_extra_max_sp_debuff(is_opponent);
-        if (char.effective_type === "skill" )
+        if (char.effect_type === "skill" )
             modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
         setChars(chars.slice());
         setEnemyChars(enemyChars.slice());
-        if (char.effective_type === "skill" && char.sp >= Number(char.sp_cap)  ) {
+        if (char.effect_type === "skill" && char.sp >= Number(char.sp_cap)  ) {
             console.log("current sp: ", char.sp, "sp cap: ", char.sp_cap);
             skillTag[charIndex] = "1";
             char.attacking = 2;
-            await sleep(1000);
+            await sleep(400);
             if(call_skill(char, enemy, charIndex, enemyIndex, is_opponent)){
                 char.sp = 0;          
                 skillTag[charIndex] = "";
@@ -524,7 +524,7 @@ export const useFight = () => {
             }
         } else {
             char.attacking = 1;
-            await sleep(700);
+            await sleep(400);
             call_attack(char, enemy, enemyIndex, is_opponent);
             char.sp = char.sp + 1;
         }
@@ -552,16 +552,15 @@ export const useFight = () => {
             setEnemyFightingIndex(enemyCharIndex);
             let enemyChar = enemyChars[enemyCharIndex]!;
 
-            // 同时攻击
             let max_loop = 40;
             while (char.hp > 0 && enemyChar.hp > 0) {
                 if(char.speed >= enemyChar.speed){
-                    await sleep(500);
+                    await sleep(800);
                     await action(char, enemyChar, charIndex, enemyCharIndex, false);
                     if(enemyChar.hp > 0)
                         await action(enemyChar, char, enemyCharIndex, charIndex, true);
                 }else{
-                    await sleep(500);
+                    await sleep(800);
                     await action(enemyChar, char, enemyCharIndex, charIndex, true);
                     if(char.hp > 0)
                         await action(char, enemyChar, charIndex, enemyCharIndex, false);                 

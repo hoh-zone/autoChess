@@ -47,14 +47,14 @@ export const SkillTag = ({ id }: { id: number }) => {
 
   return (
     <div style={{ zIndex: 1000, position: "relative", justifyContent: "left" }}>
-      {(skill !== "" || char?.effective_type === "ring") && stage === "fight" && (
+      {(skill !== "" || char?.effect_type === "ring") && stage === "fight" && (
         <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -250%)" }}>
           <div className="skill_animation">
             <Img src={get_img_url(char?.effect)}></Img>
           </div>
         </div>
       )}
-      {char?.effective_type === "skill" && char.attacking == 2 && stage === "fight" && (
+      {char?.effect_type === "skill" && char.attacking == 2 && stage === "fight" && (
         <div className="absolute  top-1/2 left-1/2 pointer-events-none" style={{ transform: "translate(-50%, -250%)" }}>
           <motion.div
             animate={{
