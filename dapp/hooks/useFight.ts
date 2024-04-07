@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom,fightResultModalVisibleAtom, fightResA } from "../store/stages";
+import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom,fightResultModalVisibleAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
@@ -7,10 +7,8 @@ import { CharacterFields } from "../types/nft";
 import useQueryChesses from "../components/button/QueryAllChesses";
 import { sleep } from "../utils/sleep";
 import { get_max_sp } from "../components/character/rawData";
-import useLocale from "./useLocale";
 
 export const useFight = () => {
-    const [fightRes, setFightRes] = useAtom(fightResA)
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
     const [chars, setChars] = useAtom(slotCharacter);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
@@ -27,7 +25,6 @@ export const useFight = () => {
     const [skillTag, setSkillTag] = useAtom(skillTagA);
     const [enemySkillTag, setEnemySkillTag] = useAtom(enemySkillTagA);
     const [fightResultModalVisible, setFightResultModalVisible] = useAtom(fightResultModalVisibleAtom)
-    const getLocale = useLocale()
 
     let animationEnd = Date.now() + 4000;
     let skew = 1;
@@ -126,12 +123,15 @@ export const useFight = () => {
         }
     }
 
+    //if is_opponent==true, returns system team index
+    //if is_opponent==false, returns player team index
     const find_next_alive_char_index = (is_opponent: boolean, charIndex: number, enemyIndex: number) => {
         if (is_opponent) {
             if (enemyIndex == enemyChars.length - 1) {
                 return null;
             }
             for (let i = enemyIndex + 1; i < enemyChars.length; i++) {
+                //console.log("find_next_alive_char_index, enemyIndex, i:", i);
                 let role = enemyChars[i];
                 if (role == null || role == undefined) {
                     continue;
@@ -145,6 +145,7 @@ export const useFight = () => {
                 return null;
             }
             for (let i = charIndex + 1; i < chars.length; i++) {
+                //console.log("find_next_alive_char_index, charIndex, i:", i);
                 let role = chars[i];
                 if (role == null || role == undefined) {
                     continue;
@@ -158,7 +159,7 @@ export const useFight = () => {
 
     const find_last_one_index = (is_opponent: boolean) => {
         if (is_opponent) {
-            for (let i = enemyChars.length - 1; i > 0; i--) {
+            for (let i = enemyChars.length - 1; i >= 0; i--) {
                 let role = enemyChars[i];
                 if (role == null || role == undefined) {
                     continue;
@@ -168,7 +169,7 @@ export const useFight = () => {
                 }
             }
         } else {
-            for (let i = chars.length; i > 0; i--) {
+            for (let i = chars.length; i >= 0; i--) {
                 let role = chars[i];
                 if (role == null || role == undefined) {
                     continue;
@@ -192,6 +193,7 @@ export const useFight = () => {
         } else {
             target_group = enemyChars;
         }
+        /////may need change
         for (const character of target_group) {
             if (character != null && character.hp > 0) {
                 if (character.effect === "forbid_buff") {
@@ -215,99 +217,27 @@ export const useFight = () => {
         if (effect == "aoe") {
             target_group = get_target_group(is_opponent, true);
             target_group.map((ele: CharacterFields | null, index: number) => {
-                if (ele == null) {
+                if (ele == null || ele.hp <= 0) {
                     return;
                 }
                 call_attack(char, ele, index, is_opponent);
             });
             set_target_group(target_group, is_opponent, true);
-        } else if (effect == "add_all_tmp_hp") {
-            if (is_forbid_buff) {
-                console.log("触发特效: 加buff失败")
-                return;
-            }
-            target_group = get_target_group(is_opponent, false);
-            target_group.map((ele: CharacterFields | null, index: number) => {
-                if (ele == null || ele.hp <= 0) {
-                    return;
-                };
-                ele.hp = Number(ele.hp) + Number(value);
-                if (is_opponent) {
-                    enemyHpChange[index] = value;
-                } else {
-                    hpChange[index] = value;
-                }
-            });
-            console.log("全体加血:", value);
-            set_target_group(target_group, is_opponent, false);
-        } else if (effect == "add_all_tmp_attack") {
-            if (is_forbid_buff) {
-                console.log("触发特效: 加buff失败")
-                return;
-            }
-            target_group = get_target_group(is_opponent, false);
-            target_group.map((ele: CharacterFields | null, index: number) => {
-                if (ele == null) {
-                    return;
-                }
-                ele.attack = Number(ele.attack) + Number(value);
-                if (is_opponent) {
-                    enemyAttackChange[index] = value;
-                } else {
-                    attackChange[enemyIndex] = value;
-                }
-            });
-            console.log("全体加攻:", value);
-            set_target_group(target_group, is_opponent, false);
-        } else if (effect == "all_max_hp_to_back1") {
-            if (is_forbid_buff) {
-                console.log("触发特效: 加buff失败")
-                return;
-            }
-            let next_one = find_next_alive_char_index(is_opponent, charIndex, enemyIndex);
-            if (next_one == null) {
-                return;
-            }
-
-            target_group = get_target_group(is_opponent, false);
-            target_group[next_one]!.max_hp = Number(target_group[next_one]!.max_hp) + Number(value);
-            target_group[next_one]!.hp = Number(target_group[next_one]!.hp) + Number(value);
-            console.log("触发后一个角色永久生命值增加:", next_one, value);
-            if (is_opponent) {
-                enemyHpChange[next_one] = value;
-            } else {
-                hpChange[next_one] = value;
-            }
-            set_target_group(target_group, is_opponent, false);
-        } else if (effect == "reduce_all_tmp_attack") {
-            if (is_forbid_debuff) {
-                console.log("触发特效: 加debuff失败")
-                return;
-            }
-            target_group = get_target_group(is_opponent, true);
-            target_group.map((ele: CharacterFields | null, index: number) => {
-                if (ele == null) {
-                    return;
-                }
-                ele.attack -= value;
-                if (ele.attack <= 0) {
-                    ele.attack = 1;
-                }
-                if (is_opponent) {
-                    attackChange[index] = -value;
-                } else {
-                    enemyAttackChange[enemyIndex] = -value;
-                }
-            });
-            console.log("全体降攻:", value);
-            set_target_group(target_group, is_opponent, true);
+            return true;
         } else if (effect == "attack_sputter_to_second_by_percent") {
             target_group = get_target_group(is_opponent, true);
-            let suppter_attack = Math.round(value / 10 * char.attack);
+            let suppter_attack = Math.trunc(value / 10 * char.attack);
             enemy.hp -= char.attack;
-            let next_one_index = find_next_alive_char_index(!is_opponent, charIndex, enemyIndex);
+            let next_one_index = null;
+            //if is_opponent==true, system attacks, should return player index
+            //if is_opponent==false, player attacks, should return system index
+            if(!is_opponent)
+                next_one_index = find_next_alive_char_index(true, charIndex, enemyIndex);
+            else
+                next_one_index = find_next_alive_char_index(false, enemyIndex, charIndex);  
+
             if (next_one_index == null) {
-                return;
+                return true;
             }
             target_group[next_one_index]!.hp -= suppter_attack;
             if (is_opponent) {
@@ -317,13 +247,15 @@ export const useFight = () => {
                 enemyHpChange[enemyIndex] = -char.attack;
                 enemyHpChange[next_one_index] = -(suppter_attack);
             }
-            console.log("造成溅射伤害:", suppter_attack);
+            console.log("attacking Index:", charIndex, ", attacked Index:", enemyIndex);
+            console.log("造成溅射伤害, index: ", next_one_index, ", 伤害值: ", suppter_attack);
+            return true;
         } else if (effect == "attack_last_char") {
             target_group = get_target_group(is_opponent, true);
             // 如果对手第一个就是最后一个，则基础伤害+效果伤害。
             let last_one_index = find_last_one_index(!is_opponent);
             if (last_one_index == null) {
-                return;
+                return true;
             }
             target_group[last_one_index]!.hp -= value;
             if (is_opponent) {
@@ -332,47 +264,17 @@ export const useFight = () => {
                 enemyHpChange[last_one_index] = -(value);
             }
             console.log("攻击最后一名角色:", target_group[last_one_index]?.class, value);
-        } else if (effect == "reduce_tmp_attack") {
-            if (is_forbid_debuff) {
-                console.log("触发特效: 加debuff失败")
-                return;
-            }
-            enemy.attack -= value;
-            if (enemy.attack <= 0) {
-                enemy.attack = 1;
-            }
-            if (is_opponent) {
-                attackChange[enemyIndex] = -(value);
-            } else {
-                enemyAttackChange[enemyIndex] = -(value);
-            }
-            console.log("触发单体降攻:", value);
-        } else if (effect == "add_all_tmp.sp") {
-            if (is_forbid_buff) {
-                console.log("触发特效: 加buff失败")
-                return;
-            }
-            target_group = get_target_group(is_opponent, false);
-            target_group.map((ele: CharacterFields | null, index: number) => {
-                if (ele == null || index == charIndex) {
-                    return;
-                }
-                ele.sp += value;
-                if (ele.sp >= ele.sp_cap) {
-                    ele.sp = ele.sp_cap;
-                }
-            });
-            console.log("全体加魔法值:", value, target_group[3]);
-            set_target_group(target_group, is_opponent, false);
-            console.log("全体加魔法值2:", chars[3]);
+            return true;
         } else if (effect == "attack_lowest_hp") {
             target_group = get_target_group(is_opponent, true);
-            let min_hp_index = 0;
+            let min_hp_index = enemyIndex;
+            let min_hp = enemy.hp
             target_group.map((character, index) => {
-                if (character == null || character.hp == null) {
+                if (character == null || character.hp <= 0) {
                     return
                 }
-                if (min_hp_index < character.hp) {
+                if (min_hp > character.hp) {
+                    min_hp = character.hp;
                     min_hp_index = index;
                 }
             });
@@ -390,10 +292,11 @@ export const useFight = () => {
                 }
             }
             set_target_group(target_group, is_opponent, true);
-        } else if (effect == "attack_by_hp_percent") {
+            return true;
+        } else if (effect == "attack_by_life_percent") {
             target_group = get_target_group(is_opponent, true);
-            let life = enemy.max_hp;
-            let extra_attack = Math.round(value / 10 * life);
+            let life = enemy.hp;
+            let extra_attack = Math.trunc(value / 10 * life);
             let final_attack = Number(char.attack) + Number(extra_attack);
             enemy.hp -= (final_attack);
             if (is_opponent) {
@@ -402,7 +305,138 @@ export const useFight = () => {
                 enemyHpChange[enemyIndex] = -(final_attack);
             }
             console.log("造成额外百分比伤害:", char.attack, " + ", extra_attack);
-        }
+            return true;
+        } else if (effect == "add_all_tmp_hp") {
+            if (is_forbid_buff) {
+                console.log("触发特效: 加buff失败")
+                return false;
+            }
+            target_group = get_target_group(is_opponent, false);
+            target_group.map((ele: CharacterFields | null, index: number) => {
+                if (ele == null || ele.hp <= 0) {
+                    return;
+                };
+                ele.hp = Number(ele.hp) + Number(value);
+                if (is_opponent) {
+                    enemyHpChange[index] = value;
+                } else {
+                    hpChange[index] = value;
+                }
+            });
+            console.log("全体加血:", value);
+            set_target_group(target_group, is_opponent, false);
+            return true;
+        } else if (effect == "add_all_tmp_attack") {
+            if (is_forbid_buff) {
+                console.log("触发特效: 加buff失败")
+                return false;
+            }
+            target_group = get_target_group(is_opponent, false);
+            target_group.map((ele: CharacterFields | null, index: number) => {
+                if (ele == null || ele.hp <= 0) {
+                    return;
+                }
+                ele.attack = Number(ele.attack) + Number(value);
+                if (is_opponent) {
+                    enemyAttackChange[index] = value;
+                } else {
+                    attackChange[enemyIndex] = value;
+                }
+            });
+            console.log("全体加攻:", value);
+            set_target_group(target_group, is_opponent, false);
+            return true;
+        } else if (effect == "add_all_tmp_sp") {
+            if (is_forbid_buff) {
+                console.log("触发特效: 加buff失败")
+                return false;
+            }
+            target_group = get_target_group(is_opponent, false);
+            target_group.map((ele: CharacterFields | null, index: number) => {
+                if (ele == null || index == charIndex) {
+                    return;
+                }
+                ele.sp += value;
+                //???
+                /*
+                if (ele.sp >= ele.sp_cap) {
+                    ele.sp = ele.sp_cap;
+                }*/
+            });
+            console.log("全体加魔法值:", value, target_group[3]);
+            set_target_group(target_group, is_opponent, false);
+            console.log("全体加魔法值2:", chars[3]);
+            return true;
+        } else if (effect == "all_max_hp_to_back1") {
+            if (is_forbid_buff) {
+                console.log("触发特效: 加buff失败")
+                return false;
+            }
+            let next_one = null;
+            //if is_opponent==true, system attacks, should return system index (buff)
+            //if is_opponent==false, play attacks, should return player index (buff)
+            if(!is_opponent)
+                next_one = find_next_alive_char_index(false, charIndex, enemyIndex);
+            else
+                next_one = find_next_alive_char_index(true, enemyIndex, charIndex);  
+
+            if (next_one == null) {
+                return true;
+            }
+
+            target_group = get_target_group(is_opponent, false);
+            //target_group[next_one]!.max_hp = Number(target_group[next_one]!.max_hp) + Number(value);
+            target_group[next_one]!.hp = Number(target_group[next_one]!.hp) + Number(value);
+            //test
+            console.log("attacking Index:", charIndex, ", attacked Index:", enemyIndex);
+            console.log("触发后一个角色永久生命值增加，index: ", next_one, ", 增加值: ", value);
+            if (is_opponent) {
+                enemyHpChange[next_one] = value;
+            } else {
+                hpChange[next_one] = value;
+            }
+            set_target_group(target_group, is_opponent, false);
+            return true;
+        } else if (effect == "reduce_all_tmp_attack") {
+            if (is_forbid_debuff) {
+                console.log("触发特效: 加debuff失败")
+                return false;
+            }
+            target_group = get_target_group(is_opponent, true);
+            target_group.map((ele: CharacterFields | null, index: number) => {
+                if (ele == null || ele.hp <= 0) {
+                    return;
+                }
+                ele.attack -= value;
+                if (ele.attack <= 0) {
+                    ele.attack = 1;
+                }
+                if (is_opponent) {
+                    attackChange[index] = -value;
+                } else {
+                    enemyAttackChange[enemyIndex] = -value;
+                }
+            });
+            console.log("全体降攻:", value);
+            set_target_group(target_group, is_opponent, true);
+            return true;
+        }  else if (effect == "reduce_tmp_attack") {
+            if (is_forbid_debuff) {
+                console.log("触发特效: 加debuff失败")
+                return false;
+            }
+            enemy.attack -= value;
+            if (enemy.attack <= 0) {
+                enemy.attack = 1;
+            }
+            if (is_opponent) {
+                attackChange[enemyIndex] = -(value);
+            } else {
+                enemyAttackChange[enemyIndex] = -(value);
+            }
+            console.log("触发单体降攻:", value);
+            return true;
+        } 
     }
 
     const died_check = (charactors: (CharacterFields | null)[], is_opponent: boolean) => {
@@ -432,7 +466,7 @@ export const useFight = () => {
                 if (ele == null) {
                     return;
                 }
-                if (ele.effect === "add_all_tmp_max_sp") {
+                if (ele.effect === "add_all_tmp_sp_cap") {
                     value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
                 }
             })
@@ -441,7 +475,7 @@ export const useFight = () => {
                 if (ele == null) {
                     return;
                 }
-                if (ele.effect === "add_all_tmp_max_sp") {
+                if (ele.effect === "add_all_tmp_sp_cap") {
                     value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
                 }
             })
@@ -463,32 +497,38 @@ export const useFight = () => {
         if (extra_max_sp_debuff > 0) {
             target_group[charIndex]!.sp_cap = get_max_sp(target_group[charIndex]) + Number(extra_max_sp_debuff);
         } else if (extra_max_sp_debuff == 0 && target_group[charIndex]!.sp_cap > get_max_sp(target_group[charIndex])) {
+            //recover the max_sp if it was modified before
             target_group[charIndex]!.sp_cap = get_max_sp(target_group[charIndex]);
         }
     }
 
     const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_sp_debuff = get_extra_max_sp_debuff(is_opponent);
-        modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
-        if (char.sp >= Number(char.sp_cap) && char.effective_type === "skill") {
+        if (char.effective_type === "skill" )
+            modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
+        setChars(chars.slice());
+        setEnemyChars(enemyChars.slice());
+        if (char.effective_type === "skill" && char.sp >= Number(char.sp_cap)  ) {
+            console.log("current sp: ", char.sp, "sp cap: ", char.sp_cap);
             skillTag[charIndex] = "1";
             char.attacking = 2;
-            char.sp = 0;
-            setChars(chars.slice());
-            setEnemyChars(enemyChars.slice());
             await sleep(1000);
-            call_skill(char, enemy, charIndex, enemyIndex, is_opponent);
-            char.attacking = 0;
-            skillTag[charIndex] = "";
+            if(call_skill(char, enemy, charIndex, enemyIndex, is_opponent)){
+                char.sp = 0;          
+                skillTag[charIndex] = "";
+            }else{
+                //do standard attack if the skill is cancelled out
+                char.attacking = 1;
+                call_attack(char, enemy, enemyIndex, is_opponent);
+                char.sp = char.sp + 1;
+            }
         } else {
             char.attacking = 1;
-            setChars(chars.slice());
-            setEnemyChars(enemyChars.slice());
             await sleep(700);
             call_attack(char, enemy, enemyIndex, is_opponent);
             char.sp = char.sp + 1;
-            char.attacking = 0;
         }
+        char.attacking = 0;
     }
 
     const reset_status = () => {
@@ -499,9 +539,9 @@ export const useFight = () => {
 
     return useCallback(async () => {
         console.log("--------开始战斗-------");
-        console.log('我方', chars);
-        console.log('敌方', enemyChars);
-        let loop = 80;
+        console.log(chars);
+        console.log(enemyChars);
+        let loop = 50;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
             let charIndex = chars.findIndex(Boolean);
@@ -513,11 +553,19 @@ export const useFight = () => {
             let enemyChar = enemyChars[enemyCharIndex]!;
 
             // 同时攻击
-            let max_loop = 70;
+            let max_loop = 40;
             while (char.hp > 0 && enemyChar.hp > 0) {
-                await sleep(500);
-                await action(char, enemyChar, charIndex, enemyCharIndex, false);
-                await action(enemyChar, char, enemyCharIndex, charIndex, true);
+                if(char.speed >= enemyChar.speed){
+                    await sleep(500);
+                    await action(char, enemyChar, charIndex, enemyCharIndex, false);
+                    if(enemyChar.hp > 0)
+                        await action(enemyChar, char, enemyCharIndex, charIndex, true);
+                }else{
+                    await sleep(500);
+                    await action(enemyChar, char, enemyCharIndex, charIndex, true);
+                    if(char.hp > 0)
+                        await action(char, enemyChar, charIndex, enemyCharIndex, false);                 
+                }
 
                 died_check(chars, false);
                 died_check(enemyChars, true);
@@ -534,16 +582,33 @@ export const useFight = () => {
             }
         }
 
-        // 这里改成合约查询
-        if (!fightRes) {
-            setFightResult(getLocale("you_lose"));
-            console.log("you lose2")
+        if (some(enemyChars, Boolean)) {
+            //test log
+            console.log("enemy win");
+            enemyChars.map((ele: CharacterFields | null, index: number) => {
+                if (ele == null) {
+                    return;
+                }
+                console.log("Class: ", ele.class, ", hp left: ", ele.hp);
+            });
+            //test log
+            setFightResult("you lose");
             animationEnd = Date.now() + 2000;
             lose_effect();
             await sleep(2000);
         } else {
-            setFightResult(getLocale("you_win"));
-            console.log("you win2")
+            //test log
+            console.log("you win");
+            chars.map((ele: CharacterFields | null, index: number) => {
+                if (ele == null) {
+                    return;
+                }
+                console.log(ele.class);
+                console.log(ele.hp);
+            });
+            //test log
+
+            setFightResult("you win");
             for (let i = 0; i < 5; ++i) {
                 win_effect();
             }

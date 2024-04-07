@@ -43,7 +43,7 @@ export interface CharacterFields {
 
     attack:  number;
     hp: number;
-    sp: number | undefined;
+    sp: number;
     speed: number;
 
     base_attack: number;
