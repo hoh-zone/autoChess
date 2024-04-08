@@ -4,6 +4,13 @@ import {
   ISMAINNET,
   SENDER,
   CHESS_CHALLENGE_PACKAGE_ID,
+  CHESS_CHALLENGE_PACKAGE_ID1,
+  CHESS_CHALLENGE_PACKAGE_ID2,
+  CHESS_CHALLENGE_PACKAGE_ID3,
+  CHESS_CHALLENGE_PACKAGE_ID4,
+  CHESS_CHALLENGE_PACKAGE_ID5,
+  CHESS_CHALLENGE_PACKAGE_ID6,
+  CHESS_CHALLENGE_PACKAGE_ID7,
 } from "../../constants";
 import {
   JsonRpcProvider,
@@ -216,7 +223,19 @@ const useQueryRanks = () => {
         filter: {
           MatchAny: [
             {
-              Package: CHESS_CHALLENGE_PACKAGE_ID,
+              Package: CHESS_CHALLENGE_PACKAGE_ID1,
+            },
+            { Package: CHESS_CHALLENGE_PACKAGE_ID2 },
+            {
+              Package: CHESS_CHALLENGE_PACKAGE_ID3,
+            },
+            { Package: CHESS_CHALLENGE_PACKAGE_ID4 },
+            {
+              Package: CHESS_CHALLENGE_PACKAGE_ID5,
+            },
+            { Package: CHESS_CHALLENGE_PACKAGE_ID6 },
+            {
+              Package: CHESS_CHALLENGE_PACKAGE_ID7,
             },
           ],
         },
@@ -229,7 +248,7 @@ const useQueryRanks = () => {
       let chessId = filterMyChess(result.data, lineup);
       if (chessId === "") {
         toast({
-          title: "My lord, You have ranked to the 1st in the world",
+          title: "My lord, You don't have any chess in rank",
           status: "warning",
           duration: 5000,
           isClosable: true,
@@ -240,7 +259,7 @@ const useQueryRanks = () => {
       const moveModule = "chess";
       const method = "claim_rank_reward";
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
+        target: `${CHESS_CHALLENGE_PACKAGE_ID7}::${moveModule}::${method}`,
         arguments: [
           tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
           tx.object(normalizeSuiObjectId(chessId)),

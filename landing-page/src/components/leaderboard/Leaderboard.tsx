@@ -85,6 +85,7 @@ export const Leaderboard: React.FC = () => {
               rank={item.rank}
               items={item.roles}
               estimateSui={String(rewards[index])}
+              isEnd={countdown === ""}
             />
           );
         })}

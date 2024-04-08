@@ -29,6 +29,7 @@ export const LeaderboardItem = ({
   reward,
   name,
   estimateSui,
+  isEnd,
 }: {
   reward: number;
   name: String;
@@ -36,8 +37,25 @@ export const LeaderboardItem = ({
   rank: number;
   items: string[];
   estimateSui: String;
+  isEnd: boolean;
 }) => {
   const toast = useToast();
+  const { wallet } = ethos.useWallet();
+  const { claim_reward } = useQueryRanks();
+  const handle_claim = async (lineup: any, rank: any) => {
+    if (!isEnd) {
+      toast({
+        title: "Sorry",
+        description:
+          "The reward hasn't been unlocked, please wait for the end of rank activity",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    await claim_reward(wallet, rank, lineup, toast);
+  };
   return (
     <HStack
       className="w-full flex py-8  text-black"
@@ -73,18 +91,7 @@ export const LeaderboardItem = ({
       </HStack>
       {
         <HStack className="text-2xl mr-1">
-          <Button
-            onClick={() =>
-              toast({
-                title: "Sorry",
-                description:
-                  "The reward hasn't been unlocked, please wait for the end of rank activity",
-                status: "warning",
-                duration: 3000,
-                isClosable: true,
-              })
-            }
-          >
+          <Button onClick={() => handle_claim(items, rank)}>
             <h6>Claim Rewards</h6>
           </Button>
         </HStack>
