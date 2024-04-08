@@ -104,6 +104,7 @@ const useQueryRanks = () => {
     )
       return "";
     let res = result.results[0].returnValues[0][0];
+    console.log(bytesToU64(new Uint8Array(res)));
     return bytesToU64(new Uint8Array(res));
   }, []);
 

@@ -22,10 +22,10 @@ export const Leaderboard: React.FC = () => {
     seconds -= hours * 60 * 60;
     var minutes = Math.floor(seconds / 60);
     seconds -= minutes * 60;
-    if (days > 1) {
+    if (days >= 1) {
       return days + " days " + hours + " hours " + minutes + " min";
     } else {
-      if (hours > 1) {
+      if (hours >= 1) {
         return hours + " hours " + minutes + " min";
       } else {
         return minutes + " min";
