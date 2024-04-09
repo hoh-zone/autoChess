@@ -189,7 +189,6 @@ const useQueryRanks = () => {
       if (res !== "") {
         return;
       }
-      console.log("item:", item);
       let info = item.data.content.fields;
       let arena = info.arena;
       let challenge_win = info.challenge_win;
@@ -198,8 +197,16 @@ const useQueryRanks = () => {
       }
       let roles = info.lineup.fields.roles;
       let isEqual = true;
+
       roles.map((role: any, index: number) => {
-        if (challenge_win == 0) {
+        if (role.fields.class + "_" + role.fields.level !== lineup[index]) {
+          console.log(role.fields.class);
+          if (role.fields.class == "shaman3") {
+            console.log("lineup:", lineup);
+            console.log(role.fields.claim);
+            // console.log(role.fields.class + "_" + role.fields.level);
+            // console.log(lineup[index]);
+          }
           isEqual = false;
         }
       });
@@ -217,6 +224,15 @@ const useQueryRanks = () => {
       if (!wallet) {
         toast({
           title: "Please login, my lord~",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+      if (rank === 3) {
+        toast({
+          title: "reward has been claimed",
           status: "warning",
           duration: 5000,
           isClosable: true,
