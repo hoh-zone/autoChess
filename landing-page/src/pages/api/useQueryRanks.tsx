@@ -189,7 +189,7 @@ const useQueryRanks = () => {
       if (res !== "") {
         return;
       }
-      // console.log("item:", item);
+      console.log("item:", item);
       let info = item.data.content.fields;
       let arena = info.arena;
       let challenge_win = info.challenge_win;
@@ -199,11 +199,7 @@ const useQueryRanks = () => {
       let roles = info.lineup.fields.roles;
       let isEqual = true;
       roles.map((role: any, index: number) => {
-        if (role.fields.class + "_" + role.fields.level !== lineup[index]) {
-          // if (role.fields.class == "shaman3") {
-          //   console.log(role.fields.class + "-" + role.fields.level);
-          //   console.log(lineup[index]);
-          // }
+        if (challenge_win == 0) {
           isEqual = false;
         }
       });
