@@ -212,6 +212,15 @@ const useQueryRanks = () => {
 
   const claim_reward = useCallback(
     async (wallet: any, rank: any, lineup: any, toast: any) => {
+      if (!wallet) {
+        toast({
+          title: "Please login, my lord~",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
       let provider;
       if (ISMAINNET) {
         provider = new JsonRpcProvider(mainnetConnection);
