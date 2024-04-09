@@ -43,17 +43,17 @@ export const LeaderboardItem = ({
   const { wallet } = ethos.useWallet();
   const { claim_reward } = useQueryRanks();
   const handle_claim = async (lineup: any, rank: any) => {
-    if (!isEnd) {
-      toast({
-        title: "Sorry",
-        description:
-          "The reward hasn't been unlocked, please wait for the end of rank activity",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
+    // if (!isEnd) {
+    //   toast({
+    //     title: "Sorry",
+    //     description:
+    //       "The reward hasn't been unlocked, please wait for the end of rank activity",
+    //     status: "warning",
+    //     duration: 3000,
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
     await claim_reward(wallet, rank, lineup, toast);
   };
   return (
