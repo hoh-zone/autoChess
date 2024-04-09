@@ -69,6 +69,12 @@ export const Leaderboard: React.FC = () => {
       className={"bg-[url('/bg1.jpg')] bg-top"}
     >
       <Center as="h2">Leaderboard</Center>
+      <Center as="h4">
+        Congratulations for the rank20 heros of 1st season!
+      </Center>
+      <Center as="h4">
+        If you have any claim problem, please contact us suiautochess@gmail.com
+      </Center>
       {countdown !== "" && (
         <Center as="h3">Unlock Countdown: {countdown}</Center>
       )}

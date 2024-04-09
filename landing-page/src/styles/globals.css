@@ -53,6 +53,15 @@ h3 {
   filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));  
 }
 
+h4 {
+  background: -webkit-linear-gradient(#181e58de, hsl(211.85deg 100% 9.21%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 500;
+  font-size: calc(2vw);
+  filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));  
+}
+
 a {
   text-decoration: underline;
   cursor: pointer;
