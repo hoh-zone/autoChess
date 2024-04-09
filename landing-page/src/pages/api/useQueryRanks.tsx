@@ -221,94 +221,12 @@ const useQueryRanks = () => {
 
   const claim_reward = useCallback(
     async (wallet: any, rank: any, lineup: any, toast: any) => {
-      if (!wallet) {
-        toast({
-          title: "Please login, my lord~",
-          status: "warning",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-      if (rank === 3) {
-        toast({
-          title: "reward has been claimed",
-          status: "warning",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-      let provider;
-      if (ISMAINNET) {
-        provider = new JsonRpcProvider(mainnetConnection);
-      } else {
-        provider = new JsonRpcProvider(testnetConnection);
-      }
-      const result = await provider.getOwnedObjects({
-        owner: wallet.address,
-        filter: {
-          MatchAny: [
-            {
-              Package: CHESS_CHALLENGE_PACKAGE_ID1,
-            },
-            { Package: CHESS_CHALLENGE_PACKAGE_ID2 },
-            {
-              Package: CHESS_CHALLENGE_PACKAGE_ID3,
-            },
-            { Package: CHESS_CHALLENGE_PACKAGE_ID4 },
-            {
-              Package: CHESS_CHALLENGE_PACKAGE_ID5,
-            },
-            { Package: CHESS_CHALLENGE_PACKAGE_ID6 },
-            {
-              Package: CHESS_CHALLENGE_PACKAGE_ID7,
-            },
-          ],
-        },
-        options: {
-          showContent: true,
-          showDisplay: true,
-          showType: true,
-        },
+      toast({
+        title: "reward has been claimed",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
       });
-      let chessId = filterMyChess(result.data, lineup);
-      if (chessId === "") {
-        toast({
-          title: "My lord, You don't have any chess in rank",
-          status: "warning",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-      const tx = new TransactionBlock();
-      const moveModule = "chess";
-      const method = "claim_rank_reward";
-      tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE_ID7}::${moveModule}::${method}`,
-        arguments: [
-          tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
-          tx.object(normalizeSuiObjectId(chessId)),
-          tx.object(normalizeSuiObjectId("0x06")),
-          tx.pure(Number(rank) - 1),
-        ],
-      });
-      const response = await wallet.signAndExecuteTransactionBlock({
-        transactionBlock: tx,
-        options: {
-          showObjectChanges: true,
-          showEffects: true,
-          showEvents: true,
-        },
-      });
-      if (response.objectChanges) {
-        const createObjectChange = response.objectChanges.find(
-          (objectChange: any) => objectChange.type === "created"
-        );
-        if (!!createObjectChange && "objectId" in createObjectChange) {
-        }
-      }
     },
     []
   );
