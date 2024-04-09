@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { chessId, fightResA, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
+import { winA, chessId, fightResA, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
 import { CHALLENGE_GLOBAL, CHESS_GLOBAL, LINEUP_GLOBAL, ROLE_GLOBAL, CHESS_CHALLENGE_PACKAGE6 } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
@@ -11,6 +11,7 @@ const useOperateAndMatch = () => {
   const [fightRes, setFightRes] = useAtom(fightResA)
   const { wallet } = ethos.useWallet()
   const [meta, _setMeta] = useAtom(metaA)
+  const [win, setWin] = useAtom(winA)
   const [nftObjectId, setNftObjectId] = useState<string | null>(null)
   const [money] = useAtom(moneyAtom)
   const [chars] = useAtom(slotCharacter)
@@ -33,6 +34,15 @@ const useOperateAndMatch = () => {
 
   const operate_submit = async (operations: string[], meta: any) => {
     if (!wallet) return
+    if (win == 10) {
+      toast({
+        title: getLocale("rank-activity-locked"),
+        status: "error",
+        duration: 5000,
+        isClosable: true
+      })
+      return
+    }
     try {
       const tx = new TransactionBlock()
       const left_gold = money

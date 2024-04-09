@@ -105,5 +105,6 @@
   "Active-skill": "主动技能",
   "Passive-skill": "被动技能",
   "HP": "生命",
-  "ACK": "攻击"
+  "ACK": "攻击",
+  "rank-activity-locked": "排行榜活动奖励已锁定，请等待下期在参加吧~"
 }

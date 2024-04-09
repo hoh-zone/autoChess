@@ -105,5 +105,6 @@
     "HP": "HP",
     "ACK": "ACK",
     "you_lose": "you lose",
-    "you_win": "you win!"
+    "you_win": "you win!",
+    "rank-activity-locked": "challenge activity rewards are locked, please wait for the next event~"
 }
