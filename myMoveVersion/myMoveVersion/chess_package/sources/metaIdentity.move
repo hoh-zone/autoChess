@@ -10,10 +10,7 @@ module chess_packagev2::metaIdentity {
     use sui::sui::SUI;
     use sui::coin::{Self};
 
-    use chess_package_main::metaIdentity;
-
     friend chess_packagev2::chess;
-    // friend chess_package::challenge;
     
     const ERR_ALREADY_BIND:u64 = 0x001;
     const ERR_NO_PERMISSION:u64 = 0x002;
@@ -113,6 +110,39 @@ module chess_packagev2::metaIdentity {
             manager: @manager
         };
         transfer::share_object(global);
+    }
+
+    public fun clone_meta_from_old_package(oldMeta: chess_package_main::metaIdentity::MetaIdentity, oldMetaGlobal: &mut chess_package_main::metaIdentity::MetaInfoGlobal, 
+        global: &mut MetaInfoGlobal, ctx:&mut TxContext) {
+        let uid = object::new(ctx);
+        let sender = tx_context::sender(ctx);
+        assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
+        let meta_addr = object::uid_to_address(&uid);
+        table::add(&mut global.wallet_meta_map, sender, meta_addr);
+        let metaId = chess_package_main::metaIdentity::get_metaId(&oldMeta);
+        let meta = MetaIdentity {
+            id:uid,
+            metaId: metaId,
+            name: chess_package_main::metaIdentity::get_name(&oldMeta),
+            wallet_addr: sender,
+            invited_claimed_num: chess_package_main::metaIdentity::query_invited_num(oldMetaGlobal, metaId),
+            level: chess_package_main::metaIdentity::get_level(&oldMeta),
+            exp: chess_package_main::metaIdentity::get_exp(&oldMeta),
+            total_arena_win: chess_package_main::metaIdentity::get_arena_win(&oldMeta),
+            total_arena_lose: chess_package_main::metaIdentity::get_arena_lose(&oldMeta),
+            avatar_name: chess_package_main::metaIdentity::get_name(&oldMeta),
+            best_rank_map: table::new<u64, u64>(ctx),
+            init_gold: 0,
+            ability1: string::utf8(b""),
+            ability2: string::utf8(b""),
+            ability3: string::utf8(b""),
+            ability4: string::utf8(b""),
+            ability5: string::utf8(b""),
+            inviterMetaId: chess_package_main::metaIdentity::get_invited_metaId(&oldMeta)
+        };
+        global.total_players = global.total_players + 1;
+        transfer::transfer(meta, sender);
+        chess_package_main::metaIdentity::burn_meta(oldMeta);
     }
 
     public fun init_rewards_global(ctx: &mut TxContext) {
