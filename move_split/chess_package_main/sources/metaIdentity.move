@@ -408,4 +408,57 @@ module chess_package_main::metaIdentity {
         assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
         global.manager = new_manager;
     }
+
+    public fun get_metaId(meta: &MetaIdentity) : u64 {
+        meta.metaId
+    }
+
+    public fun get_level(meta: &MetaIdentity) : u64 {
+        meta.level
+    }
+
+    public fun get_exp(meta: &MetaIdentity) : u64 {
+        meta.exp
+    }
+
+    public fun get_arena_win(meta: &MetaIdentity) : u64 {
+        meta.total_arena_win
+    }
+
+    public fun get_arena_lose(meta: &MetaIdentity) : u64 {
+        meta.total_arena_lose
+    }
+
+    public fun get_name(meta: &MetaIdentity) : string::String {
+        meta.name
+    }
+
+    public fun get_invited_metaId(meta: &MetaIdentity) : u64 {
+        meta.inviterMetaId
+    }
+
+    public fun burn_meta(meta: MetaIdentity) {
+        let MetaIdentity {
+            id,
+            metaId: _,
+            name: _,
+            wallet_addr: _,
+            invited_claimed_num: _,
+            level: _,
+            exp: _,
+            total_arena_win: _,
+            total_arena_lose: _, 
+            avatar_name: _,
+            best_rank_map,
+            init_gold: _,
+            ability1: _,
+            ability2: _,
+            ability3: _,
+            ability4: _,
+            ability5: _,
+            inviterMetaId: _
+        } = meta;
+        table::drop(best_rank_map);
+        object::delete(id);
+    }
 }
