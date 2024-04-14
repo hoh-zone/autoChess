@@ -172,11 +172,11 @@ module challenge_packagev2::challenge {
     // published time
     public entry fun query_left_challenge_time(global: &Global, clock:&Clock):u64 {
         let now = clock::timestamp_ms(clock);
-        let one_week = DAY_IN_MS * 7;
-        if ((now - global.publish_time) >= one_week) {
+        let duration = DAY_IN_MS * 20;
+        if ((now - global.publish_time) >= duration) {
             0
         } else {
-            one_week - (now - global.publish_time)
+            duration - (now - global.publish_time)
         }
     }
 

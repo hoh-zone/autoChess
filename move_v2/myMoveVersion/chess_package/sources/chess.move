@@ -196,7 +196,7 @@ module chess_packagev2::chess {
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
         let paid_price = coin::value(&merged_coin);
-        let split_value = paid_price / 10;
+        let split_value = paid_price / 20;
         let left_value = paid_price - split_value;
         assert!(utils::check_ticket_gold_cost(paid_price), ERR_PAYMENT_NOT_ENOUGH);
         let game = Chess {
@@ -218,7 +218,6 @@ module chess_packagev2::chess {
             coin::split<SUI>(&mut merged_coin, left_value, ctx)
         );
         balance::join(&mut global.balance_SUI, balance);
-
         let balance_for_invite = coin::into_balance<SUI>(
             coin::split<SUI>(&mut merged_coin, split_value, ctx)
         );

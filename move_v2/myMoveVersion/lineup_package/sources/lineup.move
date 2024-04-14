@@ -231,10 +231,10 @@ module lineup_packagev2::lineup {
     // Returns a random lineup in the global pool with the same win-loss tag, standard mode or arena mode depending on the flag passed
     // If the vec_map contains no lineup with the win-loss tag,it returns a random lineup from win-0 slot
     public fun select_random_lineup(win:u8, lose:u8, global:&Global, is_arena:bool, ctx: &mut TxContext) : LineUp {
-        let win_lose_tag = WinLose{
-                            win: win,
-                            lose: lose
-                         };
+        let win_lose_tag = WinLose {
+            win: win,
+            lose: lose
+        };
         let pools;
         let vec;
         if(is_arena) {
@@ -243,21 +243,21 @@ module lineup_packagev2::lineup {
                 vec = vec_map::get(pools, &win_lose_tag);
             } else {
                 let tag = WinLose{
-                            win: win,
-                            lose: 0
-                         };
+                    win: win,
+                    lose: 0
+                };
                 assert!(vec_map::contains(pools, &tag), ERR_ELE_NOT_CONTAINS);
                 vec = vec_map::get(pools, &tag);
             };
-        }else{
+        } else {
             pools = &global.standard_mood_pools;
             if (vec_map::contains(pools, &win_lose_tag)) {
                 vec = vec_map::get(pools, &win_lose_tag);
             } else {
                 let tag = WinLose{
-                            win: win,
-                            lose: 0
-                         };
+                    win: win,
+                    lose: 0
+                };
                 assert!(vec_map::contains(pools, &tag), ERR_ELE_NOT_CONTAINS);
                 vec = vec_map::get(pools, &tag);
             };
