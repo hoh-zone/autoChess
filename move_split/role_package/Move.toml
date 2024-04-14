@@ -1,0 +1,14 @@
+[package]
+name = "role_package"
+version = "0.0.1"
+published-at = "0x4ef7d22f731621fcde258cc376f716127caf61d8dfa4c3fb96074643300097e9"
+
+[dependencies]
+Sui = { local = "G:/autoChess/move_split/sui-framework" }
+MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
+util_package = { local = "G:/autoChess/move_split/util_package"}
+
+[addresses]
+role_package = "0x4ef7d22f731621fcde258cc376f716127caf61d8dfa4c3fb96074643300097e9"
+util_package = "0xd676f5b01f25ceace77b17fbbc91cbb2a5b43eea7695b99b32d15866f6a706d8"
+admin = "0xb2a79beac8a092b336f560ba27f278382bcab2da831c64e546d7e0e087acc4fe"
