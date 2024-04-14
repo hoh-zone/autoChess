@@ -14,7 +14,7 @@ fight_package = { local = "G:/autoChess/move_v1/fight_package" }
 verify_package = { local = "G:/autoChess/move_v1/verify_package" }
 
 [addresses]
-chess_package_main = "0xc6771aebae85d27ea3176be5a31c0b15927e4c5efa0add413b6cbbe0730fbdeb"
+chess_package_main = "0x0"
 util_package = "0xd676f5b01f25ceace77b17fbbc91cbb2a5b43eea7695b99b32d15866f6a706d8"
 role_package = "0x4ef7d22f731621fcde258cc376f716127caf61d8dfa4c3fb96074643300097e9"
 lineup_package = "0x82b36157bea705ea46329400615d2c4e3540e498643475d7c7fa7fe47a308deb"
