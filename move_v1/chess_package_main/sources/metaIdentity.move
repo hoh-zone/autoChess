@@ -292,7 +292,7 @@ module chess_package_main::metaIdentity {
         meta.level = meta.level + 1;
     }
 
-    public fun query_best_rank_by_season(meta: &MetaIdentity, seasonId: u64) :u64 {
+    public fun query_best_rank_by_season(meta: &mut MetaIdentity, seasonId: u64) :u64 {
         if (table::contains(&meta.best_rank_map, seasonId)) {
             *table::borrow(&meta.best_rank_map, seasonId)
         } else {
@@ -388,27 +388,7 @@ module chess_package_main::metaIdentity {
     public fun is_registered(global: &MetaInfoGlobal, user_addr:address) : bool {
         table::contains(&global.wallet_meta_map, user_addr)
     }
-
-    public fun upgradeVersion(global: &mut MetaInfoGlobal, version:u64, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
-        global.version = version;
-    }
-
-    public fun upgradeVersion2(global: &mut RewardsGlobal, version:u64, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
-        global.version = version;
-    }
-
-    public fun change_manager(global: &mut MetaInfoGlobal, new_manager: address, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
-        global.manager = new_manager;
-    }
-
-    public fun change_manager2(global: &mut RewardsGlobal, new_manager: address, ctx: &mut TxContext) {
-        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
-        global.manager = new_manager;
-    }
-
+    
     public fun get_metaId(meta: &MetaIdentity) : u64 {
         meta.metaId
     }
@@ -460,5 +440,25 @@ module chess_package_main::metaIdentity {
         } = meta;
         table::drop(best_rank_map);
         object::delete(id);
+    }
+
+    public fun upgradeVersion(global: &mut MetaInfoGlobal, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.version = version;
+    }
+
+    public fun upgradeVersion2(global: &mut RewardsGlobal, version:u64, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.version = version;
+    }
+
+    public fun change_manager(global: &mut MetaInfoGlobal, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
+    }
+
+    public fun change_manager2(global: &mut RewardsGlobal, new_manager: address, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NO_PERMISSION);
+        global.manager = new_manager;
     }
 }

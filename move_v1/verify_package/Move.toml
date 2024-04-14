@@ -5,8 +5,8 @@ published-at = "0x537b04d93d32682923cf748442866ee7b5428774ced2492ae042a0b6a4309d
 
 
 [dependencies]
-Sui = { local = "G:/autoChess/move_v1/sui-framework" }
-MoveStdlib = { local ="G:/autoChess/move_v1/move-stdlib" }
+MoveStdlib = { local ="G:/autoChess/framework/move-stdlib" }
+Sui = { local = "G:/autoChess/framework/sui-framework" }
 util_package = { local = "G:/autoChess/move_v1/util_package" }
 role_package = { local = "G:/autoChess/move_v1/role_package" }
 lineup_package = { local = "G:/autoChess/move_v1/lineup_package" }

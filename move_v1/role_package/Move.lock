@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "E9882755D5EF0539857FA2C1C7A0DC862756CAF9214A47A10AD5BED12FB897EB"
+manifest_digest = "CDA44368E2DCB932EBCAF99B136B6DF44980F5120865493AD0869C4C149D2165"
 deps_digest = "060AD7E57DFB13104F21BE5F5C3759D03F0553FC3229247D9A7A6B45F50D03A3"
 
 dependencies = [
@@ -13,11 +13,11 @@ dependencies = [
 
 [[move.package]]
 name = "MoveStdlib"
-source = { local = "G:\\autoChess\\move_v1\\move-stdlib" }
+source = { local = "G:\\autoChess\\framework\\move-stdlib" }
 
 [[move.package]]
 name = "Sui"
-source = { local = "G:\\autoChess\\move_v1\\sui-framework" }
+source = { local = "G:\\autoChess\\framework\\sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },

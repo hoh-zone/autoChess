@@ -9,7 +9,9 @@ module role_package::test {
     };
     use std::vector;
     use std::debug::print;
+
     use role_package::role;
+
 
     fun scenario(): Scenario { begin(@admin) }
 
@@ -18,6 +20,7 @@ module role_package::test {
         let scenario = scenario();
         let test = &mut scenario;
         let admin = @admin;
+        print(&string::length(&name));
         next_tx(test, admin);
         {
             // init modules
