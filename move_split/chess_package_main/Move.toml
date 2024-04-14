@@ -3,7 +3,6 @@ name = "chess_package_main"
 version = "0.0.7"
 published-at = "0x202ff58166bd7e49d849c727f2c5a8d9108f133a5ce203dce90bc0b9df49929e"
 
-
 [dependencies]
 Sui = { local = "G:/autoChess/move_split/sui-framework" }
 MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
