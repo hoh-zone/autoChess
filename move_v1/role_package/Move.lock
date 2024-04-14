@@ -13,11 +13,11 @@ dependencies = [
 
 [[move.package]]
 name = "MoveStdlib"
-source = { local = "G:\\autoChess\\move_split\\move-stdlib" }
+source = { local = "G:\\autoChess\\move_v1\\move-stdlib" }
 
 [[move.package]]
 name = "Sui"
-source = { local = "G:\\autoChess\\move_split\\sui-framework" }
+source = { local = "G:\\autoChess\\move_v1\\sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -25,7 +25,7 @@ dependencies = [
 
 [[move.package]]
 name = "util_package"
-source = { local = "G:\\autoChess\\move_split\\util_package" }
+source = { local = "G:\\autoChess\\move_v1\\util_package" }
 
 dependencies = [
   { name = "MoveStdlib" },

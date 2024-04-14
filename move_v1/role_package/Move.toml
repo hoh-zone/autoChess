@@ -4,9 +4,9 @@ version = "0.0.1"
 published-at = "0x4ef7d22f731621fcde258cc376f716127caf61d8dfa4c3fb96074643300097e9"
 
 [dependencies]
-Sui = { local = "G:/autoChess/move_split/sui-framework" }
-MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
-util_package = { local = "G:/autoChess/move_split/util_package"}
+Sui = { local = "G:/autoChess/move_v1/sui-framework" }
+MoveStdlib = { local ="G:/autoChess/move_v1/move-stdlib" }
+util_package = { local = "G:/autoChess/move_v1/util_package"}
 
 [addresses]
 role_package = "0x4ef7d22f731621fcde258cc376f716127caf61d8dfa4c3fb96074643300097e9"

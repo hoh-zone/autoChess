@@ -5,10 +5,10 @@ published-at = "0x82b36157bea705ea46329400615d2c4e3540e498643475d7c7fa7fe47a308d
 
 
 [dependencies]
-Sui = { local = "G:/autoChess/move_split/sui-framework" }
-MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
-util_package = { local = "G:/autoChess/move_split/util_package" }
-role_package = { local = "G:/autoChess/move_split/role_package" }
+Sui = { local = "G:/autoChess/move_v1/sui-framework" }
+MoveStdlib = { local ="G:/autoChess/move_v1/move-stdlib" }
+util_package = { local = "G:/autoChess/move_v1/util_package" }
+role_package = { local = "G:/autoChess/move_v1/role_package" }
 
 [addresses]
 lineup_package = "0x82b36157bea705ea46329400615d2c4e3540e498643475d7c7fa7fe47a308deb"

@@ -5,13 +5,13 @@ published-at = "0xc6771aebae85d27ea3176be5a31c0b15927e4c5efa0add413b6cbbe0730fbd
 
 
 [dependencies]
-Sui = { local = "G:/autoChess/move_split/sui-framework" }
-MoveStdlib = { local ="G:/autoChess/move_split/move-stdlib" }
-util_package = { local = "G:/autoChess/move_split/util_package" }
-role_package = { local = "G:/autoChess/move_split/role_package" }
-lineup_package = { local = "G:/autoChess/move_split/lineup_package" }
-fight_package = { local = "G:/autoChess/move_split/fight_package" }
-verify_package = { local = "G:/autoChess/move_split/verify_package" }
+Sui = { local = "G:/autoChess/move_v1/sui-framework" }
+MoveStdlib = { local ="G:/autoChess/move_v1/move-stdlib" }
+util_package = { local = "G:/autoChess/move_v1/util_package" }
+role_package = { local = "G:/autoChess/move_v1/role_package" }
+lineup_package = { local = "G:/autoChess/move_v1/lineup_package" }
+fight_package = { local = "G:/autoChess/move_v1/fight_package" }
+verify_package = { local = "G:/autoChess/move_v1/verify_package" }
 
 [addresses]
 chess_package_main = "0xc6771aebae85d27ea3176be5a31c0b15927e4c5efa0add413b6cbbe0730fbdeb"
