@@ -279,7 +279,9 @@ module challenge_packagev2::challenge {
             rank_20: vector::empty<LineUp>(),
             reward_20: vector::empty<u64>(),
             publish_time: 0,
-            lock: false
+            lock: false,
+            version: CURRENT_VERSION,
+            manager: @manager
         }
     }
 
@@ -293,7 +295,7 @@ module challenge_packagev2::challenge {
             publish_time: _t,
             lock: _l,
             version: _v,
-            manager: _m
+            manager: _m,
         } = global;
         //balance::withdraw_all(&mut b);
         balance::destroy_zero(b);

@@ -101,47 +101,47 @@ module role_packagev2::role {
     }
 
     public fun init_charactors2(global:&mut Global) {
-vec_map::insert(&mut global.charactors, utf8(b"slime1"), Role {class:utf8(b"slime1"), level: 1, gold_cost: 3, attack:  6, hp: 9, speed: 5, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
-vec_map::insert(&mut global.charactors, utf8(b"slime1_1"), Role {class:utf8(b"slime1_1"), level: 2, gold_cost: 5, attack:  6, hp: 9, speed: 5, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
-vec_map::insert(&mut global.charactors, utf8(b"slime2"), Role {class:utf8(b"slime2"), level: 3, gold_cost: 8, attack:  10, hp: 30, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
-vec_map::insert(&mut global.charactors, utf8(b"slime2_1"), Role {class:utf8(b"slime2_1"), level: 6, gold_cost: 9, attack:  10, hp: 30, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
-vec_map::insert(&mut global.charactors, utf8(b"slime3"), Role {class:utf8(b"slime3"), level: 9, gold_cost: 10, attack:  20, hp: 65, speed: 10, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
-vec_map::insert(&mut global.charactors, utf8(b"ani1"), Role {class:utf8(b"ani1"), level: 1, gold_cost: 3, attack:  4, hp: 12, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
-vec_map::insert(&mut global.charactors, utf8(b"ani1_1"), Role {class:utf8(b"ani1_1"), level: 2, gold_cost: 5, attack:  4, hp: 12, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
-vec_map::insert(&mut global.charactors, utf8(b"ani2"), Role {class:utf8(b"ani2"), level: 3, gold_cost: 8, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
-vec_map::insert(&mut global.charactors, utf8(b"ani2_1"), Role {class:utf8(b"ani2_1"), level: 6, gold_cost: 9, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
-vec_map::insert(&mut global.charactors, utf8(b"ani3"), Role {class:utf8(b"ani3"), level: 9, gold_cost: 10, attack:  16, hp: 60, speed: 9, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"9")});
-vec_map::insert(&mut global.charactors, utf8(b"tree1"), Role {class:utf8(b"tree1"), level: 1, gold_cost: 3, attack:  5, hp: 11, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
-vec_map::insert(&mut global.charactors, utf8(b"tree1_1"), Role {class:utf8(b"tree1_1"), level: 2, gold_cost: 5, attack:  5, hp: 11, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
-vec_map::insert(&mut global.charactors, utf8(b"tree2"), Role {class:utf8(b"tree2"), level: 3, gold_cost: 8, attack:  10, hp: 21, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
-vec_map::insert(&mut global.charactors, utf8(b"tree2_1"), Role {class:utf8(b"tree2_1"), level: 6, gold_cost: 9, attack:  10, hp: 21, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
-vec_map::insert(&mut global.charactors, utf8(b"tree3"), Role {class:utf8(b"tree3"), level: 9, gold_cost: 10, attack:  20, hp: 50, speed: 10, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"9")});
-vec_map::insert(&mut global.charactors, utf8(b"wizard1"), Role {class:utf8(b"wizard1"), level: 1, gold_cost: 3, attack:  5, hp: 9, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
-vec_map::insert(&mut global.charactors, utf8(b"wizard1_1"), Role {class:utf8(b"wizard1_1"), level: 2, gold_cost: 5, attack:  5, hp: 9, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
-vec_map::insert(&mut global.charactors, utf8(b"wizard2"), Role {class:utf8(b"wizard2"), level: 3, gold_cost: 8, attack:  10, hp: 18, speed: 9, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
-vec_map::insert(&mut global.charactors, utf8(b"wizard2_1"), Role {class:utf8(b"wizard2_1"), level: 6, gold_cost: 9, attack:  10, hp: 18, speed: 9, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
-vec_map::insert(&mut global.charactors, utf8(b"wizard3"), Role {class:utf8(b"wizard3"), level: 9, gold_cost: 10, attack:  20, hp: 45, speed: 12, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"2")});
-vec_map::insert(&mut global.charactors, utf8(b"priest1"), Role {class:utf8(b"priest1"), level: 1, gold_cost: 3, attack:  3, hp: 12, speed: 4, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"6")});
-vec_map::insert(&mut global.charactors, utf8(b"priest1_1"), Role {class:utf8(b"priest1_1"), level: 2, gold_cost: 5, attack:  3, hp: 12, speed: 4, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"6")});
-vec_map::insert(&mut global.charactors, utf8(b"priest2"), Role {class:utf8(b"priest2"), level: 3, gold_cost: 8, attack:  6, hp: 24, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"8")});
-vec_map::insert(&mut global.charactors, utf8(b"priest2_1"), Role {class:utf8(b"priest2_1"), level: 6, gold_cost: 9, attack:  6, hp: 24, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"8")});
-vec_map::insert(&mut global.charactors, utf8(b"priest3"), Role {class:utf8(b"priest3"), level: 9, gold_cost: 10, attack:  12, hp: 60, speed: 9, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"12")});
-vec_map::insert(&mut global.charactors, utf8(b"shinobi1"), Role {class:utf8(b"shinobi1"), level: 1, gold_cost: 3, attack:  4, hp: 12, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"1")});
-vec_map::insert(&mut global.charactors, utf8(b"shinobi1_1"), Role {class:utf8(b"shinobi1_1"), level: 2, gold_cost: 5, attack:  4, hp: 12, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"1")});
-vec_map::insert(&mut global.charactors, utf8(b"shinobi2"), Role {class:utf8(b"shinobi2"), level: 3, gold_cost: 8, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"2")});
-vec_map::insert(&mut global.charactors, utf8(b"shinobi2_1"), Role {class:utf8(b"shinobi2_1"), level: 6, gold_cost: 9, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"2")});
-vec_map::insert(&mut global.charactors, utf8(b"shinobi3"), Role {class:utf8(b"shinobi3"), level: 9, gold_cost: 10, attack:  16, hp: 60, speed: 10, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"3")});
-vec_map::insert(&mut global.charactors, utf8(b"kunoichi1"), Role {class:utf8(b"kunoichi1"), level: 1, gold_cost: 3, attack:  6, hp: 9, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
-vec_map::insert(&mut global.charactors, utf8(b"kunoichi1_1"), Role {class:utf8(b"kunoichi1_1"), level: 2, gold_cost: 5, attack:  6, hp: 9, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
-vec_map::insert(&mut global.charactors, utf8(b"kunoichi2"), Role {class:utf8(b"kunoichi2"), level: 3, gold_cost: 8, attack:  12, hp: 18, speed: 10, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
-vec_map::insert(&mut global.charactors, utf8(b"kunoichi2_1"), Role {class:utf8(b"kunoichi2_1"), level: 6, gold_cost: 9, attack:  12, hp: 18, speed: 10, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
-vec_map::insert(&mut global.charactors, utf8(b"kunoichi3"), Role {class:utf8(b"kunoichi3"), level: 9, gold_cost: 10, attack:  24, hp: 45, speed: 12, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
-vec_map::insert(&mut global.charactors, utf8(b"archer1"), Role {class:utf8(b"archer1"), level: 1, gold_cost: 3, attack:  6, hp: 9, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"7")});
-vec_map::insert(&mut global.charactors, utf8(b"archer1_1"), Role {class:utf8(b"archer1_1"), level: 2, gold_cost: 5, attack:  6, hp: 9, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"7")});
-vec_map::insert(&mut global.charactors, utf8(b"archer2"), Role {class:utf8(b"archer2"), level: 3, gold_cost: 8, attack:  12, hp: 18, speed: 9, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"14")});
-vec_map::insert(&mut global.charactors, utf8(b"archer2_1"), Role {class:utf8(b"archer2_1"), level: 6, gold_cost: 9, attack:  12, hp: 18, speed: 9, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"14")});
-vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"archer3"), level: 9, gold_cost: 10, attack:  24, hp: 45, speed: 12, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"24")});
-}
+        vec_map::insert(&mut global.charactors, utf8(b"slime1"), Role {class:utf8(b"slime1"), level: 1, gold_cost: 3, attack:  6, hp: 9, speed: 5, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"slime1_1"), Role {class:utf8(b"slime1_1"), level: 2, gold_cost: 5, attack:  6, hp: 9, speed: 5, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"slime2"), Role {class:utf8(b"slime2"), level: 3, gold_cost: 8, attack:  10, hp: 30, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"slime2_1"), Role {class:utf8(b"slime2_1"), level: 6, gold_cost: 9, attack:  10, hp: 30, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"slime3"), Role {class:utf8(b"slime3"), level: 9, gold_cost: 10, attack:  20, hp: 65, speed: 10, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"forbid_buff"), effect_value: utf8(b"")});
+        vec_map::insert(&mut global.charactors, utf8(b"ani1"), Role {class:utf8(b"ani1"), level: 1, gold_cost: 3, attack:  4, hp: 12, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
+        vec_map::insert(&mut global.charactors, utf8(b"ani1_1"), Role {class:utf8(b"ani1_1"), level: 2, gold_cost: 5, attack:  4, hp: 12, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
+        vec_map::insert(&mut global.charactors, utf8(b"ani2"), Role {class:utf8(b"ani2"), level: 3, gold_cost: 8, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
+        vec_map::insert(&mut global.charactors, utf8(b"ani2_1"), Role {class:utf8(b"ani2_1"), level: 6, gold_cost: 9, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
+        vec_map::insert(&mut global.charactors, utf8(b"ani3"), Role {class:utf8(b"ani3"), level: 9, gold_cost: 10, attack:  16, hp: 60, speed: 9, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"9")});
+        vec_map::insert(&mut global.charactors, utf8(b"tree1"), Role {class:utf8(b"tree1"), level: 1, gold_cost: 3, attack:  5, hp: 11, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
+        vec_map::insert(&mut global.charactors, utf8(b"tree1_1"), Role {class:utf8(b"tree1_1"), level: 2, gold_cost: 5, attack:  5, hp: 11, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"3")});
+        vec_map::insert(&mut global.charactors, utf8(b"tree2"), Role {class:utf8(b"tree2"), level: 3, gold_cost: 8, attack:  10, hp: 21, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
+        vec_map::insert(&mut global.charactors, utf8(b"tree2_1"), Role {class:utf8(b"tree2_1"), level: 6, gold_cost: 9, attack:  10, hp: 21, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"6")});
+        vec_map::insert(&mut global.charactors, utf8(b"tree3"), Role {class:utf8(b"tree3"), level: 9, gold_cost: 10, attack:  20, hp: 50, speed: 10, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"reduce_tmp_attack"), effect_value: utf8(b"9")});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard1"), Role {class:utf8(b"wizard1"), level: 1, gold_cost: 3, attack:  5, hp: 9, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard1_1"), Role {class:utf8(b"wizard1_1"), level: 2, gold_cost: 5, attack:  5, hp: 9, speed: 7, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard2"), Role {class:utf8(b"wizard2"), level: 3, gold_cost: 8, attack:  10, hp: 18, speed: 9, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard2_1"), Role {class:utf8(b"wizard2_1"), level: 6, gold_cost: 9, attack:  10, hp: 18, speed: 9, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"1")});
+        vec_map::insert(&mut global.charactors, utf8(b"wizard3"), Role {class:utf8(b"wizard3"), level: 9, gold_cost: 10, attack:  20, hp: 45, speed: 12, sp:0, sp_cap: 0, effect_type: utf8(b"ring"), effect: utf8(b"add_all_tmp_sp_cap"), effect_value: utf8(b"2")});
+        vec_map::insert(&mut global.charactors, utf8(b"priest1"), Role {class:utf8(b"priest1"), level: 1, gold_cost: 3, attack:  3, hp: 12, speed: 4, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"6")});
+        vec_map::insert(&mut global.charactors, utf8(b"priest1_1"), Role {class:utf8(b"priest1_1"), level: 2, gold_cost: 5, attack:  3, hp: 12, speed: 4, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"6")});
+        vec_map::insert(&mut global.charactors, utf8(b"priest2"), Role {class:utf8(b"priest2"), level: 3, gold_cost: 8, attack:  6, hp: 24, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"8")});
+        vec_map::insert(&mut global.charactors, utf8(b"priest2_1"), Role {class:utf8(b"priest2_1"), level: 6, gold_cost: 9, attack:  6, hp: 24, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"8")});
+        vec_map::insert(&mut global.charactors, utf8(b"priest3"), Role {class:utf8(b"priest3"), level: 9, gold_cost: 10, attack:  12, hp: 60, speed: 9, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"all_max_hp_to_back1"), effect_value: utf8(b"12")});
+        vec_map::insert(&mut global.charactors, utf8(b"shinobi1"), Role {class:utf8(b"shinobi1"), level: 1, gold_cost: 3, attack:  4, hp: 12, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"1")});
+        vec_map::insert(&mut global.charactors, utf8(b"shinobi1_1"), Role {class:utf8(b"shinobi1_1"), level: 2, gold_cost: 5, attack:  4, hp: 12, speed: 6, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"1")});
+        vec_map::insert(&mut global.charactors, utf8(b"shinobi2"), Role {class:utf8(b"shinobi2"), level: 3, gold_cost: 8, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"2")});
+        vec_map::insert(&mut global.charactors, utf8(b"shinobi2_1"), Role {class:utf8(b"shinobi2_1"), level: 6, gold_cost: 9, attack:  8, hp: 24, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"2")});
+        vec_map::insert(&mut global.charactors, utf8(b"shinobi3"), Role {class:utf8(b"shinobi3"), level: 9, gold_cost: 10, attack:  16, hp: 60, speed: 10, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"attack_by_hp_percent"), effect_value: utf8(b"3")});
+        vec_map::insert(&mut global.charactors, utf8(b"kunoichi1"), Role {class:utf8(b"kunoichi1"), level: 1, gold_cost: 3, attack:  6, hp: 9, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
+        vec_map::insert(&mut global.charactors, utf8(b"kunoichi1_1"), Role {class:utf8(b"kunoichi1_1"), level: 2, gold_cost: 5, attack:  6, hp: 9, speed: 8, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
+        vec_map::insert(&mut global.charactors, utf8(b"kunoichi2"), Role {class:utf8(b"kunoichi2"), level: 3, gold_cost: 8, attack:  12, hp: 18, speed: 10, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
+        vec_map::insert(&mut global.charactors, utf8(b"kunoichi2_1"), Role {class:utf8(b"kunoichi2_1"), level: 6, gold_cost: 9, attack:  12, hp: 18, speed: 10, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
+        vec_map::insert(&mut global.charactors, utf8(b"kunoichi3"), Role {class:utf8(b"kunoichi3"), level: 9, gold_cost: 10, attack:  24, hp: 45, speed: 12, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"attack_sputter_to_second_by_percent"), effect_value: utf8(b"5")});
+        vec_map::insert(&mut global.charactors, utf8(b"archer1"), Role {class:utf8(b"archer1"), level: 1, gold_cost: 3, attack:  6, hp: 9, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"7")});
+        vec_map::insert(&mut global.charactors, utf8(b"archer1_1"), Role {class:utf8(b"archer1_1"), level: 2, gold_cost: 5, attack:  6, hp: 9, speed: 7, sp:0, sp_cap: 3, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"7")});
+        vec_map::insert(&mut global.charactors, utf8(b"archer2"), Role {class:utf8(b"archer2"), level: 3, gold_cost: 8, attack:  12, hp: 18, speed: 9, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"14")});
+        vec_map::insert(&mut global.charactors, utf8(b"archer2_1"), Role {class:utf8(b"archer2_1"), level: 6, gold_cost: 9, attack:  12, hp: 18, speed: 9, sp:0, sp_cap: 2, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"14")});
+        vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"archer3"), level: 9, gold_cost: 10, attack:  24, hp: 45, speed: 12, sp:0, sp_cap: 1, effect_type: utf8(b"skill"), effect: utf8(b"attack_last_char"), effect_value: utf8(b"24")});
+    }
 
     public fun new_role(class:String, attack:u64, hp:u64, speed:u64, sp:u8, level:u8, gold_cost:u8, sp_cap:u8, 
         effect:String, effect_value:String, effect_type:String): Role{
@@ -447,7 +447,7 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
             id: id1,
             charactors: _char,
             version: _v,
-            manager: _m    
+            manager: _m
         } = global;
         object::delete(id1);
     }
@@ -564,7 +564,9 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
         };
         let Global{
             id: id1,
-            charactors: _char         
+            charactors: _char,
+            manager: _,
+            version: _
         } = global;
         object::delete(id1);
     }
@@ -600,7 +602,9 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
         };
         let Global{
             id: id1,
-            charactors: _char         
+            charactors: _char,
+            manager: _,
+            version: _     
         } = global;
         object::delete(id1);
     }
@@ -628,7 +632,9 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
         print_role(role);
         let Global{
             id: id1,
-            charactors: _char         
+            charactors: _char,
+            manager: _,
+            version: _
         } = global;
         object::delete(id1);
     }

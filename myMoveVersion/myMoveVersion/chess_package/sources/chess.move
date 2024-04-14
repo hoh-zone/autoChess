@@ -25,6 +25,7 @@ module chess_packagev2::chess {
     use challenge_packagev2::challenge;
     use fight_packagev2::fight;
     use util_packagev2::utils::{Self, Int_wrapper};
+    use chess_packagev2::metaIdentity;
 
     const INIT_GOLD:u64 = 10;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
@@ -187,7 +188,7 @@ module chess_packagev2::chess {
     }
 
     #[lint_allow(self_transfer)]
-    entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+    entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, rewardsGlobal: &mut metaIdentity::RewardsGlobal, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
@@ -195,6 +196,8 @@ module chess_packagev2::chess {
         let merged_coin = vector::pop_back(&mut coins);
         pay::join_vec(&mut merged_coin, coins);
         let paid_price = coin::value(&merged_coin);
+        let split_value = paid_price / 10;
+        let left_value = paid_price - split_value;
         assert!(utils::check_ticket_gold_cost(paid_price), ERR_PAYMENT_NOT_ENOUGH);
         let game = Chess {
             id: object::new(ctx),
@@ -212,9 +215,14 @@ module chess_packagev2::chess {
             arena_checked: false
         };
         let balance = coin::into_balance<SUI>(
-            coin::split<SUI>(&mut merged_coin, paid_price, ctx)
+            coin::split<SUI>(&mut merged_coin, left_value, ctx)
         );
         balance::join(&mut global.balance_SUI, balance);
+
+        let balance_for_invite = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, split_value, ctx)
+        );
+        metaIdentity::top_up_balance_pool(rewardsGlobal, balance_for_invite);
         if (coin::value(&merged_coin) > 0) {
             // send the left coin back to the player after paying the ticket
             transfer::public_transfer(merged_coin, tx_context::sender(ctx));
@@ -223,6 +231,55 @@ module chess_packagev2::chess {
         };
         global.total_chesses = global.total_chesses + 1;
         public_transfer(game, sender);
+    }
+
+    #[lint_allow(self_transfer)]
+    entry fun mint_invite_arena_chess(role_global:&role::Global, global: &mut Global, rewardsGlobal: &mut metaIdentity::RewardsGlobal, name:String, coins:vector<Coin<SUI>>, 
+        metaGlobal:&mut metaIdentity::MetaInfoGlobal, meta: &metaIdentity::MetaIdentity, ctx: &mut TxContext) {
+        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
+        let sender = tx_context::sender(ctx);
+        // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
+        // ticket price
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        let paid_price = coin::value(&merged_coin);
+        let split_value = paid_price / 10;
+        let left_value = paid_price - split_value;
+        assert!(utils::check_ticket_gold_cost(paid_price), ERR_PAYMENT_NOT_ENOUGH);
+        let game = Chess {
+            id: object::new(ctx),
+            name:name,
+            lineup: lineup::empty(ctx),
+            cards_pool: lineup::generate_random_cards(role_global, ctx),
+            gold: INIT_GOLD,
+            win: 0,
+            lose: 0,
+            challenge_win:0,
+            challenge_lose:0,
+            creator: sender,
+            gold_cost: paid_price,
+            arena: true,
+            arena_checked: false
+        };
+        let balance = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, left_value, ctx)
+        );
+        balance::join(&mut global.balance_SUI, balance);
+
+        let balance_for_invite = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, split_value, ctx)
+        );
+        let inviter_meta_id = metaIdentity::get_invited_metaId(meta);
+        metaIdentity::top_up_rewards_pool(rewardsGlobal, balance_for_invite, inviter_meta_id, split_value);
+        if (coin::value(&merged_coin) > 0) {
+            // send the left coin back to the player after paying the ticket
+            transfer::public_transfer(merged_coin, tx_context::sender(ctx));
+        } else {
+            coin::destroy_zero(merged_coin);
+        };
+        global.total_chesses = global.total_chesses + 1;
+        public_transfer(game, sender);
+        metaIdentity::record_invited_success(metaGlobal, meta);
     }
 
     // mint a chess nft
@@ -281,9 +338,6 @@ module chess_packagev2::chess {
         object::delete(id);
     }
 
-
-
-    
     public fun get_total_sui_amount(global: &Global) : u64 {
         balance::value(&global.balance_SUI)
     }
@@ -506,7 +560,7 @@ module chess_packagev2::chess {
 
     // Performs the battle between the player and the rival by rounds of attacks and conter-attacks
     // Return true if player wins and false if play loses
-    fun fight(chess: &mut Chess, enemy_lineup: &LineUp, is_challenge:bool, ctx:&mut TxContext) :bool {
+    fun fight(chess: &mut Chess, enemy_lineup: &LineUp, is_challenge:bool, ctx:&TxContext) :bool {
         let my_lineup_fight = *&chess.lineup;
 
         // backup to avoid base_hp to be changed

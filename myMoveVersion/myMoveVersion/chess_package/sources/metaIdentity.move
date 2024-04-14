@@ -9,9 +9,10 @@ module chess_packagev2::metaIdentity {
     use std::vector::{Self};
     use sui::sui::SUI;
     use sui::coin::{Self};
+    use sui::vec_map;
 
     friend chess_packagev2::chess;
-    
+
     const ERR_ALREADY_BIND:u64 = 0x001;
     const ERR_NO_PERMISSION:u64 = 0x002;
     const ERR_INVALID_VERSION:u64 = 0x003;
@@ -26,10 +27,12 @@ module chess_packagev2::metaIdentity {
     const EXP_LEVEL8:u64 = 500;
     const EXP_LEVEL9:u64 = 600;
     const EXP_LEVEL10:u64 = 1000;
-    const AMOUNT_DECIMAL:u64 = 1_000_000_000;
 
+    const LAST_SEASON:u64 = 1;
+    const CURRENT_SEASON:u64 = 2;
     const INIT_META_ID_INDEX:u64 = 10000;
     const ERR_NOT_PERMISSION:u64 = 0x01;
+    const LAST_SEASON_REWARD_PER_INVITE:u64 = 30_000_000;
     const CURRENT_VERSION:u64 = 1;
 
     struct MetaIdentity has key {
@@ -37,9 +40,6 @@ module chess_packagev2::metaIdentity {
         metaId:u64,
         name:string::String,
         wallet_addr:address,
-
-        // record the num clamied for invite activity to prevent double claim
-        invited_claimed_num: u64,
         level: u64,
         exp: u64,
         total_arena_win: u64,
@@ -58,10 +58,17 @@ module chess_packagev2::metaIdentity {
     struct RewardsGlobal has key {
         id:UID,
         creator: address,
-        balance_SUI: Balance<SUI>,
+        balance_invite_rewards: Balance<SUI>,
+        balance_pool: Balance<SUI>,
 
         // metaId -> claimed num(in people) for sui rewards
         claimed_rewards_num_map: table::Table<u64, u64>,
+
+        // metaId -> culmulate invite pool rewards
+        culmulate_invite_rewards_map: vec_map::VecMap<u64, u64>,
+
+        // metaId -> claimed amount (to prevent double claim)
+        culmulate_invite_claimed_rewards_map: vec_map::VecMap<u64, u64>,
 
         // metaId -> rebateLevel
         // not in table: 2%, 1: 3%, 2:4% , 3:5%
@@ -96,6 +103,19 @@ module chess_packagev2::metaIdentity {
             manager: @manager
         };
         transfer::share_object(global);
+        let global = RewardsGlobal {
+            id: object::new(ctx),
+            creator: @manager,
+            balance_invite_rewards: balance::zero(),
+            balance_pool: balance::zero(),
+            claimed_rewards_num_map: table::new<u64, u64>(ctx),
+            culmulate_invite_rewards_map: vec_map::empty(),
+            culmulate_invite_claimed_rewards_map: vec_map::empty(),
+            rebate_level: table::new<u64, u64>(ctx),
+            version: CURRENT_VERSION,
+            manager: @manager
+        };
+        transfer::share_object(global);
     }
 
     #[allow(unused_function)]
@@ -110,28 +130,43 @@ module chess_packagev2::metaIdentity {
             manager: @manager
         };
         transfer::share_object(global);
+        let global = RewardsGlobal {
+            id: object::new(ctx),
+            creator: @manager,
+            balance_invite_rewards: balance::zero(),
+            balance_pool: balance::zero(),
+            claimed_rewards_num_map: table::new<u64, u64>(ctx),
+            culmulate_invite_rewards_map: vec_map::empty(),
+            culmulate_invite_claimed_rewards_map: vec_map::empty(),
+            rebate_level: table::new<u64, u64>(ctx),
+            version: CURRENT_VERSION,
+            manager: @manager
+        };
+        transfer::share_object(global);
     }
 
     public fun clone_meta_from_old_package(oldMeta: chess_package_main::metaIdentity::MetaIdentity, oldMetaGlobal: &mut chess_package_main::metaIdentity::MetaInfoGlobal, 
-        global: &mut MetaInfoGlobal, ctx:&mut TxContext) {
+        global: &mut MetaInfoGlobal, rewardsGlobal: &mut RewardsGlobal, ctx:&mut TxContext) {
         let uid = object::new(ctx);
         let sender = tx_context::sender(ctx);
         assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
         let meta_addr = object::uid_to_address(&uid);
         table::add(&mut global.wallet_meta_map, sender, meta_addr);
         let metaId = chess_package_main::metaIdentity::get_metaId(&oldMeta);
+        let best_rank_table = table::new<u64, u64>(ctx);       
+        let best_rank = chess_package_main::metaIdentity::query_best_rank_by_season(&oldMeta, LAST_SEASON);
+        table::add(&mut best_rank_table, LAST_SEASON, best_rank);
         let meta = MetaIdentity {
             id:uid,
             metaId: metaId,
             name: chess_package_main::metaIdentity::get_name(&oldMeta),
             wallet_addr: sender,
-            invited_claimed_num: chess_package_main::metaIdentity::query_invited_num(oldMetaGlobal, metaId),
             level: chess_package_main::metaIdentity::get_level(&oldMeta),
             exp: chess_package_main::metaIdentity::get_exp(&oldMeta),
             total_arena_win: chess_package_main::metaIdentity::get_arena_win(&oldMeta),
             total_arena_lose: chess_package_main::metaIdentity::get_arena_lose(&oldMeta),
             avatar_name: chess_package_main::metaIdentity::get_name(&oldMeta),
-            best_rank_map: table::new<u64, u64>(ctx),
+            best_rank_map: best_rank_table,
             init_gold: 0,
             ability1: string::utf8(b""),
             ability2: string::utf8(b""),
@@ -140,34 +175,67 @@ module chess_packagev2::metaIdentity {
             ability5: string::utf8(b""),
             inviterMetaId: chess_package_main::metaIdentity::get_invited_metaId(&oldMeta)
         };
+        let last_season_invited_num = chess_package_main::metaIdentity::query_invited_num(oldMetaGlobal, metaId);
+        let last_season_diff_mount = last_season_invited_num * LAST_SEASON_REWARD_PER_INVITE;
+        add_invite_reward_amount(rewardsGlobal, metaId, last_season_diff_mount);
         global.total_players = global.total_players + 1;
         transfer::transfer(meta, sender);
         chess_package_main::metaIdentity::burn_meta(oldMeta);
     }
 
-    public fun init_rewards_global(ctx: &mut TxContext) {
-        let global = RewardsGlobal {
-            id: object::new(ctx),
-            creator: @manager,
-            balance_SUI: balance::zero(),
-            claimed_rewards_num_map: table::new<u64, u64>(ctx),
-            rebate_level: table::new<u64, u64>(ctx),
-            version: CURRENT_VERSION,
-            manager: @manager
+    public fun top_up_rewards_pool(global:&mut RewardsGlobal, balance:Balance<SUI>, inviter_meta_id:u64, sui_value:u64) {
+        let record_amount;
+        if (table::contains(&global.rebate_level, inviter_meta_id)) {
+            let level = *table::borrow(&global.rebate_level, inviter_meta_id);
+            if (level == 1) {
+                record_amount = sui_value / 33;
+            } else if (level == 2) {
+                record_amount = sui_value / 25;
+            } else if (level == 3) {
+                record_amount = sui_value / 20;
+            } else {
+                record_amount = sui_value / 50;
+            }
+        } else {
+            record_amount = sui_value / 50;
         };
-        transfer::share_object(global);
+        let invite_reward_amount = balance::split(&mut balance, record_amount);
+        balance::join(&mut global.balance_invite_rewards, invite_reward_amount);
+        balance::join(&mut global.balance_pool, balance);
+        add_invite_reward_amount(global, inviter_meta_id, record_amount);
     }
 
-    public fun top_up_rewards_pool(global:&mut RewardsGlobal, balance:Balance<SUI>) {
-        balance::join(&mut global.balance_SUI, balance);
+    fun add_invite_reward_amount(global:&mut RewardsGlobal, meta_id:u64, diff_amount:u64) {
+        if (vec_map::contains(&global.culmulate_invite_rewards_map, &meta_id)) {
+            let (key, value) = vec_map::remove(&mut global.culmulate_invite_rewards_map, &meta_id);
+            vec_map::insert(&mut global.culmulate_invite_rewards_map, key, value + diff_amount);
+        } else {
+            vec_map::insert(&mut global.culmulate_invite_rewards_map, meta_id, diff_amount);
+        };
     }
 
     #[lint_allow(self_transfer)]
-    public fun airdrop_split(amount:u64, global: &mut RewardsGlobal, ctx: &mut TxContext) {
+    public fun pool_split(amount:u64, global: &mut RewardsGlobal, ctx: &mut TxContext) {
         assert!(tx_context::sender(ctx) == global.manager, ERR_NOT_PERMISSION);
-        let sui_balance = balance::split(&mut global.balance_SUI, amount);
+        let sui_balance = balance::split(&mut global.balance_pool, amount);
         let sui = coin::from_balance(sui_balance, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
+    #[lint_allow(self_transfer)]
+    public fun invite_rewards_split(amount:u64, global: &mut RewardsGlobal, ctx: &mut TxContext) {
+        assert!(tx_context::sender(ctx) == global.manager, ERR_NOT_PERMISSION);
+        let sui_balance = balance::split(&mut global.balance_invite_rewards, amount);
+        let sui = coin::from_balance(sui_balance, ctx);
+        transfer::public_transfer(sui, tx_context::sender(ctx));
+    }
+
+    public fun top_up_balance_pool(global:&mut RewardsGlobal, balance:Balance<SUI>) {
+        balance::join(&mut global.balance_pool, balance);
+    }
+
+    public fun top_up_invite_rewards_pool(global:&mut RewardsGlobal, balance:Balance<SUI>) {
+        balance::join(&mut global.balance_invite_rewards, balance);
     }
 
     public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, avatar_name: string::String, ctx:&mut TxContext) {
@@ -183,7 +251,6 @@ module chess_packagev2::metaIdentity {
             metaId:metaId,
             name:name,
             wallet_addr:sender,
-            invited_claimed_num: 0,
             level: 0,
             exp: 0,
             total_arena_win: 0,
@@ -215,7 +282,6 @@ module chess_packagev2::metaIdentity {
             metaId:metaId,
             name:name,
             wallet_addr:sender,
-            invited_claimed_num: 0,
             level: 0,
             exp: 0,
             total_arena_win: 0,
@@ -269,7 +335,7 @@ module chess_packagev2::metaIdentity {
     }
 
     public(friend) fun record_update_best_rank(meta: &mut MetaIdentity, rank:u64) {
-        let seasonId = 1;
+        let seasonId = CURRENT_SEASON;
         if (table::contains(&meta.best_rank_map, seasonId)) {
             let last_rank = *table::borrow(&meta.best_rank_map, seasonId);
             if (rank < last_rank) {
@@ -342,71 +408,44 @@ module chess_packagev2::metaIdentity {
         }
     }
 
+    public fun query_culmulate_sui_invite_rewards_amount(global:&RewardsGlobal, metaId: u64) : u64 {
+        if (vec_map::contains(&global.culmulate_invite_rewards_map, &metaId)) {
+            *vec_map::get(&global.culmulate_invite_rewards_map, &metaId)
+        } else {
+            0
+        }
+    }
+
     #[lint_allow(self_transfer)]
-    public fun claim_invite_rewards(global:&MetaInfoGlobal, rewardsGlobal:&mut RewardsGlobal, meta: &mut MetaIdentity, ctx:&mut TxContext) {
+    entry fun claim_invite_rewards(global:&MetaInfoGlobal, rewardsGlobal:&mut RewardsGlobal, meta: &MetaIdentity, ctx:&mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         assert!(rewardsGlobal.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let metaId = meta.metaId;
-        let invited_num = query_invited_num(global, metaId);
-        let claimed_num;
-        if (!table::contains(&rewardsGlobal.claimed_rewards_num_map, metaId)) {
-            claimed_num = 0;
+        let culmulate_amount = query_culmulate_sui_invite_rewards_amount(rewardsGlobal, metaId);
+        let claimed_amount;
+        if (!vec_map::contains(&rewardsGlobal.culmulate_invite_claimed_rewards_map, &metaId)) {
+            claimed_amount = 0;
         } else {
-            claimed_num = *table::borrow(&rewardsGlobal.claimed_rewards_num_map, metaId);
+            claimed_amount = *vec_map::get(&rewardsGlobal.culmulate_invite_claimed_rewards_map, &metaId);
         };
-        assert!(invited_num > claimed_num, ERR_ALREADY_CLAMIED);
-        let diff_num = invited_num - claimed_num;
-
-        // everyone can gain 2% rewards
-        let amount;
-        if (table::contains(&rewardsGlobal.rebate_level, metaId)) {
-            let level = *table::borrow(&rewardsGlobal.rebate_level, metaId);
-            if (level == 1) {
-                amount = diff_num * AMOUNT_DECIMAL / 33;
-            } else if (level == 2) {
-                amount = diff_num * AMOUNT_DECIMAL / 25;
-            } else if (level == 3) {
-                amount = diff_num * AMOUNT_DECIMAL / 20;
-            } else {
-                amount = diff_num * AMOUNT_DECIMAL / 50;
-            }
-        } else {
-            amount = diff_num * AMOUNT_DECIMAL / 50;
-        };
-        let sui_rewards = balance::split(&mut rewardsGlobal.balance_SUI, amount);
+        assert!(culmulate_amount > claimed_amount, ERR_ALREADY_CLAMIED);
+        let diff_amount = culmulate_amount - claimed_amount;
+        let sui_rewards = balance::split(&mut rewardsGlobal.balance_invite_rewards, diff_amount);
         let sui = coin::from_balance(sui_rewards, ctx);
         transfer::public_transfer(sui, tx_context::sender(ctx));
 
         // record num
-        if (!table::contains(&rewardsGlobal.claimed_rewards_num_map, metaId)) {
-            table::add(&mut rewardsGlobal.claimed_rewards_num_map, metaId, invited_num);
+        if (!vec_map::contains(&rewardsGlobal.culmulate_invite_claimed_rewards_map, &metaId)) {
+            vec_map::insert(&mut rewardsGlobal.culmulate_invite_claimed_rewards_map, metaId, diff_amount);
         } else {
-            table::remove(&mut rewardsGlobal.claimed_rewards_num_map, metaId);
-            table::add(&mut rewardsGlobal.claimed_rewards_num_map, metaId, invited_num);
+            vec_map::remove(&mut rewardsGlobal.culmulate_invite_claimed_rewards_map, &metaId);
+            vec_map::insert(&mut rewardsGlobal.culmulate_invite_claimed_rewards_map, metaId, claimed_amount + diff_amount);
         };
     }
 
     public fun set_rebate_level(rewardsGlobal: &mut RewardsGlobal, metaId: u64, level: u64, ctx:&mut TxContext) {
         assert!(tx_context::sender(ctx) == rewardsGlobal.manager, ERR_NOT_PERMISSION);
         table::add(&mut rewardsGlobal.rebate_level, metaId, level);
-    }
-
-    public fun query_rebate_level(rewardsGlobal: &mut RewardsGlobal, metaId: u64) :u64 {
-        if (table::contains(&rewardsGlobal.rebate_level, metaId)) {
-            *table::borrow(&rewardsGlobal.rebate_level, metaId)
-        } else {
-            0
-        }
-    }
-
-    public fun claim_invite_exp(global:&MetaInfoGlobal, meta:&mut MetaIdentity) {
-        assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
-        let metaId = meta.metaId;
-        let invited_num = query_invited_num(global, metaId);
-        let claimed_num = meta.invited_claimed_num;
-        assert!(invited_num > claimed_num, ERR_ALREADY_CLAMIED);
-        add_exp(meta, (invited_num - claimed_num) * 20);
-        meta.invited_claimed_num = meta.invited_claimed_num + 1;
     }
 
     public fun get_is_registered(global: &MetaInfoGlobal, user_addr:address) : u64 {
@@ -419,6 +458,58 @@ module chess_packagev2::metaIdentity {
 
     public fun is_registered(global: &MetaInfoGlobal, user_addr:address) : bool {
         table::contains(&global.wallet_meta_map, user_addr)
+    }
+    
+    public fun get_metaId(meta: &MetaIdentity) : u64 {
+        meta.metaId
+    }
+
+    public fun get_level(meta: &MetaIdentity) : u64 {
+        meta.level
+    }
+
+    public fun get_exp(meta: &MetaIdentity) : u64 {
+        meta.exp
+    }
+
+    public fun get_arena_win(meta: &MetaIdentity) : u64 {
+        meta.total_arena_win
+    }
+
+    public fun get_arena_lose(meta: &MetaIdentity) : u64 {
+        meta.total_arena_lose
+    }
+
+    public fun get_name(meta: &MetaIdentity) : string::String {
+        meta.name
+    }
+
+    public fun get_invited_metaId(meta: &MetaIdentity) : u64 {
+        meta.inviterMetaId
+    }
+
+    public fun burn_meta(meta: MetaIdentity) {
+        let MetaIdentity {
+            id,
+            metaId: _,
+            name: _,
+            wallet_addr: _,
+            level: _,
+            exp: _,
+            total_arena_win: _,
+            total_arena_lose: _, 
+            avatar_name: _,
+            best_rank_map,
+            init_gold: _,
+            ability1: _,
+            ability2: _,
+            ability3: _,
+            ability4: _,
+            ability5: _,
+            inviterMetaId: _
+        } = meta;
+        table::drop(best_rank_map);
+        object::delete(id);
     }
 
     public fun upgradeVersion(global: &mut MetaInfoGlobal, version:u64, ctx: &mut TxContext) {

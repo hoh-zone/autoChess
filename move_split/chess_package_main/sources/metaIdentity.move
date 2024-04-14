@@ -292,7 +292,7 @@ module chess_package_main::metaIdentity {
         meta.level = meta.level + 1;
     }
 
-    public fun query_best_rank_by_season(meta: &mut MetaIdentity, seasonId: u64) :u64 {
+    public fun query_best_rank_by_season(meta: &MetaIdentity, seasonId: u64) :u64 {
         if (table::contains(&meta.best_rank_map, seasonId)) {
             *table::borrow(&meta.best_rank_map, seasonId)
         } else {
