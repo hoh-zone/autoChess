@@ -45,15 +45,6 @@ const useOperateAndMatch = () => {
 
   const operate_submit = async (operations: string[], meta: any) => {
     if (!wallet) return
-    if (win == 10) {
-      toast({
-        title: getLocale("rank-activity-locked"),
-        status: "error",
-        duration: 5000,
-        isClosable: true
-      })
-      return
-    }
     try {
       const tx = new TransactionBlock()
       const left_gold = money
@@ -72,8 +63,6 @@ const useOperateAndMatch = () => {
         target: `${CHESS_PACKAGE_V2}::chess::operate_and_battle`,
         arguments: argument
       })
-      console.log(argument)
-
       const response = await wallet.signAndExecuteTransactionBlock({
         transactionBlock: tx,
         options: {

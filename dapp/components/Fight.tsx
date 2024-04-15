@@ -301,7 +301,6 @@ export const Fight = () => {
               ele.attack = Number(ele.attack)
             })
             let name = json["v2_name"]
-            //let name = "mimiao"
             setEnemyName(name)
             setEnemyChars(enemys)
             setStage("fight")
