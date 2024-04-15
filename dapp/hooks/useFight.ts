@@ -28,7 +28,7 @@ export const useFight = () => {
     const ATTACK_ANIM_DURATION = 400;
     const SKILL_ANIM_DURATION = 900;
     const ATTACK_INTERVAL_TIME = 800;
-    const CHAR_SHOWUP_TIME = 800;
+    const CHAR_SHOWUP_TIME = 1800;
 
     let animationEnd = Date.now() + 4000;
     let skew = 1;
@@ -87,6 +87,11 @@ export const useFight = () => {
         let attack: number = char.attack;
         if (enemyChar.hp < attack) {
             enemyChar.hp = 0;
+            if (is_opponent) {
+                setChars(chars.slice());
+            } else {
+                setEnemyChars(enemyChars.slice());
+            }
         } else {
             enemyChar.hp -= attack;
         }
@@ -513,8 +518,9 @@ export const useFight = () => {
 
     const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_sp_debuff = get_extra_max_sp_debuff(is_opponent);
-        if (char.effect_type === "skill" )
+        if (char.effect_type === "skill" ) {
             modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
+        }
         setChars(chars.slice());
         setEnemyChars(enemyChars.slice());
         if (char.effect_type === "skill" && char.sp >= Number(char.sp_cap)  ) {
@@ -556,27 +562,26 @@ export const useFight = () => {
             let charIndex = chars.findIndex(Boolean);
             setFightingIndex(charIndex);
             let char = chars[charIndex]!;
-
             const enemyCharIndex = enemyChars.findIndex(Boolean);
             setEnemyFightingIndex(enemyCharIndex);
             let enemyChar = enemyChars[enemyCharIndex]!;
-            await sleep(CHAR_SHOWUP_TIME);
             let max_loop = 40;
             while (char.hp > 0 && enemyChar.hp > 0) {
                 if(char.speed >= enemyChar.speed){
                     await sleep(ATTACK_INTERVAL_TIME);
                     await action(char, enemyChar, charIndex, enemyCharIndex, false);
-                    if(enemyChar.hp > 0)
+                    if(enemyChar.hp > 0) {
                         await sleep(ATTACK_INTERVAL_TIME);
                         await action(enemyChar, char, enemyCharIndex, charIndex, true);
+                    }
                 }else{
                     await sleep(ATTACK_INTERVAL_TIME);
                     await action(enemyChar, char, enemyCharIndex, charIndex, true);
-                    if(char.hp > 0)
+                    if(char.hp > 0) {
                         await sleep(ATTACK_INTERVAL_TIME);
-                        await action(char, enemyChar, charIndex, enemyCharIndex, false);                 
+                        await action(char, enemyChar, charIndex, enemyCharIndex, false);        
+                    }
                 }
-
                 died_check(chars, false);
                 died_check(enemyChars, true);
                 max_loop -= 1;
