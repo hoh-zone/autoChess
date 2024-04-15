@@ -72,7 +72,7 @@ export const HpBar = ({ id }: { id: number }) => {
       <div style={{ justifyContent: "left", width: "50px", height: "30px", background: "url('status_bg.png') no-repeat", backgroundSize: "50px auto", backgroundPosition: "left" }}>
         <div style={{ width: `${get_width_by_sp(char)}px`, height: "30px", background: `${get_img_url_by_effect(char)}`, backgroundSize: "50px auto", backgroundPosition: "left" }}>
           <div style={{ width: `${get_width_by_life(char)}px`, height: "30px", background: "url('hp_inner.png') no-repeat", backgroundSize: "50px auto", backgroundPosition: "left" }}>
-            <div style={{ width: "30px", height: "30px", background: `${get_level_icon(char)}`, backgroundSize: "50px auto", backgroundPosition: "left" }}></div>
+            <div style={{ width: "30px", height: "30px", background: `${get_level_icon(char)}`, backgroundSize: "50px auto", backgroundPosition: "left" }} />
           </div>
         </div>
       </div>

@@ -183,7 +183,7 @@ export const useFight = () => {
 
     const call_skill = (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let effect = char.effect;
-        let value = parseInt(char.effect_value ? char.effect_type : "0");
+        let value = parseInt(char.effect_value ? char.effect_value : "0");
         let is_forbid_buff = false;
         let is_forbid_debuff = false;
 

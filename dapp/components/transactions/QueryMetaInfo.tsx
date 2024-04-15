@@ -197,7 +197,6 @@ const useQueryMetaInfo = () => {
       if (!data) {
         return ""
       }
-      console.log("data:", data.type)
       let version = 0
       if (String(data.type).indexOf(CHESS_CHALLENGE_PACKAGE) !== -1 || String(data.type).indexOf(CHESS_CHALLENGE_PACKAGE5) !== -1) {
         version = 1
@@ -222,7 +221,7 @@ const useQueryMetaInfo = () => {
         abilitities: [fields?.ability1, fields?.ability2, fields?.ability3, fields?.ability4, fields?.ability5],
         version: version
       }
-      console.log("version:", meta.version)
+
       let invited = await query_invited_num(meta.metaId)
       meta.invited_num = Number(invited)
       return meta
