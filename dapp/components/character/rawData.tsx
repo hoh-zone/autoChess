@@ -1330,7 +1330,7 @@ export function get_sell_price(char: CharacterFields | null): number {
   }
 }
 
-export function get_max_sp(char: CharacterFields | null): number | undefined {
+export function get_max_sp(char: CharacterFields | null | undefined): number | undefined {
   if (!char) {
     return 0
   }

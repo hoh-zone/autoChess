@@ -494,11 +494,16 @@ export const useFight = () => {
         if (charIndex == undefined || target_group[charIndex] == null || target_group[charIndex] == undefined) {
             return;
         }
+        let tmp_max_sp = get_max_sp(target_group[charIndex])
+        let sp_cap = target_group[charIndex]!.sp_cap;
         if (extra_max_sp_debuff > 0) {
-            target_group[charIndex]!.sp_cap = get_max_sp(target_group[charIndex]) + Number(extra_max_sp_debuff);
-        } else if (extra_max_sp_debuff == 0 && target_group[charIndex]!.sp_cap > get_max_sp(target_group[charIndex])) {
-            //recover the max_sp if it was modified before
-            target_group[charIndex]!.sp_cap = get_max_sp(target_group[charIndex]);
+            if (tmp_max_sp) {
+                target_group[charIndex]!.sp_cap = tmp_max_sp + Number(extra_max_sp_debuff);
+            }
+        } else if (extra_max_sp_debuff == 0 && sp_cap && tmp_max_sp) {
+            if (sp_cap> tmp_max_sp) {
+                target_group[charIndex]!.sp_cap = get_max_sp(target_group[charIndex]);
+            }
         }
     }
 
