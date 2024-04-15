@@ -28,7 +28,10 @@ export const useFight = () => {
     const ATTACK_ANIM_DURATION = 400;
     const SKILL_ANIM_DURATION = 900;
     const ATTACK_INTERVAL_TIME = 800;
-    const CHAR_SHOWUP_TIME = 1800;
+    const FIGHT_END_TIME = 1200;
+    const MAX_LOOP = 80;
+    const CHAR_SHOW_UP_TIME = 700;
+    const DEATH_DELAY_TIME = 600
 
     let animationEnd = Date.now() + 4000;
     let skew = 1;
@@ -87,6 +90,8 @@ export const useFight = () => {
         let attack: number = char.attack;
         if (enemyChar.hp < attack) {
             enemyChar.hp = 0;
+
+            // 不set的化，死亡角色的血量前端显示不会被刷新
             if (is_opponent) {
                 setChars(chars.slice());
             } else {
@@ -556,7 +561,7 @@ export const useFight = () => {
         console.log("--------开始战斗-------");
         console.log(chars);
         console.log(enemyChars);
-        let loop = 80;
+        let loop = MAX_LOOP;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
             let charIndex = chars.findIndex(Boolean);
@@ -566,6 +571,11 @@ export const useFight = () => {
             setEnemyFightingIndex(enemyCharIndex);
             let enemyChar = enemyChars[enemyCharIndex]!;
             let max_loop = 40;
+            setChars(chars.slice());
+            setEnemyChars(enemyChars.slice());
+            if (loop < MAX_LOOP) {
+                await sleep(CHAR_SHOW_UP_TIME);
+            }
             while (char.hp > 0 && enemyChar.hp > 0) {
                 if(char.speed >= enemyChar.speed){
                     await sleep(ATTACK_INTERVAL_TIME);
@@ -590,6 +600,7 @@ export const useFight = () => {
                     break;
                 }
             }
+            await sleep(DEATH_DELAY_TIME);
             loop -= 1;
             if (loop == 0) {
                 console.log("外部异常循环保护");
@@ -597,6 +608,7 @@ export const useFight = () => {
             }
         }
 
+        await sleep(FIGHT_END_TIME)
         if (some(enemyChars, Boolean)) {
             //test log
             console.log("enemy win");
