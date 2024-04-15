@@ -57,7 +57,7 @@ export const HpBar = ({ id }: { id: number }) => {
     if (!char) {
       return start
     }
-    let max = char.sp_cap
+    let max = char.sp_cap ? char.sp_cap : 0
     if (max == 0) {
       return end
     }

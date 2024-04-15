@@ -183,7 +183,7 @@ export const useFight = () => {
 
     const call_skill = (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let effect = char.effect;
-        let value = parseInt(char.effect_value);
+        let value = parseInt(char.effect_value ? char.effect_type : "0");
         let is_forbid_buff = false;
         let is_forbid_debuff = false;
 
@@ -467,7 +467,7 @@ export const useFight = () => {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_sp_cap") {
-                    value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
+                    value = parseInt(ele.effect_value ? ele.effect_type : "0") > value ? parseInt(ele.effect_value ? ele.effect_type : "0") : value;
                 }
             })
         } else {
@@ -476,7 +476,7 @@ export const useFight = () => {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_sp_cap") {
-                    value = parseInt(ele.effect_value) > value ? parseInt(ele.effect_value) : value;
+                    value = parseInt(ele.effect_value ? ele.effect_type : "0") > value ? parseInt(ele.effect_value ? ele.effect_type : "0") : value;
                 }
             })
         }
@@ -491,7 +491,7 @@ export const useFight = () => {
 
     const modify_max_sp = (extra_max_sp_debuff: number, is_opponent: boolean, charIndex: number) => {
         let target_group = get_target_group(is_opponent, false);
-        if (target_group[charIndex] == null) {
+        if (charIndex == undefined || target_group[charIndex] == null || target_group[charIndex] == undefined) {
             return;
         }
         if (extra_max_sp_debuff > 0) {

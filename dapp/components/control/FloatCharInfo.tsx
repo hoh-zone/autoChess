@@ -87,7 +87,11 @@ export const FloatCharInfo = ({ id, isShowInfo = false, isShopSlot = false, isOp
             <Text fontSize={"2xs"}>
               {char.effect_type === "skill" ? getLocale("Active-skill") : getLocale("Passive-skill")}
               {": "}
-              {lang == "EN" ? SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value) : SKILL_DESCRIPTION_CN[char.effect]?.replace("$value", char.effect_value)}
+              {char.effect_value
+                ? lang == "EN"
+                  ? SKILL_DESCRIPTION[char.effect]?.replace("$value", char.effect_value)
+                  : SKILL_DESCRIPTION_CN[char.effect]?.replace("$value", char.effect_value)
+                : SKILL_DESCRIPTION[char.effect]}
             </Text>
           </Stack>
         </>
