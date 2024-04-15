@@ -188,16 +188,16 @@ module chess_packagev2::metaIdentity {
         if (table::contains(&global.rebate_level, inviter_meta_id)) {
             let level = *table::borrow(&global.rebate_level, inviter_meta_id);
             if (level == 1) {
-                record_amount = sui_value / 33;
+                record_amount = sui_value / 3;
             } else if (level == 2) {
-                record_amount = sui_value / 25;
+                record_amount = sui_value * 2 / 5;
             } else if (level == 3) {
-                record_amount = sui_value / 20;
+                record_amount = sui_value / 2;
             } else {
-                record_amount = sui_value / 50;
+                record_amount = sui_value / 5;
             }
         } else {
-            record_amount = sui_value / 50;
+            record_amount = sui_value / 5;
         };
         let invite_reward_amount = balance::split(&mut balance, record_amount);
         balance::join(&mut global.balance_invite_rewards, invite_reward_amount);
