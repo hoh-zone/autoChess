@@ -2,8 +2,8 @@ import { Box, Button, Center, HStack, Input, Spacer, Stack, VStack } from "@chak
 import { assetsAtom, metaA } from "../../store/stages"
 import { useAtom } from "jotai"
 import { Character } from "../character/character"
-import useQueryChesses from "../button/QueryAllChesses"
-import useQueryMetaInfo from "../button/QueryMetaInfo"
+import useQueryChesses from "../transactions/QueryAllChesses"
+import useQueryMetaInfo from "../transactions/QueryMetaInfo"
 import { useEffect, useState, useContext } from "react"
 import { ethos, SignInButton } from "ethos-connect"
 import { Rank } from "../Rank"
@@ -19,16 +19,16 @@ import useLocale from "../../hooks/useLocale"
 export const StartGame = () => {
   const [inputValue, setInputValue] = useState("")
   const { nfts, query_chesses } = useQueryChesses()
-  // const { query_meta_info } = useQueryMetaInfo()
+  const { query_meta_info, clone_meta } = useQueryMetaInfo()
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useAtom(assetsAtom)
-  // const [meta, setMeta] = useAtom(metaA)
+  const [meta, setMeta] = useAtom(metaA)
   const getLocale = useLocale()
 
   const fetch = async () => {
     setIsLoading(true)
-    // setMeta(await query_meta_info())
+    setMeta(await query_meta_info())
     const result = await query_chesses()
     setIsLoading(false)
     return result
@@ -57,14 +57,23 @@ export const StartGame = () => {
                     Chess V2
                   </motion.p>
                   <VStack>
-                    {/* {!meta && <Register isLoading={isLoading} address={wallet.address} />} */}
-                    <ContinueGame isLoading={isLoading} />
+                    {!meta && <Register isLoading={isLoading} address={wallet.address} />}
+                    {meta && meta.version == 1 && (
+                      <Button
+                        onClick={() => {
+                          clone_meta(meta)
+                        }}
+                      >
+                        Start Season2
+                      </Button>
+                    )}
+                    {meta && meta.version == 2 && <ContinueGame isLoading={isLoading} />}
                   </VStack>
                 </div>
-                {!isLoading && (
+                {!isLoading && meta && meta.version == 2 && (
                   <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder={getLocale("Enter-your-chess-name")!} onChange={(v) => setInputValue(v.target.value)} />
                 )}
-                {!isLoading && <StartGameButtons name={inputValue} />}
+                {!isLoading && meta && meta.version == 2 && <StartGameButtons name={inputValue} />}
               </Stack>
             </div>
           ) : (
@@ -84,11 +93,11 @@ export const StartGame = () => {
             <div>
               <Instruction />
             </div>
-            {/* {meta && (
+            {meta && meta.version == 2 && (
               <div className="mt-3">
                 <MyAccountInfo metaInfo={meta} />
               </div>
-            )} */}
+            )}
           </div>
           <Spacer />
           <VStack className="w-4/5 absolute bottom-0" gap={0}>

@@ -1,0 +1,514 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/effect-cards";
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: PixcelFont;
+  overflow: hidden;
+  font-size: 12px;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  --swiper-navigation-size: 16px;
+  --swiper-navigation-top-offset: 50%;
+  --swiper-navigation-sides-offset: 0px;
+  --swiper-navigation-color: white;
+}
+
+.instruction-styled-modal .swiper-slide-shadow.swiper-slide-shadow-cards {
+  background: transparent;
+}
+
+.instruction-styled-modal .swiper-button-prev,
+.instruction-styled-modal .swiper-button-next {
+  font-weight: bolder;
+}
+
+.chakra-ui-light {
+  background-color: black;
+}
+
+#__next {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+div {
+  font-family: PixcelFont;
+}
+
+@font-face {
+  font-family: PixcelFont;
+  src: url("./../public/PressStart2P-Regular.ttf") format("truetype");
+}
+
+button {
+  font-family: PixcelFont;
+  font-size: small;
+}
+
+p {
+  font-family: PixcelFont;
+  font-size: small;
+}
+
+.custom-input {
+  font-family: PixcelFont;
+  font-weight: 900;
+  background: rgb(251, 251, 238);
+}
+
+.custom-input::placeholder {
+  font-weight: 900;
+  color: rgb(246, 246, 247);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+.animBasic {
+  background-position-x: left;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.orcBarbare {
+  --attack-step: 12;
+  --attack-position: -1368px;
+  --move-step: 5;
+  --move-position: -570px;
+}
+
+.orcArcher {
+  --attack-step: 18;
+  --attack-position: -2664px;
+  --move-step: 6;
+  --move-position: -888px;
+}
+
+.humanKnight {
+  --attack-step: 11;
+  --attack-position: -1056px;
+  --move-step: 8;
+  --move-position: -480px;
+}
+
+.kunoichi {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 33;
+  --attack2-position: -9900px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.ani {
+  --attack-step: 11;
+  --attack-position: -3300px;
+  --attack2-step: 9;
+  --attack2-position: -2700px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.assa {
+  --attack-step: 17;
+  --attack-position: -5100px;
+  --attack2-step: 17;
+  --attack2-position: -5100px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.cleric {
+  --attack-step: 9;
+  --attack-position: -2700px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.archer {
+  --attack-step: 15;
+  --attack-position: -4500px;
+  --attack2-step: 29;
+  --attack2-position: -8700px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.kunoichi {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 33;
+  --attack2-position: -9900px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.fighter {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --attack2-step: 15;
+  --attack2-position: -4500px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.golem {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 7;
+  --attack2-position: -2100px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.mega {
+  --attack-step: 10;
+  --attack-position: -3000px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.priest {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --attack2-step: 10;
+  --attack2-position: -3000px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shaman {
+  --attack-step: 20;
+  --attack-position: -6000px;
+  --attack2-step: 14;
+  --attack2-position: -4200px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.shinobi {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --attack2-step: 20;
+  --attack2-position: -6000px;
+  --move-step: 8;
+  --move-position: -2400px;
+}
+
+.firemega {
+  --attack-step: 24;
+  --attack-position: -7200px;
+  --attack2-step: 71;
+  --attack2-position: -21300px;
+  --move-step: 4;
+  --move-position: -1200px;
+}
+
+.slime {
+  --attack-step: 13;
+  --attack-position: -3900px;
+  --attack2-step: 26;
+  --attack2-position: -7800px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tank {
+  --attack-step: 6;
+  --attack-position: -1800px;
+  --attack2-step: 11;
+  --attack2-position: -3300px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.tree {
+  --attack-step: 12;
+  --attack-position: -3600px;
+  --attack2-step: 24;
+  --attack2-position: -7200px;
+  --move-step: 6;
+  --move-position: -1800px;
+}
+
+.wizard {
+  --attack-step: 7;
+  --attack-position: -2100px;
+  --attack2-step: 16;
+  --attack2-position: -4800px;
+  --move-step: 5;
+  --move-position: -1500px;
+}
+
+.attack1 {
+  animation: attackAnim 1s steps(calc(var(--attack-step) - 1)) 1;
+}
+
+@keyframes attackAnim {
+  to {
+    background-position: 100%;
+  }
+}
+
+.attack2 {
+  animation: attackAnim2 1.5s steps(calc(var(--attack2-step) - 1)) 1;
+}
+
+@keyframes attackAnim2 {
+  to {
+    background-position: 100%;
+  }
+}
+
+.move {
+  animation: moveAnim 0.5s steps(calc(var(--move-step) - 1)) infinite;
+}
+
+@keyframes moveAnim {
+  to {
+    background-position: 100%;
+  }
+}
+
+.effect {
+  /* animation: effectAnim 1s steps(12) infinite;
+  backgroundImage: `url(./effect.png)`,
+  width: "75px",
+  height: "100px" */
+  -webkit-filter: drop-shadow(-8px 5px 2px rgba(237, 63, 24, 0.5)) drop-shadow(27px 9px 2px rgba(156, 53, 49, 0.5));
+  filter: drop-shadow(-13px 2px 12px rgba(238, 112, 2, 0.832)) drop-shadow(13px 2px 2px rgba(250, 209, 206, 0.5));
+  transform: scale(1.5);
+}
+
+.enemy_effect {
+  -webkit-filter: drop-shadow(-8px 5px 2px rgba(237, 63, 24, 0.5)) drop-shadow(27px 9px 2px rgba(156, 53, 49, 0.5));
+  filter: drop-shadow(-13px 2px 12px rgba(238, 112, 2, 0.832)) drop-shadow(13px 2px 2px rgba(250, 209, 206, 0.5));
+  transform: scale(1.5) rotateY(180deg);
+}
+
+@keyframes effectAnim {
+  to {
+    background-position: -900px;
+  }
+}
+
+.opponentCharacter {
+  transform: rotateY(180deg);
+}
+
+.slot {
+  transform: rotateX(69deg);
+}
+
+.slot-container {
+  position: relative;
+}
+
+.slot-container:hover .float-container {
+  display: block;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(94, 94, 94, 0.5); /* 半透明背景 */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+}
+
+.modal button {
+  margin-top: 10px;
+}
+
+.float-container {
+  position: absolute;
+  width: 140px;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: none;
+  margin-bottom: 5px;
+}
+
+.shop-slot-container .buy-button {
+  display: none;
+  position: relative;
+  top: 10px;
+}
+
+.shop-slot-container .float-container {
+  margin-bottom: 20px;
+}
+
+.shop-slot-container:hover .float-container,
+.shop-slot-container:hover .buy-button {
+  display: block;
+}
+
+.slotContainer:hover .float-container .float {
+  opacity: 1;
+}
+
+.fix_float {
+  z-index: 300;
+  padding: 5px;
+  border-radius: 6px;
+  position: relative;
+  top: 50%;
+  /* left: 70px; */
+  /* transform: translate(93%, -41%); */
+  background-color: rgba(71, 66, 66, 0.5);
+  color: #fff;
+  padding: 10px;
+  transition: opacity 0.3s ease;
+}
+
+.float {
+  z-index: 300;
+  width: 200px;
+  border-radius: 8%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(93%, -41%);
+  background-color: rgba(71, 66, 66, 0.5);
+  color: #fff;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.text_animation {
+  position: relative;
+  height: 20px;
+}
+
+.moving-text {
+  position: relative;
+  color: white;
+  bottom: 0;
+  animation: move-up 1s ease-in-out;
+  opacity: 0;
+}
+
+.skill_animation {
+  position: relative;
+  border: 2px solid black;
+  background-color: black;
+  opacity: 0.7;
+}
+
+.skill-text {
+  position: relative;
+  color: rgb(255, 255, 255);
+  bottom: 20;
+  border: black 1px;
+  /* animation: move-up 2s ease-in-out; */
+  opacity: 1;
+}
+
+@media only screen and (max-height: 767px) {
+  #ethos-close-on-click {
+  scale: 0.5;
+  }
+}
+
+@keyframes move-up {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+.accountInfoInput{
+  position: relative;
+  width: 150px;
+  height: 15px;
+  padding: 0 5px;
+  border-radius: 2px;
+  line-height: 18px;
+  font-size: 8px;
+  box-shadow: 0 0 2px 2px #192541;
+  overflow: hidden;
+}
+.accountInfoInputExp{
+  position: absolute;
+  top: 0;
+  left:0;
+  height:100%;
+  background-color: #fff;
+  z-index: 0;
+}
+.accountCharacterText{
+  width: 80px;
+  height: 20px;
+  margin-right: 10px;
+  margin-bottom: 8px;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 2px;
+  background-color: #554D5D;
+}
+.changeLang{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.changeLang .changeLang-btn{
+  padding: 0 20px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  color: #E5EBF2;
+  background: #1A202C;
+}
+.changeLang .changeLang-btn-s{
+  background-color: #E5EBF2;
+  color: #1A202C;
+}

@@ -2,7 +2,7 @@ import { Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, Pr
 import { assetsAtom } from "../store/stages"
 import { useAtom } from "jotai"
 import { Character } from "./character/character"
-import useQueryMetaInfo from "./button/QueryMetaInfo"
+import useQueryMetaInfo from "./transactions/QueryMetaInfo"
 import useLocale from "../hooks/useLocale"
 
 const ContinueGame = (props: { metaInfo: any }) => {
@@ -121,6 +121,9 @@ const ContinueGame = (props: { metaInfo: any }) => {
                     </div>
                   </div>
                   <div className="text-white mt-20 mb-4 text-xs">
+                    {getLocale("Invitor")}: {props.metaInfo.inviterMetaId}
+                  </div>
+                  <div className="text-white mb-4 text-xs">
                     {getLocale("InviteNum")}: {props.metaInfo.invited_num}
                   </div>
                   <div>

@@ -1,9 +1,9 @@
 import { Text, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, HStack, Stack, useToast } from "@chakra-ui/react"
-import useQueryChesses from "./button/QueryAllChesses"
+import useQueryChesses from "./transactions/QueryAllChesses"
 import { useSyncGameNFT } from "../hooks/useSyncGameNFT"
 import { useAtom } from "jotai"
 import { operationsA, slotCharacter, stageAtom } from "../store/stages"
-import useMintChess from "./button/MintChess"
+import useMintChess from "./transactions/MintChess"
 import { useState } from "react"
 import { sleep } from "../utils/sleep"
 import { metaA } from "../store/stages"
@@ -25,7 +25,7 @@ const StartGameButtons = ({ name }: { name: string }) => {
   const checkName = () => {
     if (name === "") {
       toast({
-        title: getLocale('Please-enter-your-chess-name'),
+        title: getLocale("Please-enter-your-chess-name"),
         status: "warning",
         duration: 2000,
         isClosable: true
@@ -58,11 +58,11 @@ const StartGameButtons = ({ name }: { name: string }) => {
   return (
     <>
       <Button isLoading={isLoading} onClick={() => checkName() && onStart(false, 0)}>
-        {getLocale('Practice-Mode')}
+        {getLocale("Practice-Mode")}
       </Button>
 
       <Button onClick={() => checkName() && onOpen()} isLoading={isLoading}>
-        {getLocale('Arena-Mode-Earn')}
+        {getLocale("Arena-Mode-Earn")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -71,7 +71,7 @@ const StartGameButtons = ({ name }: { name: string }) => {
           <ModalBody className="!p-[10px] rounded-[8px]">
             <Stack>
               <Text w={"full"} textAlign={"center"} mb={4} color={"green.200"} fontSize={"lg"}>
-                {getLocale('Cost-more-earn-more')}
+                {getLocale("Cost-more-earn-more")}
               </Text>
               {[1, 10, 50, 100, 250, 500].map((amount, index) => (
                 <HStack className="w-full" key={index}>

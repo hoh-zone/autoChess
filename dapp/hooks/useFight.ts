@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
 import { CharacterFields } from "../types/nft";
-import useQueryChesses from "../components/button/QueryAllChesses";
+import useQueryChesses from "../components/transactions/QueryAllChesses";
 import { sleep } from "../utils/sleep";
 import { get_max_sp } from "../components/character/rawData";
 
