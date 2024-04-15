@@ -25,6 +25,10 @@ export const useFight = () => {
     const [skillTag, setSkillTag] = useAtom(skillTagA);
     const [enemySkillTag, setEnemySkillTag] = useAtom(enemySkillTagA);
     const [fightResultModalVisible, setFightResultModalVisible] = useAtom(fightResultModalVisibleAtom)
+    const ATTACK_ANIM_DURATION = 400;
+    const SKILL_ANIM_DURATION = 900;
+    const ATTACK_INTERVAL_TIME = 800;
+    const CHAR_SHOWUP_TIME = 800;
 
     let animationEnd = Date.now() + 4000;
     let skew = 1;
@@ -517,7 +521,7 @@ export const useFight = () => {
             console.log("current sp: ", char.sp, "sp cap: ", char.sp_cap);
             skillTag[charIndex] = "1";
             char.attacking = 2;
-            await sleep(400);
+            await sleep(SKILL_ANIM_DURATION);
             if(call_skill(char, enemy, charIndex, enemyIndex, is_opponent)){
                 char.sp = 0;          
                 skillTag[charIndex] = "";
@@ -529,7 +533,7 @@ export const useFight = () => {
             }
         } else {
             char.attacking = 1;
-            await sleep(400);
+            await sleep(ATTACK_ANIM_DURATION);
             call_attack(char, enemy, enemyIndex, is_opponent);
             char.sp = char.sp + 1;
         }
@@ -546,7 +550,7 @@ export const useFight = () => {
         console.log("--------开始战斗-------");
         console.log(chars);
         console.log(enemyChars);
-        let loop = 50;
+        let loop = 80;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
             let charIndex = chars.findIndex(Boolean);
@@ -556,18 +560,20 @@ export const useFight = () => {
             const enemyCharIndex = enemyChars.findIndex(Boolean);
             setEnemyFightingIndex(enemyCharIndex);
             let enemyChar = enemyChars[enemyCharIndex]!;
-
+            await sleep(CHAR_SHOWUP_TIME);
             let max_loop = 40;
             while (char.hp > 0 && enemyChar.hp > 0) {
                 if(char.speed >= enemyChar.speed){
-                    await sleep(800);
+                    await sleep(ATTACK_INTERVAL_TIME);
                     await action(char, enemyChar, charIndex, enemyCharIndex, false);
                     if(enemyChar.hp > 0)
+                        await sleep(ATTACK_INTERVAL_TIME);
                         await action(enemyChar, char, enemyCharIndex, charIndex, true);
                 }else{
-                    await sleep(800);
+                    await sleep(ATTACK_INTERVAL_TIME);
                     await action(enemyChar, char, enemyCharIndex, charIndex, true);
                     if(char.hp > 0)
+                        await sleep(ATTACK_INTERVAL_TIME);
                         await action(char, enemyChar, charIndex, enemyCharIndex, false);                 
                 }
 
