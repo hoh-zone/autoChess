@@ -350,7 +350,7 @@ module chess_packagev2::chess {
     // After verification, the function excutes the round of battle and records the battle result
     public entry fun operate_and_battle(global:&mut Global, role_global:&role::Global, lineup_global:&mut lineup::Global, 
         challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
-        lineup_str_vec: vector<String>, ctx:&mut TxContext) {
+        lineup_str_vec: vector<String>, meta: &mut metaIdentity::MetaIdentity, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let current_roles = lineup::get_mut_roles(&mut *&chess.lineup);
         let cards_pool_roles = lineup::get_mut_roles(&mut chess.cards_pool);
@@ -371,7 +371,7 @@ module chess_packagev2::chess {
         chess.lineup = expected_lineup; 
         
         // challenge mode, arena mode or standard mode will be processed in match function
-        battle(role_global, lineup_global, challengeGlobal, chess, ctx);
+        battle(role_global, lineup_global, challengeGlobal, chess, meta, ctx);
         global.total_battle = global.total_battle + 1;
     }
 
@@ -517,7 +517,7 @@ module chess_packagev2::chess {
     //3. Calls fight functions to complete the rounds of actions till one team has no hero alive.
     //4. Processes the battle result, record both winning and losing time 
     //Returns true if player wines the battle and false othwewise
-    fun battle(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, ctx: &mut TxContext) {
+    fun battle(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, meta:&mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
         // match an enemy config
         let enemy_lineup;
@@ -536,17 +536,21 @@ module chess_packagev2::chess {
             if (chanllenge_on) {
                 // challenge_win is 1 when chess.win is 0, it stays 0 till the 10th win on standard mode
                 challenge::rank_forward(challengeGlobal, chess.lineup);
+                let best_rank = challenge::find_rank(challengeGlobal, &chess.lineup);
+                metaIdentity::record_update_best_rank(meta, best_rank);
             } else {
                 lineup::record_player_lineup(chess.win - 1, chess.lose, lineup_global, chess.lineup, chess.arena);
                 if (chess.win == 10) {
                     lineup::record_player_lineup(chess.win, chess.lose, lineup_global, chess.lineup, chess.arena);
                 };
             };
+            metaIdentity::record_add_win(meta);
         } else {
             // player losses
             if (!chanllenge_on) {
                 lineup::record_player_lineup(chess.win, chess.lose - 1, lineup_global, chess.lineup, chess.arena);
-            }
+            };
+            metaIdentity::record_add_lose(meta);
         };
         if (chess.lose <= 2) {
             refresh_cards_pools(role_global, chess, ctx);
