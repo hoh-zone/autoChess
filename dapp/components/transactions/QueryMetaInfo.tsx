@@ -1,16 +1,6 @@
 import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import {
-  CHESS_CHALLENGE_PACKAGE,
-  CHESS_CHALLENGE_PACKAGE1,
-  CHESS_CHALLENGE_PACKAGE5,
-  CHESS_GLOBAL,
-  CHESS_PACKAGE_V2,
-  ISMAINNET,
-  META_GLOBAL,
-  META_REWARDS_GLOBAL_V2,
-  METAINFO_GLOBAL_V2
-} from "../../lib/constants"
+import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE5, CHESS_PACKAGE_V2, ISMAINNET, META_GLOBAL, META_REWARDS_GLOBAL_V2, METAINFO_GLOBAL_V2 } from "../../lib/constants"
 import { JsonRpcProvider, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
 
 interface Meta {
@@ -64,13 +54,13 @@ const useQueryMetaInfo = () => {
     }
   }
 
-  const claim_invite_exp = async (meta: Meta) => {
+  const claim_invite_sui = async (meta: Meta) => {
     if (!wallet) return
     try {
       const tx = new TransactionBlock()
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE5}::metaIdentity::claim_invite_exp`,
-        arguments: [tx.object(normalizeSuiObjectId(META_GLOBAL)), tx.object(normalizeSuiObjectId(meta.objectId))]
+        target: `${CHESS_PACKAGE_V2}::metaIdentity::claim_invite_rewards`,
+        arguments: [tx.object(normalizeSuiObjectId(METAINFO_GLOBAL_V2)), tx.object(normalizeSuiObjectId(META_REWARDS_GLOBAL_V2)), tx.object(normalizeSuiObjectId(meta.objectId))]
       })
       const response = await wallet.signAndExecuteTransactionBlock({
         transactionBlock: tx,
@@ -131,7 +121,7 @@ const useQueryMetaInfo = () => {
     try {
       if (!wallet) return
       let global: any = await wallet.client.getObject({
-        id: META_GLOBAL,
+        id: METAINFO_GLOBAL_V2,
         options: {
           showContent: true
         }
@@ -229,7 +219,7 @@ const useQueryMetaInfo = () => {
       console.log("err", error)
     }
   }, [wallet])
-  return { register_meta, query_meta_info, query_invited_num, claim_invite_exp, clone_meta }
+  return { register_meta, query_meta_info, query_invited_num, claim_invite_sui, clone_meta }
 }
 
 export default useQueryMetaInfo

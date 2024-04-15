@@ -8,7 +8,7 @@ import useLocale from "../hooks/useLocale"
 const ContinueGame = (props: { metaInfo: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [assets, setAssets] = useAtom(assetsAtom)
-  const { claim_invite_exp } = useQueryMetaInfo()
+  const { claim_invite_sui } = useQueryMetaInfo()
   const toast = useToast()
   const getLocale = useLocale()
 
@@ -56,7 +56,7 @@ const ContinueGame = (props: { metaInfo: any }) => {
       })
       return
     }
-    claim_invite_exp(props.metaInfo)
+    claim_invite_sui(props.metaInfo)
   }
 
   return (
