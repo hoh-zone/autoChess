@@ -3,7 +3,8 @@ import {
   CHALLENGE_GLOBAL,
   ISMAINNET,
   SENDER,
-  CHESS_CHALLENGE_PACKAGE_ID,
+  CHESS_PACKAGE_ID,
+  CHALLENGE_PACKAGE_ID,
 } from "../../constants";
 import {
   JsonRpcProvider,
@@ -86,7 +87,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "query_left_challenge_time";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
+      target: `${CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
       arguments: [
         tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
         tx.pure(normalizeSuiObjectId("0x06")),
@@ -119,7 +120,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "get_estimate_reward_20_amounts";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
+      target: `${CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
     const result = await provider.devInspectTransactionBlock({
@@ -150,7 +151,7 @@ const useQueryRanks = () => {
     const moveModule = "challenge";
     const method = "generate_rank_20_description";
     tx.moveCall({
-      target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
+      target: `${CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
       arguments: [tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL))],
     });
     const result = await provider.devInspectTransactionBlock({
@@ -213,7 +214,7 @@ const useQueryRanks = () => {
         filter: {
           MatchAny: [
             {
-              Package: CHESS_CHALLENGE_PACKAGE_ID,
+              Package: CHESS_PACKAGE_ID,
             },
           ],
         },
@@ -237,7 +238,7 @@ const useQueryRanks = () => {
       const moveModule = "chess";
       const method = "claim_rank_reward";
       tx.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE_ID}::${moveModule}::${method}`,
+        target: `${CHESS_PACKAGE_ID}::${moveModule}::${method}`,
         arguments: [
           tx.object(normalizeSuiObjectId(CHALLENGE_GLOBAL)),
           tx.object(normalizeSuiObjectId(chessId)),

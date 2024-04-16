@@ -68,7 +68,7 @@ export const Leaderboard: React.FC = () => {
       py={64}
       className={"bg-[url('/bg1.jpg')] bg-top"}
     >
-      <Center as="h2">Leaderboard</Center>
+      <Center as="h2">Leaderboard Season2</Center>
       {countdown !== "" && (
         <Center as="h3">Unlock Countdown: {countdown}</Center>
       )}

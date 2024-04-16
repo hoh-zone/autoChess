@@ -64,12 +64,12 @@ export const LeaderboardItem = ({
       </HStack>
       <HStack className="text-2xl mr-8">
         <Image alt={"gold"} width={24} height={24} src={"/gold.png"}></Image>
-        <Text>Score:{reward}</Text>
+        <Text>Score:{reward / 1_000_000_000}</Text>
       </HStack>
 
       <HStack className="text-2xl mr-1">
         <Image alt={"sui"} width={24} height={24} src={"/sui.png"}></Image>
-        <Text>{Number(estimateSui)} Sui</Text>
+        {/* <Text>{Number(estimateSui)} Sui</Text> */}
       </HStack>
       {
         <HStack className="text-2xl mr-1">
