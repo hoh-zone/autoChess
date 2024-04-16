@@ -413,6 +413,10 @@ module chess_package_main::metaIdentity {
         meta.name
     }
 
+    public fun get_avatar_name(meta: &MetaIdentity) : string::String {
+        meta.avatar_name
+    }
+
     public fun get_invited_metaId(meta: &MetaIdentity) : u64 {
         meta.inviterMetaId
     }

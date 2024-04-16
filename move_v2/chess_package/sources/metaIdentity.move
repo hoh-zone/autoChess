@@ -166,7 +166,7 @@ module chess_packagev2::metaIdentity {
             exp: chess_package_main::metaIdentity::get_exp(&oldMeta),
             total_arena_win: chess_package_main::metaIdentity::get_arena_win(&oldMeta),
             total_arena_lose: chess_package_main::metaIdentity::get_arena_lose(&oldMeta),
-            avatar_name: chess_package_main::metaIdentity::get_name(&oldMeta),
+            avatar_name: chess_package_main::metaIdentity::get_avatar_name(&oldMeta),
             best_rank_map: best_rank_table,
             init_gold: 0,
             ability1: string::utf8(b""),
@@ -517,6 +517,10 @@ module chess_packagev2::metaIdentity {
 
     public fun get_name(meta: &MetaIdentity) : string::String {
         meta.name
+    }
+
+    public fun get_avatar_name(meta: &MetaIdentity) : string::String {
+        meta.avatar_name
     }
 
     public fun get_invited_metaId(meta: &MetaIdentity) : u64 {
