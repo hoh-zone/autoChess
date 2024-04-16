@@ -2,8 +2,6 @@ import { Button, HStack, Link, Text, VStack } from "@chakra-ui/react";
 import { Character } from "../character/character";
 import { walletAddressEllipsis } from "@/utils/walletAddressEllipsis";
 import Image from "next/image";
-import useQueryRanks from "@/pages/api/useQueryRanks";
-import { ethos } from "ethos-connect";
 import { useToast } from "@chakra-ui/react";
 
 function get_role_name(data: string): string {
