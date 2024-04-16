@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "D739DE0C6CD6AA713337C0BC3C4722A1A7FACA66269B65121B41057EAD3240B6"
+manifest_digest = "6BD3B25CF6B33F655D3A694FF4513C8A481C16C3F4E4DCA062CDA8943BD565BF"
 deps_digest = "CAFAD8A7CF51067FB4358215BECB86BD100DD64E57C2AC8A7AE7D74B688F5965"
 
 dependencies = [
@@ -17,11 +17,11 @@ dependencies = [
 
 [[move.package]]
 name = "MoveStdlib"
-source = { local = "G:\\autoChess\\move_split\\move-stdlib" }
+source = { local = "G:\\autoChess\\framework\\move-stdlib" }
 
 [[move.package]]
 name = "Sui"
-source = { local = "G:\\autoChess\\move_split\\sui-framework" }
+source = { local = "G:\\autoChess\\framework\\sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -29,7 +29,7 @@ dependencies = [
 
 [[move.package]]
 name = "fight_package"
-source = { local = "G:\\autoChess\\move_split\\fight_package" }
+source = { local = "G:\\autoChess\\move_v1\\fight_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -41,7 +41,7 @@ dependencies = [
 
 [[move.package]]
 name = "lineup_package"
-source = { local = "G:\\autoChess\\move_split\\lineup_package" }
+source = { local = "G:\\autoChess\\move_v1\\lineup_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -52,7 +52,7 @@ dependencies = [
 
 [[move.package]]
 name = "role_package"
-source = { local = "G:\\autoChess\\move_split\\role_package" }
+source = { local = "G:\\autoChess\\move_v1\\role_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -62,7 +62,7 @@ dependencies = [
 
 [[move.package]]
 name = "util_package"
-source = { local = "G:\\autoChess\\move_split\\util_package" }
+source = { local = "G:\\autoChess\\move_v1\\util_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -71,7 +71,7 @@ dependencies = [
 
 [[move.package]]
 name = "verify_package"
-source = { local = "G:\\autoChess\\move_split\\verify_package" }
+source = { local = "G:\\autoChess\\move_v1\\verify_package" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -80,8 +80,3 @@ dependencies = [
   { name = "role_package" },
   { name = "util_package" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.20.0"
-edition = "legacy"
-flavor = "sui"

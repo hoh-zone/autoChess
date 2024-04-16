@@ -1,7 +1,7 @@
 [package]
 name = "chess_package_main"
-version = "0.0.7"
-published-at = "0x9a58fc749f5877ee52597aae14d903083aae69d70855d3063f0cd39098e6a790"
+version = "0.0.8"
+published-at = "0x8b9c4f5c9354ef9fd93cd78c93276d832081104d07e407f36474894431c908bf"
 
 [dependencies]
 MoveStdlib = { local ="G:/autoChess/framework/move-stdlib" }
