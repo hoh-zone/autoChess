@@ -119,6 +119,14 @@ const ContinueGame = (props: { metaInfo: any }) => {
                         </span>
                       </div>
                     </div>
+                    <div className="flex items-center mt-2 mb-2">
+                      <div className="inline-block mr-2" style={{ width: "5px", height: "5px", backgroundColor: "#85B8C7" }}></div>
+                      <div className="accountInfoInput" style={{ backgroundColor: "#85B8C7" }}>
+                        <span>
+                          {getLocale("Best-Rank")}:{props.metaInfo.bestRank == 21 ? 0 : props.metaInfo.bestRank}{" "}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                   <div className="text-white mt-20 mb-4 text-xs">
                     {getLocale("Invitor")}: {props.metaInfo.inviterMetaId}
@@ -142,6 +150,7 @@ const ContinueGame = (props: { metaInfo: any }) => {
                         claim_invite_reward(props.metaInfo.invited_num)
                       }}
                     >
+                      <Img className="mr-2" src={"./sui.png"}></Img>
                       {getLocale("CLAIM-REWARDS")}
                     </Button>
                   </div>

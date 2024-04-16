@@ -10,6 +10,7 @@ interface Meta {
   level: number
   exp: number
   avatar_name: string
+  bestRank: number
   invited_num: number
   invited_claimed_num: number
   inviterMetaId: number
@@ -121,7 +122,7 @@ const useQueryMetaInfo = () => {
     try {
       if (!wallet) return
       let global: any = await wallet.client.getObject({
-        id: METAINFO_GLOBAL_V2,
+        id: META_GLOBAL,
         options: {
           showContent: true
         }
@@ -134,11 +135,31 @@ const useQueryMetaInfo = () => {
           value: String(metaId)
         }
       })
+      let global2: any = await wallet.client.getObject({
+        id: METAINFO_GLOBAL_V2,
+        options: {
+          showContent: true
+        }
+      })
+      let id2 = global2.data?.content?.fields.invited_meta_map.fields.id.id
+      let invited_num2: any = await wallet.client.getDynamicFieldObject({
+        parentId: id2,
+        name: {
+          type: "u64",
+          value: String(metaId)
+        }
+      })
       if (invited_num.error) {
         return 0
       }
       let array = invited_num.data?.content?.fields.value
-      return array.fields.value.length
+      let old_invite_num = array.fields.value.length
+      if (invited_num2.error) {
+        return old_invite_num
+      }
+      let arrry2 = invited_num2.data?.content?.fields.value
+      let new_invite_num = arrry2.fields.value.length
+      return old_invite_num + new_invite_num
     } catch (error) {
       console.log("err", error)
     }
@@ -193,8 +214,24 @@ const useQueryMetaInfo = () => {
       } else if (String(data.type).indexOf(CHESS_PACKAGE_V2) !== -1) {
         version = 2
       }
+      console.log("data:", data)
       let content: any = data?.content
       let fields: any = content?.fields
+      let rank_map_id = fields?.best_rank_map?.fields.id.id
+      console.log("rank_map_id:", rank_map_id)
+      let best_rank: any = await wallet.client.getDynamicFieldObject({
+        parentId: rank_map_id,
+        name: {
+          type: "u64",
+          value: "1"
+        }
+      })
+      if (best_rank.error) {
+        best_rank = -1
+      } else {
+        best_rank = Number(best_rank.data.content.fields.value)
+      }
+      console.log(best_rank)
       let meta: Meta = {
         metaId: Number(fields?.metaId),
         objectId: data?.objectId,
@@ -203,6 +240,7 @@ const useQueryMetaInfo = () => {
         exp: Number(fields?.exp),
         avatar_name: fields?.avatar_name,
         invited_num: 0,
+        bestRank: best_rank,
         invited_claimed_num: Number(fields?.invited_claimed_num),
         inviterMetaId: Number(fields?.inviterMetaId),
         total_arena_lose: Number(fields?.total_arena_lose),
@@ -211,7 +249,6 @@ const useQueryMetaInfo = () => {
         abilitities: [fields?.ability1, fields?.ability2, fields?.ability3, fields?.ability4, fields?.ability5],
         version: version
       }
-
       let invited = await query_invited_num(meta.metaId)
       meta.invited_num = Number(invited)
       return meta
