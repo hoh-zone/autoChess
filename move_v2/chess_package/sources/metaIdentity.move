@@ -7,8 +7,9 @@ module chess_packagev2::metaIdentity {
     use sui::table::{Self};
     use sui::balance::{Self, Balance};
     use std::vector::{Self};
+    use sui::pay;
     use sui::sui::SUI;
-    use sui::coin::{Self};
+    use sui::coin::{Self, Coin};
     use sui::vec_map;
 
     friend chess_packagev2::chess;
@@ -230,12 +231,46 @@ module chess_packagev2::metaIdentity {
         transfer::public_transfer(sui, tx_context::sender(ctx));
     }
 
-    public fun top_up_balance_pool(global:&mut RewardsGlobal, balance:Balance<SUI>) {
+    public fun top_up_balance_pool(global:&mut RewardsGlobal, balance: Balance<SUI>) {
         balance::join(&mut global.balance_pool, balance);
     }
 
-    public fun top_up_invite_rewards_pool(global:&mut RewardsGlobal, balance:Balance<SUI>) {
+    #[lint_allow(self_transfer)]
+    public fun top_up_balance_pool2(global:&mut RewardsGlobal, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        let amount = coin::value(&merged_coin);
+        let balance = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, amount, ctx)
+        );
+        balance::join(&mut global.balance_pool, balance);
+        if (coin::value(&merged_coin) > 0) {
+            // send the left coin back to the player after paying the ticket
+            transfer::public_transfer(merged_coin, tx_context::sender(ctx));
+        } else {
+            coin::destroy_zero(merged_coin);
+        };
+    }
+
+    public fun top_up_invite_rewards_pool(global:&mut RewardsGlobal, balance: Balance<SUI>) {
         balance::join(&mut global.balance_invite_rewards, balance);
+    }
+
+    #[lint_allow(self_transfer)]
+    public fun top_up_invite_rewards_pool2(global:&mut RewardsGlobal, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+        let merged_coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut merged_coin, coins);
+        let amount = coin::value(&merged_coin);
+        let balance = coin::into_balance<SUI>(
+            coin::split<SUI>(&mut merged_coin, amount, ctx)
+        );
+        balance::join(&mut global.balance_invite_rewards, balance);
+        if (coin::value(&merged_coin) > 0) {
+            // send the left coin back to the player after paying the ticket
+            transfer::public_transfer(merged_coin, tx_context::sender(ctx));
+        } else {
+            coin::destroy_zero(merged_coin);
+        };
     }
 
     public entry fun mint_meta(global: &mut MetaInfoGlobal, name:string::String, avatar_name: string::String, ctx:&mut TxContext) {
