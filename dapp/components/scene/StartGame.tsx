@@ -54,7 +54,7 @@ export const StartGame = () => {
                   <motion.p initial={{ opacity: 0, scale: 0, y: "30px" }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1 }} style={{ marginBottom: "30px", fontSize: "80px" }}>
                     Sui Auto
                     <br />
-                    Chess V2
+                    Chess
                   </motion.p>
                   <VStack>
                     {!meta && <Register isLoading={isLoading} address={wallet.address} />}
@@ -64,7 +64,7 @@ export const StartGame = () => {
                           clone_meta(meta)
                         }}
                       >
-                        Start Season2
+                        Start Game
                       </Button>
                     )}
                     {meta && meta.version == 2 && <ContinueGame isLoading={isLoading} />}
