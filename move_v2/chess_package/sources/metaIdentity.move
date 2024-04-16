@@ -31,7 +31,7 @@ module chess_packagev2::metaIdentity {
 
     const LAST_SEASON:u64 = 1;
     const CURRENT_SEASON:u64 = 2;
-    const INIT_META_ID_INDEX:u64 = 10000;
+    const INIT_META_ID_INDEX:u64 = 11000;
     const ERR_NOT_PERMISSION:u64 = 0x01;
     const LAST_SEASON_REWARD_PER_INVITE:u64 = 30_000_000;
     const CURRENT_VERSION:u64 = 1;
