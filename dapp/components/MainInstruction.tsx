@@ -1,4 +1,4 @@
-import { Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, HStack, Box } from "@chakra-ui/react"
+import { Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, HStack, Box, Img, Center } from "@chakra-ui/react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, EffectCards } from "swiper/modules"
 import { assetsAtom } from "../store/stages"
@@ -25,16 +25,54 @@ export const Instruction = () => {
                     <>
                       <div className="w-full h-full relative px-[60px]">
                         <div className={`w-full h-full relative overflow-y-auto rounded-[8px] text-white px-[20px] py-[20px] ${isActive ? "bg-slate-500" : "bg-slate-600"}`}>
+                          <Center>
+                            <h1 style={{ fontSize: "30px", marginBottom: "20px" }}>{getLocale("Instruction")}</h1>
+                          </Center>
                           <p className="text-[length:var(--chakra-fontSizes-md)]">
-                            {getLocale("Normal-Mode")}: {getLocale("Normal-Mode-text")}
+                            <Button className="mr-8">{getLocale("Normal-Mode")}</Button>
+                            {getLocale("Normal-Mode-text")}
                           </p>
                           <br />
                           <p className="text-[length:var(--chakra-fontSizes-md)]">
-                            {getLocale("Arena-Mode")}: {getLocale("Arena-Mode-text")}
+                            <Button className="mr-8">{getLocale("Arena-Mode")}</Button>
+                            {getLocale("Arena-Mode-text")}
                           </p>
                           <br />
                           <p className="text-[length:var(--chakra-fontSizes-md)]">
-                            {getLocale("How-to-play")}: {getLocale("How-to-play-text")}
+                            <Button className="mr-8">
+                              {getLocale("How-to-play")} <Img className="ml-4 mr-2" src={"./gold.png"}></Img>
+                            </Button>
+                            {getLocale("How-to-play-text")}
+                          </p>
+                          <br />
+                          <p className="text-[length:var(--chakra-fontSizes-md)]">
+                            <HStack>
+                              <Button className="mr-8">{getLocale("level-up")}</Button>
+                              <Img src={"./level_1.png"} />
+                              <Img src={"./level_2.png"} />
+                              <Img src={"./level_3.png"} />
+                              <Img src={"./level_4.png"} />
+                              <Img src={"./level_5.png"} />
+                              <Img src={"./level_6.png"} />
+                              <Img src={"./level_7.png"} />
+                              <Img src={"./level_8.png"} />
+                              <Img src={"./level_9.png"} />
+                            </HStack>
+                            {getLocale("How-to-level-up")}
+                          </p>
+                          <br />
+                          <p className="text-[length:var(--chakra-fontSizes-md)]">
+                            <Button className="mr-8">
+                              {getLocale("activity1")} <Img className="ml-4 mr-2" src={"./gold.png"}></Img>
+                            </Button>
+                            {getLocale("activity1-content")}
+                          </p>
+                          <br />
+                          <p className="text-[length:var(--chakra-fontSizes-md)]">
+                            <Button className="mr-8">
+                              {getLocale("activity2")} <Img className="ml-4 mr-2" src={"./gold.png"}></Img>
+                            </Button>
+                            {getLocale("activity2-content")}
                           </p>
                           <br />
                           <p className="text-[length:var(--chakra-fontSizes-md)]">{getLocale("Problem-Feedback")}: suiautochess@gmail.com</p>
