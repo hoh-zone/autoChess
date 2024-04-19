@@ -358,8 +358,7 @@ module chess_packagev2::chess {
         // todo: how to resolve the gas limit problem when publishing
         let expected_lineup;
         if (string::length(&chess.name) + vector::length(&operations) != 12) {
-            let total_gold:u64 = 10;
-            expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, total_gold - (left_gold as u64), ctx);
+            expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.gold_cost, ctx);
         } else {
             expected_lineup = verify_operation(role_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
         };
