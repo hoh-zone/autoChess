@@ -596,8 +596,15 @@ module chess_packagev2::chess {
             role::print_roles_short(&enemy_roles);
             */
             //test
-
-            if(role::get_speed(my_acting_role) >= role::get_speed(enemy_acting_role)){
+            let enemy_hash = lineup::get_hash(enemy_lineup);
+            let my_hash = lineup::get_hash(my_lineup_fight);
+            let my_speed = role::get_speed(my_acting_role);
+            let enemy_speed = role::get_speed(enemy_acting_role);
+            let i_am_fast = my_speed > enemy_speed;
+            if (my_speed == enemy_speed) {
+                i_am_fast = my_hash > enemy_hash
+            };
+            if(i_am_fast){
                 fight::action(my_acting_role, enemy_acting_role, &mut my_roles,  &mut enemy_roles, &mut permenant_increase_hp_info);
                 if(role::get_hp(enemy_acting_role) == 0 && vector::length(&enemy_roles) > 0){
                     enemy_acting_role = &mut vector::pop_back(&mut enemy_roles);
