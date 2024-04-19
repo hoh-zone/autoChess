@@ -1,5 +1,5 @@
 import { useAtom } from "jotai"
-import { chessId, enemyCharacter, stageAtom, winA, loseA, slotCharacter, operationsA, enemyNameA, challengeWinA, challengeLoseA, metaA } from "../store/stages"
+import { chessId, enemyCharacter, stageAtom, winA, loseA, slotCharacter, operationsA, enemyNameA, challengeWinA, challengeLoseA, metaA, enemyHash0A } from "../store/stages"
 import useOperateAndMatch from "./transactions/OperateAndMatch"
 import useQueryFight from "./transactions/QueryFightResult"
 import { useFight } from "../hooks/useFight"
@@ -10,6 +10,7 @@ import { CharacterFields } from "../types/nft"
 import useLocale from "../hooks/useLocale"
 
 export const Fight = () => {
+  const [enemyHash0, setEnemyHash0] = useAtom(enemyHash0A)
   const { nftObjectId, operate_submit } = useOperateAndMatch()
   const { query_fight } = useQueryFight()
   const [enemyName, setEnemyName] = useAtom(enemyNameA)
@@ -62,14 +63,12 @@ export const Fight = () => {
               })
               return
             }
-
             let debug = false
             let json
             if (debug) {
               json = await query_fight(chess_id, win - 1, lose)
             } else {
               json = await operate_submit(operations, meta)
-              console.log("json", json)
               // json = {
               //   // 我方测试阵容
               //   v1_lineup: {
@@ -301,6 +300,7 @@ export const Fight = () => {
               ele.attack = Number(ele.attack)
             })
             let name = json["v2_name"]
+            setEnemyHash0(json["v2_lineup"].hash[0])
             setEnemyName(name)
             setEnemyChars(enemys)
             setStage("fight")

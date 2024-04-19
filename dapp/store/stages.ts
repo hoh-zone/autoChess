@@ -33,6 +33,8 @@ export const enemyCharacter = atom<(CharacterFields | null)[]>([null, null, null
 export const enemyWinA = atom<number>(0)
 export const enemyLoseA = atom<number>(0)
 export const enemyNameA = atom<string>("Your Enemy")
+export const myHash0A = atom<number>(0)
+export const enemyHash0A = atom<number>(0)
 export const enemyFightingIndex = atom<number>(0)
 
 export const shopCharacter = atom<(CharacterFields | null)[]>([null, null, null, null, null, null])

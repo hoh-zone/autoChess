@@ -14,6 +14,7 @@ export interface GameNft {
     refresh_price: string;
     arena:         boolean;
     arena_checked: boolean;
+    hash0: number;
 }
 
 export interface CardsPool {

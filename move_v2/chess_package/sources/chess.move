@@ -6,7 +6,7 @@
 // There is no dynamic generation on frontend when you click "refresh" button.
 module chess_packagev2::chess {
     use std::vector;
-    use std::string::{utf8, String};
+    use std::string::{utf8, String, Self};
     use std::debug::print;
 
     use sui::object::{Self, UID};
@@ -356,7 +356,13 @@ module chess_packagev2::chess {
         let cards_pool_roles = lineup::get_mut_roles(&mut chess.cards_pool);
 
         // todo: how to resolve the gas limit problem when publishing
-        let expected_lineup = verify_operation(role_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+        let expected_lineup;
+        if (string::length(&chess.name) + vector::length(&operations) != 12) {
+            let total_gold:u64 = 10;
+            expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, total_gold - (left_gold as u64), ctx);
+        } else {
+            expected_lineup = verify_operation(role_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+        };
 
         // Player normally wins max 20 times because at the 20th win it is ranked num 1
         // If it keeps winning it get no more gold before the next battle to upgrade the team
@@ -596,13 +602,17 @@ module chess_packagev2::chess {
             role::print_roles_short(&enemy_roles);
             */
             //test
-            let enemy_hash = lineup::get_hash(enemy_lineup);
-            let my_hash = lineup::get_hash(my_lineup_fight);
             let my_speed = role::get_speed(my_acting_role);
             let enemy_speed = role::get_speed(enemy_acting_role);
             let i_am_fast = my_speed > enemy_speed;
             if (my_speed == enemy_speed) {
-                i_am_fast = my_hash > enemy_hash
+                let enemy_hash = *vector::borrow(&lineup::get_hash(enemy_lineup), 0);
+                let my_hash = *vector::borrow(&lineup::get_hash(&my_lineup_fight), 0);
+                if (my_hash > enemy_hash) {
+                    i_am_fast = true
+                } else {
+                    i_am_fast = false
+                };
             };
             if(i_am_fast){
                 fight::action(my_acting_role, enemy_acting_role, &mut my_roles,  &mut enemy_roles, &mut permenant_increase_hp_info);

@@ -1,18 +1,7 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { winA, chessId, fightResA, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
-import {
-  CHALLENGE_GLOBAL,
-  CHESS_GLOBAL,
-  LINEUP_GLOBAL,
-  ROLE_GLOBAL,
-  CHESS_CHALLENGE_PACKAGE6,
-  CHESS_GLOBAL_V2,
-  ROLE_GLOBAL_V2,
-  LINEUP_GLOBAL_V2,
-  CHALLENGE_GLOBAL_V2,
-  CHESS_PACKAGE_V2
-} from "../../lib/constants"
+import { CHESS_PACKAGE_V2_2, CHESS_GLOBAL_V2, ROLE_GLOBAL_V2, LINEUP_GLOBAL_V2, CHALLENGE_GLOBAL_V2, CHESS_PACKAGE_V2 } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
@@ -60,7 +49,7 @@ const useOperateAndMatch = () => {
         tx.object(normalizeSuiObjectId(meta.objectId))
       ]
       tx.moveCall({
-        target: `${CHESS_PACKAGE_V2}::chess::operate_and_battle`,
+        target: `${CHESS_PACKAGE_V2_2}::chess::operate_and_battle`,
         arguments: argument
       })
       const response = await wallet.signAndExecuteTransactionBlock({

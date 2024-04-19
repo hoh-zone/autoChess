@@ -214,11 +214,9 @@ const useQueryMetaInfo = () => {
       } else if (String(data.type).indexOf(CHESS_PACKAGE_V2) !== -1) {
         version = 2
       }
-      console.log("data:", data)
       let content: any = data?.content
       let fields: any = content?.fields
       let rank_map_id = fields?.best_rank_map?.fields.id.id
-      console.log("rank_map_id:", rank_map_id)
       let best_rank: any = await wallet.client.getDynamicFieldObject({
         parentId: rank_map_id,
         name: {

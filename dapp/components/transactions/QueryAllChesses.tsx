@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react"
-
 import { ethos } from "ethos-connect"
-import { CHESS_CHALLENGE_PACKAGE, CHESS_PACKAGE_V2, ISMAINNET } from "../../lib/constants"
+import { CHESS_PACKAGE_V2, ISMAINNET } from "../../lib/constants"
 import { GameNft } from "../../types/nft"
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
 import { JsonRpcProvider, PaginatedObjectsResponse, mainnetConnection, testnetConnection } from "@mysten/sui.js"
+import { myHash0A } from "../../store/stages"
 
 const useQueryChesses = () => {
   const { wallet } = ethos.useWallet()
@@ -54,7 +54,9 @@ const useQueryChesses = () => {
       cursor = result.nextCursor
       result.data.map((item: any) => {
         if ((item.data?.content as any)?.fields) {
-          gamesList.push((item.data?.content as any)?.fields)
+          let nft: any = (item.data?.content as any)?.fields
+          nft.hash0 = nft.lineup.fields.hash[0]
+          gamesList.push(nft)
         }
       })
     }

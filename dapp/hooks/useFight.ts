@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom,fightResultModalVisibleAtom } from "../store/stages";
+import { myHash0A, enemyHash0A, attackChangeA, chessId, enemyAttackChangeA, enemyCharacter, enemyFightingIndex, enemyHpChangeA, enemySkillTagA, fightResultEffectA, fightingIndex, hpChangeA, operationsA, skillTagA, slotCharacter, stageAtom,fightResultModalVisibleAtom } from "../store/stages";
 import { useAtom } from "jotai";
 import some from "lodash/some";
 import confetti from "canvas-confetti";
@@ -10,6 +10,8 @@ import { get_max_sp } from "../components/character/rawData";
 
 export const useFight = () => {
     const [enemyChars, setEnemyChars] = useAtom(enemyCharacter);
+    const [myHash0, _setMyHash0] = useAtom(myHash0A);
+    const [enemyHash0, _setEnemyHash0] = useAtom(enemyHash0A);
     const [chars, setChars] = useAtom(slotCharacter);
     const [fight_index, setFightingIndex] = useAtom(fightingIndex);
     const [enemy_fight_index, setEnemyFightingIndex] = useAtom(enemyFightingIndex);
@@ -577,7 +579,13 @@ export const useFight = () => {
                 await sleep(CHAR_SHOW_UP_TIME);
             }
             while (char.hp > 0 && enemyChar.hp > 0) {
-                if(char.speed >= enemyChar.speed){
+                let mycharSpeed = char.speed;
+                let enemyCharSpeed = enemyChar.speed;
+                let i_am_first = mycharSpeed > enemyCharSpeed;
+                if (mycharSpeed == enemyCharSpeed) {
+                    i_am_first = myHash0 > enemyHash0
+                }
+                if(i_am_first){
                     await sleep(ATTACK_INTERVAL_TIME);
                     await action(char, enemyChar, charIndex, enemyCharIndex, false);
                     if(enemyChar.hp > 0) {
@@ -630,8 +638,7 @@ export const useFight = () => {
                 if (ele == null) {
                     return;
                 }
-                console.log(ele.class);
-                console.log(ele.hp);
+
             });
             //test log
 

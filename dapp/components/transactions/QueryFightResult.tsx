@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
 
 import { ethos } from "ethos-connect"
-import { CHESS_PACKAGE_V2, ISMAINNET } from "../../lib/constants"
+import { CHESS_PACKAGE_V2, CHESS_PACKAGE_V2_2, ISMAINNET } from "../../lib/constants"
 import { sleep } from "../../utils/sleep"
 import { JsonRpcProvider, mainnetConnection, testnetConnection } from "@mysten/sui.js"
 
@@ -23,7 +23,7 @@ const useQueryFight = () => {
       if (!wallet) return
       let result_tmp = await wallet.client.queryEvents({
         query: {
-          MoveEventType: CHESS_PACKAGE_V2 + "::chess::FightEvent"
+          MoveEventType: CHESS_PACKAGE_V2_2 + "::chess::FightEvent"
         },
         limit: 30,
         order: "descending"

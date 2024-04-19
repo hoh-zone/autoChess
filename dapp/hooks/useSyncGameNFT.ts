@@ -1,9 +1,10 @@
 import { useCallback } from "react"
 import { GameNft } from "../types/nft";
 import { useAtom } from "jotai";
-import { chessId, loseA, moneyA, nameA, shopCharacter, slotCharacter, winA, challengeWinA, challengeLoseA} from "../store/stages";
+import { chessId, loseA, moneyA, nameA, shopCharacter, slotCharacter, winA, challengeWinA, challengeLoseA, myHash0A} from "../store/stages";
 
 export const useSyncGameNFT = () => {
+    const [_myHash0, setMyHash0] = useAtom(myHash0A)
     const [_chessId, setChessId] = useAtom(chessId);
     const [_gold, setGold] = useAtom(moneyA);
     const [_win, setWin] = useAtom(winA);
@@ -15,6 +16,7 @@ export const useSyncGameNFT = () => {
     const [_shopCharacter, setShopCharacter] = useAtom(shopCharacter);
 
     return useCallback((nft: GameNft) => {
+        setMyHash0(nft?.hash0)
         setChessId(nft?.id?.id)
         setGold(Number(nft.gold));
         setWin(nft.win);
