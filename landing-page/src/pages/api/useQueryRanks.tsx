@@ -167,7 +167,6 @@ const useQueryRanks = () => {
       return "";
     }
     let source = result.results[0].returnValues[0][0];
-    source = source.slice(2);
     let resultStr = bytesArrayToString(new Uint8Array(source));
     let resultArr = splitRankStr(resultStr);
 

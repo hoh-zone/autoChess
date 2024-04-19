@@ -20,6 +20,13 @@ function get_role_level(data: string): number {
   return 1;
 }
 
+function getFixReward(reward: number, rank: number) {
+  if (reward > 0 && reward < 100000) {
+    return 10 + Math.floor((20 - rank) / 2);
+  }
+  return reward / 1_000_000_000;
+}
+
 export const LeaderboardItem = ({
   items,
   rank,
@@ -62,7 +69,7 @@ export const LeaderboardItem = ({
       </HStack>
       <HStack className="text-2xl mr-8">
         <Image alt={"gold"} width={24} height={24} src={"/gold.png"}></Image>
-        <Text>Score:{reward / 1_000_000_000}</Text>
+        <Text>Score:{getFixReward(reward, rank)}</Text>
       </HStack>
 
       <HStack className="text-2xl mr-1">
