@@ -48,6 +48,7 @@ const useOperateAndMatch = () => {
         tx.pure(get_chars_strvec()),
         tx.object(normalizeSuiObjectId(meta.objectId))
       ]
+      console.log(argument)
       tx.moveCall({
         target: `${CHESS_PACKAGE_V2_3}::chess::operate_and_battle`,
         arguments: argument
