@@ -479,22 +479,19 @@ export const useFight = () => {
         let value = 0;
         if (is_opponent) {
             chars.map((ele:any) => {
-                if (ele == null || value > 0) {
+                if (ele == null) {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_sp_cap") {
-                    console.log("1111", String(ele.effect_value));
                     value = parseInt(ele.effect_value ? ele.effect_value : "0") > value ? parseInt(ele.effect_value ? ele.effect_value : "0") : value;
-                    console.log("1111", value);
                 }
             })
         } else {
             enemyChars.map((ele) => {
-                if (ele == null || value > 0) {
+                if (ele == null) {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_sp_cap") {
-                    console.log("2222" + ele);
                     value = parseInt(ele.effect_value ? ele.effect_value : "0") > value ? parseInt(ele.effect_value ? ele.effect_value : "0") : value;
                 }
             })
