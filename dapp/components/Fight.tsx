@@ -75,17 +75,17 @@ export const Fight = () => {
               //     roles: [
               //       {
               //         attack: 16,
-              //         class: "ani3",
-              //         effect: "reduce_tmp_attack",
-              //         effect_type: "skill",
-              //         effect_value: "9",
+              //         class: "wizard2_1",
+              //         effect: "add_all_tmp_sp_cap",
+              //         effect_type: "ring",
+              //         effect_value: "1",
               //         gold_cost: 3,
-              //         hp: 60,
-              //         level: 9,
+              //         hp: 18,
+              //         level: 6,
               //         sp: 0,
-              //         sp_cap: 1,
+              //         sp_cap: 0,
               //         speed: 9,
-              //         max_hp: 60,
+              //         max_hp: 18,
               //         attacking: 0
               //       },
               //       {
@@ -167,6 +167,7 @@ export const Fight = () => {
               //   },
               //   // 敌方测试阵容
               //   v2_lineup: {
+              //     hash: [0],
               //     roles: [
               //       {
               //         attack: 8,

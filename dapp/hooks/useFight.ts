@@ -478,21 +478,24 @@ export const useFight = () => {
     const get_extra_max_sp_debuff = (is_opponent: boolean) => {
         let value = 0;
         if (is_opponent) {
-            chars.map((ele) => {
-                if (ele == null) {
+            chars.map((ele:any) => {
+                if (ele == null || value > 0) {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_sp_cap") {
-                    value = parseInt(ele.effect_value ? ele.effect_type : "0") > value ? parseInt(ele.effect_value ? ele.effect_type : "0") : value;
+                    console.log("1111", String(ele.effect_value));
+                    value = parseInt(ele.effect_value ? ele.effect_value : "0") > value ? parseInt(ele.effect_value ? ele.effect_value : "0") : value;
+                    console.log("1111", value);
                 }
             })
         } else {
             enemyChars.map((ele) => {
-                if (ele == null) {
+                if (ele == null || value > 0) {
                     return;
                 }
                 if (ele.effect === "add_all_tmp_sp_cap") {
-                    value = parseInt(ele.effect_value ? ele.effect_type : "0") > value ? parseInt(ele.effect_value ? ele.effect_type : "0") : value;
+                    console.log("2222" + ele);
+                    value = parseInt(ele.effect_value ? ele.effect_value : "0") > value ? parseInt(ele.effect_value ? ele.effect_value : "0") : value;
                 }
             })
         }
@@ -525,13 +528,16 @@ export const useFight = () => {
 
     const action = async (char: CharacterFields, enemy: CharacterFields, charIndex: number, enemyIndex: number, is_opponent: boolean) => {
         let extra_max_sp_debuff = get_extra_max_sp_debuff(is_opponent);
+        if (is_opponent) {
+            console.log("extra_max_sp_debuff:", extra_max_sp_debuff);
+        }
         if (char.effect_type === "skill" ) {
             modify_max_sp(extra_max_sp_debuff, is_opponent, charIndex);
         }
         setChars(chars.slice());
         setEnemyChars(enemyChars.slice());
+        console.log("class:", char.class, "current sp: ", char.sp, "sp cap: ", char.sp_cap);
         if (char.effect_type === "skill" && char.sp >= Number(char.sp_cap)  ) {
-            console.log("current sp: ", char.sp, "sp cap: ", char.sp_cap);
             skillTag[charIndex] = "1";
             char.attacking = 2;
             await sleep(SKILL_ANIM_DURATION);
