@@ -562,10 +562,19 @@ export const useFight = () => {
         clear_change();
     }
 
+    const cleanNone = () => {
+        enemyChars.map((item, index) => {
+            if (item?.class == "none") {
+                enemyChars[index] = null;
+            }
+        })
+    }
+
     return useCallback(async () => {
         console.log("--------开始战斗-------");
         console.log(chars);
         console.log(enemyChars);
+        cleanNone();
         let loop = MAX_LOOP;
         while (some(chars, Boolean) && some(enemyChars, Boolean)) {
             // 出战1v1
