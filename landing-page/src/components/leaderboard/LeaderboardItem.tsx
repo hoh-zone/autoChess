@@ -74,23 +74,23 @@ export const LeaderboardItem = ({
 
       <HStack className="text-2xl mr-1">
         <Image alt={"sui"} width={24} height={24} src={"/sui.png"}></Image>
-        {/* <Text>{Number(estimateSui)} Sui</Text> */}
+        <Text>
+          {((getFixReward(reward, rank) / 2221) * 300).toFixed(2)} Sui
+        </Text>
       </HStack>
       {
         <HStack className="text-2xl mr-1">
           <Button
             onClick={() =>
               toast({
-                title: "Sorry",
-                description:
-                  "The reward hasn't been unlocked, please wait for the end of rank activity",
+                description: "The rewards has been sent to the wallet address",
                 status: "warning",
                 duration: 3000,
                 isClosable: true,
               })
             }
           >
-            <h6>Claim Rewards</h6>
+            <h6>Rewards Claimed</h6>
           </Button>
         </HStack>
       }
