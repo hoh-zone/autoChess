@@ -56,6 +56,21 @@ export interface CharacterFields {
     effect_value: string | undefined;
     attacking?: 0 | 1 | 2;
 }
+
+
+//Effect: increase HP, Attack or increase some stats while decreasing some stats
+//Range: 1 or 6 (All)
+//Duration: One battle or permanent
+export interface ItemFields {
+    name: string;
+    effect: string; 
+    range: number;
+    duration: string;
+    effect_value: number | string;
+    cost: number;
+    selling_price: number;
+}
+
 // Example:
 // {
 //     "cards_pool": {

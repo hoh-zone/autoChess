@@ -1,5 +1,5 @@
 import { atom } from "jotai"
-import { CharacterFields } from "../types/nft"
+import { CharacterFields, ItemFields } from "../types/nft"
 
 export const currentNftId = atom<string>("")
 
@@ -40,11 +40,19 @@ export const enemyFightingIndex = atom<number>(0)
 export const shopCharacter = atom<(CharacterFields | null)[]>([null, null, null, null, null, null])
 export const chessId = atom<string>("")
 
+//Items
+export const itemsA = atom<(ItemFields | null)[]>([null, null, null])
+export const boughtItems = atom<(ItemFields | null)[]>([null, null, null])
+
 // control
 export const stageAtom = atom<"init" | "shop" | "fight">("init")
 export const selectedShopSlot = atom<number | null>(null)
 export const selectedSlot = atom<number | null>(null)
 export const operationsA = atom<string[]>([])
+
+export const selectedShopItemSlot = atom<string | null>(null)
+export const selectedItemSlot = atom<number | null>(null)
+
 
 // effects
 export const fightResultEffectA = atom<null | string>(null)

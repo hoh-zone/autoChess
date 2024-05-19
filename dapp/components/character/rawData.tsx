@@ -1,10 +1,9 @@
-import { CharacterFields } from "../../types/nft"
+import { CharacterFields, ItemFields } from "../../types/nft"
 import { removeSuffix } from "../../utils/TextUtils"
 
 interface Roles {
   [key: string]: CharacterFields
 }
-
 const roles_info: Roles = {
   assa1: {
     class: "assa1",
@@ -975,7 +974,7 @@ const roles_info: Roles = {
     base_attack: 5,
     max_hp: 9,
     base_speed: 6,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -991,7 +990,7 @@ const roles_info: Roles = {
     base_attack: 5,
     max_hp: 9,
     base_speed: 6,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1007,7 +1006,7 @@ const roles_info: Roles = {
     base_attack: 10,
     max_hp: 21,
     base_speed: 8,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1023,7 +1022,7 @@ const roles_info: Roles = {
     base_attack: 10,
     max_hp: 21,
     base_speed: 8,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1039,7 +1038,7 @@ const roles_info: Roles = {
     base_attack: 20,
     max_hp: 65,
     base_speed: 10,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1055,7 +1054,7 @@ const roles_info: Roles = {
     base_attack: 6,
     max_hp: 8,
     base_speed: 5,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1071,7 +1070,7 @@ const roles_info: Roles = {
     base_attack: 6,
     max_hp: 8,
     base_speed: 5,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1087,7 +1086,7 @@ const roles_info: Roles = {
     base_attack: 12,
     max_hp: 15,
     base_speed: 9,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1103,7 +1102,7 @@ const roles_info: Roles = {
     base_attack: 12,
     max_hp: 15,
     base_speed: 9,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1119,7 +1118,7 @@ const roles_info: Roles = {
     base_attack: 24,
     max_hp: 37,
     base_speed: 11,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_debuff",
     effect_value: undefined,
@@ -1135,7 +1134,7 @@ const roles_info: Roles = {
     base_attack: 6,
     max_hp: 9,
     base_speed: 5,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
@@ -1151,7 +1150,7 @@ const roles_info: Roles = {
     base_attack: 6,
     max_hp: 9,
     base_speed: 5,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
@@ -1167,7 +1166,7 @@ const roles_info: Roles = {
     base_attack: 10,
     max_hp: 30,
     base_speed: 7,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
@@ -1183,7 +1182,7 @@ const roles_info: Roles = {
     base_attack: 10,
     max_hp: 30,
     base_speed: 7,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
@@ -1199,7 +1198,7 @@ const roles_info: Roles = {
     base_attack: 20,
     max_hp: 65,
     base_speed: 10,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "forbid_buff",
     effect_value: undefined,
@@ -1215,7 +1214,7 @@ const roles_info: Roles = {
     base_attack: 5,
     max_hp: 9,
     base_speed: 7,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
@@ -1231,7 +1230,7 @@ const roles_info: Roles = {
     base_attack: 5,
     max_hp: 9,
     base_speed: 7,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
@@ -1247,7 +1246,7 @@ const roles_info: Roles = {
     base_attack: 10,
     max_hp: 18,
     base_speed: 9,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
@@ -1263,7 +1262,7 @@ const roles_info: Roles = {
     base_attack: 10,
     max_hp: 18,
     base_speed: 9,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "1",
@@ -1279,7 +1278,7 @@ const roles_info: Roles = {
     base_attack: 20,
     max_hp: 45,
     base_speed: 12,
-    sp_cap: undefined,
+    sp_cap: 0,
     effect_type: "ring",
     effect: "add_all_tmp_sp_cap",
     effect_value: "2",
@@ -1296,6 +1295,10 @@ export function get_chars(names: string[]): CharacterFields[] {
     }
   })
   return chars
+}
+
+export function get_char(name: string): CharacterFields {
+  return roles_info[name]
 }
 
 export function get_buy_price(char: CharacterFields | null): number {
@@ -1330,7 +1333,21 @@ export function get_sell_price(char: CharacterFields | null): number {
   }
 }
 
-export function get_max_sp(char: CharacterFields | null | undefined): number | undefined {
+export function get_item_buy_price(item: ItemFields | null): number {
+  if (!item) {
+    return 0
+  }
+  return item.cost
+}
+
+export function get_item_sell_price(item: ItemFields | null): number {
+  if (!item) {
+    return 0
+  }
+  return item.selling_price
+}
+
+export function get_max_sp(char: CharacterFields | null): number | undefined {
   if (!char) {
     return 0
   }
@@ -1346,6 +1363,21 @@ export function get_star_num(char: CharacterFields | null): number {
     return level / 3
   }
   return level / 3 + 1
+}
+
+export const char_class_info: string[] = ["ani", "archer", "assa", "cleric", "fighter", "firemega", "golem", "kunoichi", "mega", "priest", "shaman", "shinobi", "slime", "tank", "tree", "wizard"]
+
+//Should be invoked after each battle, it resets the stats changed by items effective for only one battle
+//to the base stats
+export function reset_char_stats(chars: CharacterFields[]) {
+  chars.map((char: CharacterFields | null, index: number) => {
+    if (char != null) {
+      char.attack = char.base_attack
+      char.speed = char.base_speed
+      char.hp = char.max_hp
+      char.sp = 0
+    }
+  })
 }
 
 export function upgrade(char1: CharacterFields, char2: CharacterFields): CharacterFields {

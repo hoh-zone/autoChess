@@ -37,6 +37,8 @@ const useOperateAndMatch = () => {
     try {
       const tx = new TransactionBlock()
       const left_gold = money
+      let chars = get_chars_strvec()
+      console.log("charssL:", chars)
       let argument: any = [
         tx.pure(`${CHESS_GLOBAL_V2}`),
         tx.pure(`${ROLE_GLOBAL_V2}`),
