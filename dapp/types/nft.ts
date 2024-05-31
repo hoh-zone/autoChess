@@ -66,7 +66,7 @@ export interface ItemFields {
     effect: string; 
     range: number;
     duration: string;
-    effect_value: number | string;
+    effect_value: number;
     cost: number;
     selling_price: number;
 }

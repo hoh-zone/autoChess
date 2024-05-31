@@ -117,5 +117,10 @@
   "SPEED": "速度",
   "update-info": "Autochess 2.0 更新内容：",
   "update-info1": "1、更新了全新的速度系统，每名角色有不同的初始速度，决定了攻击的先后手顺序",
-  "update-info2": "2、修复了战斗结果概率性和演算动画不一致的bug"
+  "update-info2": "2、修复了战斗结果概率性和演算动画不一致的bug",
+  "range": "范围",
+  "effect-value": "效果值",
+  "description": "描述",
+  "item-banned-ring-effect": "此角色技能为光环，魔法药水无法用于此角色！",
+  "item_banned_sp_max": "此角色sp已满，魔法药水无法用于此角色！"
 }

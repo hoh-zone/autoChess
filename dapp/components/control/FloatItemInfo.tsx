@@ -7,6 +7,8 @@ import { item_list } from "../items/RawData"
 import { useContext } from "react"
 import { AppContext } from "../../pages/_app"
 import useLocale from "../../hooks/useLocale"
+import { ITEM_DESCRIPTION, ITEM_NAME } from "../../utils/itemDescription"
+import { ITEM_DESCRIPTION_CN, ITEM_NAME_CN } from "../../utils/itemDescriptionCn"
 
 export const FloatItemInfo = ({ name, isShowInfo = false, isShopSlot = false }: { name: string; isShowInfo?: boolean; isShopSlot?: boolean }) => {
   const [stage] = useAtom(stageAtom)
@@ -17,7 +19,6 @@ export const FloatItemInfo = ({ name, isShowInfo = false, isShopSlot = false }: 
   // console.log(locale);
 
   let item: ItemFields = item_list[name]
-
   return (
     <div className="float-container pointer-events-none">
       {/* 触发范围 */}
@@ -25,18 +26,13 @@ export const FloatItemInfo = ({ name, isShowInfo = false, isShopSlot = false }: 
         <>
           <Stack className={"fix_float"}>
             <HStack gap={4}>
-              <Text className="text-[6px]">
-                {getLocale("range")}:{item.range}
-              </Text>
-              <Text className="text-[6px]">
-                {getLocale("effect-value")}:{item.effect_value}
-              </Text>
+              <Text className="text-[6px]">{lang == "EN" ? ITEM_NAME[item.name] : ITEM_NAME_CN[item.name]}</Text>
             </HStack>
             <Divider borderWidth={1} />
             <Text fontSize={"3xs"}>
               {getLocale("description")}
               {": "}
-              {item.effect}
+              {lang == "EN" ? ITEM_DESCRIPTION[item.name]?.replace("$value", String(item.effect_value)) : ITEM_DESCRIPTION_CN[item.name]?.replace("$value", String(item.effect_value))}
             </Text>
           </Stack>
         </>

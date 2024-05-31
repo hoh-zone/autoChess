@@ -117,5 +117,10 @@
     "you_win": "you win!",
     "update-info": "Autochess 2.0 Update Content：",
     "update-info1": "1、New speed system has been updated. Each character has a different initial speed, which determines the order of attacks.",
-    "update-info2": "2、Fixed a bug in which the probability of battle results and the calculation animation were inconsistent"
+    "update-info2": "2、Fixed a bug in which the probability of battle results and the calculation animation were inconsistent",
+    "range": "Range",
+    "effect-value": "Value",
+    "description": "Description",
+    "item-banned-ring-effect": "Magic potion can not be used on the character because the character's skill is ring.",
+    "item_banned_sp_max": "Magic potion can not be used on the character because the character's sp is at max."
 }
