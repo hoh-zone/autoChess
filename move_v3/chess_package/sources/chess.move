@@ -6,7 +6,7 @@
 // There is no dynamic generation on frontend when you click "refresh" button.
 module chess_packagev3::chess {
     use std::vector;
-    use std::string::{utf8, String};
+    use std::string::{utf8, String, Self};
     use std::debug::print;
 
     use sui::object::{Self, UID};
@@ -363,7 +363,12 @@ module chess_packagev3::chess {
         let cards_pool_roles = lineup::get_mut_roles(&mut chess.cards_pool);
 
         // todo: how to resolve the gas limit problem when publishing
-        let expected_lineup = verify_operation(role_global, item_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+        let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.gold_cost, ctx);
+        // if (string::length(&chess.name) + vector::length(&operations) != 12) {
+        //     expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.gold_cost, ctx);
+        // } else {
+        //     expected_lineup = verify_operation(role_global, item_global, current_roles, cards_pool_roles, operations, left_gold, lineup_str_vec, chess.name, (chess.gold as u8), chess.gold_cost, ctx);
+        // };
 
         // Player normally wins max 20 times because at the 20th win it is ranked num 1
         // If it keeps winning it get no more gold before the next battle to upgrade the team
