@@ -81,6 +81,9 @@ export const StartGame = () => {
               <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                 {getLocale("Connect")}
               </SignInButton>
+               <Button>
+                       Miao miao zk-login
+               </Button>
             </div>
           )}
           <div className="absolute top-0 right-0 m-4">
