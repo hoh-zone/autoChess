@@ -1,14 +1,12 @@
 import { Button } from "@radix-ui/themes";
 import { generateNonce, generateRandomness } from '@mysten/zklogin';
-//import { jwtToAddress, getExtendedEphemeralPublicKey } from '@mysten/zklogin';
-//import { genAddressSeed, getZkLoginSignature } from "@mysten/zklogin";
+import { jwtToAddress, getExtendedEphemeralPublicKey } from '@mysten/zklogin';
+import { getZkLoginSignature } from "@mysten/zklogin";
 import { SuiClient } from '@mysten/sui/client';
+import axios from 'axios';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { JwtPayload, jwtDecode } from "jwt-decode";
-//import { jwtDecode } from "jwt-decode";
 
-//pnpm build
-//pnpm run dev
 const FULLNODE_URL = 'https://fullnode.devnet.sui.io'; // replace with the RPC URL you want to use
 const suiClient = new SuiClient({ url: FULLNODE_URL });
 const ephemeralKeyPair = new Ed25519Keypair();
@@ -16,7 +14,6 @@ const ephemeralKeyPair = new Ed25519Keypair();
 //Only for google acount Oauth
 const CLIENT_ID = '15551813151-do454v0l676ic4b4stm4iuorudsie7rt.apps.googleusercontent.com';
 const REDIRECT_URI = 'http://localhost:5173/';
-
 
 const {epoch} = await suiClient.getLatestSuiSystemState();
 const maxEpoch = Number(epoch) + 10; // this means the ephemeral key will be active for 2 epochs from now.
@@ -48,55 +45,66 @@ const loginURL = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
 
   // Parse the fragment to get the id_token
   const urlParams = new URLSearchParams(urlFragment.substring(1));
-  const idToken = urlParams.get('id_token');
-  if(idToken != null ){
-    const jwtPayload = jwtDecode(idToken) as JwtPayload;;
+  const jwtIdToken = urlParams.get('id_token');
+  if(jwtIdToken != null ){
+    const jwtPayload = jwtDecode(jwtIdToken) as JwtPayload;;
   
     console.log("zkLoginUserAddress iss:", jwtPayload.iss);
     console.log("zkLoginUserAddress sub:", jwtPayload.sub);
     console.log("zkLoginUserAddress aud:", jwtPayload.aud);
 
-  }
+    let userSalt = 'salt miao';
+    await axios.post(
+      "https://salt.api.mystenlabs.com/get_salt",
+      {
+        token: jwtPayload
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => {
+      userSalt = res.data.salt;
+   })
+   .catch((err) => {
+      console.log(err.message);
+   });
+   console.log("userSalt:", userSalt);
 
-// example, use the post
-//const proofResponse = await post('/your-internal-api/zkp/get', zkpRequestPayload);
+   const zkLoginUserAddress = jwtToAddress(jwtIdToken, userSalt);
+   const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
+     ephemeralKeyPair.getPublicKey()
+   );
+   console.log("zkLoginUserAddress:", zkLoginUserAddress);
+   console.log("extendedEphemeralPublicKey:", extendedEphemeralPublicKey);
 
-/**
- * Problem 2 being: salt
- */
-
-/**
- * Problem 3 being: zk-proof
- */
-
-/*
-
-  const zkLoginUserAddress = jwtToAddress(jwt, userSalt);
-  const extendedEphemeralPublicKey = getExtendedEphemeralPublicKey(
-    ephemeralKeyPair.getPublicKey()
+   const zkProofResult = await axios.post(
+    "https://prover-dev.mystenlabs.com/v1",
+    {
+      jwt: jwtIdToken,
+      extendedEphemeralPublicKey: extendedEphemeralPublicKey,
+      maxEpoch: maxEpoch,
+      jwtRandomness: randomness,
+      salt: userSalt,
+      keyClaimName: "sub",
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
   );
 
-const zkProofResult = await axios.post(
-  "https://prover-dev.mystenlabs.com/v1",
-  {
-    jwt: oauthParams?.id_token as string,
-    extendedEphemeralPublicKey: extendedEphemeralPublicKey,
-    maxEpoch: maxEpoch,
-    jwtRandomness: randomness,
-    salt: userSalt,
-    keyClaimName: "sub",
-  },
-  {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-).data;
+  const proofResponse = await axios.post('/your-internal-api/zkp/get', zkProofResult);
 
-const partialZkLoginSignature = zkProofResult as PartialZkLoginSignature
-
-*/
-
+  type PartialZkLoginSignature = Omit<
+    Parameters<typeof getZkLoginSignature>['0']['inputs'],
+    'addressSeed'
+  >;
+  
+  const partialZkLoginSignature = proofResponse as PartialZkLoginSignature;
+}
 
 export const ZkLoginButton = () =>{
     return (
@@ -107,5 +115,4 @@ export const ZkLoginButton = () =>{
         </>
   )
 }
-
 export default ZkLoginButton;
