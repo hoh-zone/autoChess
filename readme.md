@@ -88,9 +88,9 @@ Next Song Version Expandable Abilities:
     4、....
 ![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/162bb486-b114-4bb7-ba4e-9daa4c1400c6)
 
-## 竞技场经济模型模拟：
+## Arena mode economic model simulation result:
 ![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/31c658f4-b275-4e5e-a974-22a16f4523e2)  
-参数：每胜一局奖励0.3 sui  
-门票价格：1 sui  
-稳定后每局的胜利期望概率：0.5  
-结果：池子的收益会稳定在10%左右，玩家玩游戏的期望收益也会在亏10%左右  
+Parameters: 0.3 sui for each win  
+Ticket price: 1 sui  
+Expected probability of winning each game after stabilization: 0.5  
+Result: the return of the pool will stabilize at around 10%, and the expected return of the players playing the game will be around 10% of the loss  
