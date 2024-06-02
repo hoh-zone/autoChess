@@ -1,157 +1,84 @@
-- 首页背景剪掉底部水印
-
-# 设计思路  
-
-## 开发计划
-
-总结来说就是以下几点：
-- 改善前端交互体验
-- 提升可玩性（more addictive）
-- 社区运营
-- 用户增长（经济模型、砸钱）
-
+ # Design Roadmap
+Goal:
+- Improve the front-end interaction experience
+- Improve the front-end interactive experience (more addictive)
+- Community operation
+- User growth (economic modeling, money)
 ----
 
-## Grant提交计划  
-Milestone1 ：基本功能打磨 (预计成本35,000$)  
+## Grant Plan
+Milestone1 ：Basic Fucntion
 Expected completion date 2023/10/30  
-- 有完整，带版权的背景音乐、背景动画素材  
-- 16个角色开发：每个角色包含头像，闲置动画，1-2个技能动画及其独特的技能机制和数值效果  
-- 链端完成商店操作的合理性验证：包含购买，售出，角色合成的合理性验证  
-- 完成新手引导开发：交互式或gif形式引导  
-- 完成界面布局自适应问题：不同尺寸浏览器打开可实现适配（普通分辨率全屏状态下基本无遮挡，无需滚动条）  
-- 背景图片预加载：进入战斗后不会出现背景白屏问题。  
-- 强化显示效果：人物的属性，特性，每个技能的释放效果，在商店以及战斗过程中能清楚展示。  
+- Complete, copyrighted background music, background animation material available  
+- 16 characters development: each character includes avatar, idle animation, 1-2 skill animations and its unique skill mechanism and numerical effect.  
+- Completion of the reasonableness verification of store operations on the chain side: including the reasonableness verification of buying, selling, and character synthesizing.  
+- Complete the development of newbie guide: interactive or gif guide.  
+- Completion of interface layout adaptation: different sizes of browsers can be adapted to open (basically no blocking under the state of full-screen in ordinary resolution, no need for scroll bars).  
+- Background image preloading: no background white screen problem after entering the battle.  
+- Enhanced display effect: Character's attributes, characteristics, and the release effect of each skill can be clearly displayed in the store and during the battle.
 
-Milestone2：MVP 完成 (预计成本15,000$)  
+Milestone2：MVP Finished
 Expected completion date 2023/11/15  
---完成竞技场模式排行榜的显示，以及排行榜的奖励分发功能  
---发布游戏官网，包含宣传视频，landingPage，游戏入口和简单介绍  
-
-
-**Testnet （9w，12月初）：**
-
-目标：让用户觉得还不错，强调后续上主网打赢了会有钱，强调会有空投。吸引用户进入社群。上测试网后上主网，这个时间不能太久，最多一两周。要确保上主网用户还会来。
-
-todo:
-- 替换掉音乐、背景动画素材，当前素材无版权 （1w）
-- 角色技能动画素材精修（5k）
-    - 比如解决素材被裁剪的问题，
-    - 解决特效大小不一致，受击动画和技能不匹配的问题 
-- 前端用户交互的增强（1.5w）
-    - 角色摆放正确的位置
-    - 强化前端技能效果显示，让玩家能看懂发生了什么
-    - 战斗结算界面
-    - 排行榜
-    - 封印被动
-    - 素材在启动时预加载
-    - 新手引导，交互式的，或者一些 gif
-    - 动画播放提供不同的速度选项（可选）
-    - 拖动实现买卖（可选）
-    - block 一些 IP，规避一点法律风险。
-- 排行榜，以及排行榜的奖励分发，前端+后端
-    - 每周把奖池的钱瓜分给排行榜上的玩家
-    - 参考一下 https://sui8192.ethoswallet.xyz/
-- landing page（5k）
-    - https://www.youtube.com/watch?v=sKF_XRKz-1U
-    - 包含宣传视频等
-- 找人运营 telegram、discord 社群，twitter 账号。（1w）
-    - 确认去哪些地方发广告（群、discord），参考下别的游戏
-- 找几个人做 playtest
-- 审计（3w）
-
-
-
+--Completed the display of Arena Mode leaderboards, as well as the reward distribution function of the leaderboards.  
+--Published the official website of the game, including promotional video, landingPage, game entrance and brief introduction.  
 
 ----
 
-**Mainnet（5w，测试网后一个星期）:**
+**Mainnet (5w, one week after testnet):**
 
-目标：砸一部分钱进去获得一些初始用户，能让他们觉得好玩，并且上排行榜有钱赚，让他们能持续玩下去。后续变成就算我们不砸钱进去，池子里的钱也足够吸引玩家冲排行榜。
+Goal: Drop some money in to get some initial users that can make it fun for them and make money on the leaderboards so they can keep playing. Later on it turns out that even if we don't throw money in, there's enough money in the pool to attract players to the leaderboards.
 
-before release on mainnet: 
-- 做转发到 twitter 赠送门票的奖励（1w）
-    - 增加点传播性，打完第一局、以及上排行榜的时候提醒用户分享：“Share the link, and make the treasury pool bigger! 10 times play, $1000 additional you earn”
-- 分离不同奖池的玩家，更复杂、更安全的匹配逻辑（5k）
-- 多个票价 1、10、50、100
-- 中英双语支持
+before release on mainnet. 
+- Do retweets to twitter to give away tickets (1w)
+    - Increase the spread by reminding users to share the link after the first game and when they get on the leaderboard: “Share the link, and make the treasury pool bigger! 10 times play, $1000 additional you earn! “
+- Separate players for different pools, more complex and secure matchmaking logic (5k)
+- Multiple ticket prices 1, 10, 50, 100
+- Bilingual support
 
-todo:
-- 给所有测试网玩家空投门票
-- 每天 1000 刀奖池，持续 30 天（3w）
-- 前端功能优化，提供单步播放调试、跳过战斗动画等功能（5k）
-- 优化 landing page，加一些 faq（比如如何登上排行榜，钱怎么算的之类），更 fancy 的排行榜，更方便的社交软件分享功能。
+todo.
+- Airdrop tickets to all testnet players
+- 1000 Knife Pool per day for 30 days (3w)
+- Optimize front-end functionality, provide single-step play debugging, skip battle animations, etc. (5k)
+- Optimize landing page, add some faqs (such as how to get on the leaderboards, how the money is calculated, etc.), more fancy leaderboards, more convenient social software sharing features.
 
 ----
 
-**V2（10w，主网后一个月）:**
-目标：卖 nft。合作 nft。开始数值通膨之路。
+**V2 (10w, one month after mainnet):**
+Goal: sell nft. co-op nft. start the path to numerical inflation.
 
-todo:
-- 每天 1000 刀奖池，持续 30 天（3w）
-- 空投 NFT 给之前的玩家
-- 设计三个英雄（NFT）（一个限时免费 mint、一个合作（比如 BullSharks）、一个自己卖），前端+合约。（3w）
-- 用游戏引擎重写前端（3w）
-- 食物系统（1w）
+todo.
+- 1000 knife jackpot per day for 30 days (3w)
+- Airdrop NFT to previous players
+- Design three heroes (NFT) (one free mint for a limited time, one co-op (e.g. BullSharks), and one for sale), front-end + contracts. (3w)
+- Rewrite front end with game engine (3w)
+- Food system (1w)
 
-- 帮用户从门票里面扣 gas fee。
+- Help users deduct gas fee from tickets.
 
-- 增加魔法值设定，英雄满魔法值之后再释放技能，全体角色提高点生命值，不然技能放不出来
-- 增加角色特性：反弹，攻击，魔法的 buff 和 debuff，毒伤，解除 debuff，套盾等
-- 增加前端和链端的战斗日志打印和战斗模拟测试功能，方便进行比对测试，战力平衡测试
-- 经济模式玩法强化：历史残局继续赚钱或者10局之后进入挑战模式轮训挑战
+- Add magic value setting, heroes can release skills after full magic value, all characters increase life value a bit, otherwise skills can't be released
+- Add character characteristics: rebound, attack, magic buff and debuff, poison, debuff, shield, etc.
+- Add battle log printing and battle simulation test functions for front-end and chain-end, which is convenient for comparison test and battle balance test.
+- Enhancement of economic mode: continue to earn money in historical games or enter challenge mode after 10 games.
 
 - gamebot telegram
 - tw, desui, withinfinity
 
-## 数据流图  
+## data flow diagram
 ![Flow](https://github.com/ISayHelloworld/autoChess/assets/43593163/31784949-6b5d-48bd-950f-92d0c4787575)
 
 
-## 匹配机制:
-1、普通模式和竞技场模式池子分离
-2、每次从global的阵容map中，根据胜败key "3-2" 随机抽一个阵容出来打，结束后把自己的阵容插入到阵容map中，当通个key的阵容数超过N(目前n=10)时，把最老的阵容替换掉，以保持持续的阵容版本更新  
+## Matching mechanism
+1、Ordinary mode and arena mode pool separation
+2、Each time from global's lineup map, according to the win/loss key “3-2” randomly draw a lineup out to play, after the end of the lineup insert their lineups into the lineup map, when the number of lineups that pass a key is more than N (at present n=10), the oldest lineup will be replaced in order to maintain a continuous update of the lineup versions  
 
-## 阵容初始化与迭代更新  
-阵容可能性排列组合  
-限制1：胜场10场后结束游戏  
-限制2：输3场后结束游戏  
-排列组合：  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/90891e9e-d68d-4674-b99f-5058e0afa4dc)  
-映射战斗力：  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/0512b642-f28f-4f45-a08d-9e005708d131)
-
-阵容人数：  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/a6559499-650a-4a02-8390-e99e13444561)  
-
-
-二三星卡抽取概率：  （优先计算三星卡，然后二星，否则一星）  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/aea10166-7fb4-4665-8c55-48031cbbe145)  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/fae6a2a6-a86b-4718-8db1-a42f3661ad24)  
-
-
-战斗力会影响阵容的随机卡牌概率  
-每种战斗力池子里随机生成n(n>5)个阵容  
-则阵容池里初始化总共包含37 * n个随机阵容  
-
-## 卡牌池  
-卡牌池只能出现1,2星卡  
-根据胜负场->战斗力，来调整卡排池出现2星卡的概率，总体来说概率需要比阵容池的概率更低。  
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/3c156d51-afac-459a-9a40-8adb0c8e8b2e)  
-
-
-## 角色信息  
-角色设计：
-下歌版本可拓展能力：
-    1、亡语设计
-    2、围绕金币运营设计
-    3、反弹
+## Role Information  
+Character Design:
+Next Song Version Expandable Abilities:
+    1, dead language design
+    2, Designed around gold operation
+    3, rebound
     4、....
 ![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/162bb486-b114-4bb7-ba4e-9daa4c1400c6)
-
-
-## 主棋盘nft包含信息  
-胜场数X-Y, owner, 金币, 当前阵容, 游戏模式  
 
 ## 竞技场经济模型模拟：
 ![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/31c658f4-b275-4e5e-a974-22a16f4523e2)  
