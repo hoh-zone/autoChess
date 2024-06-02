@@ -86,7 +86,8 @@ Next Song Version Expandable Abilities:
     2, Designed around gold operation
     3, rebound
     4、....
-![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/162bb486-b114-4bb7-ba4e-9daa4c1400c6)
+![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/c59152b3-78de-4961-86a5-11c87cb24e9c)
+
 
 ## Arena mode economic model simulation result:
 ![image](https://github.com/ISayHelloworld/autoChess/assets/43593163/31c658f4-b275-4e5e-a974-22a16f4523e2)  
