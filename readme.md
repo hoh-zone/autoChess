@@ -5,7 +5,7 @@
  - /landing-page: The entrance of official website, display the chanllenge rank
  - /move-v3: 3.0 move contract, implement randomness, items system (latest 2024-05)
  - /move-v2: 2.0 move contract, implement speed attribute, challenge mode, data tranfer, modular decoupling and account register (2024-01)
- - /move: 1.0 move contract, implement basic fight logic, charactors and lineup (2023-08)
+ - /move-v1: 1.0 move contract, implement basic fight logic, charactors and lineup (2023-08)
 
 ## 2024 Annual Goal:
 - Improve the front-end interaction experience
