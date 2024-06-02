@@ -32,34 +32,34 @@ Expected completion date 2023/11/15
 
 ----
 
-**Mainnet (5w, one week after testnet):**
+**Mainnet (one week after testnet):**
 
 Goal: Drop some money in to get some initial users that can make it fun for them and make money on the leaderboards so they can keep playing. Later on it turns out that even if we don't throw money in, there's enough money in the pool to attract players to the leaderboards.
 
 before release on mainnet. 
-- Do retweets to twitter to give away tickets (1w)
+- Do retweets to twitter to give away tickets 
     - Increase the spread by reminding users to share the link after the first game and when they get on the leaderboard: “Share the link, and make the treasury pool bigger! 10 times play, $1000 additional you earn! “
-- Separate players for different pools, more complex and secure matchmaking logic (5k)
+- Separate players for different pools, more complex and secure matchmaking logic
 - Multiple ticket prices 1, 10, 50, 100
 - Bilingual support
 
 todo.
 - Airdrop tickets to all testnet players
-- 1000 Knife Pool per day for 30 days (3w)
-- Optimize front-end functionality, provide single-step play debugging, skip battle animations, etc. (5k)
+- 1000 Knife Pool per day for 30 days
+- Optimize front-end functionality, provide single-step play debugging, skip battle animations, etc.
 - Optimize landing page, add some faqs (such as how to get on the leaderboards, how the money is calculated, etc.), more fancy leaderboards, more convenient social software sharing features.
 
 ----
 
-**V2 (10w, one month after mainnet):**
+**V2 (one month after mainnet):**
 Goal: sell nft. co-op nft. start the path to numerical inflation.
 
 todo.
-- 1000 knife jackpot per day for 30 days (3w)
+- 1000 knife jackpot per day for 30 days
 - Airdrop NFT to previous players
-- Design three heroes (NFT) (one free mint for a limited time, one co-op (e.g. BullSharks), and one for sale), front-end + contracts. (3w)
-- Rewrite front end with game engine (3w)
-- Food system (1w)
+- Design three heroes (NFT) (one free mint for a limited time, one co-op (e.g. BullSharks), and one for sale), front-end + contracts.
+- Rewrite front end with game engine
+- Food system
 
 - Help users deduct gas fee from tickets.
 
