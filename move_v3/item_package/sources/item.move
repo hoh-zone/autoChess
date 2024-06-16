@@ -44,6 +44,10 @@ module item_packagev3::item {
         vec_map::insert(&mut global.items, utf8(b"chess"), Item{name: utf8(b"chess"), effect: utf8(b"other"), duration: utf8(b"once"), range: 1, effect_value: 0, cost:3});
     }  
 
+    public fun get_items_keys(global: &Items): vector<String>{
+        global.items.keys()
+    }
+
     public fun get_item_by_name(items:&ItemsGlobal, name:&String) : Item {
         //print(&name);
         *vec_map::get(&items.items, name)
