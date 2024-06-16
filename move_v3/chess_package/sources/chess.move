@@ -58,7 +58,7 @@ module chess_packagev3::chess {
     const NUM_CHARS:u64 = 16;
     const CHAR_POOL_SIZE:u64 = 30;
 
-    struct Global has key {
+    public struct Global has key {
         id: UID,
         total_chesses: u64,
         total_battle:u64,
@@ -96,7 +96,7 @@ module chess_packagev3::chess {
     gold is a constant, it is not needed to be kept in the nft
     cards_pool: LineUp, is re-generated before each battle's operation and no need to be recorded in chess
     */
-    struct Chess has key, store {
+    public struct Chess has key, store {
         id:UID,
         name:String,
         lineup: LineUp,
@@ -114,7 +114,7 @@ module chess_packagev3::chess {
     }
 
     // one round of battle event
-    struct FightEvent has copy, drop {
+    public struct FightEvent has copy, drop {
         chess_id: address,
         v1: address,
         v1_name: String,
