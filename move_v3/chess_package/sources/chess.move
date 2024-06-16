@@ -50,6 +50,14 @@ module chess_packagev3::chess {
     const ERR_INVALID_VERSION:u64 = 0x009;
     const CURRENT_VERSION: u64 = 1;
 
+    const REFRESH_gold_cost:u8 = 2;
+    const CARDS_IN_ONE_REFRESH:u64 = 5;
+    const ITEMS_IN_ONE_REFRESH:u64 = 3;
+    const NUM_ITEMS:u64 = 10;
+    const ITEM_POOL_SIZE:u64 = 18;
+    const NUM_CHARS:u64 = 16;
+    const CHAR_POOL_SIZE:u64 = 30;
+
     struct Global has key {
         id: UID,
         total_chesses: u64,
@@ -92,8 +100,8 @@ module chess_packagev3::chess {
         id:UID,
         name:String,
         lineup: LineUp,
-        items: vector<String>,
-        cards_pool: LineUp,
+        cards_pool_roles: vector<Role>,
+        cards_pool_items: vector<Item>,
         gold: u64,
         win: u8,
         lose: u8,
@@ -140,6 +148,42 @@ module chess_packagev3::chess {
     #[test_only]
     public fun get_cards_pool(chess:&Chess): &LineUp {
         &chess.cards_pool
+    }
+
+
+    /*
+    The two functions should be in role module and item module, here only for convinence
+    */
+    // return 30 random heroes of level 1, it is created for the hero shop pool with 30 heroes
+    entry fun create_random_roles_for_cards(r:&Random, global: &role::Global, ctx:&mut TxContext): vector<Role> {
+        let mut generator = random::new_generator(r, ctx);
+        let mut roles = vector::empty<Role>();
+        let keys = global.get_chars_keys();
+        let mut i = 0;
+        while(i < CHAR_POOL_SIZE){ 
+            let role_index = random::generate_u64_in_range(&mut generator, 1, NUM_CHARS) - 1; 
+            let key = keys.borrow(role_index);
+            let role = role::get_role_by_class(global, *key);
+            roles.push_back(role);
+            i = i + 1;
+        };
+        roles
+    }
+
+    // return 18 random items, it is created for the item shop pool with 18 items
+    entry fun create_random_items_for_cards(r:&Random, global: &item::Items, ctx:&mut TxContext): vector<Item> {
+        let mut generator = random::new_generator(r, ctx);
+        let mut items = vector::empty<Item>();
+        let keys = global.get_items_keys();
+        let mut i = 0;     
+        while(i < ITEM_POOL_SIZE){ 
+            let item_index = random::generate_u64_in_range(&mut generator, 1, NUM_ITEMS) - 1;  
+            let key = keys.borrow(item_index);     
+            let item = item::get_item_by_name(global, key);
+            items.push_back(item);
+            i = i + 1;
+        };
+        items
     }
 
     // Withdraw a the 'amount' of SUI from the chess shop balance and transfer to the local account
