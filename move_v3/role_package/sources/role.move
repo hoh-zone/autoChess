@@ -155,6 +155,10 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
         }
     }
 
+    public fun get_chars_keys(global: &Global): vector<String>{
+        global.charactors.keys()
+    }
+
     //deep copy,from a borrowed role
     public fun new_role_from_reference(copy_from: &Role): Role{
         Role {
