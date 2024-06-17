@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "56309BC762E3590028D2746D3474B35F8898BBF684D6AC2ECEC0688D9C73EA68"
+manifest_digest = "0C9D2F69E8DCB8A0446680103CC7D8D58D4DCF014111EF34BE9D3F2A1617E567"
 deps_digest = "397E6A9F7A624706DBDFEE056CE88391A15876868FD18A88504DA74EB458D697"
 
 dependencies = [
@@ -15,11 +15,11 @@ dependencies = [
 
 [[move.package]]
 name = "MoveStdlib"
-source = { local = "G:\\autoChess\\framework\\move-stdlib" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/mainnet", subdir = "crates\\sui-framework\\packages\\move-stdlib" }
 
 [[move.package]]
 name = "Sui"
-source = { local = "G:\\autoChess\\framework\\sui-framework" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/mainnet", subdir = "crates/sui-framework/packages/sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -56,6 +56,14 @@ dependencies = [
 ]
 
 [move.toolchain-version]
-compiler-version = "1.20.0"
+compiler-version = "1.27.2"
 edition = "legacy"
 flavor = "sui"
+
+[env]
+
+[env.mainnet]
+chain-id = "35834a8a"
+original-published-id = "0x6fc5b39e797c23448dec88686050b0d2933dadaba397c7d9a39153cc23ad076f"
+latest-published-id = "0x6fc5b39e797c23448dec88686050b0d2933dadaba397c7d9a39153cc23ad076f"
+published-version = "1"

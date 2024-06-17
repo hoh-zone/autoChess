@@ -2,6 +2,7 @@ module item_packagev3::item {
     use std::string::{utf8, String};
     use std::debug::print;
     use std::vector;
+    use sui::transfer;
 
     use sui::tx_context::{TxContext};
     use sui::object::{UID, Self};
@@ -9,10 +10,6 @@ module item_packagev3::item {
 
     use role_packagev3::role::{Self, Role};
     use util_packagev3::utils::{Self};
-    const ITEMS_LENGTH:u64 = 3;
-
-    const ERR_EXCEED_ITEMS_LENGTH:u64 = 0x007;
-    const ERR_CHECK_ITEMS_NOT_EQUAL:u64 = 0x008;
 
     struct ItemsGlobal has key {
         id: UID,
@@ -44,8 +41,18 @@ module item_packagev3::item {
         vec_map::insert(&mut global.items, utf8(b"chess"), Item{name: utf8(b"chess"), effect: utf8(b"other"), duration: utf8(b"once"), range: 1, effect_value: 0, cost:3});
     }  
 
-    public fun get_items_keys(global: &Items): vector<String>{
-        global.items.keys()
+    fun init(ctx: &mut TxContext) {
+        let global = ItemsGlobal {
+            id: object::new(ctx),
+            items:vec_map::empty<String, Item>()
+        };
+        init_items(&mut global);
+        transfer::share_object(global);
+    }
+
+
+    public fun get_items_keys(global: &ItemsGlobal): vector<String>{
+        vec_map::keys(&global.items)
     }
 
     public fun get_item_by_name(items:&ItemsGlobal, name:&String) : Item {
@@ -197,7 +204,7 @@ module item_packagev3::item {
      }*/
 
      ////////////////////////////// Test
-     public fun generate_item_global(ctx: &mut TxContext): ItemsGlobal{
+    public fun generate_item_global(ctx: &mut TxContext): ItemsGlobal{
         let item_global = ItemsGlobal {
             id: object::new(ctx),
             items: vec_map::empty<String, Item>()

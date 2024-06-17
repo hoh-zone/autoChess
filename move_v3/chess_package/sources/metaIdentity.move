@@ -28,12 +28,9 @@ module chess_packagev3::metaIdentity {
     const EXP_LEVEL8:u64 = 500;
     const EXP_LEVEL9:u64 = 600;
     const EXP_LEVEL10:u64 = 1000;
-
-    const LAST_SEASON:u64 = 1;
     const CURRENT_SEASON:u64 = 2;
     const INIT_META_ID_INDEX:u64 = 11000;
     const ERR_NOT_PERMISSION:u64 = 0x01;
-    const LAST_SEASON_REWARD_PER_INVITE:u64 = 30_000_000;
     const CURRENT_VERSION:u64 = 1;
 
     struct MetaIdentity has key {
@@ -144,44 +141,6 @@ module chess_packagev3::metaIdentity {
             manager: @manager
         };
         transfer::share_object(global);
-    }
-
-    public fun clone_meta_from_old_package(oldMeta: chess_package_main::metaIdentity::MetaIdentity, oldMetaGlobal: &mut chess_package_main::metaIdentity::MetaInfoGlobal, 
-        global: &mut MetaInfoGlobal, rewardsGlobal: &mut RewardsGlobal, ctx:&mut TxContext) {
-        let uid = object::new(ctx);
-        let sender = tx_context::sender(ctx);
-        assert!(!table::contains(&global.wallet_meta_map, sender), ERR_ALREADY_BIND);
-        let meta_addr = object::uid_to_address(&uid);
-        table::add(&mut global.wallet_meta_map, sender, meta_addr);
-        let metaId = chess_package_main::metaIdentity::get_metaId(&oldMeta);
-        let best_rank_table = table::new<u64, u64>(ctx);       
-        let best_rank = chess_package_main::metaIdentity::query_best_rank_by_season(&mut oldMeta, LAST_SEASON);
-        table::add(&mut best_rank_table, LAST_SEASON, best_rank);
-        let meta = MetaIdentity {
-            id:uid,
-            metaId: metaId,
-            name: chess_package_main::metaIdentity::get_name(&oldMeta),
-            wallet_addr: sender,
-            level: chess_package_main::metaIdentity::get_level(&oldMeta),
-            exp: chess_package_main::metaIdentity::get_exp(&oldMeta),
-            total_arena_win: chess_package_main::metaIdentity::get_arena_win(&oldMeta),
-            total_arena_lose: chess_package_main::metaIdentity::get_arena_lose(&oldMeta),
-            avatar_name: chess_package_main::metaIdentity::get_avatar_name(&oldMeta),
-            best_rank_map: best_rank_table,
-            init_gold: 0,
-            ability1: string::utf8(b""),
-            ability2: string::utf8(b""),
-            ability3: string::utf8(b""),
-            ability4: string::utf8(b""),
-            ability5: string::utf8(b""),
-            inviterMetaId: chess_package_main::metaIdentity::get_invited_metaId(&oldMeta)
-        };
-        let last_season_invited_num = chess_package_main::metaIdentity::query_invited_num(oldMetaGlobal, metaId);
-        let last_season_diff_mount = last_season_invited_num * LAST_SEASON_REWARD_PER_INVITE;
-        add_invite_reward_amount(rewardsGlobal, metaId, last_season_diff_mount);
-        global.total_players = global.total_players + 1;
-        transfer::transfer(meta, sender);
-        chess_package_main::metaIdentity::burn_meta(oldMeta);
     }
 
     public fun top_up_rewards_pool(global:&mut RewardsGlobal, balance:Balance<SUI>, inviter_meta_id:u64, sui_value:u64) {

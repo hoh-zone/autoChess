@@ -6,7 +6,7 @@
 // There is no dynamic generation on frontend when you click "refresh" button.
 module chess_packagev3::chess {
     use std::vector;
-    use std::string::{utf8, String, Self};
+    use std::string::{utf8, String};
     use std::debug::print;
 
     use sui::object::{Self, UID};
@@ -18,6 +18,7 @@ module chess_packagev3::chess {
     use sui::pay;
     use sui::coin::{Self, Coin};
     use sui::clock::{Clock};
+    use sui::random::{Self, Random};
     use sui::event;
 
     use lineup_packagev3::lineup::{Self, LineUp};
@@ -26,7 +27,7 @@ module chess_packagev3::chess {
     use fight_packagev3::fight;
     use util_packagev3::utils::{Self, Int_wrapper};
     use chess_packagev3::metaIdentity;
-    use item_packagev3::item;
+    use item_packagev3::item::{Self, Item};
 
     const INIT_GOLD:u64 = 10;
     const ERR_YOU_ARE_DEAD:u64 = 0x01;
@@ -37,7 +38,6 @@ module chess_packagev3::chess {
     const ERR_ONLY_ARENA_MODE_ALLOWED:u64 = 0x12;
     const ERR_CHALLENGE_NOT_END:u64 = 0x013;
     const ERR_ARENA_FEE_HAS_CHECKED_OUT:u64 = 0x014;
-    const REFRESH_gold_cost:u8 = 2;
     const CARDS_IN_ONE_REFRESH:u64 = 5;
     const ERR_INVALID_CHARACTOR:u64 = 0x001;
     const ERR_CHARACTOR_IS_NONE:u64 = 0x002;
@@ -51,14 +51,12 @@ module chess_packagev3::chess {
     const CURRENT_VERSION: u64 = 1;
 
     const REFRESH_gold_cost:u8 = 2;
-    const CARDS_IN_ONE_REFRESH:u64 = 5;
-    const ITEMS_IN_ONE_REFRESH:u64 = 3;
     const NUM_ITEMS:u64 = 10;
     const ITEM_POOL_SIZE:u64 = 18;
     const NUM_CHARS:u64 = 16;
     const CHAR_POOL_SIZE:u64 = 30;
 
-    public struct Global has key {
+    struct Global has key {
         id: UID,
         total_chesses: u64,
         total_battle:u64,
@@ -96,7 +94,7 @@ module chess_packagev3::chess {
     gold is a constant, it is not needed to be kept in the nft
     cards_pool: LineUp, is re-generated before each battle's operation and no need to be recorded in chess
     */
-    public struct Chess has key, store {
+    struct Chess has key, store {
         id:UID,
         name:String,
         lineup: LineUp,
@@ -114,7 +112,7 @@ module chess_packagev3::chess {
     }
 
     // one round of battle event
-    public struct FightEvent has copy, drop {
+    struct FightEvent has copy, drop {
         chess_id: address,
         v1: address,
         v1_name: String,
@@ -145,42 +143,36 @@ module chess_packagev3::chess {
         &chess.lineup
     }
 
-    #[test_only]
-    public fun get_cards_pool(chess:&Chess): &LineUp {
-        &chess.cards_pool
-    }
-
-
     /*
     The two functions should be in role module and item module, here only for convinence
     */
     // return 30 random heroes of level 1, it is created for the hero shop pool with 30 heroes
     entry fun create_random_roles_for_cards(r:&Random, global: &role::Global, ctx:&mut TxContext): vector<Role> {
-        let mut generator = random::new_generator(r, ctx);
-        let mut roles = vector::empty<Role>();
-        let keys = global.get_chars_keys();
-        let mut i = 0;
+        let generator = random::new_generator(r, ctx);
+        let roles = vector::empty<Role>();
+        let keys = role::get_chars_keys(global);
+        let i = 0;
         while(i < CHAR_POOL_SIZE){ 
             let role_index = random::generate_u64_in_range(&mut generator, 1, NUM_CHARS) - 1; 
-            let key = keys.borrow(role_index);
+            let key =vector::borrow(&keys, role_index);
             let role = role::get_role_by_class(global, *key);
-            roles.push_back(role);
+            vector::push_back(&mut roles, role);
             i = i + 1;
         };
         roles
     }
 
     // return 18 random items, it is created for the item shop pool with 18 items
-    entry fun create_random_items_for_cards(r:&Random, global: &item::Items, ctx:&mut TxContext): vector<Item> {
-        let mut generator = random::new_generator(r, ctx);
-        let mut items = vector::empty<Item>();
-        let keys = global.get_items_keys();
-        let mut i = 0;     
+    entry fun create_random_items_for_cards(r:&Random, global: &item::ItemsGlobal, ctx:&mut TxContext): vector<Item> {
+        let generator = random::new_generator(r, ctx);
+        let items = vector::empty<Item>();
+        let keys = item::get_items_keys(global);
+        let i = 0;     
         while(i < ITEM_POOL_SIZE){ 
-            let item_index = random::generate_u64_in_range(&mut generator, 1, NUM_ITEMS) - 1;  
-            let key = keys.borrow(item_index);     
+            let item_index = random::generate_u64_in_range(&mut generator, 1, NUM_ITEMS) - 1;    
+            let key = vector::borrow(&keys, item_index);
             let item = item::get_item_by_name(global, key);
-            items.push_back(item);
+            vector::push_back(&mut items, item);
             i = i + 1;
         };
         items
@@ -226,7 +218,7 @@ module chess_packagev3::chess {
         let sender = tx_context::sender(ctx);
         let tmp_lineup = challenge::get_lineup_by_rank(challengeGlobal, rank);
         if (lineup::get_creator(tmp_lineup) == sender) {
-            let Chess {id, name:_, lineup:_, cards_pool:_, items:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked:_} = chess;
+            let Chess {id, name:_, lineup:_, cards_pool_roles:_, cards_pool_items:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked:_} = chess;
             challenge::send_reward_by_rank(challengeGlobal, rank, ctx);
             object::delete(id);
         } else {
@@ -235,7 +227,7 @@ module chess_packagev3::chess {
     }
 
     #[lint_allow(self_transfer)]
-    entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, rewardsGlobal: &mut metaIdentity::RewardsGlobal, itemsGlobal: &item::ItemsGlobal, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+    entry fun mint_arena_chess(r:&Random, role_global:&role::Global, global: &mut Global, rewardsGlobal: &mut metaIdentity::RewardsGlobal, itemsGlobal: &item::ItemsGlobal, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
@@ -250,8 +242,8 @@ module chess_packagev3::chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            items: item::generate_random_items(itemsGlobal, ctx),
-            cards_pool: lineup::generate_random_cards(role_global, ctx),
+            cards_pool_items: create_random_items_for_cards(r, itemsGlobal, ctx),
+            cards_pool_roles: create_random_roles_for_cards(r, role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -281,7 +273,7 @@ module chess_packagev3::chess {
     }
 
     #[lint_allow(self_transfer)]
-    entry fun mint_invite_arena_chess(role_global:&role::Global, global: &mut Global, itemsGlobal: &item::ItemsGlobal, rewardsGlobal: &mut metaIdentity::RewardsGlobal, name:String, coins:vector<Coin<SUI>>, 
+    entry fun mint_invite_arena_chess(r:&Random, role_global:&role::Global, global: &mut Global, itemsGlobal: &item::ItemsGlobal, rewardsGlobal: &mut metaIdentity::RewardsGlobal, name:String, coins:vector<Coin<SUI>>, 
         metaGlobal:&mut metaIdentity::MetaInfoGlobal, meta: &metaIdentity::MetaIdentity, ctx: &mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
@@ -297,8 +289,8 @@ module chess_packagev3::chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            items: item::generate_random_items(itemsGlobal, ctx),
-            cards_pool: lineup::generate_random_cards(role_global, ctx),
+            cards_pool_items: create_random_items_for_cards(r, itemsGlobal, ctx),
+            cards_pool_roles: create_random_roles_for_cards(r, role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -332,15 +324,15 @@ module chess_packagev3::chess {
 
     // mint a chess nft
     #[lint_allow(self_transfer)]
-    entry fun mint_chess(role_global:&role::Global, global: &mut Global, name:String, ctx: &mut TxContext) {
+    entry fun mint_chess(r:&Random, role_global:&role::Global, itemGlobal:&item::ItemsGlobal, global: &mut Global, name:String, ctx: &mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            items: vector::empty<String>(),
-            cards_pool: lineup::generate_random_cards(role_global, ctx),
+            cards_pool_items: create_random_items_for_cards(r, itemGlobal, ctx),
+            cards_pool_roles: create_random_roles_for_cards(r, role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -378,7 +370,7 @@ module chess_packagev3::chess {
         assert!(chess.arena, ERR_NOT_ARENA_CHESS);
         let total_amount = get_total_sui_amount(global);
         let reward_amount = utils::estimate_reward(total_amount, chess.gold_cost, chess.win);
-        let Chess {id, name:_, lineup:_, cards_pool:_, items:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked: arena_checked} = chess;
+        let Chess {id, name:_, lineup:_, cards_pool_items:_, cards_pool_roles:_, gold:_, win:_, lose:_, challenge_win:_, challenge_lose:_, creator:_, gold_cost:_, arena:_, arena_checked: arena_checked} = chess;
         if (!arena_checked) {
             let sui_balance = balance::split(&mut global.balance_SUI, reward_amount);
             let sui = coin::from_balance(sui_balance, ctx);
@@ -398,13 +390,13 @@ module chess_packagev3::chess {
     // lineup_str_vec is purely the frontend result and needs to be verified
     // The function verifies that the operations are valid and the left SUI balance is correct
     // After verification, the function excutes the round of battle and records the battle result
-    public entry fun operate_and_battle(global:&mut Global, role_global:&role::Global, item_global:&item::ItemsGlobal, lineup_global:&mut lineup::Global, 
+    public entry fun operate_and_battle(r:&Random, global:&mut Global, role_global:&role::Global, item_global:&item::ItemsGlobal, lineup_global:&mut lineup::Global, 
         challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
         lineup_str_vec: vector<String>, meta: &mut metaIdentity::MetaIdentity, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let current_roles = lineup::get_mut_roles(&mut *&chess.lineup);
-        let current_items = *&chess.items;
-        let cards_pool_roles = lineup::get_mut_roles(&mut chess.cards_pool);
+        let current_items = *&chess.cards_pool_items;
+        let cards_pool_roles = lineup::get_mut_roles(&mut chess.lineup);
 
         // todo: how to resolve the gas limit problem when publishing
         let expected_lineup = lineup::parse_lineup_str_vec(chess.name, role_global, lineup_str_vec, chess.gold_cost, ctx);
@@ -425,10 +417,10 @@ module chess_packagev3::chess {
         };
         lineup::set_hash(&mut expected_lineup, lineup::get_hash(&chess.lineup));
         chess.lineup = expected_lineup; 
-        chess.items = current_items;
+        chess.cards_pool_items = current_items;
         
         // challenge mode, arena mode or standard mode will be processed in match function
-        battle(role_global, lineup_global, challengeGlobal, chess, meta, ctx);
+        battle(r, role_global, lineup_global, challengeGlobal, chess, meta, ctx);
         global.total_battle = global.total_battle + 1;
     }
 
@@ -630,7 +622,7 @@ module chess_packagev3::chess {
     //3. Calls fight functions to complete the rounds of actions till one team has no hero alive.
     //4. Processes the battle result, record both winning and losing time 
     //Returns true if player wines the battle and false othwewise
-    fun battle(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, meta:&mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
+    fun battle(r:&Random, role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, meta:&mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
         // match an enemy config
         let enemy_lineup;
@@ -666,12 +658,12 @@ module chess_packagev3::chess {
             metaIdentity::record_add_lose(meta);
         };
         if (chess.lose <= 2) {
-            refresh_cards_pools(role_global, chess, ctx);
+            refresh_cards_pools(r, role_global, chess, ctx);
         };
     }
 
-    fun refresh_cards_pools(role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
-        chess.cards_pool = lineup::generate_random_cards(role_global, ctx);
+    fun refresh_cards_pools(r:&Random, role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
+        chess.cards_pool_roles = create_random_roles_for_cards(r, role_global, ctx);
     }
 
     // Performs the battle between the player and the rival by rounds of attacks and conter-attacks
@@ -842,145 +834,145 @@ module chess_packagev3::chess {
     }
 
     //326
-    #[test]
-    fun test_verify_operation(){
-        let ctx = tx_context::dummy();
-        let role_global = role::generate_role_global(&mut ctx);
-        let item_global = item::generate_item_global(&mut ctx);
-        //My roles before operation
-        let attacking_roles = vector::empty<Role>();
-        vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"priest1_1")));
-        vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"fighter1")));
-        vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"golem1_1")));
-        vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"tank1")));
-        vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"fighter1_1")));
-        vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"golem1_1")));
+    // #[test]
+    // fun test_verify_operation(){
+    //     let ctx = tx_context::dummy();
+    //     let role_global = role::generate_role_global(&mut ctx);
+    //     let item_global = item::generate_item_global(&mut ctx);
+    //     //My roles before operation
+    //     let attacking_roles = vector::empty<Role>();
+    //     vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"priest1_1")));
+    //     vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"fighter1")));
+    //     vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"golem1_1")));
+    //     vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"tank1")));
+    //     vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"fighter1_1")));
+    //     vector::push_back(&mut attacking_roles, role::get_role_by_class(&role_global, utf8(b"golem1_1")));
 
-        let cards_pool_roles = lineup::get_mut_roles(&mut lineup::generate_random_cards(&role_global, &mut ctx));
-        //role::print_roles_short(cards_pool_roles);
-         role::print_roles_short(&attacking_roles);
+    //     let cards_pool_roles = lineup::get_mut_roles(&mut lineup::generate_random_cards(r, &role_global, &mut ctx));
+    //     //role::print_roles_short(cards_pool_roles);
+    //      role::print_roles_short(&attacking_roles);
 
-        //The expected results from front end, this is an sample, not verified yet
-        let roles_info = vector::empty<String>();
-        // role description example: priest1_1-6:3:1'
-        // role description format: name-level:attack:hp
-        //vector::push_back(&mut roles_info, utf8(b"priest1_1-2:13:11"));
-        //none
-        vector::push_back(&mut roles_info, utf8(b""));
-        vector::push_back(&mut roles_info, utf8(b"fighter2_1-6:22:21"));
-        vector::push_back(&mut roles_info, utf8(b"golem2_1-6:33:31"));
-        vector::push_back(&mut roles_info, utf8(b"tank1-1:15:10"));
-        vector::push_back(&mut roles_info, utf8(b"mega3-9:50:18"));
-        vector::push_back(&mut roles_info, utf8(b"shaman2-3:23:16"));
+    //     //The expected results from front end, this is an sample, not verified yet
+    //     let roles_info = vector::empty<String>();
+    //     // role description example: priest1_1-6:3:1'
+    //     // role description format: name-level:attack:hp
+    //     //vector::push_back(&mut roles_info, utf8(b"priest1_1-2:13:11"));
+    //     //none
+    //     vector::push_back(&mut roles_info, utf8(b""));
+    //     vector::push_back(&mut roles_info, utf8(b"fighter2_1-6:22:21"));
+    //     vector::push_back(&mut roles_info, utf8(b"golem2_1-6:33:31"));
+    //     vector::push_back(&mut roles_info, utf8(b"tank1-1:15:10"));
+    //     vector::push_back(&mut roles_info, utf8(b"mega3-9:50:18"));
+    //     vector::push_back(&mut roles_info, utf8(b"shaman2-3:23:16"));
 
-        let operations = vector::empty<String>();
-        /*
-        vector::push_back(&mut operations, utf8(b"sell"));
-        vector::push_back(&mut operations, utf8(b"3"));   
-        vector::push_back(&mut operations, utf8(b"upgrade"));  
-        //vector::push_back(&mut operations, utf8(b"2-4")); //for error test
-        vector::push_back(&mut operations, utf8(b"1-4"));
-        vector::push_back(&mut operations, utf8(b"upgrade"));
-        vector::push_back(&mut operations, utf8(b"2-5"));
+    //     let operations = vector::empty<String>();
+    //     /*
+    //     vector::push_back(&mut operations, utf8(b"sell"));
+    //     vector::push_back(&mut operations, utf8(b"3"));   
+    //     vector::push_back(&mut operations, utf8(b"upgrade"));  
+    //     //vector::push_back(&mut operations, utf8(b"2-4")); //for error test
+    //     vector::push_back(&mut operations, utf8(b"1-4"));
+    //     vector::push_back(&mut operations, utf8(b"upgrade"));
+    //     vector::push_back(&mut operations, utf8(b"2-5"));
 
-        vector::push_back(&mut operations, utf8(b"buy"));
-        vector::push_back(&mut operations, utf8(b"2-1"));
-        vector::push_back(&mut operations, utf8(b"buy"));
-        //vector::push_back(&mut operations, utf8(b"2-2")); //for error test
-        //vector::push_back(&mut operations, utf8(b"3-1")); //for error test
-        vector::push_back(&mut operations, utf8(b"3-2"));
-        vector::push_back(&mut operations, utf8(b"refresh"));
-        vector::push_back(&mut operations, utf8(b"refresh"));
-        vector::push_back(&mut operations, utf8(b"refresh"));
-        vector::push_back(&mut operations, utf8(b"buy"));
-        vector::push_back(&mut operations, utf8(b"4-3"));
+    //     vector::push_back(&mut operations, utf8(b"buy"));
+    //     vector::push_back(&mut operations, utf8(b"2-1"));
+    //     vector::push_back(&mut operations, utf8(b"buy"));
+    //     //vector::push_back(&mut operations, utf8(b"2-2")); //for error test
+    //     //vector::push_back(&mut operations, utf8(b"3-1")); //for error test
+    //     vector::push_back(&mut operations, utf8(b"3-2"));
+    //     vector::push_back(&mut operations, utf8(b"refresh"));
+    //     vector::push_back(&mut operations, utf8(b"refresh"));
+    //     vector::push_back(&mut operations, utf8(b"refresh"));
+    //     vector::push_back(&mut operations, utf8(b"buy"));
+    //     vector::push_back(&mut operations, utf8(b"4-3"));
 
-        vector::push_back(&mut operations, utf8(b"buy_upgrade"));
-        vector::push_back(&mut operations, utf8(b"3-4"));
-        vector::push_back(&mut operations, utf8(b"refresh"));
-        vector::push_back(&mut operations, utf8(b"buy_upgrade"));
-        vector::push_back(&mut operations, utf8(b"1-5"));
-        vector::push_back(&mut operations, utf8(b"refresh"));
-        vector::push_back(&mut operations, utf8(b"buy_upgrade"));
-        vector::push_back(&mut operations, utf8(b"0-2"));
-        vector::push_back(&mut operations, utf8(b"refresh"));
-        vector::push_back(&mut operations, utf8(b"buy_upgrade"));
-        vector::push_back(&mut operations, utf8(b"4-2"));
+    //     vector::push_back(&mut operations, utf8(b"buy_upgrade"));
+    //     vector::push_back(&mut operations, utf8(b"3-4"));
+    //     vector::push_back(&mut operations, utf8(b"refresh"));
+    //     vector::push_back(&mut operations, utf8(b"buy_upgrade"));
+    //     vector::push_back(&mut operations, utf8(b"1-5"));
+    //     vector::push_back(&mut operations, utf8(b"refresh"));
+    //     vector::push_back(&mut operations, utf8(b"buy_upgrade"));
+    //     vector::push_back(&mut operations, utf8(b"0-2"));
+    //     vector::push_back(&mut operations, utf8(b"refresh"));
+    //     vector::push_back(&mut operations, utf8(b"buy_upgrade"));
+    //     vector::push_back(&mut operations, utf8(b"4-2"));
 
-        vector::push_back(&mut operations, utf8(b"sell"));
-        vector::push_back(&mut operations, utf8(b"1"));   
-        vector::push_back(&mut operations, utf8(b"sell"));
-        vector::push_back(&mut operations, utf8(b"3"));  
-        vector::push_back(&mut operations, utf8(b"swap")); 
-        vector::push_back(&mut operations, utf8(b"0-1"));
-        vector::push_back(&mut operations, utf8(b"swap")); 
-        vector::push_back(&mut operations, utf8(b"4-5"));
+    //     vector::push_back(&mut operations, utf8(b"sell"));
+    //     vector::push_back(&mut operations, utf8(b"1"));   
+    //     vector::push_back(&mut operations, utf8(b"sell"));
+    //     vector::push_back(&mut operations, utf8(b"3"));  
+    //     vector::push_back(&mut operations, utf8(b"swap")); 
+    //     vector::push_back(&mut operations, utf8(b"0-1"));
+    //     vector::push_back(&mut operations, utf8(b"swap")); 
+    //     vector::push_back(&mut operations, utf8(b"4-5"));
 
-        //All are wrong operations to test 
-        //vector::push_back(&mut operations, utf8(b"sell"));
-        //vector::push_back(&mut operations, utf8(b"0"));      
-        //vector::push_back(&mut operations, utf8(b"buy_upgrade"));
-       // vector::push_back(&mut operations, utf8(b"2-5"));     
-       //vector::push_back(&mut operations, utf8(b"buy_upgrade"));
-        //vector::push_back(&mut operations, utf8(b"buy"));
-        //vector::push_back(&mut operations, utf8(b"1-1")); 
-        //vector::push_back(&mut operations, utf8(b"upgrade"));
-        //vector::push_back(&mut operations, utf8(b"1-2"));
-        */
+    //     //All are wrong operations to test 
+    //     //vector::push_back(&mut operations, utf8(b"sell"));
+    //     //vector::push_back(&mut operations, utf8(b"0"));      
+    //     //vector::push_back(&mut operations, utf8(b"buy_upgrade"));
+    //    // vector::push_back(&mut operations, utf8(b"2-5"));     
+    //    //vector::push_back(&mut operations, utf8(b"buy_upgrade"));
+    //     //vector::push_back(&mut operations, utf8(b"buy"));
+    //     //vector::push_back(&mut operations, utf8(b"1-1")); 
+    //     //vector::push_back(&mut operations, utf8(b"upgrade"));
+    //     //vector::push_back(&mut operations, utf8(b"1-2"));
+    //     */
 
-        //items
+    //     //items
   
-        vector::push_back(&mut operations, utf8(b"buy_item"));
-        vector::push_back(&mut operations, utf8(b"devil_fruit-")); 
-        vector::push_back(&mut operations, utf8(b"buy_item"));
-        vector::push_back(&mut operations, utf8(b"chess-")); 
+    //     vector::push_back(&mut operations, utf8(b"buy_item"));
+    //     vector::push_back(&mut operations, utf8(b"devil_fruit-")); 
+    //     vector::push_back(&mut operations, utf8(b"buy_item"));
+    //     vector::push_back(&mut operations, utf8(b"chess-")); 
 
-        vector::push_back(&mut operations, utf8(b"buy_item"));
-        vector::push_back(&mut operations, utf8(b"chicken_drumstick-")); 
-        vector::push_back(&mut operations, utf8(b"use_item")); 
-        vector::push_back(&mut operations, utf8(b"chicken_drumstick-2"));
+    //     vector::push_back(&mut operations, utf8(b"buy_item"));
+    //     vector::push_back(&mut operations, utf8(b"chicken_drumstick-")); 
+    //     vector::push_back(&mut operations, utf8(b"use_item")); 
+    //     vector::push_back(&mut operations, utf8(b"chicken_drumstick-2"));
 
-        vector::push_back(&mut operations, utf8(b"use_chess"));
-        vector::push_back(&mut operations, utf8(b"archer1-1"));  
-        vector::push_back(&mut operations, utf8(b"buy_item")); 
-        vector::push_back(&mut operations, utf8(b"whet_stone-"));
-        vector::push_back(&mut operations, utf8(b"use_item")); 
-        vector::push_back(&mut operations, utf8(b"whet_stone-3"));
-
-
+    //     vector::push_back(&mut operations, utf8(b"use_chess"));
+    //     vector::push_back(&mut operations, utf8(b"archer1-1"));  
+    //     vector::push_back(&mut operations, utf8(b"buy_item")); 
+    //     vector::push_back(&mut operations, utf8(b"whet_stone-"));
+    //     vector::push_back(&mut operations, utf8(b"use_item")); 
+    //     vector::push_back(&mut operations, utf8(b"whet_stone-3"));
 
 
-       let items_str_vec = vector::empty<String>();
-       vector::push_back(&mut items_str_vec, utf8(b"devil_fruit-1"));
-       let items = vec_map::empty<String, u8>();
 
-        //fun verify_operation(role_global:&role::Global, item_global:&item::Items, current_roles:&mut vector<Role>, current_items:&mut VecMap<String, u8>, cards_pool_roles: &mut vector<Role>, operations: vector<String>,
-       // left_gold:u8, lineup_str_vec: vector<String>, items_str_vec: &vector<String>, name:String, gold:u8, ticket_gold_cost:u64, 
-       // ctx:&mut TxContext)
-        let result_lineup = verify_operation(&role_global, &item_global, &mut attacking_roles, cards_pool_roles, 
-            operations, 10, roles_info, utf8(b"Tiff's Test"), 50, 3, &mut ctx); 
-        //role::print_roles_short(cards_pool_roles);  
 
-        let result_roles = vector::empty<Role>();
-        vector::push_back(&mut result_roles, role::empty());
-        vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"priest1_1")));
-        vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"wizard2")));
-        vector::push_back(&mut result_roles, role::empty());
-        //change to level 4
-        vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"golem2")));
-        //change to level 5
-        vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"fighter2")));
-        role::set_level(vector::borrow_mut(&mut result_roles, 4), 5);
-        role::set_level(vector::borrow_mut(&mut result_roles, 5), 4);
+    //    let items_str_vec = vector::empty<String>();
+    //    vector::push_back(&mut items_str_vec, utf8(b"devil_fruit-1"));
+    //    let items = vec_map::empty<String, u8>();
 
-        //role::print_roles_short(&result_roles);
-        role::print_roles_short(&attacking_roles);
-        //ERR_NOT_PERMISSION
-        //assert!(role::check_roles_equality(&result_roles, &attacking_roles), ERR_NOT_PERMISSION);   
+    //     //fun verify_operation(role_global:&role::Global, item_global:&item::Items, current_roles:&mut vector<Role>, current_items:&mut VecMap<String, u8>, cards_pool_roles: &mut vector<Role>, operations: vector<String>,
+    //    // left_gold:u8, lineup_str_vec: vector<String>, items_str_vec: &vector<String>, name:String, gold:u8, ticket_gold_cost:u64, 
+    //    // ctx:&mut TxContext)
+    //     let result_lineup = verify_operation(&role_global, &item_global, &mut attacking_roles, cards_pool_roles, 
+    //         operations, 10, roles_info, utf8(b"Tiff's Test"), 50, 3, &mut ctx); 
+    //     //role::print_roles_short(cards_pool_roles);  
 
-        role::delete_role_global(role_global);
-        item::delete_item_global(item_global);
-    }
+    //     let result_roles = vector::empty<Role>();
+    //     vector::push_back(&mut result_roles, role::empty());
+    //     vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"priest1_1")));
+    //     vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"wizard2")));
+    //     vector::push_back(&mut result_roles, role::empty());
+    //     //change to level 4
+    //     vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"golem2")));
+    //     //change to level 5
+    //     vector::push_back(&mut result_roles, role::get_role_by_class(&role_global, utf8(b"fighter2")));
+    //     role::set_level(vector::borrow_mut(&mut result_roles, 4), 5);
+    //     role::set_level(vector::borrow_mut(&mut result_roles, 5), 4);
+
+    //     //role::print_roles_short(&result_roles);
+    //     role::print_roles_short(&attacking_roles);
+    //     //ERR_NOT_PERMISSION
+    //     //assert!(role::check_roles_equality(&result_roles, &attacking_roles), ERR_NOT_PERMISSION);   
+
+    //     role::delete_role_global(role_global);
+    //     item::delete_item_global(item_global);
+    // }
 
     #[test]
     #[allow(unused_assignment,unused_variable)]

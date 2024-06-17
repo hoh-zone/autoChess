@@ -6,7 +6,7 @@
 module role_packagev3::role {
     use std::string::{Self, utf8, String};
     use std::debug::print;
-    use std::vector;
+    use std::vector::{Self};
 
     use sui::tx_context::{TxContext};
     use sui::object::{UID, Self};
@@ -156,7 +156,7 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
     }
 
     public fun get_chars_keys(global: &Global): vector<String>{
-        global.charactors.keys()
+        vec_map::keys(&global.charactors)
     }
 
     //deep copy,from a borrowed role
@@ -324,26 +324,26 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
     // p2 = 35 * power; p3 = 0 or 2 times power when power >16
     // higher p3 is more likely to get a level 9 charactor
     // higher p2 is more likely to get a level 3 charactor
-    entry fun get_random_role_by_power(global: &Global, r:&Random, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
-        let mut generator = random::new_generator(r, ctx); 
-        random::generate_u64_in_range(&mut generator, 0, 1000);
-        if (random < p3) {
+    public entry fun get_random_role_by_power(global: &Global, r:&Random, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
+        let generator = random::new_generator(r, ctx); 
+        let randomNum = random::generate_u64_in_range(&mut generator, 0, 1000);
+        if (randomNum < p3) {
             //print(&utf8(b"level 9 will be chosen"));
-            get_random_role_by_level(global, 9, random, ctx)
-        } else if (random < p2) {
+            get_random_role_by_level(global, 9, randomNum, ctx)
+        } else if (randomNum < p2) {
             //print(&utf8(b"level 3 will be chosen"));
-            get_random_role_by_level(global, 3, random, ctx)
+            get_random_role_by_level(global, 3, randomNum, ctx)
         } else {
             //print(&utf8(b"level 1 will be chosen"));
-            get_random_role_by_level(global, 1, random, ctx)
+            get_random_role_by_level(global, 1, randomNum, ctx)
         }
     }
 
     // return a random class charactor of level 1, it is created for the basic hero pool with 30 heros
-    entry fun create_random_role_for_cards(global: &Global, r:&Random, ctx: &mut TxContext) : Role {
-        let mut generator = random::new_generator(r, ctx); 
-        random::generate_u64_in_range(&mut generator, 0, 1000);
-        get_random_role_by_level(global, 1, random, ctx)
+    public entry fun create_random_role_for_cards(global: &Global, r:&Random, ctx: &mut TxContext) : Role {
+        let generator = random::new_generator(r, ctx); 
+        let randomNum = random::generate_u64_in_range(&mut generator, 0, 1000);
+        get_random_role_by_level(global, 1, randomNum, ctx)
     }
     
     //changed a lot

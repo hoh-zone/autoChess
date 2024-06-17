@@ -2,14 +2,13 @@
 
 [move]
 version = 0
-manifest_digest = "88B1D9513FCA6483211065AB6D9B85A8858822050233C16860147438D5F0D49B"
-deps_digest = "8227D341C0550A37580C10FA45FE148A465225149C69D179737E0FE454AD6AEC"
+manifest_digest = "B0190AD1170D43215DC0EB3489E413C0DEDB3D721FDB9F2022A5E05534B697DD"
+deps_digest = "04732BFEF428F74DE262001DC455D76B909EBC394B034A9A15CC095E4BDD9CEF"
 
 dependencies = [
   { name = "MoveStdlib" },
   { name = "Sui" },
   { name = "challenge_packagev3" },
-  { name = "chess_package_main" },
   { name = "fight_packagev3" },
   { name = "item_packagev3" },
   { name = "lineup_packagev3" },
@@ -19,11 +18,11 @@ dependencies = [
 
 [[move.package]]
 name = "MoveStdlib"
-source = { local = "G:\\autoChess\\framework\\move-stdlib" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/mainnet", subdir = "crates\\sui-framework\\packages\\move-stdlib" }
 
 [[move.package]]
 name = "Sui"
-source = { local = "G:\\autoChess\\framework\\sui-framework" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/mainnet", subdir = "crates/sui-framework/packages/sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -39,32 +38,6 @@ dependencies = [
   { name = "lineup_packagev3" },
   { name = "role_packagev3" },
   { name = "util_packagev3" },
-]
-
-[[move.package]]
-name = "chess_package_main"
-source = { local = "G:\\autoChess\\move_v1\\chess_package_main" }
-
-dependencies = [
-  { name = "MoveStdlib" },
-  { name = "Sui" },
-  { name = "fight_package" },
-  { name = "lineup_package" },
-  { name = "role_package" },
-  { name = "util_package" },
-  { name = "verify_package" },
-]
-
-[[move.package]]
-name = "fight_package"
-source = { local = "G:\\autoChess\\move_v1\\fight_package" }
-
-dependencies = [
-  { name = "MoveStdlib" },
-  { name = "Sui" },
-  { name = "lineup_package" },
-  { name = "role_package" },
-  { name = "util_package" },
 ]
 
 [[move.package]]
@@ -90,17 +63,6 @@ dependencies = [
 ]
 
 [[move.package]]
-name = "lineup_package"
-source = { local = "G:\\autoChess\\move_v1\\lineup_package" }
-
-dependencies = [
-  { name = "MoveStdlib" },
-  { name = "Sui" },
-  { name = "role_package" },
-  { name = "util_package" },
-]
-
-[[move.package]]
 name = "lineup_packagev3"
 source = { local = "G:\\autoChess\\move_v3\\lineup_package" }
 
@@ -109,16 +71,6 @@ dependencies = [
   { name = "Sui" },
   { name = "role_packagev3" },
   { name = "util_packagev3" },
-]
-
-[[move.package]]
-name = "role_package"
-source = { local = "G:\\autoChess\\move_v1\\role_package" }
-
-dependencies = [
-  { name = "MoveStdlib" },
-  { name = "Sui" },
-  { name = "util_package" },
 ]
 
 [[move.package]]
@@ -132,15 +84,6 @@ dependencies = [
 ]
 
 [[move.package]]
-name = "util_package"
-source = { local = "G:\\autoChess\\move_v1\\util_package" }
-
-dependencies = [
-  { name = "MoveStdlib" },
-  { name = "Sui" },
-]
-
-[[move.package]]
 name = "util_packagev3"
 source = { local = "G:\\autoChess\\move_v3\\util_package" }
 
@@ -149,19 +92,15 @@ dependencies = [
   { name = "Sui" },
 ]
 
-[[move.package]]
-name = "verify_package"
-source = { local = "G:\\autoChess\\move_v1\\verify_package" }
-
-dependencies = [
-  { name = "MoveStdlib" },
-  { name = "Sui" },
-  { name = "lineup_package" },
-  { name = "role_package" },
-  { name = "util_package" },
-]
-
 [move.toolchain-version]
-compiler-version = "1.20.0"
+compiler-version = "1.27.2"
 edition = "legacy"
 flavor = "sui"
+
+[env]
+
+[env.mainnet]
+chain-id = "35834a8a"
+original-published-id = "0x62a3a8daea6eb491d11b42546dc72c074f5c40c8185c780487aafec4254be564"
+latest-published-id = "0x62a3a8daea6eb491d11b42546dc72c074f5c40c8185c780487aafec4254be564"
+published-version = "1"
