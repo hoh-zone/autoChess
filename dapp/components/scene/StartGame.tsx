@@ -71,6 +71,7 @@ export const StartGame = () => {
                   </VStack>
                 </div>
                 {!isLoading && meta && meta.version == 2 && (
+                  // 输入框
                   <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder={getLocale("Enter-your-chess-name")!} onChange={(v) => setInputValue(v.target.value)} />
                 )}
                 {!isLoading && meta && meta.version == 2 && <StartGameButtons name={inputValue} />}
