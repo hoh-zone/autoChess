@@ -78,6 +78,7 @@ const useQueryMetaInfo = () => {
         }
       }
     } catch (error) {
+      //
       console.log(error)
     }
   }
