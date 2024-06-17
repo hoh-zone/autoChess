@@ -15,7 +15,6 @@ import Register from "../Register"
 import MyAccountInfo from "../MyAccountInfo"
 import StartGameButtons from "../StartGameButtons"
 import useLocale from "../../hooks/useLocale"
-import ZkLoginButton from "../ZkLoginButton"
 
 export const StartGame = () => {
   const [inputValue, setInputValue] = useState("")
@@ -82,7 +81,6 @@ export const StartGame = () => {
               <SignInButton className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                 {getLocale("Connect")}
               </SignInButton>
-              <ZkLoginButton />
             </div>
           )}
           <div className="absolute top-0 right-0 m-4">
