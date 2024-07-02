@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHALLENGE_GLOBAL, CHESS_CHALLENGE_PACKAGE, SENDER } from "../../lib/constants"
+import { CHALLENGE_GLOBAL, CHESS_PACKAGE, SENDER } from "../../lib/constants"
 
 export function bytesArrayToString(input: Uint8Array): String {
   const bytes: Uint8Array = new Uint8Array(input)
@@ -17,7 +17,7 @@ const useQueryChallengeRank = () => {
       if (!wallet) return
       const transactionBlock = new TransactionBlock()
       transactionBlock.moveCall({
-        target: `${CHESS_CHALLENGE_PACKAGE}::${moveModule}::${method}`,
+        target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
         arguments: [transactionBlock.pure(CHALLENGE_GLOBAL)]
       })
       const result = await wallet.client.devInspectTransactionBlock({

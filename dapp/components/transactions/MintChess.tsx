@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_PACKAGE_V2, ROLE_GLOBAL_V2, CHESS_GLOBAL_V2, META_REWARDS_GLOBAL_V2, METAINFO_GLOBAL_V2 } from "../../lib/constants"
+import { CHESS_PACKAGE, ROLE_GLOBAL, CHESS_GLOBAL, META_REWARDS_GLOBAL, META_INFO_GLOBAL } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 import useLocale from "../../hooks/useLocale"
 
@@ -27,21 +27,21 @@ const useMintChess = () => {
         let coins = transactionBlock.splitCoins(transactionBlock.gas, [transactionBlock.pure(price * 1_000_000_000)])
         let coin_vec = transactionBlock.makeMoveVec({ objects: [coins] })
         transactionBlock.moveCall({
-          target: `${CHESS_PACKAGE_V2}::${moveModule}::${method}`,
+          target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
           arguments: [
-            transactionBlock.pure(`${ROLE_GLOBAL_V2}`),
-            transactionBlock.pure(`${CHESS_GLOBAL_V2}`),
-            transactionBlock.pure(`${META_REWARDS_GLOBAL_V2}`),
+            transactionBlock.pure(`${ROLE_GLOBAL}`),
+            transactionBlock.pure(`${CHESS_GLOBAL}`),
+            transactionBlock.pure(`${META_REWARDS_GLOBAL}`),
             transactionBlock.pure(username),
             coin_vec,
-            transactionBlock.pure(`${METAINFO_GLOBAL_V2}`),
+            transactionBlock.pure(`${META_INFO_GLOBAL}`),
             transactionBlock.pure(meta.objectId)
           ]
         })
       } else {
         transactionBlock.moveCall({
-          target: `${CHESS_PACKAGE_V2}::${moveModule}::${method}`,
-          arguments: [transactionBlock.pure(`${ROLE_GLOBAL_V2}`), transactionBlock.pure(`${CHESS_GLOBAL_V2}`), transactionBlock.pure(username)]
+          target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
+          arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username)]
         })
       }
       const response = await wallet.signAndExecuteTransactionBlock({

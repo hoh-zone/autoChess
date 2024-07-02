@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_CHALLENGE_PACKAGE, CHESS_CHALLENGE_PACKAGE5, CHESS_PACKAGE_V2, ISMAINNET, META_GLOBAL, META_REWARDS_GLOBAL_V2, METAINFO_GLOBAL_V2 } from "../../lib/constants"
+import { CHESS_PACKAGE, ISMAINNET, META_REWARDS_GLOBAL, META_INFO_GLOBAL } from "../../lib/constants"
 import { JsonRpcProvider, mainnetConnection, normalizeSuiObjectId, testnetConnection } from "@mysten/sui.js"
 
 interface Meta {
@@ -23,17 +23,19 @@ interface Meta {
 
 const useQueryMetaInfo = () => {
   const { wallet } = ethos.useWallet()
+
+  // deprecated
   const clone_meta = async (meta: Meta) => {
     if (!wallet) return
     try {
       const tx = new TransactionBlock()
       tx.moveCall({
-        target: `${CHESS_PACKAGE_V2}::metaIdentity::clone_meta_from_old_package`,
+        target: `${CHESS_PACKAGE}::metaIdentity::clone_meta_from_old_package`,
         arguments: [
           tx.object(normalizeSuiObjectId(meta.objectId)),
-          tx.object(normalizeSuiObjectId(META_GLOBAL)),
-          tx.object(normalizeSuiObjectId(METAINFO_GLOBAL_V2)),
-          tx.object(normalizeSuiObjectId(META_REWARDS_GLOBAL_V2))
+          tx.object(normalizeSuiObjectId(META_INFO_GLOBAL)),
+          tx.object(normalizeSuiObjectId(META_INFO_GLOBAL)),
+          tx.object(normalizeSuiObjectId(META_REWARDS_GLOBAL))
         ]
       })
       const response = await wallet.signAndExecuteTransactionBlock({
@@ -60,8 +62,8 @@ const useQueryMetaInfo = () => {
     try {
       const tx = new TransactionBlock()
       tx.moveCall({
-        target: `${CHESS_PACKAGE_V2}::metaIdentity::claim_invite_rewards`,
-        arguments: [tx.object(normalizeSuiObjectId(METAINFO_GLOBAL_V2)), tx.object(normalizeSuiObjectId(META_REWARDS_GLOBAL_V2)), tx.object(normalizeSuiObjectId(meta.objectId))]
+        target: `${CHESS_PACKAGE}::metaIdentity::claim_invite_rewards`,
+        arguments: [tx.object(normalizeSuiObjectId(META_INFO_GLOBAL)), tx.object(normalizeSuiObjectId(META_REWARDS_GLOBAL)), tx.object(normalizeSuiObjectId(meta.objectId))]
       })
       const response = await wallet.signAndExecuteTransactionBlock({
         transactionBlock: tx,
@@ -90,13 +92,13 @@ const useQueryMetaInfo = () => {
       if (inviteMetaId > 0) {
         console.log(inviteMetaId)
         tx.moveCall({
-          target: `${CHESS_PACKAGE_V2}::metaIdentity::register_invited_meta`,
-          arguments: [tx.object(normalizeSuiObjectId(METAINFO_GLOBAL_V2)), tx.pure(inviteMetaId), tx.pure(name), tx.pure(avatar_name)]
+          target: `${CHESS_PACKAGE}::metaIdentity::register_invited_meta`,
+          arguments: [tx.object(normalizeSuiObjectId(META_INFO_GLOBAL)), tx.pure(inviteMetaId), tx.pure(name), tx.pure(avatar_name)]
         })
       } else {
         tx.moveCall({
-          target: `${CHESS_PACKAGE_V2}::metaIdentity::mint_meta`,
-          arguments: [tx.object(normalizeSuiObjectId(METAINFO_GLOBAL_V2)), tx.pure(name), tx.pure(avatar_name)]
+          target: `${CHESS_PACKAGE}::metaIdentity::mint_meta`,
+          arguments: [tx.object(normalizeSuiObjectId(META_INFO_GLOBAL)), tx.pure(name), tx.pure(avatar_name)]
         })
       }
       const response = await wallet.signAndExecuteTransactionBlock({
@@ -123,7 +125,7 @@ const useQueryMetaInfo = () => {
     try {
       if (!wallet) return
       let global: any = await wallet.client.getObject({
-        id: META_GLOBAL,
+        id: META_INFO_GLOBAL,
         options: {
           showContent: true
         }
@@ -137,7 +139,7 @@ const useQueryMetaInfo = () => {
         }
       })
       let global2: any = await wallet.client.getObject({
-        id: METAINFO_GLOBAL_V2,
+        id: META_INFO_GLOBAL,
         options: {
           showContent: true
         }
@@ -181,19 +183,7 @@ const useQueryMetaInfo = () => {
           MatchAny: [
             {
               MoveModule: {
-                package: CHESS_CHALLENGE_PACKAGE,
-                module: "metaIdentity"
-              }
-            },
-            {
-              MoveModule: {
-                package: CHESS_CHALLENGE_PACKAGE5,
-                module: "metaIdentity"
-              }
-            },
-            {
-              MoveModule: {
-                package: CHESS_PACKAGE_V2,
+                package: CHESS_PACKAGE,
                 module: "metaIdentity"
               }
             }
@@ -210,9 +200,9 @@ const useQueryMetaInfo = () => {
         return ""
       }
       let version = 0
-      if (String(data.type).indexOf(CHESS_CHALLENGE_PACKAGE) !== -1 || String(data.type).indexOf(CHESS_CHALLENGE_PACKAGE5) !== -1) {
+      if (String(data.type).indexOf(CHESS_PACKAGE) !== -1) {
         version = 1
-      } else if (String(data.type).indexOf(CHESS_PACKAGE_V2) !== -1) {
+      } else if (String(data.type).indexOf(CHESS_PACKAGE) !== -1) {
         version = 2
       }
       let content: any = data?.content

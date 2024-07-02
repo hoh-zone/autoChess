@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_PACKAGE_V2, CHESS_GLOBAL_V2 } from "../../lib/constants"
+import { CHESS_PACKAGE, CHESS_GLOBAL } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 import useLocale from "../../hooks/useLocale"
 
@@ -22,8 +22,8 @@ const useCheckout = () => {
       try {
         const transactionBlock = new TransactionBlock()
         transactionBlock.moveCall({
-          target: `${CHESS_PACKAGE_V2}::${moveModule}::${method}`,
-          arguments: [transactionBlock.pure(`${CHESS_GLOBAL_V2}`), transactionBlock.pure(`${chess_id}`)]
+          target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
+          arguments: [transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(`${chess_id}`)]
         })
         const response = await wallet.signAndExecuteTransactionBlock({
           transactionBlock,

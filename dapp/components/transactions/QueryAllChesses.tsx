@@ -1,10 +1,9 @@
 import { useCallback, useState } from "react"
 import { ethos } from "ethos-connect"
-import { CHESS_PACKAGE_V2, ISMAINNET } from "../../lib/constants"
+import { CHESS_PACKAGE, ISMAINNET } from "../../lib/constants"
 import { GameNft } from "../../types/nft"
 import { useSyncGameNFT } from "../../hooks/useSyncGameNFT"
 import { JsonRpcProvider, PaginatedObjectsResponse, mainnetConnection, testnetConnection } from "@mysten/sui.js"
-import { myHash0A } from "../../store/stages"
 
 const useQueryChesses = () => {
   const { wallet } = ethos.useWallet()
@@ -44,7 +43,7 @@ const useQueryChesses = () => {
         },
         filter: {
           MoveModule: {
-            package: CHESS_PACKAGE_V2,
+            package: CHESS_PACKAGE,
             module: "chess"
           }
         },
