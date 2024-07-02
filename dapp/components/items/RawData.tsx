@@ -50,7 +50,7 @@ export const item_list: Items = {
     effect: "Increase sp for one battle",
     range: 1,
     duration: "once",
-    effect_value: "max",
+    effect_value: 10,
     cost: 2,
     selling_price: 1
   },
@@ -95,7 +95,7 @@ export const item_list: Items = {
     effect: "Suffer no damage when attacked the first time",
     range: 1,
     duration: "once",
-    effect_value: "no_damage_one_round",
+    effect_value: 0,
     cost: 2,
     selling_price: 2
   },
@@ -104,7 +104,7 @@ export const item_list: Items = {
     effect: "Replace the chosen character with a randomly decided character of the same level",
     range: 1,
     duration: "once",
-    effect_value: "random_replace",
+    effect_value: 0,
     cost: 3,
     selling_price: 2
   }
