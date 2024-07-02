@@ -12,7 +12,6 @@ module role_packagev3::role {
     use sui::object::{UID, Self};
     use sui::transfer::{Self};
     use sui::vec_map::{Self, VecMap};
-    use sui::random::{Self, Random};
 
     use util_packagev3::utils::{Self, Int_wrapper};
     // friend auto_chess::chess;
@@ -324,27 +323,26 @@ vec_map::insert(&mut global.charactors, utf8(b"archer3"), Role {class:utf8(b"arc
     // p2 = 35 * power; p3 = 0 or 2 times power when power >16
     // higher p3 is more likely to get a level 9 charactor
     // higher p2 is more likely to get a level 3 charactor
-    public entry fun get_random_role_by_power(global: &Global, r:&Random, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
-        let generator = random::new_generator(r, ctx); 
-        let randomNum = random::generate_u64_in_range(&mut generator, 0, 1000);
-        if (randomNum < p3) {
+    public fun get_random_role_by_power(global: &Global, seed:u8, p2:u64, p3:u64, ctx: &mut TxContext) : Role {
+        let random = utils::get_random_num(0, 1000, seed, ctx);
+        if (random < p3) {
             //print(&utf8(b"level 9 will be chosen"));
-            get_random_role_by_level(global, 9, randomNum, ctx)
-        } else if (randomNum < p2) {
+            get_random_role_by_level(global, 9, random, ctx)
+        } else if (random < p2) {
             //print(&utf8(b"level 3 will be chosen"));
-            get_random_role_by_level(global, 3, randomNum, ctx)
+            get_random_role_by_level(global, 3, random, ctx)
         } else {
             //print(&utf8(b"level 1 will be chosen"));
-            get_random_role_by_level(global, 1, randomNum, ctx)
+            get_random_role_by_level(global, 1, random, ctx)
         }
     }
 
     // return a random class charactor of level 1, it is created for the basic hero pool with 30 heros
-    public entry fun create_random_role_for_cards(global: &Global, r:&Random, ctx: &mut TxContext) : Role {
-        let generator = random::new_generator(r, ctx); 
-        let randomNum = random::generate_u64_in_range(&mut generator, 0, 1000);
-        get_random_role_by_level(global, 1, randomNum, ctx)
+    public fun create_random_role_for_cards(global: &Global, seed:u8, ctx: &mut TxContext) : Role {
+        let random = utils::get_random_num(0, 1000, seed, ctx);
+        get_random_role_by_level(global, 1, random, ctx)
     }
+    
     
     //changed a lot
     // merge the two roles and get a stronger role

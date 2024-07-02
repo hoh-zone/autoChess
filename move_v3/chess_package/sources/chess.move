@@ -18,7 +18,6 @@ module chess_packagev3::chess {
     use sui::pay;
     use sui::coin::{Self, Coin};
     use sui::clock::{Clock};
-    use sui::random::{Self, Random};
     use sui::event;
 
     use lineup_packagev3::lineup::{Self, LineUp};
@@ -51,10 +50,8 @@ module chess_packagev3::chess {
     const CURRENT_VERSION: u64 = 1;
 
     const REFRESH_gold_cost:u8 = 2;
-    const NUM_ITEMS:u64 = 10;
-    const ITEM_POOL_SIZE:u64 = 18;
-    const NUM_CHARS:u64 = 16;
-    const CHAR_POOL_SIZE:u64 = 30;
+    const ITEM_POOL_SIZE:u8 = 18;
+    const CHAR_POOL_SIZE:u8 = 30;
 
     struct Global has key {
         id: UID,
@@ -147,13 +144,12 @@ module chess_packagev3::chess {
     The two functions should be in role module and item module, here only for convinence
     */
     // return 30 random heroes of level 1, it is created for the hero shop pool with 30 heroes
-    entry fun create_random_roles_for_cards(r:&Random, global: &role::Global, ctx:&mut TxContext): vector<Role> {
-        let generator = random::new_generator(r, ctx);
+    entry fun create_random_roles_for_cards(global: &role::Global, ctx:&mut TxContext): vector<Role> {
         let roles = vector::empty<Role>();
         let keys = role::get_chars_keys(global);
-        let i = 0;
+        let i:u8 = 0;
         while(i < CHAR_POOL_SIZE){ 
-            let role_index = random::generate_u64_in_range(&mut generator, 1, NUM_CHARS) - 1; 
+            let role_index = utils::get_random_num(0, 15, i, ctx);
             let key =vector::borrow(&keys, role_index);
             let role = role::get_role_by_class(global, *key);
             vector::push_back(&mut roles, role);
@@ -163,13 +159,12 @@ module chess_packagev3::chess {
     }
 
     // return 18 random items, it is created for the item shop pool with 18 items
-    entry fun create_random_items_for_cards(r:&Random, global: &item::ItemsGlobal, ctx:&mut TxContext): vector<Item> {
-        let generator = random::new_generator(r, ctx);
+    entry fun create_random_items_for_cards(global: &item::ItemsGlobal, ctx:&mut TxContext): vector<Item> {
         let items = vector::empty<Item>();
         let keys = item::get_items_keys(global);
-        let i = 0;     
+        let i:u8 = 0;     
         while(i < ITEM_POOL_SIZE){ 
-            let item_index = random::generate_u64_in_range(&mut generator, 1, NUM_ITEMS) - 1;    
+            let item_index = utils::get_random_num(0, 10, i, ctx);
             let key = vector::borrow(&keys, item_index);
             let item = item::get_item_by_name(global, key);
             vector::push_back(&mut items, item);
@@ -227,7 +222,7 @@ module chess_packagev3::chess {
     }
 
     #[lint_allow(self_transfer)]
-    entry fun mint_arena_chess(r:&Random, role_global:&role::Global, global: &mut Global, rewardsGlobal: &mut metaIdentity::RewardsGlobal, itemsGlobal: &item::ItemsGlobal, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
+    entry fun mint_arena_chess(role_global:&role::Global, global: &mut Global, rewardsGlobal: &mut metaIdentity::RewardsGlobal, itemsGlobal: &item::ItemsGlobal, name:String, coins:vector<Coin<SUI>>, ctx: &mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         // merge the coin payment together (coin smashing) as the ticket price and make sure that it is more than the min 
@@ -242,8 +237,8 @@ module chess_packagev3::chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            cards_pool_items: create_random_items_for_cards(r, itemsGlobal, ctx),
-            cards_pool_roles: create_random_roles_for_cards(r, role_global, ctx),
+            cards_pool_items: create_random_items_for_cards(itemsGlobal, ctx),
+            cards_pool_roles: create_random_roles_for_cards(role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -273,7 +268,7 @@ module chess_packagev3::chess {
     }
 
     #[lint_allow(self_transfer)]
-    entry fun mint_invite_arena_chess(r:&Random, role_global:&role::Global, global: &mut Global, itemsGlobal: &item::ItemsGlobal, rewardsGlobal: &mut metaIdentity::RewardsGlobal, name:String, coins:vector<Coin<SUI>>, 
+    entry fun mint_invite_arena_chess(role_global:&role::Global, global: &mut Global, itemsGlobal: &item::ItemsGlobal, rewardsGlobal: &mut metaIdentity::RewardsGlobal, name:String, coins:vector<Coin<SUI>>, 
         metaGlobal:&mut metaIdentity::MetaInfoGlobal, meta: &metaIdentity::MetaIdentity, ctx: &mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
@@ -289,8 +284,8 @@ module chess_packagev3::chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            cards_pool_items: create_random_items_for_cards(r, itemsGlobal, ctx),
-            cards_pool_roles: create_random_roles_for_cards(r, role_global, ctx),
+            cards_pool_items: create_random_items_for_cards(itemsGlobal, ctx),
+            cards_pool_roles: create_random_roles_for_cards(role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -324,15 +319,15 @@ module chess_packagev3::chess {
 
     // mint a chess nft
     #[lint_allow(self_transfer)]
-    entry fun mint_chess(r:&Random, role_global:&role::Global, itemGlobal:&item::ItemsGlobal, global: &mut Global, name:String, ctx: &mut TxContext) {
+    entry fun mint_chess(role_global:&role::Global, itemGlobal:&item::ItemsGlobal, global: &mut Global, name:String, ctx: &mut TxContext) {
         assert!(global.version == CURRENT_VERSION, ERR_INVALID_VERSION);
         let sender = tx_context::sender(ctx);
         let game = Chess {
             id: object::new(ctx),
             name:name,
             lineup: lineup::empty(ctx),
-            cards_pool_items: create_random_items_for_cards(r, itemGlobal, ctx),
-            cards_pool_roles: create_random_roles_for_cards(r, role_global, ctx),
+            cards_pool_items: create_random_items_for_cards(itemGlobal, ctx),
+            cards_pool_roles: create_random_roles_for_cards(role_global, ctx),
             gold: INIT_GOLD,
             win: 0,
             lose: 0,
@@ -390,7 +385,7 @@ module chess_packagev3::chess {
     // lineup_str_vec is purely the frontend result and needs to be verified
     // The function verifies that the operations are valid and the left SUI balance is correct
     // After verification, the function excutes the round of battle and records the battle result
-    public entry fun operate_and_battle(r:&Random, global:&mut Global, role_global:&role::Global, item_global:&item::ItemsGlobal, lineup_global:&mut lineup::Global, 
+    public entry fun operate_and_battle(global:&mut Global, role_global:&role::Global, item_global:&item::ItemsGlobal, lineup_global:&mut lineup::Global, 
         challengeGlobal:&mut challenge::Global, chess:&mut Chess, operations: vector<String>, left_gold:u8, 
         lineup_str_vec: vector<String>, meta: &mut metaIdentity::MetaIdentity, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
@@ -420,7 +415,7 @@ module chess_packagev3::chess {
         chess.cards_pool_items = current_items;
         
         // challenge mode, arena mode or standard mode will be processed in match function
-        battle(r, role_global, lineup_global, challengeGlobal, chess, meta, ctx);
+        battle(role_global, lineup_global, challengeGlobal, chess, meta, ctx);
         global.total_battle = global.total_battle + 1;
     }
 
@@ -622,7 +617,7 @@ module chess_packagev3::chess {
     //3. Calls fight functions to complete the rounds of actions till one team has no hero alive.
     //4. Processes the battle result, record both winning and losing time 
     //Returns true if player wines the battle and false othwewise
-    fun battle(r:&Random, role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, meta:&mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
+    fun battle(role_global:&role::Global, lineup_global:&mut lineup::Global, challengeGlobal:&mut challenge::Global, chess:&mut Chess, meta:&mut metaIdentity::MetaIdentity, ctx: &mut TxContext) {
         assert!(chess.lose <= 2, ERR_YOU_ARE_DEAD);
         // match an enemy config
         let enemy_lineup;
@@ -658,12 +653,12 @@ module chess_packagev3::chess {
             metaIdentity::record_add_lose(meta);
         };
         if (chess.lose <= 2) {
-            refresh_cards_pools(r, role_global, chess, ctx);
+            refresh_cards_pools(role_global, chess, ctx);
         };
     }
 
-    fun refresh_cards_pools(r:&Random, role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
-        chess.cards_pool_roles = create_random_roles_for_cards(r, role_global, ctx);
+    fun refresh_cards_pools(role_global:&role::Global, chess:&mut Chess, ctx:&mut TxContext) {
+        chess.cards_pool_roles = create_random_roles_for_cards(role_global, ctx);
     }
 
     // Performs the battle between the player and the rival by rounds of attacks and conter-attacks

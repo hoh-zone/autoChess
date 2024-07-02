@@ -10,7 +10,6 @@ module challenge_packagev3::challenge {
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::transfer::{Self};  
-    use sui::random::{Random};
     use sui::balance::{Self, Balance};
     use sui::coin::{Self};
     use sui::clock::{Self, Clock};
@@ -109,15 +108,14 @@ module challenge_packagev3::challenge {
     }
 
     // Initiate the initial robot top 20 lineups with decreasing power and increasing seed when rank goes up
-    #[allow(lint(public_random))]
-    public fun init_rank_20(r:&Random, global: &mut Global, roleGlobal: &role::Global, clock:&Clock, ctx: &mut TxContext) {
+    public fun init_rank_20(global: &mut Global, roleGlobal: &role::Global, clock:&Clock, ctx: &mut TxContext) {
         let i = 0;
         let init_power = 60;
         let seed:u8 = 1;
         global.publish_time = clock::timestamp_ms(clock);
         assert!(vector::length(&global.rank_20) == 0, ERR_ALREADY_INIT);
         while (i < 20) {
-            let lineup = lineup::generate_lineup_by_power(roleGlobal, init_power, r, ctx);
+            let lineup = lineup::generate_lineup_by_power(roleGlobal, init_power, seed, ctx);
             vector::push_back(&mut global.rank_20, lineup);
             init_power = init_power - 2;
             seed = seed + 1;
