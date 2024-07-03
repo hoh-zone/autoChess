@@ -1340,13 +1340,6 @@ export function get_item_buy_price(item: ItemFields | null): number {
   return item.cost
 }
 
-export function get_item_sell_price(item: ItemFields | null): number {
-  if (!item) {
-    return 0
-  }
-  return item.selling_price
-}
-
 export function get_max_sp(char: CharacterFields | null): number | undefined {
   if (!char) {
     return 0
