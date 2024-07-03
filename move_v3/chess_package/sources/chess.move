@@ -149,8 +149,8 @@ module chess_packagev3::chess {
         let keys = role::get_chars_keys(global);
         let i:u8 = 0;
         while(i < CHAR_POOL_SIZE){ 
-            let role_index = utils::get_random_num(0, 15, i, ctx);
-            let key =vector::borrow(&keys, role_index);
+            let role_index = 5 * utils::get_random_num(0, 15, i, ctx);
+            let key = vector::borrow(&keys, role_index);
             let role = role::get_role_by_class(global, *key);
             vector::push_back(&mut roles, role);
             i = i + 1;
@@ -390,7 +390,6 @@ module chess_packagev3::chess {
         lineup_str_vec: vector<String>, meta: &mut metaIdentity::MetaIdentity, ctx:&mut TxContext) {
         assert!(vector::length(&lineup_str_vec) == 6, ERR_EXCEED_NUM_LIMIT);
         let current_roles = lineup::get_mut_roles(&mut *&chess.lineup);
-        let current_items = *&chess.cards_pool_items;
         let cards_pool_roles = lineup::get_mut_roles(&mut chess.lineup);
 
         // todo: how to resolve the gas limit problem when publishing
@@ -412,8 +411,7 @@ module chess_packagev3::chess {
         };
         lineup::set_hash(&mut expected_lineup, lineup::get_hash(&chess.lineup));
         chess.lineup = expected_lineup; 
-        chess.cards_pool_items = current_items;
-        
+        chess.cards_pool_items = create_random_items_for_cards(item_global, ctx);
         // challenge mode, arena mode or standard mode will be processed in match function
         battle(role_global, lineup_global, challengeGlobal, chess, meta, ctx);
         global.total_battle = global.total_battle + 1;

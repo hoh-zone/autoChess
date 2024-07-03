@@ -14,8 +14,6 @@ module item_packagev3::item {
     struct ItemsGlobal has key {
         id: UID,
         items: VecMap<String, Item>,
-        //version: u64,
-        //manager: address
     }
 
     struct Item has store, copy, drop {
@@ -37,9 +35,9 @@ module item_packagev3::item {
         vec_map::insert(&mut global.items, utf8(b"purple_potion"), Item{name: utf8(b"purple_potion"), effect: utf8(b"sp"), duration: utf8(b"once"), range: 6, effect_value:1, cost:3});
         vec_map::insert(&mut global.items, utf8(b"whet_stone"), Item{name: utf8(b"whet_stone"), effect: utf8(b"attack"), duration: utf8(b"once"), range: 6, effect_value: 2, cost:3});
         vec_map::insert(&mut global.items, utf8(b"chicken_drumstick"), Item{name: utf8(b"chicken_drumstick"), effect: utf8(b"speed"), duration: utf8(b"once"), range: 6, effect_value: 1, cost:3});
-        vec_map::insert(&mut global.items, utf8(b"invisibility_cloak"), Item{name: utf8(b"invisibility_cloak"), effect: utf8(b"other"), duration: utf8(b"once"), range: 1, effect_value:0, cost:2});
+        vec_map::insert(&mut global.items, utf8(b"thick_cloak"), Item{name: utf8(b"thick_cloak"), effect: utf8(b"hp"), duration: utf8(b"permanent"), range: 1, effect_value:5, cost:3});
         vec_map::insert(&mut global.items, utf8(b"chess"), Item{name: utf8(b"chess"), effect: utf8(b"other"), duration: utf8(b"once"), range: 1, effect_value: 0, cost:3});
-    }  
+    }
 
     fun init(ctx: &mut TxContext) {
         let global = ItemsGlobal {
@@ -76,6 +74,8 @@ module item_packagev3::item {
             use_devil_fruit(role)
         else if(item.name == utf8(b"magic_potion"))
             use_magic_potion(role)
+        else if(item.name == utf8(b"thick_cloak"))
+            use_thick_cloak(role, item)
     }
 
     public fun generate_random_items(itemsGlobal: &ItemsGlobal, ctx: &mut TxContext) : vector<String> {
@@ -110,10 +110,14 @@ module item_packagev3::item {
         else if(item.name == utf8(b"whet_stone"))
             use_whet_stone(roles, item)
         else if(item.name == utf8(b"chicken_drumstick"))
-            use_chicken_drumstick(roles, item);
+            use_chicken_drumstick(roles, item)
      }
 
      fun use_rice_ball(role: &mut Role, item: &Item){
+        role::increase_hp(role, item.effect_value);
+     }
+
+     fun use_thick_cloak(role: &mut Role, item: &Item){
         role::increase_hp(role, item.effect_value);
      }
 
@@ -176,12 +180,6 @@ module item_packagev3::item {
             i = i + 1;
         };
      }
-
-     /*     
-     fun use_invisibility_cloak(role: &mut Role, item: &Item){
-
-     }
-     */
 
      //need ctx because it needs to use a random number
      /*
