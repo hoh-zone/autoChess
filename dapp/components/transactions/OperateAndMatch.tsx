@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
 import { winA, chessId, fightResA, metaA, moneyA as moneyAtom, slotCharacter } from "../../store/stages"
-import { CHESS_PACKAGE, CHESS_GLOBAL, ROLE_GLOBAL, LINEUP_GLOBAL, CHALLENGE_GLOBAL } from "../../lib/constants"
+import { CHESS_PACKAGE, CHESS_GLOBAL, ROLE_GLOBAL, LINEUP_GLOBAL, CHALLENGE_GLOBAL, ITEM_GLOBAL } from "../../lib/constants"
 import { useAtom } from "jotai"
 import { useToast } from "@chakra-ui/react"
 import { normalizeSuiObjectId } from "@mysten/sui.js"
@@ -37,11 +37,10 @@ const useOperateAndMatch = () => {
     try {
       const tx = new TransactionBlock()
       const left_gold = money
-      let chars = get_chars_strvec()
-      console.log("charssL:", chars)
       let argument: any = [
         tx.pure(`${CHESS_GLOBAL}`),
         tx.pure(`${ROLE_GLOBAL}`),
+        tx.pure(`${ITEM_GLOBAL}`),
         tx.pure(`${LINEUP_GLOBAL}`),
         tx.pure(`${CHALLENGE_GLOBAL}`),
         tx.pure(chess_id),

@@ -1,5 +1,5 @@
 import { atom } from "jotai"
-import { CharacterFields, ItemFields } from "../types/nft"
+import { CharacterFields, Item, ItemFields } from "../types/nft"
 
 export const currentNftId = atom<string>("")
 

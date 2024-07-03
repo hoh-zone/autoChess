@@ -1,6 +1,5 @@
 import { Box, Center, HStack } from "@chakra-ui/react"
 import { ShopSlot } from "../control/ShopSlot"
-import { ShopItemSlot } from "../control/ShopItemSlot"
 import { ItemSlot } from "../control/ItemSlot"
 
 export const Shop = () => {

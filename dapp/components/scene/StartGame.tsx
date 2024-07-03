@@ -19,7 +19,7 @@ import useLocale from "../../hooks/useLocale"
 export const StartGame = () => {
   const [inputValue, setInputValue] = useState("")
   const { nfts, query_chesses } = useQueryChesses()
-  const { query_meta_info, clone_meta } = useQueryMetaInfo()
+  const { query_meta_info } = useQueryMetaInfo()
   const { status, wallet } = ethos.useWallet()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useAtom(assetsAtom)
@@ -58,7 +58,7 @@ export const StartGame = () => {
                   </motion.p>
                   <VStack>
                     {!meta && <Register isLoading={isLoading} address={wallet.address} />}
-                    {meta && meta.version == 1 && (
+                    {/* {meta && meta.version == 1 && (
                       <Button
                         onClick={() => {
                           clone_meta(meta)
@@ -66,15 +66,15 @@ export const StartGame = () => {
                       >
                         Start Game
                       </Button>
-                    )}
-                    {meta && meta.version == 2 && <ContinueGame isLoading={isLoading} />}
+                    )} */}
+                    {meta && <ContinueGame isLoading={isLoading} />}
                   </VStack>
                 </div>
-                {!isLoading && meta && meta.version == 2 && (
+                {!isLoading && meta && (
                   // 输入框
                   <Input type="text" className="custom-input" width={"300px"} value={inputValue} placeholder={getLocale("Enter-your-chess-name")!} onChange={(v) => setInputValue(v.target.value)} />
                 )}
-                {!isLoading && meta && meta.version == 2 && <StartGameButtons name={inputValue} />}
+                {!isLoading && meta && <StartGameButtons name={inputValue} />}
               </Stack>
             </div>
           ) : (
@@ -94,7 +94,7 @@ export const StartGame = () => {
             <div>
               <Instruction />
             </div>
-            {meta && meta.version == 2 && (
+            {meta && (
               <div className="mt-3">
                 <MyAccountInfo metaInfo={meta} />
               </div>

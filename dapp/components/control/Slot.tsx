@@ -2,7 +2,19 @@ import { twMerge } from "tailwind-merge"
 import { Character } from "../character/character"
 import { useAtom } from "jotai"
 import { moneyA as moneyAtom, selectedItemSlot, selectedShopSlot, selectedSlot, shopCharacter, stageAtom, operationsA, enemyCharacter, slotCharacter, itemsA } from "../../store/stages"
-import { use_rice_ball, use_dragon_fruit, use_boot, use_devil_fruit, use_magic_potion, use_red_potion, use_purple_potion, use_whet_stone, use_chicken_drumstick, use_chess } from "../items/RawData"
+import {
+  use_rice_ball,
+  use_dragon_fruit,
+  use_boot,
+  use_thick_cloak,
+  use_devil_fruit,
+  use_magic_potion,
+  use_red_potion,
+  use_purple_potion,
+  use_whet_stone,
+  use_chicken_drumstick,
+  use_chess
+} from "../items/RawData"
 import { removeSuffix } from "../../utils/TextUtils"
 import { upgrade } from "../character/rawData"
 import { FloatCharInfo } from "./FloatCharInfo"
@@ -193,6 +205,15 @@ export const Slot = ({ isOpponent = false, id }: { isOpponent?: boolean; id: num
             show_failed_toast("item_banned_sp_max")
           } else {
             if (item != null && item != undefined) {
+              if (money < item!.cost) {
+                toast({
+                  title: getLocale("Money-is-not-enough"),
+                  status: "warning",
+                  duration: 2000,
+                  isClosable: true
+                })
+                return
+              }
               setMoney(money - item!.cost)
             }
             if (item!.name == "rice_ball") {
@@ -214,7 +235,8 @@ export const Slot = ({ isOpponent = false, id }: { isOpponent?: boolean; id: num
               use_whet_stone(chars)
             } else if (item!.name == "chicken_drumstick") {
               use_chicken_drumstick(chars)
-            } else if (item!.name == "invisibility_cloak") {
+            } else if (item!.name == "thick_cloak") {
+              use_thick_cloak(char)
             } else if (item!.name == "chess") {
               char = use_chess(char)
             }

@@ -1,9 +1,7 @@
 import { twMerge } from "tailwind-merge"
-import { Character } from "../character/character"
 import { useAtom } from "jotai"
 import { selectedShopItemSlot, selectedItemSlot } from "../../store/stages"
-import { removeSuffix } from "../../utils/TextUtils"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { FloatItemInfo } from "./FloatItemInfo"
 import { motion } from "framer-motion"
 import { sleep } from "../../utils/sleep"
@@ -11,9 +9,9 @@ import { sleep } from "../../utils/sleep"
 export const ShopItemSlot = ({ name }: { name: string }) => {
   const [shopItemSlotName, setShopItemSlotName] = useAtom(selectedShopItemSlot)
   const [, setItemSlotNumber] = useAtom(selectedItemSlot)
-  const selected = (shopItemSlotName === name)
+  const selected = shopItemSlotName === name
 
-  const img_src: string = "items/" + name + ".png";
+  const img_src: string = "items/" + name + ".png"
 
   useEffect(() => {
     setInterval(async () => {

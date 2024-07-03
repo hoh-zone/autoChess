@@ -220,7 +220,7 @@ const useQueryMetaInfo = () => {
       } else {
         best_rank = Number(best_rank.data.content.fields.value)
       }
-      console.log(best_rank)
+      console.log("best_rank:", best_rank)
       let meta: Meta = {
         metaId: Number(fields?.metaId),
         objectId: data?.objectId,
@@ -240,6 +240,7 @@ const useQueryMetaInfo = () => {
       }
       let invited = await query_invited_num(meta.metaId)
       meta.invited_num = Number(invited)
+      console.log("meta:", meta)
       return meta
     } catch (error) {
       console.log("err", error)

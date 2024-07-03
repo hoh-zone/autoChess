@@ -8,7 +8,7 @@ export const ITEM_DESCRIPTION: Record<string, string> = {
     "purple_potion":"Increase $value sp for one battle",
     "whet_stone":"Increase $value attack for one battle",
     "chicken_drumstick":"Increase $value speed for one battle",
-    "invisibility_cloak":"Suffer no damage when attacked the first time",
+    "thick_cloak":"Suffer no damage when attacked the first time",
     "chess":"Replace the chosen character with a randomly decided character of the same level"
 }
 
@@ -22,6 +22,6 @@ export const ITEM_NAME: Record<string, string> = {
     "purple_potion":"purple potion",
     "whet_stone":"whet stone",
     "chicken_drumstick":"chicken drumstick",
-    "invisibility_cloak":"invisibility cloak",
+    "thick_cloak":"invisibility cloak",
     "chess":"chess"
 }

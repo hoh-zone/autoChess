@@ -1,5 +1,6 @@
 export interface GameNft {
-    cards_pool:    CardsPool;
+    cards_pool_roles:    Role[];
+    cards_pool_items:    Item[];
     creator:       string;
     even:          number;
     gold:          string;
@@ -15,6 +16,11 @@ export interface GameNft {
     arena:         boolean;
     arena_checked: boolean;
     hash0: number;
+}
+
+export interface Item {
+    type: string;
+    fields: ItemFields;
 }
 
 export interface CardsPool {
@@ -67,8 +73,7 @@ export interface ItemFields {
     range: number;
     duration: string;
     effect_value: number;
-    cost: number;
-    selling_price: number;
+    cost: number
 }
 
 // Example:

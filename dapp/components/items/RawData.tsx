@@ -15,8 +15,7 @@ export const item_list: Items = {
     range: 1,
     duration: "permanent",
     effect_value: 3,
-    cost: 2,
-    selling_price: 1
+    cost: 2
   },
   dragon_fruit: {
     name: "dragon_fruit",
@@ -24,8 +23,7 @@ export const item_list: Items = {
     range: 1,
     duration: "permanent",
     effect_value: 3,
-    cost: 2,
-    selling_price: 1
+    cost: 2
   },
   boot: {
     name: "boot",
@@ -33,8 +31,7 @@ export const item_list: Items = {
     range: 1,
     duration: "permanent",
     effect_value: 2,
-    cost: 2,
-    selling_price: 1
+    cost: 2
   },
   devil_fruit: {
     name: "devil_fruit",
@@ -42,8 +39,7 @@ export const item_list: Items = {
     range: 1,
     duration: "permanent",
     effect_value: 20,
-    cost: 2,
-    selling_price: 1
+    cost: 2
   },
   magic_potion: {
     name: "magic_potion",
@@ -51,8 +47,7 @@ export const item_list: Items = {
     range: 1,
     duration: "once",
     effect_value: 10,
-    cost: 2,
-    selling_price: 1
+    cost: 2
   },
   red_potion: {
     name: "red_potion",
@@ -60,8 +55,7 @@ export const item_list: Items = {
     range: 6,
     duration: "once",
     effect_value: 3,
-    cost: 3,
-    selling_price: 2
+    cost: 3
   },
   purple_potion: {
     name: "purple_potion",
@@ -69,8 +63,7 @@ export const item_list: Items = {
     range: 6,
     duration: "once",
     effect_value: 1,
-    cost: 3,
-    selling_price: 2
+    cost: 3
   },
   whet_stone: {
     name: "whet_stone",
@@ -78,8 +71,7 @@ export const item_list: Items = {
     range: 6,
     duration: "once",
     effect_value: 2,
-    cost: 3,
-    selling_price: 2
+    cost: 3
   },
   chicken_drumstick: {
     name: "chicken_drumstick",
@@ -87,17 +79,15 @@ export const item_list: Items = {
     range: 6,
     duration: "once",
     effect_value: 1,
-    cost: 3,
-    selling_price: 2
+    cost: 3
   },
-  invisibility_cloak: {
-    name: "invisibility_cloak",
-    effect: "Suffer no damage when attacked the first time",
+  thick_cloak: {
+    name: "thick_cloak",
+    effect: "Permanently increase hp",
     range: 1,
-    duration: "once",
-    effect_value: 0,
-    cost: 2,
-    selling_price: 2
+    duration: "permanent",
+    effect_value: 5,
+    cost: 3
   },
   chess: {
     name: "chess",
@@ -105,8 +95,7 @@ export const item_list: Items = {
     range: 1,
     duration: "once",
     effect_value: 0,
-    cost: 3,
-    selling_price: 2
+    cost: 3
   }
 }
 
@@ -115,6 +104,14 @@ export function use_rice_ball(char: CharacterFields | null) {
     return
   }
   char.hp = char.hp + (item_list["rice_ball"].effect_value as number)
+  char.max_hp = char.hp
+}
+
+export function use_thick_cloak(char: CharacterFields | null) {
+  if (!char) {
+    return
+  }
+  char.hp = char.hp + (item_list["thick_cloak"].effect_value as number)
   char.max_hp = char.hp
 }
 
@@ -182,8 +179,6 @@ export function use_chicken_drumstick(chars: (CharacterFields | null)[]) {
     }
   })
 }
-
-export function use_invisibility_cloak(char: CharacterFields | null) {}
 
 export function use_chess(dumped_char: CharacterFields): CharacterFields {
   let random_char_index = Math.floor(Math.random() * number_of_chars)

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { ethos, TransactionBlock } from "ethos-connect"
-import { CHESS_PACKAGE, ROLE_GLOBAL, CHESS_GLOBAL, META_REWARDS_GLOBAL, META_INFO_GLOBAL } from "../../lib/constants"
+import { CHESS_PACKAGE, ROLE_GLOBAL, CHESS_GLOBAL, META_REWARDS_GLOBAL, META_INFO_GLOBAL, ITEM_GLOBAL } from "../../lib/constants"
 import { useToast } from "@chakra-ui/react"
 import useLocale from "../../hooks/useLocale"
 
@@ -31,6 +31,7 @@ const useMintChess = () => {
           arguments: [
             transactionBlock.pure(`${ROLE_GLOBAL}`),
             transactionBlock.pure(`${CHESS_GLOBAL}`),
+            transactionBlock.pure(`${ITEM_GLOBAL}`),
             transactionBlock.pure(`${META_REWARDS_GLOBAL}`),
             transactionBlock.pure(username),
             coin_vec,
@@ -41,7 +42,7 @@ const useMintChess = () => {
       } else {
         transactionBlock.moveCall({
           target: `${CHESS_PACKAGE}::${moveModule}::${method}`,
-          arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username)]
+          arguments: [transactionBlock.pure(`${ROLE_GLOBAL}`), transactionBlock.pure(`${ITEM_GLOBAL}`), transactionBlock.pure(`${CHESS_GLOBAL}`), transactionBlock.pure(username)]
         })
       }
       const response = await wallet.signAndExecuteTransactionBlock({

@@ -8,7 +8,7 @@ export const ITEM_DESCRIPTION_CN: Record<string, string> = {
     "purple_potion":"提升角色下一场战斗的 $value 点sp值",
     "whet_stone":"提升角色下一场战斗的 $value 点攻击力",
     "chicken_drumstick":"提升角色下一场战斗的 $value 点速度",
-    "invisibility_cloak":"免疫敌人的第一次攻击",
+    "thick_cloak":"永久提升角色 $value 点生命值",
     "chess":"随机将角色替换为一个同等级随机角色"
 }
 
@@ -22,6 +22,6 @@ export const ITEM_NAME_CN: Record<string, string> = {
     "purple_potion":"紫药水",
     "whet_stone":"磨刀石",
     "chicken_drumstick":"鸡腿",
-    "invisibility_cloak":"隐形斗篷",
+    "thick_cloak":"棉斗篷",
     "chess":"战旗"
 }

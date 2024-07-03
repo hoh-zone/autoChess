@@ -17,6 +17,7 @@ export const useSyncGameNFT = () => {
     const [_items, setItems] = useAtom(itemsA)
 
     return useCallback((nft: GameNft) => {
+        console.log('nft:', nft)
         setMyHash0(nft?.hash0)
         setChessId(nft?.id?.id)
         setGold(Number(nft.gold));
@@ -38,7 +39,8 @@ export const useSyncGameNFT = () => {
             role.fields.base_speed = Number(role.fields.speed);
             return role.fields
         }));
-        setShopCharacter(nft.cards_pool.fields.roles.map((role) => {
+        console.log("nft:", nft)
+        setShopCharacter(nft.cards_pool_roles.map((role) => {
             if (role.fields.class == "none") {
                 return null;
             }
@@ -51,109 +53,11 @@ export const useSyncGameNFT = () => {
             role.fields.base_speed = Number(role.fields.speed);
             return role.fields
         }));
-        
-        // todo: for test
-        setItems([
-            {
-                name: "rice_ball",
-                effect: "Permanently increase hp",
-                range: 1,
-                duration: "permanent",
-                effect_value: 3,
-                cost: 2,
-                selling_price: 1,
-            },
-            {
-                name: "dragon_fruit",
-                effect: "Permanently increase attack",
-                range: 1,
-                duration: "permanent",
-                effect_value: 3,
-                cost: 2,
-                selling_price: 1,
-            },
-            {
-                name: "boot",
-                effect: "Permanently increase speed",
-                range: 1,
-                duration: "permanent",
-                effect_value: 2,
-                cost: 2,
-                selling_price: 1,
-            },
-            {
-                name: "devil_fruit",
-                effect: "Permanently reduce hp and increase attack",
-                range: 1,
-                duration: "permanent",
-                effect_value: 20,
-                cost: 2,
-                selling_price: 1,
-            },
-            {
-                name: "magic_potion",
-                effect: "Increase sp for one battle",
-                range: 1,
-                duration: "once",
-                effect_value: "max",
-                cost: 2,
-                selling_price: 1,
-            },
-            {
-                name: "red_potion",
-                effect: "Increase hp for one battle",
-                range: 6,
-                duration: "once",
-                effect_value: 3,
-                cost: 3,
-                selling_price: 2,
-            },
-            {
-                name: "purple_potion",
-                effect: "Increase sp for one battle",
-                range: 6,
-                duration: "once",
-                effect_value: 1,
-                cost: 3,
-                selling_price: 2,
-            },
-            {
-                name: "whet_stone",
-                effect: "Increase attack for one battle",
-                range: 6,
-                duration: "once",
-                effect_value: 2,
-                cost: 3,
-                selling_price: 2,
-            },
-            {
-                name: "chicken_drumstick",
-                effect: "Increase speed for one battle",
-                range: 6,
-                duration: "once",
-                effect_value: 1,
-                cost: 3,
-                selling_price: 2,
-            },
-            {
-                name: "invisibility_cloak",
-                effect: "Suffer no damage when attacked the first time",
-                range: 1,
-                duration: "once",
-                effect_value: "no_damage_one_round",
-                cost: 2,
-                selling_price: 2,
-            },
-            {
-                name: "chess",
-                effect: "Replace the chosen character with a randomly decided character of the same level",
-                range: 1,
-                duration: "once",
-                effect_value: "random_replace",
-                cost: 3,
-                selling_price: 2,
-            }
-        ])
-
+        setItems(nft.cards_pool_items.map((item) => {
+            item.fields.cost = Number(item.fields.cost);
+            item.fields.effect_value = Number(item.fields.effect_value);
+            item.fields.range = Number(item.fields.range);
+            return item.fields;
+        }));
     }, []);
 }

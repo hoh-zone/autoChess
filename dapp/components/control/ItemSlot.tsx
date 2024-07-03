@@ -14,7 +14,7 @@ import {
   slotCharacter
 } from "../../store/stages"
 import { motion } from "framer-motion"
-import { useToast } from "@chakra-ui/react"
+import { HStack, useToast } from "@chakra-ui/react"
 import confetti from "canvas-confetti"
 import { CharacterFields, ItemFields } from "../../types/nft"
 import { FloatItemInfo } from "./FloatItemInfo"
@@ -78,13 +78,6 @@ export const ItemSlot = ({ id }: { id: number }) => {
         selected ? "border-4 border-transparent z-20 hover:border-slate-800" : "border-4 border-transparent z-20 hover:border-slate-300",
         selected ? "border-slate-800" : ""
       )}
-      /*
-        const [items, setItems] = useAtom(boughtItems)
-        const [shopItems, setSellingItems] = useAtom(sellingItems)
-        const [shopItemSlotNumber, setShopItemSlotNumber] = useAtom(selectedShopItemSlot)
-        const [itemSlotNumber, setItemSlotNumber] = useAtom(selectedItemSlot)
-       
-      */
       onClick={async () => {
         //test
         // only shop scene can buy
@@ -106,30 +99,6 @@ export const ItemSlot = ({ id }: { id: number }) => {
             setItemSlotNumber(null)
           }
         }
-
-        // if (item != undefined && item != null) {
-        //   if (money >= item.cost) {
-        //     setMoney(money - item.cost)
-        //     items[id] = item_shop_choosen
-        //     item = item_shop_choosen
-        //     img_src = "items/" + item!.name + ".png"
-        //     setItems(items.slice())
-        //     setShopItemSlotName(null)
-        //     setItemSlotNumber(null)
-        //     operations.push("buy_item")
-        //     operations.push(item?.name + "-")
-        //   } else {
-        //     show_failed_toast()
-        //   }
-        // } else {
-        //   if (itemSlotNumber == null) {
-        //     setItemSlotNumber(id)
-        //   } else {
-        //     // cancel choosen state
-        //     setItemSlotNumber(null)
-        //   }
-        //   setShopItemSlotName(null)
-        // }
       }}
     >
       <div className="absolute pointer-events-none">{item && <img src={img_src} />}</div>

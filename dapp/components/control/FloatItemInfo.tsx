@@ -26,7 +26,9 @@ export const FloatItemInfo = ({ name, isShowInfo = false, isShopSlot = false }: 
         <>
           <Stack className={"fix_float"}>
             <HStack gap={4}>
-              <Text className="text-[6px]">{lang == "EN" ? ITEM_NAME[item.name] : ITEM_NAME_CN[item.name]}</Text>
+              <Text className="text-[6px]">
+                {lang == "EN" ? ITEM_NAME[item.name] : ITEM_NAME_CN[item.name]}(-{item.cost}💰)
+              </Text>
             </HStack>
             <Divider borderWidth={1} />
             <Text fontSize={"3xs"}>
